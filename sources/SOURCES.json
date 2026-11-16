@@ -1046,6 +1046,28 @@
    "license": "CC-BY-4.0",
    "notice": "Copyright of the contributors to the Eclipse Foundation; the NOTICE section of each documentation file names its copyright holders. The upstream repository licenses code under Apache-2.0 and non-code under CC-BY-4.0.",
    "form": "Byte copy of the upstream file at the pinned commit"
+  },
+  {
+   "path": "Tractus-X/semantic-models/io.catenax.shared.uuid/2.1.0/Uuid.ttl",
+   "sha256": "74bab324023ffebf568a06885b3481e190055e2bb8645e19199a0224c5451448",
+   "bytes": 2429,
+   "family": "Eclipse Tractus-X semantic models",
+   "title": "Aspect models of eclipse-tractusx/sldt-semantic-models",
+   "origin": "https://github.com/eclipse-tractusx/sldt-semantic-models/tree/06d63b0b9ed9fb080fe163f0cd9ac2eaba875464",
+   "license": "CC-BY-4.0",
+   "notice": "The license header of each model file names its copyright holders.",
+   "form": "Byte copy of the upstream file at the pinned commit"
+  },
+  {
+   "path": "Tractus-X/semantic-models/io.catenax.shared.business_partner_number/2.0.0/BusinessPartnerNumber.ttl",
+   "sha256": "e04b8aaa827e482572695ddedd777d5452ffc6e2656ab6517a817ca794020834",
+   "bytes": 6287,
+   "family": "Eclipse Tractus-X semantic models",
+   "title": "Aspect models of eclipse-tractusx/sldt-semantic-models",
+   "origin": "https://github.com/eclipse-tractusx/sldt-semantic-models/tree/06d63b0b9ed9fb080fe163f0cd9ac2eaba875464",
+   "license": "CC-BY-4.0",
+   "notice": "The license header of each model file names its copyright holders.",
+   "form": "Byte copy of the upstream file at the pinned commit"
   }
  ]
 }

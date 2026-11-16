@@ -76,7 +76,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-016"
@@ -103,6 +103,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -1170,7 +1176,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-016"
@@ -1203,6 +1209,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -1230,7 +1242,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-022",
@@ -1264,6 +1276,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -1889,7 +1907,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-022"
@@ -1916,6 +1934,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -1945,7 +1969,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-022"
@@ -1972,6 +1996,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -2200,7 +2230,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the reference server writes no data received from a partner into a passport dataset: the lifecycle notifications change a passport only through the step of their operation, and the individual battery information that the original issuer receives is stored in a record of its own. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-009"
@@ -2238,6 +2268,12 @@
      "date": "2026-11-16",
      "change": "statement reworded for the reference server (before: \"The connector client shall write data received for a battery's passport dataset into the customer's store only within an exchange started by a subject acting for the economic operator responsible for that passport or for an operator to which it gave a written authorisation recorded in the application.\")",
      "reason": "rewording that removes a term of the battery passport application; Francesco, 2026-11-16: \"Approve, start stage 4\"",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
      "approver": "Francesco"
     }
    ],
@@ -2472,7 +2508,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-RDB-003"
@@ -2505,6 +2541,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -2531,7 +2573,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-RDB-006"
@@ -2564,6 +2606,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -2590,7 +2638,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the calculation of the recycling efficiency and of the recovery of materials outside its scope, and the notification PassportEnded carries the reference of the material recycling certificate and no recovered mass. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-RDB-032"
@@ -2623,6 +2671,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -2827,7 +2881,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement binds the data plane of the connector, which the reference server uses and does not contain. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CONNECTOR-003"
@@ -2860,6 +2914,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3060,7 +3120,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-025"
@@ -3093,6 +3153,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3118,7 +3184,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-033"
@@ -3151,6 +3217,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3176,7 +3248,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-034"
@@ -3209,6 +3281,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3234,7 +3312,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-049"
@@ -3267,6 +3345,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3289,7 +3373,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-050"
@@ -3322,6 +3406,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3344,7 +3434,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-051"
@@ -3377,6 +3467,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3399,7 +3495,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-052"
@@ -3432,6 +3528,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3454,7 +3556,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-DATASET-053"
@@ -3487,6 +3589,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3509,7 +3617,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-026"
@@ -3542,6 +3650,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3564,7 +3678,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-027"
@@ -3597,6 +3711,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3619,7 +3739,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-028"
@@ -3652,6 +3772,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3677,7 +3803,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-035"
@@ -3710,6 +3836,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3734,7 +3866,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-036"
@@ -3767,6 +3899,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -3789,7 +3927,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-029"
@@ -3822,6 +3960,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4318,7 +4462,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the yearly report on recycling outside its scope, and no interface of the proposal carries the data of a recycling facility. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-030"
@@ -4351,6 +4495,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4375,7 +4525,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the yearly report on recycling outside its scope, and no interface of the proposal carries the data of a recycling facility. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-BACKEND-051"
@@ -4408,6 +4558,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4433,7 +4589,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the proposal CX-0160-4 puts the yearly report on recycling outside its scope, and no interface of the proposal carries the data of a recycling facility. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-CXCLIENT-031"
@@ -4466,6 +4622,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4488,7 +4650,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the reference server holds passports and no traced part, and the data provider supplies the SerialPart payload and the SingleLevelBomAsBuilt payload of a passport. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-TWINS-044"
@@ -4521,6 +4683,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4601,7 +4769,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the reference server holds passports and no traced part, and the data provider supplies the SerialPart payload and the SingleLevelBomAsBuilt payload of a passport. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-TWINS-046"
@@ -4634,6 +4802,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4656,7 +4830,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the reference server holds passports and no traced part, and the data provider supplies the SerialPart payload and the SingleLevelBomAsBuilt payload of a passport. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-TWINS-047"
@@ -4689,6 +4863,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },
@@ -4956,7 +5136,7 @@
    "implementation": {
     "state": "missing",
     "where": [],
-    "note": "The reference server of this repository is not built yet."
+    "note": "Not built in the reference server: the requirement rests only on the draft implementing act under Article 77(9) of Regulation (EU) 2023/1542, whose final text may change the exceptions, and waits for the adoption of the act. Owner's decision of 2026-11-16."
    },
    "verification": [
     "VM-SWE-ACCESS-038"
@@ -4983,6 +5163,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "implementation note set: the reference server does not build the requirement (note before: \"The reference server of this repository is not built yet.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept all five\" (requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The five decisions on the specification of the reference server\", point 4, scope)",
+     "approver": "Francesco"
     }
    ]
   },

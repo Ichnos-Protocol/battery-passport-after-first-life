@@ -131,6 +131,36 @@ operations in decision D5 of Annex C, and the normative references of section 6.
 references keeps its exception for the conduct address of the Eclipse Foundation. The words also start stage 5, the
 specification of the standalone reference server.
 
+## The five decisions on the specification of the reference server
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you accept my five
+recommendations for the specification?" (version 1 of the specification of the reference server):
+
+> Accept all five
+
+The words accept five recommendations:
+
+1. Authentication (open decision OD-1): option A. A request from a partner carries a shared key of the connector's data
+   plane and the consumer's Business Partner Number in a header that the data plane sets, and an operator's request
+   carries a token signed with a key of the deployment.
+2. Database content (open decision OD-2): option B, 17 tables, which builds use case UC-5b (the original issuer
+   purchases degradation data from second-life operators), as decision Q-1011 (whether the reference implementation
+   builds use case UC-5) states.
+3. Conformance target (open decision OD-3): option A, one test code against an in-process binding and a connector
+   binding.
+4. Scope: the reference server does not build the requirements on recovered materials and recycling efficiency, the
+   access rules that rest only on the draft implementing act under Article 77(9), the yearly reports of the first
+   recycler, the digital twins and bills of material of traced parts, the pull of passport inputs from a partner, and
+   the forwarding rule of the connector's data plane. The reference server builds the sharing of individual battery
+   information with the original issuer (use case UC-5b).
+5. Waste successor: the reference server follows the proposal and records the successor that the notification names,
+   and the software requirement on the successor with the role producer is reworded, with its old and new statement
+   shown to Francesco before the change.
+
+The words also accept that five registry corrections are brought with their old and new text, that values without a
+stored text stay configuration values marked as not verified, and that the two shared Catena-X models needed for the
+validation of the proposed models are copied into the source texts of the public repository.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
