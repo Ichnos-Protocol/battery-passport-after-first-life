@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "BatteryBecameWaste.schema.json",
+  "title": "BatteryBecameWaste",
+  "description": "The content of the operation BatteryBecameWaste: the waste receiver tells the data provider of a passport and the successor that the battery became waste.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "successorBpnl",
+    "successorRole",
+    "date"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the passport of the waste battery."
+    },
+    "successorBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the successor that takes over the responsibility for the passport."
+    },
+    "successorRole": {
+      "type": "string",
+      "enum": [
+        "producer",
+        "producerResponsibilityOrganisation",
+        "wasteManagementOperator"
+      ],
+      "description": "The role of the successor."
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
+      "description": "The date and time at which the battery became waste."
+    }
+  }
+}

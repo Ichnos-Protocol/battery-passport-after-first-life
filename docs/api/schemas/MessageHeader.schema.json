@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MessageHeader.schema.json",
+  "title": "MessageHeader",
+  "description": "The header of a lifecycle notification, with the properties of the Catena-X message header in version 3.0.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "messageId",
+    "context",
+    "sentDateTime",
+    "senderBpn",
+    "receiverBpn",
+    "version"
+  ],
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of the message, unique per message."
+    },
+    "context": {
+      "type": "string",
+      "enum": [
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1"
+      ],
+      "description": "The context of the operation, as Table 4.3 of the proposal CX-0160-4 states the context."
+    },
+    "sentDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
+      "description": "The date and time at which the sender sent the message, with a time zone."
+    },
+    "senderBpn": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the legal entity that sends the message."
+    },
+    "receiverBpn": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the legal entity that receives the message."
+    },
+    "version": {
+      "const": "3.0.0",
+      "description": "The version of the message header."
+    },
+    "expectedResponseBy": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
+      "description": "The date and time by which the sender expects a response."
+    },
+    "relatedMessageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of a message to which this message relates."
+    }
+  }
+}

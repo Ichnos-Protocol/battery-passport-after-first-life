@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LifecycleNotification.schema.json",
+  "title": "LifecycleNotification",
+  "description": "The envelope of a lifecycle notification: an object with exactly the two properties header and content. One definition per operation fixes the context of the header and the schema of the content.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/NewPassportIssued"
+    },
+    {
+      "$ref": "#/$defs/BatteryRepaired"
+    },
+    {
+      "$ref": "#/$defs/BatteryBecameWaste"
+    },
+    {
+      "$ref": "#/$defs/PassportEnded"
+    }
+  ],
+  "$defs": {
+    "NewPassportIssued": {
+      "title": "NewPassportIssuedMessage",
+      "description": "The message of the operation NewPassportIssued: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "description": "The header of the message, with the context of the operation NewPassportIssued.",
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1",
+                  "description": "The context of the operation NewPassportIssued."
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "description": "The content of the operation NewPassportIssued.",
+          "$ref": "NewPassportIssued.schema.json"
+        }
+      }
+    },
+    "BatteryRepaired": {
+      "title": "BatteryRepairedMessage",
+      "description": "The message of the operation BatteryRepaired: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "description": "The header of the message, with the context of the operation BatteryRepaired.",
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1",
+                  "description": "The context of the operation BatteryRepaired."
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "description": "The content of the operation BatteryRepaired.",
+          "$ref": "BatteryRepaired.schema.json"
+        }
+      }
+    },
+    "BatteryBecameWaste": {
+      "title": "BatteryBecameWasteMessage",
+      "description": "The message of the operation BatteryBecameWaste: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "description": "The header of the message, with the context of the operation BatteryBecameWaste.",
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1",
+                  "description": "The context of the operation BatteryBecameWaste."
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "description": "The content of the operation BatteryBecameWaste.",
+          "$ref": "BatteryBecameWaste.schema.json"
+        }
+      }
+    },
+    "PassportEnded": {
+      "title": "PassportEndedMessage",
+      "description": "The message of the operation PassportEnded: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "description": "The header of the message, with the context of the operation PassportEnded.",
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1",
+                  "description": "The context of the operation PassportEnded."
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "description": "The content of the operation PassportEnded.",
+          "$ref": "PassportEnded.schema.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NewPassportIssued.schema.json",
+  "title": "NewPassportIssued",
+  "description": "The content of the operation NewPassportIssued: the second-life operator tells the data provider of an original passport that a new passport was issued.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "catenaXId",
+    "operation",
+    "operationDate",
+    "predecessorPassportIdentifier"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the new passport."
+    },
+    "catenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the digital twin of the new passport."
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "preparationForReUse",
+        "preparationForRepurposing",
+        "repurposing",
+        "remanufacturing"
+      ],
+      "description": "The operation that issued the new passport."
+    },
+    "operationDate": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
+      "description": "The date and time at which the new passport was issued."
+    },
+    "predecessorPassportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the one original passport of the receiver that the notification concerns."
+    }
+  }
+}

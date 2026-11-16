@@ -18,6 +18,11 @@ All notable changes to this repository are documented in this file. The format f
 - The shared aspect models `io.catenax.shared.uuid` 2.1.0 and `io.catenax.shared.business_partner_number` 2.0.0 in `sources/Tractus-X/semantic-models/`, which the three proposed aspect models import.
 - The specification check `scripts/spec_gate_check.py`.
 - The annex check `scripts/check-annexes.mjs`, which compares every file that an annex of the implementation specification prints with the file of the repository.
+- Phase P1 (the contract) of the implementation specification: the OpenAPI specification `docs/api/openAPI.yaml` of the lifecycle notification API in OpenAPI 3.1.0 with the four POST operations NewPassportIssued, BatteryRepaired, BatteryBecameWaste and PassportEnded, and the eight JSON schemas of `docs/api/schemas/` for the message header, the envelope, the content of each operation, the body of the response 200 and the error body.
+- The ruleset `.spectral.yaml` of the OpenAPI lint and the workflow `.github/workflows/spectral.yml`, which lints the OpenAPI file with Spectral on a change of `docs/api/` or of `.spectral.yaml`.
+- The workflow `.github/workflows/checks.yml`, which runs the registry check, the source register check, the license header check, the private reference check, the annex check and the specification check on every pull request and on every push to the branch `main`.
+- The package file `server/package.json` and the lock file `server/package-lock.json` of the reference server, and the test of the contract `server/test/contractSchemas.test.mjs`.
+- The file `.gitattributes`, which stores every text file with LF line endings.
 
 ### Changed
 

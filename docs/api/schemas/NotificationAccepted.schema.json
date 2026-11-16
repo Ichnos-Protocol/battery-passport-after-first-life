@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NotificationAccepted.schema.json",
+  "title": "NotificationAccepted",
+  "description": "The body of the answer 200 of a notification endpoint.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "messageId",
+    "outcome"
+  ],
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of the received message, in lower case with the prefix urn:uuid:."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "applied",
+        "recorded",
+        "duplicate"
+      ],
+      "description": "The outcome: the receiver applied the step, recorded the message without a change of a passport, or had stored the same message before."
+    }
+  }
+}
