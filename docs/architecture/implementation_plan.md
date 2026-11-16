@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
+| Status | Approved by the owner on 2026-11-16 ("Approve, start", `requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md`, section "The approval of the specification of the reference server"); phases P1 to P3 are in execution; phases P4 to P8 follow after phase P3 is verified |
 | Version | 7 |
 | Changes from version 1 | Version 2 recorded the five decisions of the owner of 2026-11-16 (§12.1), moved the sharing of individual battery information with the original issuer into scope, made the audit trail a table and stored the two shared models in `sources/` |
 | Changes from version 2 | Version 3 closes the 64 findings of the independent review of version 2 (§18). The substrate is the registry after the ten registry texts that the owner approved on 2026-11-16. The database section states every table, column, constraint, index, trigger, policy and grant of the three migration files (§9.4). The server connects as a role without ownership. The data provider records the end of a passport from every status. The receiver resolution, the repair certificate check and the retry of a failed transport are built. Every decision has a title. The line limit of the earlier versions no longer applies |

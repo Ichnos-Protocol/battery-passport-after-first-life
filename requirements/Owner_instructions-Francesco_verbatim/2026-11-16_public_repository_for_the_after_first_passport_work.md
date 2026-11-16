@@ -232,6 +232,20 @@ installation guide that the reference server needs a database of its own:
 The words accept the revocation of the right to create temporary tables from the group PUBLIC of the database, and
 decide that the reference server runs on a database of its own, which the installation guide states.
 
+## The approval of the specification of the reference server
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you approve version 7, or do
+you want a sixth review of the changed database rules first?" (version 7 of the specification of the reference server,
+after five independent reviews):
+
+> Approve, start
+
+The words approve version 7 of the specification of the reference server and start its execution: the continuous
+integration workflows and phases P1, P2 and P3. The approval covers the specification as version 7 states it, which
+includes the permanent waste successor of its decision D65 and the performance values that do not change on a stored
+passport. The proposed upper length of a passport identifier in the public schemas is not part of version 7 and stays a
+question for the owner.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
