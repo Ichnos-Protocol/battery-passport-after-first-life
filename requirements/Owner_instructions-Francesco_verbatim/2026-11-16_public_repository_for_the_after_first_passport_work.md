@@ -221,6 +221,17 @@ The words accept five recommendations:
 5. Node.js 24 and Java 21 run in containers from public images, with no installation on the machine, and the model
    validation tool is downloaded from the releases of its Eclipse project.
 
+## A database of its own for the reference server
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the recommendation to accept that the
+migration takes the right to create temporary tables away from every role of the database, and to state in the
+installation guide that the reference server needs a database of its own:
+
+> accept, the reference server needs its own database
+
+The words accept the revocation of the right to create temporary tables from the group PUBLIC of the database, and
+decide that the reference server runs on a database of its own, which the installation guide states.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
