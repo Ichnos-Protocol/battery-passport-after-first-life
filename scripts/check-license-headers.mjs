@@ -38,7 +38,7 @@ const EXEMPT = new Set([
 // Third-party texts keep their own notices.
 const EXEMPT_PREFIXES = ["sources/"];
 const CODE = /\.(mjs|js|cjs|sql|sh|py)$/;
-const DATA = /.(ya?ml|ttl)$/;
+const DATA = /\.(ya?ml|ttl)$/;
 
 function lacksNotice(path, text) {
   if (path.endsWith(".md")) {
