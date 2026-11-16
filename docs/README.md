@@ -4,14 +4,16 @@ The table states what each path holds on 2026-11-16.
 
 | Path | Content | State |
 |---|---|---|
-| `proposal/` | The text of the proposal CX-0160-4 (Battery Passport after the First Passport) | Not yet carried over |
+| `proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` | The text of the proposal CX-0160-4 (Battery Passport after the First Passport) | Draft 0.6 of 2026-11-16 |
 | `api/openAPI.yaml` | The OpenAPI specification of the lifecycle notification interface | Not yet written |
 | `api/schemas/` | The JSON schemas of the notification messages | Not yet written |
 | `architecture/` | The architecture documentation in the arc42 structure | Not yet written |
 | `admin/` | The administration guide | Not yet written |
 | `adoption-view.md`, `development-view.md`, `operations-view.md` | The three views of a Tractus-X KIT | Not yet written |
-| `methodology.md` | The derivation of the interfaces from the regulation and the standards | Not yet written |
-| `proposals.md` | The items that no standard covers | Not yet written |
+| `methodology.md` | The derivation of the interfaces from the regulation and the standards: the method, the literature, the use cases UC-1 to UC-5b and the Tractus-X conventions applied | Written |
+| `citation-catalogue.md` | The 289 quotes of the regulation, the standards and the models that the proposal and the methodology cite, each with its locator | Written |
+| `proposals.md` | The items that no standard covers: the three proposed aspect models, the four lifecycle notifications, the notification asset and its policy, the open points of Annex B and the points for discussion of Annex D of the proposal | Written |
+| `lessons-from-a-first-implementation.md` | The 14 classes of defects of a first implementation of the battery passport lifecycle, each as a lesson for an implementer of the proposal | Written |
 
 ## NOTICE
 

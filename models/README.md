@@ -1,6 +1,6 @@
 # Proposed aspect models
 
-This folder holds the two aspect models that the proposal CX-0160-4 proposes, in the folder layout of the Tractus-X semantic model repository. The models are not written yet.
+This folder holds the three aspect models that the proposal CX-0160-4 proposes, in the folder layout of the Tractus-X semantic model repository. The models are not written yet.
 
 ## NOTICE
 
