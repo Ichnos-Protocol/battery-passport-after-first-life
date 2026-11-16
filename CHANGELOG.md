@@ -31,7 +31,8 @@ All notable changes to this repository are documented in this file. The format f
 - The database access of `server/src/db/`: the migration runner `migrate.mjs` with the command `npm run migrate`, the role creation `createAppRole.mjs` with the command `npm run create-role`, the pool factory `pool.mjs`, the transaction helper `transaction.mjs` and the health check `health.mjs`.
 - The database rule tests `server/test/databaseRules.integration.test.mjs` with the test database module `server/test/support/database.mjs`: nine groups for the catalogue, the constraints, the triggers, the setting `app.today`, the policies, the privileges, the concurrent transactions, the type parsers and the isolation levels.
 - The licence check of the locked packages `scripts/check-dependency-licenses.mjs` with its test `server/test/dependencyLicenses.test.mjs`.
-- The workflow `.github/workflows/tests.yml`, which runs the tests of the server with a PostgreSQL 17 service and the licence check on every pull request and on every push to the branch `main`.
+- The workflow `.github/workflows/tests.yml`, which runs the tests of the server with a PostgreSQL 17 database and the licence check on every pull request and on every push to the branch `main`.
+- The CodeQL workflow `.github/workflows/codeql.yml`, the TruffleHog workflow `.github/workflows/trufflehog.yml` and the Dependabot file `.github/dependabot.yml`. The implementation specification assigns the three files to phase P8, and the three files are delivered ahead of phase P8 by the plan of the owner of 2026-11-16 for the continuous integration.
 
 ### Changed
 
@@ -43,6 +44,8 @@ All notable changes to this repository are documented in this file. The format f
 - The workflow `.github/workflows/checks.yml` runs the annex check with the argument `--require P3`.
 - The test of the contract `server/test/contractSchemas.test.mjs` uses the invented Business Partner Numbers `BPNL00000000TCK1`, `BPNL00000000TCK2` and `BPNL00000000TCK4` of the test data of the implementation specification.
 - The list of proposals `docs/proposals.md` names the files of the three models, the validation command and the import of version 2.1.0 of the shared model `io.catenax.shared.uuid`.
+- The role creation `server/src/db/createAppRole.mjs` removes the stored settings of the role `refserver_app` for every database and for each single database, as version 8 of the implementation specification states, and the database rule tests gain the cases of the stored settings.
+- The workflow `.github/workflows/tests.yml` runs in one job: a step generates and masks the two passwords, and a step starts the database, so that no generated password reaches a log.
 
 ## NOTICE
 

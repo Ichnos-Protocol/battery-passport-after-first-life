@@ -18,7 +18,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
 
-# Runs the tests of the reference server with a PostgreSQL 17 service on every pull request and on
+# Runs the tests of the reference server with a PostgreSQL 17 database on every pull request and on
 # every push to the branch main, and checks the licences of the locked packages.
 # Software requirements: SwR-RDB-007 (Dataset writes only by the responsible or an authorised operator)
 # and SwR-DATASET-208 (Database trigger refuses a change of a passport's manufacturer).
@@ -34,42 +34,9 @@ permissions:
   contents: read
 
 jobs:
-  # Generates the two passwords of the run. No file of the repository holds a password.
-  passwords:
-    name: The generated passwords of the test database
-    runs-on: ubuntu-latest
-    outputs:
-      superuser: ${{ steps.generate.outputs.superuser }}
-      app-role: ${{ steps.generate.outputs.app-role }}
-    steps:
-      - name: Generate the two passwords
-        id: generate
-        run: |
-          echo "superuser=$(openssl rand -hex 24)" >> "$GITHUB_OUTPUT"
-          echo "app-role=$(openssl rand -hex 24)" >> "$GITHUB_OUTPUT"
-
   server:
     name: The tests of the reference server
-    needs: passwords
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_PASSWORD: ${{ needs.passwords.outputs.superuser }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 20
-    env:
-      TEST_DATABASE_URL: postgres://postgres:${{ needs.passwords.outputs.superuser }}@localhost:5432/postgres
-      TEST_APP_ROLE_PASSWORD: ${{ needs.passwords.outputs.app-role }}
-    defaults:
-      run:
-        working-directory: server
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -77,9 +44,39 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+      # No file of the repository holds a password. Each value is masked before every other use of the value.
+      - name: Generate the two passwords
+        shell: bash
+        run: |
+          postgres_password="$(openssl rand -hex 24)"
+          echo "::add-mask::${postgres_password}"
+          app_role_password="$(openssl rand -hex 24)"
+          echo "::add-mask::${app_role_password}"
+          echo "POSTGRES_PASSWORD=${postgres_password}" >> "$GITHUB_ENV"
+          echo "TEST_APP_ROLE_PASSWORD=${app_role_password}" >> "$GITHUB_ENV"
+      # The option --env POSTGRES_PASSWORD without a value takes the value from the environment of the step,
+      # so the command line holds no password.
+      - name: Start the test database
+        shell: bash
+        run: |
+          docker run --detach --name test-database --env POSTGRES_PASSWORD --publish 127.0.0.1:5432:5432 postgres:17
+          for attempt in $(seq 1 60); do
+            if docker exec test-database pg_isready -U postgres; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "The test database is not ready after 60 attempts."
+          exit 1
+      - name: Set the connection string of the test database
+        shell: bash
+        run: echo "TEST_DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@localhost:5432/postgres" >> "$GITHUB_ENV"
       - name: Install the packages of the lock file
+        working-directory: server
         run: npm ci
       - name: Check the licences of the locked packages
+        working-directory: server
         run: node ../scripts/check-dependency-licenses.mjs
       - name: Run the tests of the server
+        working-directory: server
         run: npm test

@@ -95,9 +95,11 @@ The summary of the tests holds the line `# fail 0`, and the licence check prints
 A deployment of the reference server runs on a PostgreSQL 17 database of its own. Two commands of the folder
 `server/` prepare the database, and both read their variables from the environment:
 
-1. `npm run create-role` creates the login role `refserver_app` and sets its password. The command reads
+1. `npm run create-role` creates the login role `refserver_app`, removes every stored setting of the role and sets
+   its password. The command reads
    `DATABASE_MIGRATION_URL`, the connection string of the role that owns the schema, and `APP_ROLE_PASSWORD`. An
-   administrator runs the command once per database cluster, before the first migration.
+   administrator runs the command once per database cluster, before the first migration, and again when the
+   migration reports a stored setting of the role.
 2. `npm run migrate` applies the migration files of `server/src/db/migrations/` to the schema of the variable
    `DATABASE_SCHEMA`. The command reads `DATABASE_MIGRATION_URL` and `DATABASE_SCHEMA`. A second run applies no file.
 

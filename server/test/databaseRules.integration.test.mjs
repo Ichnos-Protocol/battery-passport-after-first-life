@@ -33,6 +33,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { after, before, test } from "node:test";
 
+import { createAppRole } from "../src/db/createAppRole.mjs";
 import { migrate } from "../src/db/migrate.mjs";
 import { createPool } from "../src/db/pool.mjs";
 import { withTransaction } from "../src/db/transaction.mjs";
@@ -1412,7 +1413,18 @@ test("(c) triggers", async (t) => {
     });
 
     await t19.test("SwR-RDB-007: trg_passport_lineage refuses at the commit a passport inserted with the status waste, a new passport without a link, and a new passport without one of its five values", async () => {
-      await refusedAtCommit(admin, (client) => insertRow(client, "passports", passportRow(wasteColumns())), REFUSAL.insertedWaste, "a passport inserted with the status waste");
+      await refusedAtCommit(
+        admin,
+        async (client) => {
+          const inserted = await insertRow(client, "passports", passportRow(wasteColumns()));
+          await insertRow(client, "passport_responsibility_intervals", intervalRow(inserted.id));
+          await client.query("UPDATE passport_responsibility_intervals SET valid_to = $2 WHERE passport_id = $1 AND valid_to IS NULL", [inserted.id, WASTE_DATE]);
+          await insertRow(client, "passport_responsibility_intervals", intervalRow(inserted.id, { responsible_bpnl: SUCCESSOR, role: "wasteManagementOperator", valid_from: WASTE_DATE }));
+        },
+        REFUSAL.insertedWaste,
+        "a passport inserted with the status waste and with its two intervals",
+      );
+      await refusedAtCommit(admin, (client) => insertRow(client, "passports", passportRow(wasteColumns())), REFUSAL.insertedWaste, "a passport inserted with the status waste and without an interval");
       await refusedAtCommit(
         admin,
         async (client) => {
@@ -1426,9 +1438,32 @@ test("(c) triggers", async (t) => {
       for (const column of ["date_into_service", "rated_capacity_ah", "capacity_fade_percent", "power_fade_percent", "expected_lifetime_years"]) {
         // The closing update of a new passport without one of its five values is refused in its statement,
         // and the commit of the passport with its link and without the closing update is refused as well.
-        await refusedStatement(admin, (client) => writeNewPassport(client, { [column]: null }), REFUSAL.keepsValues, `the closing update of a new passport without ${column}`);
-        await refusedAtCommit(admin, (client) => writeNewPassport(client, { [column]: null }, { close: false }), REFUSAL.newPassportNeeds, `a new passport without ${column}`);
+        await rolledBack(admin, async (client) => {
+          const created = await writeNewPassport(client, { [column]: null }, { close: false });
+          await assertRefused(() => client.query("UPDATE passports SET lineage_open = false WHERE id = $1", [created.id]), REFUSAL.keepsValues, `the closing update of a new passport without ${column}`);
+        });
+        await refusedAtCommit(admin, (client) => writeNewPassport(client, { [column]: null }, { close: false }), REFUSAL.newPassportNeeds, `a new passport without ${column} and without the closing update`);
       }
+    });
+
+    await t19.test("SwR-RDB-007: no statement reaches the sentence on a passport inserted with the status original: the sentence is a part of the source of check_passport_lineage, and a link for such a passport of the same transaction fails with the sentence of trg_passport_lineage_links_insert", async () => {
+      const source = await admin.query(
+        "SELECT p.prosrc FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1 AND p.proname = 'check_passport_lineage'",
+        [db.schema],
+      );
+      assert.equal(source.rowCount, 1);
+      assert.ok(source.rows[0].prosrc.includes("ERR-DB-LINEAGE: A passport that is inserted with the status original has no lineage link."));
+      await refusedStatement(
+        admin,
+        async (client) => {
+          const original = await insertRow(client, "passports", passportRow());
+          assert.equal(original.lifecycle_status, "original");
+          assert.equal(original.lineage_open, false);
+          await insertRow(client, "passport_lineage_links", linkRow(original.id));
+        },
+        REFUSAL.linkWhileOpen,
+        "a link for a passport inserted with the status original in the same transaction",
+      );
     });
 
     await t19.test("SwR-RDB-007: a new passport whose two links hold two operation dates fails at the commit, and a new passport whose two links hold one operation date commits", async () => {
@@ -2397,26 +2432,141 @@ test("(i) isolation levels", async (t) => {
     }
   }
 
-  await t.test("SwR-RDB-007: a client of withTransaction on a connection of a role with the stored setting default_transaction_isolation = serializable reports the level read committed", async () => {
-    await admin.query("ALTER ROLE refserver_app SET default_transaction_isolation = 'serializable'");
-    let pool;
+  // The stored settings of the role refserver_app. The catalogue pg_db_role_setting holds one row per
+  // database of a setting, and one row with the database 0 for the settings of every database.
+  const databaseName = (await admin.query("SELECT current_database() AS name")).rows[0].name;
+  const inDatabase = `IN DATABASE ${admin.escapeIdentifier(databaseName)}`;
+  const appPassword = decodeURIComponent(new URL(appConnectionString()).password);
+  const storedSettings = async () =>
+    (
+      await admin.query(
+        `SELECT COALESCE(d.datname, '') AS database, s.setconfig FROM pg_db_role_setting s JOIN pg_roles r ON r.oid = s.setrole LEFT JOIN pg_database d ON d.oid = s.setdatabase
+          WHERE r.rolname = 'refserver_app' ORDER BY 1`,
+      )
+    ).rows;
+  // Runs the case and then createAppRole, so that no stored setting outlasts the case.
+  async function withStoredSettings(work) {
     try {
-      const stored = await admin.query("SELECT s.setconfig FROM pg_db_role_setting s JOIN pg_roles r ON r.oid = s.setrole WHERE r.rolname = 'refserver_app'");
-      assert.deepEqual(stored.rows, [{ setconfig: ["default_transaction_isolation=serializable"] }]);
-      pool = createPool({ connectionString: appConnectionString(), schema: db.schema, size: 1 });
-      const level = await withTransaction(pool, asCompany(COMPANY_A), async (client) => {
-        const shown = await client.query("SHOW transaction_isolation");
-        // The transaction writes a record, which every trigger function refuses at another level.
-        await writeFirstPassport(client);
-        return shown.rows[0].transaction_isolation;
-      });
-      assert.equal(level, "read committed");
-      assert.equal((await pool.query("SHOW default_transaction_isolation")).rows[0].default_transaction_isolation, "read committed");
+      await work();
     } finally {
-      if (pool) await pool.end();
-      await admin.query("ALTER ROLE refserver_app RESET default_transaction_isolation");
+      await createAppRole(admin, { password: appPassword });
     }
-    const left = await admin.query("SELECT 1 FROM pg_db_role_setting s JOIN pg_roles r ON r.oid = s.setrole WHERE r.rolname = 'refserver_app'");
-    assert.equal(left.rowCount, 0);
+    assert.deepEqual(await storedSettings(), [], "a stored setting of the role outlasts the case");
+  }
+
+  for (const [form, store, remove, row] of [
+    ["ALTER ROLE refserver_app SET", "ALTER ROLE refserver_app SET default_transaction_isolation = 'serializable'", "ALTER ROLE refserver_app RESET default_transaction_isolation", ""],
+    [
+      "ALTER ROLE refserver_app IN DATABASE <the test database> SET",
+      `ALTER ROLE refserver_app ${inDatabase} SET default_transaction_isolation = 'serializable'`,
+      `ALTER ROLE refserver_app ${inDatabase} RESET default_transaction_isolation`,
+      databaseName,
+    ],
+  ]) {
+    await t.test(`SwR-RDB-007: a client of withTransaction on a connection of a role with the stored setting default_transaction_isolation = serializable, stored with ${form}, reports the level read committed`, async () => {
+      await withStoredSettings(async () => {
+        await admin.query(store);
+        let pool;
+        try {
+          assert.deepEqual(await storedSettings(), [{ database: row, setconfig: ["default_transaction_isolation=serializable"] }]);
+          pool = createPool({ connectionString: appConnectionString(), schema: db.schema, size: 1 });
+          const level = await withTransaction(pool, asCompany(COMPANY_A), async (client) => {
+            const shown = await client.query("SHOW transaction_isolation");
+            // The transaction writes a record, which every trigger function refuses at another level.
+            await writeFirstPassport(client);
+            return shown.rows[0].transaction_isolation;
+          });
+          assert.equal(level, "read committed");
+          assert.equal((await pool.query("SHOW default_transaction_isolation")).rows[0].default_transaction_isolation, "read committed");
+        } finally {
+          if (pool) await pool.end();
+          // The superuser removes the setting around the case.
+          await admin.query(remove);
+        }
+        assert.deepEqual(await storedSettings(), []);
+      });
+    });
+  }
+
+  await t.test("SwR-RDB-007: after the superuser stores statement_timeout = '60s' for every database and default_transaction_isolation = 'repeatable read' for the test database, createAppRole leaves no row of the role in pg_db_role_setting", async () => {
+    await withStoredSettings(async () => {
+      await admin.query("ALTER ROLE refserver_app SET statement_timeout = '60s'");
+      await admin.query(`ALTER ROLE refserver_app ${inDatabase} SET default_transaction_isolation = 'repeatable read'`);
+      assert.deepEqual(await storedSettings(), [
+        { database: "", setconfig: ["statement_timeout=60s"] },
+        { database: databaseName, setconfig: ["default_transaction_isolation=repeatable read"] },
+      ]);
+      await createAppRole(admin, { password: appPassword });
+      assert.deepEqual(await storedSettings(), []);
+      // The password of the role is the password of the pool after the call.
+      assert.equal((await db.appPool.query("SELECT current_user AS role")).rows[0].role, "refserver_app");
+    });
+  });
+
+  await t.test("SwR-RDB-007: after the superuser stores only the setting for the test database, ALTER ROLE refserver_app RESET ALL alone leaves one row, the behaviour of PostgreSQL 17 that createAppRole answers", async () => {
+    await withStoredSettings(async () => {
+      await admin.query(`ALTER ROLE refserver_app ${inDatabase} SET default_transaction_isolation = 'repeatable read'`);
+      await admin.query("ALTER ROLE refserver_app RESET ALL");
+      assert.deepEqual(await storedSettings(), [{ database: databaseName, setconfig: ["default_transaction_isolation=repeatable read"] }]);
+    });
+  });
+
+  await t.test("SwR-RDB-007: while the setting for the test database exists, migrate for a new schema rejects with ERR-DB-ROLE-PRIVILEGE and names npm run create-role, and after createAppRole the same call of migrate applies the third file and returns its name", async () => {
+    const schema = `${db.schema}_m`;
+    const migrator = await connectAdminClient();
+    try {
+      await withStoredSettings(async () => {
+        await admin.query(`ALTER ROLE refserver_app ${inDatabase} SET default_transaction_isolation = 'repeatable read'`);
+        let rejection;
+        try {
+          await migrate(migrator, { schema });
+        } catch (error) {
+          rejection = error;
+        }
+        assert.ok(rejection, "migrate applied the three files in spite of the stored setting");
+        assert.ok(rejection.message.includes("ERR-DB-ROLE-PRIVILEGE"), rejection.message);
+        assert.ok(rejection.message.includes("npm run create-role"), rejection.message);
+        const names = async () => (await migrator.query("SELECT name FROM schema_migrations ORDER BY name")).rows.map((line) => line.name);
+        assert.deepEqual(await names(), ["001_schema.sql", "002_triggers.sql"]);
+        await createAppRole(admin, { password: appPassword });
+        assert.deepEqual(await migrate(migrator, { schema }), ["003_policies.sql"]);
+        assert.deepEqual(await names(), ["001_schema.sql", "002_triggers.sql", "003_policies.sql"]);
+        assert.deepEqual(await migrate(migrator, { schema }), []);
+      });
+    } finally {
+      await migrator.query(`DROP SCHEMA IF EXISTS ${migrator.escapeIdentifier(schema)} CASCADE`);
+      await migrator.end();
+    }
+  });
+
+  await t.test("SwR-RDB-007: createAppRole removes a setting that the superuser stores for another database of the cluster and writes one warning line that names the database to the standard error output", async () => {
+    const other = (await admin.query("SELECT datname FROM pg_database WHERE datname <> current_database() ORDER BY datname LIMIT 1")).rows[0].datname;
+    const originalWrite = process.stderr.write;
+    const written = [];
+    await withStoredSettings(async () => {
+      await admin.query(`ALTER ROLE refserver_app IN DATABASE ${admin.escapeIdentifier(other)} SET default_transaction_isolation = 'repeatable read'`);
+      assert.deepEqual(await storedSettings(), [{ database: other, setconfig: ["default_transaction_isolation=repeatable read"] }]);
+      process.stderr.write = (chunk) => {
+        written.push(String(chunk));
+        return true;
+      };
+      try {
+        await createAppRole(admin, { password: appPassword });
+      } finally {
+        process.stderr.write = originalWrite;
+      }
+      assert.deepEqual(written, [`createAppRole: removed the stored settings of refserver_app for the database ${other}\n`]);
+      assert.deepEqual(await storedSettings(), []);
+    });
+  });
+
+  await t.test("SwR-RDB-007: the role refserver_app stores a setting for the test database through appPool with success, and createAppRole removes that row as well", async () => {
+    await withStoredSettings(async () => {
+      const stored = await db.appPool.query(`ALTER ROLE refserver_app ${inDatabase} SET default_transaction_isolation = 'repeatable read'`);
+      assert.equal(stored.command, "ALTER");
+      assert.deepEqual(await storedSettings(), [{ database: databaseName, setconfig: ["default_transaction_isolation=repeatable read"] }]);
+      await createAppRole(admin, { password: appPassword });
+      assert.deepEqual(await storedSettings(), []);
+    });
   });
 });

@@ -14,7 +14,7 @@ The table states what the folder holds after phases P1 (the contract), P2 (the m
 | `test/modelExamples.test.mjs` | The test of the models: the three generated schemas and the three example payloads of `docs/api/aspects/`, and the stored schemas of `sources/IDTA/` |
 | `src/db/migrations/` | The three migration files: `001_schema.sql` (four domains and 17 tables), `002_triggers.sql` (16 functions and 37 triggers) and `003_policies.sql` (the privileges of the role `refserver_app` and 12 row-level security policies) |
 | `src/db/migrate.mjs`, `src/db/migrateCli.mjs` | The migration runner and the command `npm run migrate`, which reads `DATABASE_MIGRATION_URL` and `DATABASE_SCHEMA` |
-| `src/db/createAppRole.mjs`, `src/db/createAppRoleCli.mjs` | The creation of the login role `refserver_app` and the command `npm run create-role`, which reads `DATABASE_MIGRATION_URL` and `APP_ROLE_PASSWORD` |
+| `src/db/createAppRole.mjs`, `src/db/createAppRoleCli.mjs` | The creation of the login role `refserver_app`, which also removes every stored setting of the role, and the command `npm run create-role`, which reads `DATABASE_MIGRATION_URL` and `APP_ROLE_PASSWORD` |
 | `src/db/pool.mjs` | The factory of the connection pool: the search path of the schema, the time zone UTC, the isolation level READ COMMITTED and the type parsers |
 | `src/db/transaction.mjs` | The one transaction helper `withTransaction`, which sets the two transaction settings `app.acting_bpnl` and `app.today` |
 | `src/db/health.mjs` | The health check of the database connection |

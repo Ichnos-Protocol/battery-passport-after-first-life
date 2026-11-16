@@ -33,6 +33,8 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | `sources/` | The source texts that their licenses allow to redistribute | 97 files, listed in `sources/SOURCES.json` |
 | `scripts/` | The checks of the repository | The license header check, the source register check, the requirement check, the private reference check, the annex check, the specification check, the model validation script `validate-models.sh` and the licence check of the locked packages `check-dependency-licenses.mjs` |
 
+The folder `.github/` holds the continuous integration: the workflows of the repository checks, of the OpenAPI lint, of the model validation and of the tests of the server, and the CodeQL workflow, the TruffleHog workflow and the Dependabot file. The implementation specification assigns the last three files to phase P8, and the three files are delivered ahead of phase P8 by the plan of the owner of 2026-11-16.
+
 ## Installation and usage
 
 `INSTALL.md` describes the installation, the lint of the OpenAPI file, the validation of the models, the test database and the tests of the server. The checks of the repository need Node.js 24.
