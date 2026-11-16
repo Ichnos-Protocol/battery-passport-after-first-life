@@ -102,6 +102,18 @@ model holds one group), and BatteryPassportLifecycle as the carrier (option 1 of
 IDTA model, asks the Catena-X expert group for three additions (the access map and the two lifecycle models), and
 leaves the general question of mixed models to Annex B point 11 of the proposal."
 
+## The approval of the three rewordings and of stage 3
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you approve the three
+rewordings and stage 3, so stage 4 can start?":
+
+> Approve, start stage 4
+
+The words approve the rewordings of SwR-CXCLIENT-111 (end of a recycled battery's passport made known to the
+provider), SwR-CXCLIENT-114 (received passport inputs written only for the responsible operator) and SwR-DATASET-102
+(new dataset fields set at the issue of a new passport), approve stage 3 (the public requirements registry) and start
+stage 4 (the documents of the public repository).
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).

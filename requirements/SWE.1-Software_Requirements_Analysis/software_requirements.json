@@ -959,8 +959,16 @@
     {
      "date": "2026-11-16",
      "change": "statement reworded for the reference server (before: \"The battery passport dataset aggregation shall set the fields of a new dataset as the carry-over table states: the battery model of the original battery, the battery category recorded for the new use even when it differs, no batch, and a date of putting into service of its own on or after the date of the transition, leaving every field of the original dataset unchanged.\")",
-     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
-     "approver": ""
+     "reason": "rewording that removes a term of the battery passport application; Francesco, 2026-11-16: \"Approve, start stage 4\"",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The approval of the three rewordings and of stage 3",
+     "quote": "Approve, start stage 4"
     }
    ]
   },
@@ -2156,8 +2164,16 @@
     {
      "date": "2026-11-16",
      "change": "statement reworded for the reference server (before: \"When the recycling of a battery is recorded, the connector client shall make the end of that battery's passport known to the passport service provider in the form agreed with Francesco.\")",
-     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
-     "approver": ""
+     "reason": "rewording that removes a term of the battery passport application; Francesco, 2026-11-16: \"Approve, start stage 4\"",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The approval of the three rewordings and of stage 3",
+     "quote": "Approve, start stage 4"
     }
    ]
   },
@@ -2221,8 +2237,16 @@
     {
      "date": "2026-11-16",
      "change": "statement reworded for the reference server (before: \"The connector client shall write data received for a battery's passport dataset into the customer's store only within an exchange started by a subject acting for the economic operator responsible for that passport or for an operator to which it gave a written authorisation recorded in the application.\")",
-     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
-     "approver": ""
+     "reason": "rewording that removes a term of the battery passport application; Francesco, 2026-11-16: \"Approve, start stage 4\"",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The approval of the three rewordings and of stage 3",
+     "quote": "Approve, start stage 4"
     }
    ]
   },
