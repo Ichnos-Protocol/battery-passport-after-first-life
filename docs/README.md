@@ -7,7 +7,7 @@ The table states what each path holds on 2026-11-16.
 | `proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` | The text of the proposal CX-0160-4 (Battery Passport after the First Passport) | Draft 0.7 of 2026-11-16 |
 | `api/openAPI.yaml` | The OpenAPI specification of the lifecycle notification interface | Not yet written |
 | `api/schemas/` | The JSON schemas of the notification messages | Not yet written |
-| `architecture/implementation_plan.md` | The implementation specification of the standalone reference server: the scope, the requirements that the server implements and the requirements that the server does not implement, the files, the modules, the interfaces, the database, the phases, the decisions and the tests | Version 6 of 2026-11-16; draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
+| `architecture/implementation_plan.md` | The implementation specification of the standalone reference server: the scope, the requirements that the server implements and the requirements that the server does not implement, the files, the modules, the interfaces, the database, the phases, the decisions and the tests | Version 7 of 2026-11-16; draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
 | `architecture/` | The architecture documentation in the arc42 structure | Not yet written |
 | `admin/` | The administration guide | Not yet written |
 | `adoption-view.md`, `development-view.md`, `operations-view.md` | The three views of a Tractus-X KIT | Not yet written |
