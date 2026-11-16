@@ -246,6 +246,17 @@ includes the permanent waste successor of its decision D65 and the performance v
 passport. The proposed upper length of a passport identifier in the public schemas is not part of version 7 and stays a
 question for the owner.
 
+## The author address of the commits in the public repository
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Which author e-mail address do
+the 28 commits carry in the public repository?", asked before the first push:
+
+> Company address
+
+The words decide that every commit of the public repository carries the published address of Ichnos Protocol as its
+author address and its committer address. The commits made before the first push were rewritten to that address, and
+the commit identifiers that the specification names were replaced by the new identifiers.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
