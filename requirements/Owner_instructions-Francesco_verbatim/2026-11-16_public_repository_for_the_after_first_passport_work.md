@@ -179,6 +179,14 @@ interfaces. The words also accept two recommendations: the next draft of the pro
 UUID model, and the system requirement on the producer that takes over a waste battery's passport is reworded, with
 both statements shown to Francesco before the change.
 
+## The shortened title of the software requirement on direct re-use
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the report that the approved title of
+SwR-DATASET-195 has thirteen words, one more than the registry check allows, and now reads "Direct re-use recorded as a
+purchaser change, never as a lineage step":
+
+> ok, keep the shortened title
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
