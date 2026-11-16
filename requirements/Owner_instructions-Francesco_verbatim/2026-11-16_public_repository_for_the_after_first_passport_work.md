@@ -187,6 +187,18 @@ purchaser change, never as a lineage step":
 
 > ok, keep the shortened title
 
+## The work up to phase P3 and the push
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the statement that a less capable model can
+carry out the work after the approval of the reviewed specification and after phase P3 (the database with its triggers
+and its rule tests):
+
+> ok, continue until phase P3 is done, then push the repo to origin and I will take it further with less capable models and have you review it
+
+The words order the work up to the end of phase P3 of the specification of the reference server, then the push of the
+repository to its origin on GitHub. Francesco continues the later phases with other models, and the results come back
+for review.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
