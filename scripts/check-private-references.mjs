@@ -81,6 +81,18 @@ const EXCEPTIONS = [
     path: "CODE_OF_CONDUCT.md",
     allows: /^conduct@eclipse-foundation[.]org$/,
   },
+  // npm writes the two lock files. A base64 integrity value of a lock file can
+  // hold the letter M and one digit between two characters that are no word
+  // characters, which the pattern of the milestone names matches. No other
+  // expression of the pattern is excepted in a lock file.
+  {
+    path: "server/package-lock.json",
+    allows: /^M[1-8]$/,
+  },
+  {
+    path: "tck/package-lock.json",
+    allows: /^M[1-8]$/,
+  },
 ];
 
 function isExcepted(path, hit) {

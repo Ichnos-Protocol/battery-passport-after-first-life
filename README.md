@@ -24,7 +24,7 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | `docs/proposal/` | The text of the proposal CX-0160-4 | Draft 0.7 of 2026-11-16 |
 | `docs/api/` | The OpenAPI specification and the JSON schemas of the lifecycle notifications | Not yet written |
 | `docs/` | The methodology, the citation catalogue with 287 quotes, the list of the items that no standard covers, and the lessons from a first implementation | Written, listed in `docs/README.md` |
-| `docs/architecture/` | The implementation specification of the standalone reference server, `implementation_plan.md` | Version 4 of 2026-11-16; draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
+| `docs/architecture/` | The implementation specification of the standalone reference server, `implementation_plan.md` | Version 5 of 2026-11-16; draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
 | `docs/` | Architecture, administration guide, adoption view, development view, operations view | Not yet written |
 | `models/` | The three proposed aspect models (Semantic Aspect Meta Model, SAMM) | Not yet written |
 | `server/` | The reference server (Node.js 24, Express, PostgreSQL) | Not yet written |

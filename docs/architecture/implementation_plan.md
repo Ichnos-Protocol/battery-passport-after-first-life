@@ -3,14 +3,15 @@
 | | |
 |---|---|
 | Status | Draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
-| Version | 4 |
+| Version | 5 |
 | Changes from version 1 | Version 2 recorded the five decisions of the owner of 2026-11-16 (§12.1), moved the sharing of individual battery information with the original issuer into scope, made the audit trail a table and stored the two shared models in `sources/` |
 | Changes from version 2 | Version 3 closes the 64 findings of the independent review of version 2 (§18). The substrate is the registry after the ten registry texts that the owner approved on 2026-11-16. The database section states every table, column, constraint, index, trigger, policy and grant of the three migration files (§9.4). The server connects as a role without ownership. The data provider records the end of a passport from every status. The receiver resolution, the repair certificate check and the retry of a failed transport are built. Every decision has a title. The line limit of the earlier versions no longer applies |
 | Changes from version 3 | Version 4 closes the 36 findings of the second independent review (§18) and records the owner's four decisions and the owner's decision on the tools of 2026-11-16 (§12.1). The public schemas accept every form of an identifier that the stored shared model admits, and the server normalises. Every change of the successor's authorisation is written to the audit table. Every tool of phases P1 to P3 runs in a container, and every done-when command has one form. The database section gains the grant on the migration table, one clock in UTC, the row locks, the type parsers and one further trigger. §5.7 lists the 32 measures that name a role of another design. A tag marks every sentence that rests on a decision that waits for the owner |
+| Changes from version 4 | Version 5 closes the 19 findings of the third independent review, whose reviewer built phases P1 to P3 from version 4 (§18). Three annexes print every file of phases P1 to P3 that the implementer would otherwise compose, and the annexes are normative (§20, §21, §22). The author ran the three migration files on PostgreSQL 17, validated the three model files with the SAMM command line tool and compiled the schema files. The lineage rule of the database uses a column that the insertion sets and the executor clears. The database ties the waste date and the recycling date to the responsibility intervals and freezes the intervals of an ended passport. One schema file defines the envelope of a notification and fixes the context of each operation. The repository gains the file `.gitattributes` |
 | Date | 2026-11-16 |
 | Owner | the owner of this repository, the author of the proposal CX-0160-4 (Battery Passport after the First Passport) |
 | Implementer | an implementation agent, which executes this specification literally |
-| Substrate | this repository, branch `main`, at the commit e9f7ba1, which records the owner's four decisions before phases P1 to P3 |
+| Substrate | this repository, branch `main`, at the commit 4ccd705, which holds version 4 of this specification |
 | Proposal | draft 0.7 of 2026-11-16, `docs/proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` |
 | Verified | 2026-11-16, against the working tree of this repository and the registry of `requirements/` |
 
@@ -19,7 +20,8 @@
 - **Must and may.** The word "must" states what the implementer builds. The word "may" states a permission. A sentence without either word describes a fact of the repository or of the proposal.
 - **The order of the sources.** Where two sources differ, this specification follows, in this order: a MUST of draft 0.7 of the proposal `docs/proposal/CX-0160-4_Battery_passport_after_the_first_passport.md`; an answered decision of the registry or the owner's stored words; the statement of a requirement of the registry of `requirements/`. §5.7 names every requirement and every measure whose text differs from the design, with a proposed text for the owner. Where no source decides, this specification chooses the narrowest design that keeps the reference server correct, marks the decision with the words "chosen by this specification; the owner has not decided", and lists the decision in §19.1. The implementer does not stop for a difference that §5.7 lists, and builds the design of this specification. The implementer stops and reports a difference that §5.7 does not list.
 - **The `[live]` mark.** A claim marked `[live]` was read in the named file of this repository on 2026-11-16.
-- **The mark "not verified against a stored text".** A claim with this mark rests on no text that `sources/` stores. A value of the connector with this mark is a configuration value of §9.6, and phase P7 (§11.7) verifies the value before the connector binding runs. No value with this mark decides a file of phases P1 to P3, except the download address and the sub-commands of the SAMM command line tool of §11.2, for which §11.2 states the step of the implementer.
+- **The mark "not verified against a stored text".** A claim with this mark rests on no text that `sources/` stores and on no run. A value of the connector with this mark is a configuration value of §9.6, and phase P7 (§11.7) verifies the value before the connector binding runs. No value with this mark decides a file of phases P1 to P3. A fact that a run of 2026-11-16 verified is stated as observed, with the run.
+- **The annexes.** §20, §21 and §22 print in full the files of phases P1 to P3 that leave no choice to the implementer. An annex is normative: where a sentence of §9 or §10 and an annex differ, the annex decides, and the implementer reports the difference.
 - **The decisions of the owner.** §12.1 holds the decisions that the owner took on 2026-11-16, each with the owner's stored words.
 - **The tag for a waiting decision.** The words `[waits for the owner]` follow a decision that the owner has not taken, at every sentence that rests on the decision. The implementer builds the stated behaviour as written. A later decision of the owner arrives as a new version of this specification with its own migration file (from `004` on) or its own model version, and never as a change of a migration file or of a model version that a phase has delivered.
 - **A moved substrate.** When a path that this specification names as existing is absent, the implementer stops and reports the path. The implementer never creates a second file for the same concept.
@@ -81,7 +83,7 @@ The implementer builds, in this repository only, six results that a test checks:
 - `LICENSE`, `LICENSE_non-code`, `NOTICE.md`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` and `AUTHORS.md`.
 - `docs/proposal/CX-0160-4_Battery_passport_after_the_first_passport.md`, `docs/citation-catalogue.md` and `docs/lessons-from-a-first-implementation.md`.
 - `requirements/`, except the field `implementation` of the software requirements of §5.2 in phase P8 (§11.8).
-- `scripts/check-license-headers.mjs`, `scripts/check-sources.mjs`, `scripts/check-private-references.mjs`, `scripts/requirements-check.mjs`, `scripts/lib/requirementsRules.mjs` and `scripts/spec_gate_check.py`.
+- `scripts/check-license-headers.mjs`, `scripts/check-sources.mjs`, `scripts/check-private-references.mjs`, `scripts/requirements-check.mjs`, `scripts/lib/requirementsRules.mjs`, `scripts/check-annexes.mjs` and `scripts/spec_gate_check.py`.
 
 ## 4. Users and success measures
 
@@ -400,24 +402,25 @@ The second table lists the 32 measures of §17.2 that name the role `api_app`, e
 | `requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md` | the owner's decisions and orders of 2026-11-16 (§12.1) |
 | `sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json`, `sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.0/gen/TechnicalDataBattery-schema.json`, `sources/IDTA/io.admin-shell.idta.batterypass.product_condition/1.0.0/gen/ProductConditionBattery-schema.json`, `sources/IDTA/io.admin-shell.idta.dpp.dpp_metadata/1.0.0/gen/DppMetadata-schema.json` | the JSON schemas of the four stored models, which `server/src/submodels/submodelService.mjs` compiles (decision D28, Supplied payloads) |
 | `sources/Tractus-X/semantic-models/io.catenax.shared.recycling_strategy_certificate/3.0.0/metadata.json`, `sources/Tractus-X/semantic-models/io.catenax.shared.recycling_strategy_certificate/3.0.0/RecyclingStrategyCertificate.ttl` | a stored Tractus-X aspect model folder, as the pattern of the layout of `models/` and of the prefixes of a model file |
-| `scripts/check-license-headers.mjs`, `scripts/check-private-references.mjs`, `scripts/check-sources.mjs`, `scripts/requirements-check.mjs`, `scripts/spec_gate_check.py` | the checks that every phase runs |
+| `scripts/check-license-headers.mjs`, `scripts/check-private-references.mjs`, `scripts/check-sources.mjs`, `scripts/requirements-check.mjs`, `scripts/check-annexes.mjs`, `scripts/spec_gate_check.py` | the checks that every phase runs. The author of version 5 added `scripts/check-annexes.mjs` and added the exception for the two lock files to `scripts/check-private-references.mjs` (§11.1) |
 
 ## 7. Files to write or modify
 
-The action `new` marks a file that does not exist at the substrate. The action `modify` marks an existing file. Every code file (`.mjs`, `.sql`, `.sh`, `.py`) starts with the Apache-2.0 header that `scripts/check-sources.mjs` carries `[live]`, in the comment form of its language. Every YAML and Turtle file starts with the CC-BY-4.0 header in `#` comments, except the workflow files, `.github/dependabot.yml`, `.spectral.yaml` and `tck/docker-compose.yml`, which start with the Apache-2.0 header in `#` comments. `server/Dockerfile` and `tck/.env.example` start with the Apache-2.0 header in `#` comments, although `scripts/check-license-headers.mjs` checks neither file `[live]`. Every Markdown file ends with the NOTICE section, with its own source address. A JSON file carries no header.
+The action `new` marks a file that does not exist at the substrate. The action `modify` marks an existing file. Every code file (`.mjs`, `.sql`, `.sh`, `.py`) starts with the Apache-2.0 header that `scripts/check-sources.mjs` carries `[live]`, in the comment form of its language. Every YAML and Turtle file starts with the CC-BY-4.0 header in `#` comments, except the workflow files, `.github/dependabot.yml`, `.spectral.yaml` and `tck/docker-compose.yml`, which start with the Apache-2.0 header in `#` comments. The CC-BY-4.0 header is the first 14 lines of `docs/api/openAPI.yaml` in §20, and the Apache-2.0 header in `#` comments is the first 20 lines of `.spectral.yaml` in §20; both headers carry the two copyright lines of this repository. `server/Dockerfile` and `tck/.env.example` start with the Apache-2.0 header in `#` comments, although `scripts/check-license-headers.mjs` checks neither file `[live]`. Every Markdown file ends with the NOTICE section, with its own source address. A JSON file carries no header.
 
 | Path | Action | Phase | Note |
 |---|---|---|---|
-| `docs/api/openAPI.yaml` | new | P1 | OpenAPI 3.1.0; four POST operations; §10.1 |
-| `docs/api/schemas/MessageHeader.schema.json`, `docs/api/schemas/NewPassportIssued.schema.json`, `docs/api/schemas/BatteryRepaired.schema.json`, `docs/api/schemas/BatteryBecameWaste.schema.json`, `docs/api/schemas/PassportEnded.schema.json`, `docs/api/schemas/NotificationAccepted.schema.json`, `docs/api/schemas/ErrorResponse.schema.json` | new | P1 | the one definition of the message, of the 200 body and of the error body |
-| `.spectral.yaml` | new | P1 | the ruleset: `extends: ["spectral:oas"]` |
+| `docs/api/openAPI.yaml` | new | P1 | OpenAPI 3.1.0; four POST operations; §10.1, §20 |
+| `.gitattributes` | new | P1 | the line endings (decision D57, Line endings); §20 |
+| `docs/api/schemas/MessageHeader.schema.json`, `docs/api/schemas/LifecycleNotification.schema.json`, `docs/api/schemas/NewPassportIssued.schema.json`, `docs/api/schemas/BatteryRepaired.schema.json`, `docs/api/schemas/BatteryBecameWaste.schema.json`, `docs/api/schemas/PassportEnded.schema.json`, `docs/api/schemas/NotificationAccepted.schema.json`, `docs/api/schemas/ErrorResponse.schema.json` | new | P1 | the one definition of the header, of the envelope, of the four contents, of the 200 body and of the error body; §20 |
+| `.spectral.yaml` | new | P1 | the ruleset of the OpenAPI rules of Spectral; §20 |
 | `server/package.json`, `server/package-lock.json` | new | P1 | `"type": "module"`, `"engines": { "node": ">=24" }`, the scripts of §14.1 and the packages of §9.8 |
 | `server/test/contractSchemas.test.mjs` | new | P1 | §14.2 |
 | `.github/workflows/checks.yml`, `.github/workflows/spectral.yml` | new | P1 | §9.7 |
 | `models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl`, `models/io.catenax.battery.passport_lifecycle/1.0.0/metadata.json`, `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle-schema.json`, `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle.json`, `models/io.catenax.battery.passport_lifecycle/RELEASE_NOTES.md` | new | P2 | §10.6 |
 | `models/io.catenax.battery.passport_successors/1.0.0/BatteryPassportSuccessors.ttl`, `models/io.catenax.battery.passport_successors/1.0.0/metadata.json`, `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors-schema.json`, `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors.json`, `models/io.catenax.battery.passport_successors/RELEASE_NOTES.md` | new | P2 | §10.6 |
 | `models/io.catenax.battery.passport_access_map/1.0.0/BatteryPassportAccessMap.ttl`, `models/io.catenax.battery.passport_access_map/1.0.0/metadata.json`, `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap-schema.json`, `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap.json`, `models/io.catenax.battery.passport_access_map/RELEASE_NOTES.md` | new | P2 | §10.6 |
-| `scripts/validate-models.sh` | new | P2 | assembles the models root and runs the SAMM command line tool (§11.2) |
+| `scripts/validate-models.sh` | new | P2 | assembles the models root and runs the SAMM command line tool (§11.2); §21 |
 | `server/test/modelExamples.test.mjs` | new | P2 | §14.2 |
 | `.github/workflows/samm.yml` | new | P2 | §9.7 |
 | `models/README.md`, `docs/proposals.md` | modify | P2 | the three models and the validation command; the import of version 2.1.0 of the shared uuid model |
@@ -465,7 +468,7 @@ This specification deletes no file and moves no file. The folders `server/`, `tc
 
 | Concept | The one source | Readers |
 |---|---|---|
-| The message of each operation, the 200 body and the error body | the seven schema files of `docs/api/schemas/` (decision D21, One definition of the message) | `docs/api/openAPI.yaml` by `$ref`; `server/src/validation/schemaValidator.mjs`; the test kit |
+| The message of each operation, the 200 body and the error body | the eight schema files of `docs/api/schemas/` (decision D21, One definition of the message) | `docs/api/openAPI.yaml` by `$ref`; `server/src/validation/schemaValidator.mjs`; the test kit |
 | The four operations, their contexts and their receiving steps | `OPERATIONS` of `server/src/dataset/lifecycleCatalogue.mjs` | the routes, the executor, the plan builder |
 | The four lineage operations with their admission rule and the status of the new passport | `LINEAGE_OPERATIONS` of `server/src/dataset/lifecycleCatalogue.mjs` | the executor |
 | The five status values | `LIFECYCLE_STATUS_VALUES` of `server/src/dataset/lifecycleCatalogue.mjs`, equal to the CHECK constraint of `passports.lifecycle_status`; the test `server/test/lifecycleCatalogue.test.mjs` compares both with `sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/BatteryStatus_enum.ttl` | the executor, the schemas |
@@ -513,7 +516,7 @@ The rules of `issueNewPassport`, in the order of the checks:
 2. For each predecessor entry whose `passportIdentifier` names a passport of the own database, the executor reads the stored passport with a row lock. A stored passport that has ended, whose status differs from the declared `lifeCycleStage`, or whose purpose record with `is_original` true differs, after the normalisation of rule 3, from the declared `originalPurpose`, refuses `ERR-LC-OPERATION-NOT-ADMITTED` (decision D13, Predecessors of another data provider).
 3. The admission rule of D40 (The admission rule) holds for each predecessor (`ERR-LC-OPERATION-NOT-ADMITTED`). The executor compares two purposes after this normalisation of both texts: leading and trailing white space removed, each run of white space replaced by one space, and every letter converted to lower case.
 4. The identifier rule of D14 (The identifier rule) holds, and no two predecessor entries carry one `passportIdentifier` (`ERR-LC-IDENTIFIER-RULE`). The table holds no passport with the `passportIdentifier` of the request (`ERR-LC-IDENTIFIER-EXISTS`).
-5. The executor inserts the passport with `manufacturer_bpnl = ownBpnl` and the status of D40, one lineage link per predecessor, the responsibility interval with `valid_from` equal to `operationDate`, one purpose record with `is_original` true, the purpose `originalPurpose` of the first predecessor entry and `recorded_at` equal to `operationDate`, and one purpose record with `is_original` false, the purpose `purpose` of the request and `recorded_at` equal to `operationDate`. The declared `originalPurpose` of a predecessor entry is the purpose for which the battery of that predecessor was originally designed: the purpose record with `is_original` true of the predecessor passport, also when the predecessor is itself a new passport.
+5. The executor inserts the passport with `manufacturer_bpnl = ownBpnl` and the status of D40, one lineage link per predecessor, the responsibility interval with `valid_from` equal to `operationDate`, one purpose record with `is_original` true, the purpose `originalPurpose` of the first predecessor entry and `recorded_at` equal to `operationDate`, and one purpose record with `is_original` false, the purpose `purpose` of the request and `recorded_at` equal to `operationDate`. The database sets `lineage_open` to true at the insertion of a new passport; the executor inserts the lineage links and then closes the lineage with `UPDATE passports SET lineage_open = false` for the new passport, in the same transaction (decision D54, The lineage of a new passport is open only inside its own transaction). The declared `originalPurpose` of a predecessor entry is the purpose for which the battery of that predecessor was originally designed: the purpose record with `is_original` true of the predecessor passport, also when the predecessor is itself a new passport.
 6. For each predecessor whose `dataProviderBpnl` equals `ownBpnl`, the executor inserts a received record of the operation NewPassportIssued: `message` is the header and the content that `buildMessageHeader` and the plan build for a receiver of another company, with `senderBpn` and `receiverBpn` equal to `ownBpnl`; `message_id` is the `messageId` of that header; `sender_bpnl` is `ownBpnl`; `passport_identifier` is the passport identifier of the predecessor; `outcome` is `applied`; and `received_at` is the current time of `clock`. `addForwardLink` can then name the record (D12).
 
 The rules that every function of the table applies:
@@ -672,17 +675,17 @@ The base path of every endpoint is `/api`. The parameter `:passportId` is `passp
 
 ### 9.4 Database
 
-One deployment serves one company, and one database schema holds the passports of which that company is the data provider. The schema holds 17 tables (decision D42, A database of 17 tables) and the table `schema_migrations` of `migrate`. The three migration files hold exactly the objects of §9.4.1, §9.4.2 and §9.4.3, and the implementer writes no further table, column, index, trigger, policy or grant. No statement of the three files names a schema, because `migrate` sets the search path.
+One deployment serves one company, and one database schema holds the passports of which that company is the data provider. The schema holds 17 tables (decision D42, A database of 17 tables) and the table `schema_migrations` of `migrate`. The three migration files hold exactly the objects of §9.4.1, §9.4.2 and §9.4.3, and the implementer writes no further table, column, index, trigger, policy or grant. No statement of the three files names a schema, because `migrate` sets the search path. §22 prints the three files in full, and the implementer copies them (decision D58, Normative annexes).
 
 #### 9.4.1 The file `001_schema.sql`
 
-The file first creates two domains: `bpnl AS text CHECK (VALUE ~ '^BPNL[a-zA-Z0-9]{12}$')` and `bpns AS text CHECK (VALUE ~ '^BPNS[a-zA-Z0-9]{12}$')`. The file then creates the tables in the order of the table below. Every table has, as its last column, `created_at timestamptz NOT NULL DEFAULT now()`. Every constraint carries the name of the table below, because `server/src/routes/errorHandler.mjs` maps a violation by the constraint name (§9.5). The abbreviation PK means primary key and FK means foreign key. Every foreign key is `ON DELETE RESTRICT` and has no `ON UPDATE` action. A column that the table marks NOT NULL holds no default unless the table names one.
+The file first creates two domains with named constraints: `bpnl AS text CONSTRAINT bpnl_check CHECK (VALUE ~ '^BPNL[a-zA-Z0-9]{12}$')` and `bpns AS text CONSTRAINT bpns_check CHECK (VALUE ~ '^BPNS[a-zA-Z0-9]{12}$')`. The file then creates the tables in the order of the table below. Every table has, as its last column, `created_at timestamptz NOT NULL DEFAULT now()`. Every constraint carries the name of the table below, because `server/src/routes/errorHandler.mjs` maps a violation by the constraint name (§9.5). The abbreviation PK means primary key and FK means foreign key. Every foreign key is `ON DELETE RESTRICT` and has no `ON UPDATE` action. A column that the table marks NOT NULL holds no default unless the table names one.
 
 | Group | Table | Columns in the order of the definition, then the table constraints and the indexes |
 |---|---|---|
 | companies | `companies` | `bpnl bpnl` PK `companies_pkey`; `legal_name text NOT NULL` with CHECK `companies_legal_name_check` (`length(legal_name) BETWEEN 1 AND 300`); `legal_name_language text NOT NULL DEFAULT 'en'`; `address jsonb NOT NULL`; `operator_identifier text` |
 | passports | `battery_models` | `id uuid` PK `battery_models_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartType twin); `manufacturer_bpnl bpnl NOT NULL` FK `battery_models_manufacturer_fkey` to `companies(bpnl)`; `manufacturer_part_id text NOT NULL` with CHECK `battery_models_part_id_check` (`length(manufacturer_part_id) BETWEEN 1 AND 200`); `original_model_catena_x_id uuid`; `original_model_manufacturer_bpnl bpnl`; CHECK `battery_models_original_check` (`(original_model_catena_x_id IS NULL) = (original_model_manufacturer_bpnl IS NULL)`); UNIQUE `battery_models_manufacturer_part_key (manufacturer_bpnl, manufacturer_part_id)` |
-| passports | `passports` | `id uuid` PK `passports_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartInstance twin); `passport_identifier text NOT NULL DEFAULT ('urn:uuid:' \|\| gen_random_uuid()::text)` with UNIQUE `passports_passport_identifier_key`; `battery_identifier text NOT NULL` with CHECK `passports_battery_identifier_check` (`length(battery_identifier) BETWEEN 1 AND 200`); `manufacturer_bpnl bpnl NOT NULL` FK `passports_manufacturer_fkey` to `companies(bpnl)`; `battery_model_id uuid NOT NULL` FK `passports_battery_model_fkey` to `battery_models(id)`; `lifecycle_status text NOT NULL` with CHECK `passports_lifecycle_status_check` (`lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')`); `battery_category text NOT NULL` with CHECK `passports_battery_category_check` (`battery_category IN ('lmt','ev','industrial','stationary')`); `facility_bpns bpns NOT NULL`; `date_of_manufacture date NOT NULL`; `date_into_service date`; `rated_capacity_ah numeric(10,2)` with CHECK `passports_rated_capacity_check` (`rated_capacity_ah > 0`); `capacity_fade_percent numeric(5,2)` with CHECK `passports_capacity_fade_check` (`capacity_fade_percent BETWEEN 0 AND 100`); `power_fade_percent numeric(5,2)` with CHECK `passports_power_fade_check` (`power_fade_percent BETWEEN 0 AND 100`); `expected_lifetime_years numeric(4,1)` with CHECK `passports_expected_lifetime_check` (`expected_lifetime_years > 0`); `waste_successor_bpnl bpnl`; `waste_successor_role text` with CHECK `passports_waste_successor_role_check` (`waste_successor_role IN ('producer','producerResponsibilityOrganisation','wasteManagementOperator')`); `waste_date timestamptz`; `successor_authorisation_ref text` with CHECK `passports_authorisation_ref_check` (`length(successor_authorisation_ref) BETWEEN 1 AND 500`); `successor_authorisation_valid_from date`; `successor_authorisation_valid_to date`; `recycling_date timestamptz`; `recycler_bpnl bpnl`; `material_recycling_certificate_catena_x_id uuid`; CHECK `passports_waste_successor_check` (`(lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)`); CHECK `passports_authorisation_check` (`(successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')`); CHECK `passports_end_check` (`(recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)`); index `passports_battery_identifier_idx (battery_identifier)`; index `passports_battery_model_idx (battery_model_id)` |
+| passports | `passports` | `id uuid` PK `passports_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartInstance twin); `passport_identifier text NOT NULL DEFAULT ('urn:uuid:' \|\| gen_random_uuid()::text)` with UNIQUE `passports_passport_identifier_key`; `battery_identifier text NOT NULL` with CHECK `passports_battery_identifier_check` (`length(battery_identifier) BETWEEN 1 AND 200`); `manufacturer_bpnl bpnl NOT NULL` FK `passports_manufacturer_fkey` to `companies(bpnl)`; `battery_model_id uuid NOT NULL` FK `passports_battery_model_fkey` to `battery_models(id)`; `lifecycle_status text NOT NULL` with CHECK `passports_lifecycle_status_check` (`lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')`); `battery_category text NOT NULL` with CHECK `passports_battery_category_check` (`battery_category IN ('lmt','ev','industrial','stationary')`); `facility_bpns bpns NOT NULL`; `date_of_manufacture date NOT NULL`; `date_into_service date`; `rated_capacity_ah numeric(10,2)` with CHECK `passports_rated_capacity_check` (`rated_capacity_ah > 0`); `capacity_fade_percent numeric(5,2)` with CHECK `passports_capacity_fade_check` (`capacity_fade_percent BETWEEN 0 AND 100`); `power_fade_percent numeric(5,2)` with CHECK `passports_power_fade_check` (`power_fade_percent BETWEEN 0 AND 100`); `expected_lifetime_years numeric(4,1)` with CHECK `passports_expected_lifetime_check` (`expected_lifetime_years > 0`); `waste_successor_bpnl bpnl`; `waste_successor_role text` with CHECK `passports_waste_successor_role_check` (`waste_successor_role IN ('producer','producerResponsibilityOrganisation','wasteManagementOperator')`); `waste_date timestamptz`; `successor_authorisation_ref text` with CHECK `passports_authorisation_ref_check` (`length(successor_authorisation_ref) BETWEEN 1 AND 500`); `successor_authorisation_valid_from date`; `successor_authorisation_valid_to date`; `recycling_date timestamptz`; `recycler_bpnl bpnl`; `material_recycling_certificate_catena_x_id uuid`; `lineage_open boolean NOT NULL DEFAULT false` (true only between the insertion of a new passport and the closing statement of the same transaction; D54); CHECK `passports_waste_successor_check` (`(lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)`); CHECK `passports_authorisation_check` (`(successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')`); CHECK `passports_end_check` (`(recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)`); CHECK `passports_end_after_waste_check` (`recycling_date IS NULL OR waste_date IS NULL OR recycling_date >= waste_date`); index `passports_battery_identifier_idx (battery_identifier)`; index `passports_battery_model_idx (battery_model_id)` |
 | passports | `passport_purposes` | `id bigint GENERATED ALWAYS AS IDENTITY` PK `passport_purposes_pkey`; `passport_id uuid NOT NULL` FK `passport_purposes_passport_fkey` to `passports(id)`; `purpose text NOT NULL` with CHECK `passport_purposes_purpose_check` (`length(purpose) BETWEEN 1 AND 2000`); `is_original boolean NOT NULL`; `recorded_at timestamptz NOT NULL`; unique index `passport_purposes_original_key (passport_id) WHERE is_original`; index `passport_purposes_passport_idx (passport_id)` |
 | passports | `passport_aspect_payloads` | `passport_id uuid NOT NULL` FK `passport_aspect_payloads_passport_fkey` to `passports(id)`; `aspect_key text NOT NULL` with CHECK `passport_aspect_payloads_key_check` (`aspect_key IN ('digital-nameplate','handover-documentation','carbon-footprint','technical-data','product-condition','material-composition','circularity','dpp-metadata','serial-part','single-level-bom-as-built')`); `payload jsonb NOT NULL`; `updated_at timestamptz NOT NULL DEFAULT now()`; PK `passport_aspect_payloads_pkey (passport_id, aspect_key)` |
 | notifications sent and received | `notifications_received` | `message_id text` PK `notifications_received_pkey`; `operation text NOT NULL` with CHECK `notifications_received_operation_check` (`operation IN ('NewPassportIssued','BatteryRepaired','BatteryBecameWaste','PassportEnded')`); `sender_bpnl bpnl NOT NULL`; `passport_identifier text NOT NULL`; `message jsonb NOT NULL`; `outcome text NOT NULL` with CHECK `notifications_received_outcome_check` (`outcome IN ('applied','recorded')`); `received_at timestamptz NOT NULL`; index `notifications_received_passport_idx (passport_identifier, operation)` |
@@ -702,24 +705,25 @@ The grain of the four performance values `rated_capacity_ah` (Ah), `capacity_fad
 
 #### 9.4.2 The file `002_triggers.sql`
 
-The file creates twelve functions in the language `plpgsql`, each `SECURITY INVOKER`, and twenty-one triggers. Every refusal of a function is the statement `RAISE EXCEPTION '<refusal id>: <one sentence that states the rule>' USING ERRCODE = 'P0001'`, the error class "PL/pgSQL error" with the code `raise_exception`. Every row trigger is `FOR EACH ROW`. A constraint trigger is `CREATE CONSTRAINT TRIGGER ... AFTER ... DEFERRABLE INITIALLY DEFERRED FOR EACH ROW` and runs at the commit.
+The file creates twelve functions in the language `plpgsql`, each `SECURITY INVOKER`, and twenty-two triggers; §22 prints the file. Every refusal of a function is the statement `RAISE EXCEPTION '<refusal id>: <sentence>' USING ERRCODE = 'P0001'`, the error class "PL/pgSQL error" with the code `raise_exception`, and the sentence of each refusal is the sentence of §22. Every trigger is `FOR EACH ROW`. A constraint trigger is `CREATE CONSTRAINT TRIGGER ... AFTER ... DEFERRABLE INITIALLY DEFERRED FOR EACH ROW` and runs at the commit. A function of a BEFORE trigger returns `NEW`, or `OLD` for a deletion that the function admits, and a function of a constraint trigger returns `NULL`. A function that serves two tables reads the passport id by `TG_TABLE_NAME` or by `TG_OP`, as §22 shows. A function that compares "every column other than" a list compares `to_jsonb(NEW)` and `to_jsonb(OLD)` after the removal of the listed keys.
 
 | Function | Triggers (name: table, event) | Rule | Refusal id |
 |---|---|---|---|
-| `refuse_passport_identity_change()` | `trg_passport_identity`: `passports`, BEFORE UPDATE | raises when `NEW.id`, `NEW.passport_identifier`, `NEW.battery_identifier`, `NEW.manufacturer_bpnl` or `NEW.battery_model_id` is distinct from the old value; the function holds no exemption for a role (decision D16, The permanent manufacturer) | `ERR-DB-IDENTITY-PERMANENT` |
+| `set_passport_insert_defaults()` | `trg_passport_insert`: `passports`, BEFORE INSERT | sets `lineage_open` to true for a passport inserted with the status `re-used`, `repurposed` or `remanufactured`, and to false for every other status; the value of the statement is ignored (D54) | none |
+| `refuse_passport_identity_change()` | `trg_passport_identity`: `passports`, BEFORE UPDATE | raises when `id`, `passport_identifier`, `battery_identifier`, `manufacturer_bpnl` or `battery_model_id` is distinct from the old value; the function holds no exemption for a role (decision D16, The permanent manufacturer). The function also raises when `lineage_open` changes from false to true | `ERR-DB-IDENTITY-PERMANENT`; `ERR-DB-LINEAGE` for the lineage |
 | `refuse_battery_model_change()` | `trg_battery_model_identity`: `battery_models`, BEFORE UPDATE OR DELETE | raises on every update and every deletion of a battery model | `ERR-DB-IDENTITY-PERMANENT` |
 | `check_passport_status_change()` | `trg_passport_status_change`: `passports`, BEFORE UPDATE OF `lifecycle_status` | when the new status is distinct from the old status: admits the new status `waste` from every other status, and the new status `re-used` from `original`, `repurposed` and `remanufactured`; raises for every other change | `ERR-DB-STATUS-CHANGE` |
 | `refuse_change_of_ended_passport()` | `trg_passport_ended`: `passports`, BEFORE UPDATE OR DELETE | raises when `OLD.recycling_date` is not null; raises on every deletion of a passport | `ERR-DB-PASSPORT-ENDED` |
-| `check_passport_after_waste()` | `trg_passport_after_waste`: `passports`, BEFORE UPDATE | returns without a refusal when `OLD.recycling_date` is not null, so that an ended passport is refused by `refuse_change_of_ended_passport` alone; otherwise applies when `OLD.lifecycle_status = 'waste'`: the function reads the date `current_setting('app.today', true)::date` and never reads `current_date`; no authorisation is in force when the setting is absent or empty, when `OLD.successor_authorisation_valid_from` is null or after the date, or when `OLD.successor_authorisation_valid_to` is before the date; without an authorisation in force the function raises when a column other than `successor_authorisation_ref`, `successor_authorisation_valid_from`, `successor_authorisation_valid_to`, `recycling_date`, `recycler_bpnl` and `material_recycling_certificate_catena_x_id` is distinct from its old value | `ERR-DB-SUCCESSOR-AUTHORISATION` |
-| `check_waste_successor()` | `trg_passport_waste_successor`: `passports`, constraint trigger AFTER INSERT OR UPDATE | at the commit, reads the current state of the passport; when the status is `waste`, raises unless one interval of `passport_responsibility_intervals` for the passport has `valid_to IS NULL`, `responsible_bpnl` equal to `waste_successor_bpnl` and `role` equal to `waste_successor_role` (decision D17, The named waste successor) | `ERR-DB-WASTE-SUCCESSOR` |
-| `check_passport_lineage()` | `trg_passport_lineage`: `passports`, constraint trigger AFTER INSERT | at the commit, with the values of the inserted row (the status of a passport at its insertion) and the lineage links that the table holds at the commit: raises for a passport inserted with the status `waste`; raises for a passport inserted with the status `original` that has a lineage link; raises for a passport inserted with the status `re-used`, `repurposed` or `remanufactured` that has no lineage link, or whose `date_into_service` or one of whose four performance values is null | `ERR-DB-LINEAGE` |
-| `check_one_responsible()` | `trg_passport_one_responsible`: `passports`, constraint trigger AFTER INSERT; `trg_interval_one_responsible`: `passport_responsibility_intervals`, constraint trigger AFTER INSERT OR UPDATE | at the commit, raises unless the passport (`NEW.id` or `NEW.passport_id`) has exactly one interval whose `valid_to` is null | `ERR-DB-RESPONSIBILITY` |
+| `check_passport_after_waste()` | `trg_passport_after_waste`: `passports`, BEFORE UPDATE | returns without a refusal when `OLD.recycling_date` is not null or when `OLD.lifecycle_status` is not `waste`. Otherwise the function reads the date `NULLIF(current_setting('app.today', true), '')::date` and never reads `current_date`. An authorisation is in force when the date is not null, `OLD.successor_authorisation_valid_from` is not null and not after the date, and `OLD.successor_authorisation_valid_to` is null or not before the date. An absent setting and an empty setting, which a pooled connection holds after an earlier transaction, give the date null, so no authorisation is in force; a setting that is no date raises the SQLSTATE `22007`. Without an authorisation in force the function raises when a column other than `successor_authorisation_ref`, `successor_authorisation_valid_from`, `successor_authorisation_valid_to`, `recycling_date`, `recycler_bpnl` and `material_recycling_certificate_catena_x_id` is distinct from its old value | `ERR-DB-SUCCESSOR-AUTHORISATION` |
+| `check_passport_lineage()` | `trg_passport_lineage`: `passports`, constraint trigger AFTER INSERT | at the commit, with the values of the inserted row and the state of the tables at the commit: raises for a passport inserted with the status `waste`; raises for a passport inserted with the status `original` that has a lineage link; raises for a passport inserted with the status `re-used`, `repurposed` or `remanufactured` that has no lineage link, or whose `date_into_service` or one of whose four performance values is null; raises when `lineage_open` of the passport is still true | `ERR-DB-LINEAGE` |
+| `check_responsibility()` | `trg_passport_responsibility`: `passports`, constraint trigger AFTER INSERT OR UPDATE; `trg_interval_responsibility`: `passport_responsibility_intervals`, constraint trigger AFTER INSERT OR UPDATE | at the commit, for the passport of the row: raises unless exactly one interval has `valid_to` null; for a passport in the status `waste`, raises unless that open interval has `responsible_bpnl` equal to `waste_successor_bpnl`, `role` equal to `waste_successor_role` and `valid_from` equal to `waste_date`, and an earlier interval of the passport has `valid_to` equal to `waste_date`; raises when `recycling_date` is before `valid_from` of the open interval (D17 (The named waste successor), D55 (The dates of the waste status and of the end are rules of the database)) | `ERR-DB-RESPONSIBILITY` for the count; `ERR-DB-WASTE-SUCCESSOR` for the waste rule; `ERR-DB-END-DATE` for the recycling date |
 | `refuse_change()` | six triggers BEFORE UPDATE OR DELETE: `trg_passport_lineage_links_append_only`, `trg_passport_repair_entries_append_only`, `trg_passport_successor_links_append_only`, `trg_notifications_received_append_only`, `trg_passport_write_decisions_append_only`, `trg_received_battery_information_append_only`, each on the table of its name | raises on every update and every deletion | `ERR-DB-APPEND-ONLY` |
 | `check_interval_change()` | `trg_interval_change`: `passport_responsibility_intervals`, BEFORE UPDATE OR DELETE | raises on every deletion; raises on an update that changes a column other than `valid_to`, or that changes a `valid_to` that is not null | `ERR-DB-APPEND-ONLY` |
-| `refuse_child_of_ended_passport()` | four triggers BEFORE INSERT OR UPDATE OR DELETE: `trg_passport_aspect_payloads_ended`, `trg_passport_successor_links_ended`, `trg_passport_repair_entries_ended`, `trg_passport_purposes_ended`, each on the table of its name | reads the passport of the row (`passport_id` of the new row, or of the old row for a deletion) with `SELECT recycling_date ... FOR SHARE`, so that the function waits for a concurrent transaction that ends the passport, and raises when `recycling_date` is not null | `ERR-DB-PASSPORT-ENDED` |
-| `check_lineage_link_insert()` | `trg_passport_lineage_links_insert`: `passport_lineage_links`, BEFORE INSERT | raises unless the passport of the new link was inserted by the current transaction: `EXISTS (SELECT 1 FROM passports p WHERE p.id = NEW.passport_id AND p.xmin = pg_current_xact_id()::xid)` | `ERR-DB-LINEAGE` |
+| `refuse_child_of_ended_passport()` | four triggers BEFORE INSERT OR UPDATE OR DELETE: `trg_passport_aspect_payloads_ended`, `trg_passport_successor_links_ended`, `trg_passport_repair_entries_ended`, `trg_passport_purposes_ended`, each on the table of its name; and `trg_passport_responsibility_intervals_ended`: `passport_responsibility_intervals`, BEFORE INSERT OR UPDATE | reads the passport of the row (`passport_id` of the new row, or of the old row for a deletion) with `SELECT recycling_date ... FOR SHARE`, so that the function waits for a concurrent transaction that ends the passport, and raises when `recycling_date` is not null. The responsibility intervals of an ended passport are frozen in this way (D55) | `ERR-DB-PASSPORT-ENDED` |
+| `check_lineage_link_insert()` | `trg_passport_lineage_links_insert`: `passport_lineage_links`, BEFORE INSERT | reads `lineage_open` of the passport of the new link with `SELECT ... FOR UPDATE` and raises unless the value is true. A passport that does not exist, and a passport that the policies hide from the role, give no row and the same refusal (D54) | `ERR-DB-LINEAGE` |
 
-Two triggers on one table and one event fire in the order of their names. `trg_passport_after_waste` fires before `trg_passport_ended` and returns for an ended passport, so a change of an ended passport is always refused with `ERR-DB-PASSPORT-ENDED`. The record of the end of a passport is one UPDATE that sets the three end columns on a passport whose stored `recycling_date` is null, so `trg_passport_ended` admits the statement.
+Two triggers on one table and one event fire in the order of their names. On an update of `passports` the order is `trg_passport_after_waste`, `trg_passport_ended`, `trg_passport_identity`, `trg_passport_status_change`. `trg_passport_after_waste` returns for an ended passport, so a change of an ended passport is always refused with `ERR-DB-PASSPORT-ENDED`. On `passport_responsibility_intervals` the order of an update is `trg_interval_change`, then `trg_passport_responsibility_intervals_ended`. A BEFORE trigger fires before the check of a foreign key and before the `WITH CHECK` expression of a policy; an insert of a lineage link for a passport that does not exist, or for a passport of another company, is therefore refused with `ERR-DB-LINEAGE`, and the foreign key `passport_lineage_links_passport_fkey` and the policy `passport_lineage_links_own` are never the first refusal of an insert. The record of the end of a passport is one UPDATE that sets the three end columns on a passport whose stored `recycling_date` is null, so `trg_passport_ended` admits the statement.
+
 
 #### 9.4.3 The file `003_policies.sql`
 
@@ -808,7 +812,7 @@ A validation refusal adds one entry to `messages` per validator error, with the 
 | Database error | Refusal on an operator endpoint | On a receiving endpoint |
 |---|---|---|
 | `P0001` with `ERR-DB-IDENTITY-PERMANENT` | `ERR-LC-IDENTITY-PERMANENT` | `ERR-RX-INTERNAL` |
-| `P0001` with `ERR-DB-STATUS-CHANGE` | `ERR-LC-STATUS-NOT-ADMITTED` | `ERR-RX-STEP-REFUSED` |
+| `P0001` with `ERR-DB-STATUS-CHANGE` or `ERR-DB-END-DATE`, and `23514` on `passports_end_after_waste_check` or `passport_responsibility_intervals_period_check` | `ERR-LC-STATUS-NOT-ADMITTED` | `ERR-RX-STEP-REFUSED` |
 | `P0001` with `ERR-DB-PASSPORT-ENDED` | `ERR-LC-PASSPORT-ENDED` | `ERR-RX-STEP-REFUSED` |
 | `P0001` with `ERR-DB-SUCCESSOR-AUTHORISATION` | `ERR-LC-SUCCESSOR-AUTHORISATION-MISSING` | `ERR-RX-STEP-REFUSED` |
 | `P0001` with `ERR-DB-WASTE-SUCCESSOR`, `ERR-DB-LINEAGE`, `ERR-DB-RESPONSIBILITY` or `ERR-DB-APPEND-ONLY` | `ERR-LC-INTERNAL`, because the executor writes the required records in the same transaction and the refusal shows a defect of the server | `ERR-RX-INTERNAL` |
@@ -864,9 +868,9 @@ Every workflow runs on `pull_request` and on `push` to `main`, on `ubuntu-latest
 
 | File | Steps |
 |---|---|
-| `.github/workflows/checks.yml` | `node scripts/requirements-check.mjs`; `node scripts/check-sources.mjs`; `node scripts/check-license-headers.mjs`; `node scripts/check-private-references.mjs`; `python scripts/spec_gate_check.py` with the arguments of §18 |
+| `.github/workflows/checks.yml` | the installation of the package `poppler-utils` of Ubuntu, so that the registry check reads the stored PDF file; `node scripts/requirements-check.mjs`, whose last line starts with `0 problems, 0 quotes skipped`; `node scripts/check-sources.mjs`; `node scripts/check-license-headers.mjs`; `node scripts/check-private-references.mjs`; `node scripts/check-annexes.mjs --require P<n>` with the number of the last delivered phase; `python scripts/spec_gate_check.py` with the arguments of §18 |
 | `.github/workflows/spectral.yml` | `npx @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset .spectral.yaml --fail-severity error`, on a change of `docs/api/` or of `.spectral.yaml` |
-| `.github/workflows/samm.yml` | Java 21; download of the SAMM command line tool 2.11.1 to `tools/samm-cli-2.11.1.jar`; `bash scripts/validate-models.sh` (§11.2) |
+| `.github/workflows/samm.yml` | Java 21; the download of the SAMM command line tool 2.11.1 to `tools/samm-cli-2.11.1.jar` with the command of §11.2; `bash scripts/validate-models.sh --generate`; `git diff --exit-code -- models`, which fails when a generated schema of the commit differs from the output of the tool |
 | `.github/workflows/tests.yml` | the Ubuntu form of §11: the actions that install Node.js 24; a service container of the image `postgres:17` with a password that the workflow generates at its start and with the port 5432 published on `localhost`; the variables `TEST_DATABASE_URL` (`postgres://postgres:<the generated password>@localhost:5432/postgres`) and `TEST_APP_ROLE_PASSWORD` (a second generated value); `npm ci`, `node ../scripts/check-dependency-licenses.mjs` and `npm test` in `server/`; from phase P6 also `npm ci` and `npm test` in `tck/` with `TCK_BINDING=in-process` |
 | `.github/workflows/codeql.yml` | CodeQL analysis of the language `javascript-typescript`, also on a weekly schedule |
 | `.github/workflows/trufflehog.yml` | TruffleHog scan of the pushed commits with the option that reports only verified secrets |
@@ -885,7 +889,7 @@ The table lists every package, tool and container image that the phases use. The
 | `ajv-draft-04`, major version 1 | the server (the stored and the generated aspect schemas, draft-04 dialect) | P2 | MIT |
 | `yaml`, major version 2 | the tests of the server and the test kit | P1 | ISC |
 | `@stoplight/spectral-cli`, major version 6 (run by `npx`, no dependency of a package file) | the OpenAPI lint | P1 | Apache-2.0 |
-| SAMM command line tool 2.11.1 (`samm-cli-2.11.1.jar`, a tool of the Eclipse Semantic Modeling Framework) | the model validation | P2 | MPL-2.0 |
+| SAMM command line tool 2.11.1 (`samm-cli-2.11.1.jar`, a tool of the Eclipse Semantic Modeling Framework; 110,342,711 bytes; SHA-256 `fab66a72e1969ff2e4d9db5d1c0eeb55936f89e2159045576301ea46c49ffc0f`, observed on 2026-11-16) | the model validation | P2 | MPL-2.0 |
 | the container image `eclipse-temurin:21` (a Java 21 runtime) | the SAMM command line tool | P2 | GPL-2.0 with the Classpath exception, for the runtime |
 | the container image `postgres:17` (PostgreSQL 17) | the tests | P3 | PostgreSQL licence |
 | the container image `node:24` (Node.js 24) | every phase, and the base image of `server/Dockerfile` | P1 | MIT for Node.js |
@@ -900,16 +904,19 @@ The implementer pins each npm package to the latest release of its stated major 
 
 ### 10.1 The notification message
 
-- **The form.** A notification is the JSON object `{ "header": <MessageHeader>, "content": <content of the operation> }`, as `sources/Tractus-X/kits-26.09/industry-core-kit/software-development-view/notifications.mdx` states `[live]`. Both properties are required, and the request body schema of each operation admits no other property.
-- **The header.** `docs/api/schemas/MessageHeader.schema.json` defines the header with the properties of the table below and with `additionalProperties: false`. The stored Industry Core KIT text shows the first seven properties in its example `[live]`, and the stored file `sources/Tractus-X/kits-26.09/traceability-kit/openapi/notifications_2-0-0.yaml` holds the header schema of version 2.0.0 of the model with the property `relatedMessageId` `[live]`. The file of the aspect model `urn:samm:io.catenax.shared.message_header:3.0.0#MessageHeaderAspect` is not stored, so the patterns of the table are the patterns of this specification and are not verified against the model file.
-- **The content.** The content of each operation holds the properties of Table 4.4 of the proposal. Every property is required except `materialRecyclingCertificateCatenaXId`. Every content schema sets `additionalProperties: false`.
-- **The dialect.** Each of the seven schema files declares `"$schema": "https://json-schema.org/draft/2020-12/schema"` and an `$id` equal to its file name (decision D21, One definition of the message).
-- **The identifiers.** A property that holds a `catenaXId`, the property `messageId` and the property `relatedMessageId` have the pattern `UUID_PATTERN` of §9.2.1, which is the pattern of the stored shared model: `(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)` (decision D50, Every admitted form of an identifier accepted, one form sent). The schemas therefore admit the form with and without the prefix `urn:uuid:`, upper and lower case, and every version digit. The reference server normalises a received identifier and always sends and serves the lower-case form with the prefix. A property that holds a Business Partner Number of a legal entity (BPNL) has the pattern `^BPNL[a-zA-Z0-9]{12}$`. A property that holds a date and time has the format `date-time` of RFC 3339.
+- **The annex.** §20 prints `docs/api/openAPI.yaml` and the eight schema files of `docs/api/schemas/` in full, and the implementer copies them. The sentences and the two tables of this section describe the files.
+- **The envelope.** A notification is the JSON object `{ "header": <MessageHeader>, "content": <content of the operation> }`, as `sources/Tractus-X/kits-26.09/industry-core-kit/software-development-view/notifications.mdx` states `[live]`. `docs/api/schemas/LifecycleNotification.schema.json` defines the envelope: one definition per operation under `$defs`, each an object with exactly the two required properties `header` and `content` and with `additionalProperties: false`. The definition of an operation fixes the context of the header with a `const` and references the content schema of the operation (decision D56, One schema file for the envelope, and the context as a constant). The request body of each operation in `docs/api/openAPI.yaml` is a `$ref` to the definition of the operation.
+- **The header.** `docs/api/schemas/MessageHeader.schema.json` defines the header with the properties of the table below and with `additionalProperties: false`. The property `context` is an enumeration of the four contexts of Table 4.3 of the proposal, as section 4.3 item 4 of the proposal requires and as the stored file `sources/Tractus-X/kits-26.09/traceability-kit/openapi/notifications_2-0-0.yaml` constrains the context of its API `[live]`. The stored Industry Core KIT text shows the first seven properties in its example `[live]`, and the stored Traceability file holds the header schema of version 2.0.0 of the model with the property `relatedMessageId` `[live]`. The file of the aspect model `urn:samm:io.catenax.shared.message_header:3.0.0#MessageHeaderAspect` is not stored, so the patterns of the table are the patterns of this specification and are not verified against the model file.
+- **The content.** Each of the four operation schema files defines the content of its operation and not the whole message. The content holds the properties of Table 4.4 of the proposal. Every property is required except `materialRecyclingCertificateCatenaXId`. Every content schema sets `additionalProperties: false`. A passport identifier is a string of one character or more without an upper limit, because Table 4.4 of the proposal and the stored DPP Metadata schema state no limit.
+- **The dialect.** Each of the eight schema files declares `"$schema": "https://json-schema.org/draft/2020-12/schema"`, an `$id` equal to its file name, a `title` and a `description`, and every property carries a `description` (decision D21, One definition of the message).
+- **The date and time.** A property that holds a date and time has the format `date-time` of RFC 3339, which Table 4.4 of the proposal names. The reference server asserts the format: the validator of §9.2 is created with the formats of `ajv-formats`, so a value without a time zone and a text that is no date are refused, although the 2020-12 dialect alone treats `format` as an annotation.
+- **The identifiers.** A property that holds a `catenaXId`, the property `messageId` and the property `relatedMessageId` have the pattern `UUID_PATTERN` of §9.2.1, which is the pattern of the stored shared model (decision D50, Every admitted form of an identifier accepted, one form sent). The reference server normalises a received identifier and always sends and serves the lower-case form with the prefix. A property that holds a Business Partner Number of a legal entity (BPNL) has the pattern `^BPNL[a-zA-Z0-9]{12}$`.
+
 
 | Header property | Required | Schema |
 |---|---|---|
 | `messageId` | yes | string, `UUID_PATTERN`; unique per message |
-| `context` | yes | string; the receiving endpoint compares the value with the context of its operation |
+| `context` | yes | string, one of the four contexts of the table below; the envelope definition of an operation admits only the context of that operation |
 | `sentDateTime` | yes | string, format `date-time` |
 | `senderBpn` | yes | string, the BPNL pattern |
 | `receiverBpn` | yes | string, the BPNL pattern |
@@ -919,24 +926,24 @@ The implementer pins each npm package to the latest release of its stated major 
 
 | Operation | Context | Content property | Schema | Source on the sending side |
 |---|---|---|---|---|
-| NewPassportIssued | `BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1` | `passportIdentifier` | string, 1 to 200 characters | `passports.passport_identifier` of the new passport |
+| NewPassportIssued | `BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1` | `passportIdentifier` | string, 1 character or more | `passports.passport_identifier` of the new passport |
 | | | `catenaXId` | `UUID_PATTERN` | `passports.id` of the new passport |
 | | | `operation` | one of the four values of `passport_lineage_links.operation` | the lineage link |
 | | | `operationDate` | `date-time` | `passport_lineage_links.operation_date` |
-| | | `predecessorPassportIdentifier` | string, 1 to 200 characters | `passport_lineage_links.predecessor_passport_identifier` of the link that names the receiver |
-| BatteryRepaired | `BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1` | `passportIdentifier` | string, 1 to 200 characters | the request of `EP-REPORT-REPAIR` |
+| | | `predecessorPassportIdentifier` | string, 1 character or more | `passport_lineage_links.predecessor_passport_identifier` of the link that names the receiver |
+| BatteryRepaired | `BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1` | `passportIdentifier` | string, 1 character or more | the request of `EP-REPORT-REPAIR` |
 | | | `repairDate` | `date-time` | the request |
 | | | `repairCertificateCatenaXId` | `UUID_PATTERN` | the request |
-| BatteryBecameWaste | `BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1` | `passportIdentifier` | string, 1 to 200 characters | the request of `EP-REPORT-WASTE` |
+| BatteryBecameWaste | `BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1` | `passportIdentifier` | string, 1 character or more | the request of `EP-REPORT-WASTE` |
 | | | `successorBpnl` | the BPNL pattern | the request |
 | | | `successorRole` | `producer`, `producerResponsibilityOrganisation` or `wasteManagementOperator` | the request |
 | | | `date` | `date-time` | the request field `wasteDate` |
-| PassportEnded | `BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1` | `passportIdentifier` | string, 1 to 200 characters | the request of `EP-REPORT-RECYCLING` |
+| PassportEnded | `BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1` | `passportIdentifier` | string, 1 character or more | the request of `EP-REPORT-RECYCLING` |
 | | | `recyclingDate` | `date-time` | the request |
 | | | `recyclerBpnl` | the BPNL pattern | `config.ownBpnl` of the reporting deployment |
 | | | `materialRecyclingCertificateCatenaXId` | `UUID_PATTERN`, optional | the request |
 
-`docs/api/openAPI.yaml` holds these parts: `openapi: 3.1.0`; `info` with the title "Battery Passport Lifecycle Notification API", the version `1.0.0`, the license object `{ name: "CC-BY-4.0", identifier: "CC-BY-4.0" }` and a description whose last sentence reads "The connector of the receiver authenticates the caller, so this specification defines no security scheme."; one entry of `servers` with the address `{baseUrl}/api/lifecycle-notifications` and the variable `baseUrl` with the default `https://provider.example`; the four paths of §9.3, each with one `post` operation whose `operationId` equals the operation name, whose request body is required, has the content type `application/json` and is an object with the required properties `header` (a `$ref` to `schemas/MessageHeader.schema.json`) and `content` (a `$ref` to the content schema of the operation); and the responses `200` (`schemas/NotificationAccepted.schema.json`), `400`, `401`, `403`, `404`, `405`, `409`, `413`, `422` and `500`, where each of the nine error responses has the content type `application/json` and a `$ref` to `schemas/ErrorResponse.schema.json`. The file holds no `security` entry and no `securitySchemes`. `NotificationAccepted.schema.json` requires `messageId` (`UUID_PATTERN`) and `outcome` (`applied`, `recorded` or `duplicate`) and admits no other property. `ErrorResponse.schema.json` requires `success` (the constant `false`), `error` (an object with the required strings `message` and `code`) and `messages` (a list of one or more objects with the required properties `messageType`, one of `Error`, `Warning`, `Info` and `Exception`, and `text`); the four values of `messageType` are the values of the result object of Part 2 of the Asset Administration Shell (AAS) specification, which is cited and not stored, so the four values are not verified against a stored text.
+`docs/api/openAPI.yaml` holds these parts, as §20 prints them: `openapi: 3.1.0`; `info` with the title "Battery Passport Lifecycle Notification API", the version `1.0.0`, a description, a contact and the license object `{ name: "CC-BY-4.0", identifier: "CC-BY-4.0" }`; one entry of `servers` with the address `{baseUrl}/api/lifecycle-notifications` and the variable `baseUrl` with the default `https://provider.example`; one tag `LifecycleNotification`; the four paths of §9.3, each with one `post` operation with the tag, a summary, a description that names the sender, the receivers and the context, an `operationId` equal to the operation name, a required request body of the content type `application/json` whose schema is a `$ref` to `schemas/LifecycleNotification.schema.json#/$defs/<Operation>`, and the ten responses `200`, `400`, `401`, `403`, `404`, `405`, `409`, `413`, `422` and `500`; and ten entries of `components.responses`, each with a description that names the refusal ids of §9.5 of its status and with a `$ref` to `schemas/NotificationAccepted.schema.json` or to `schemas/ErrorResponse.schema.json`. The file holds no `security` entry and no `securitySchemes`. `NotificationAccepted.schema.json` requires `messageId` (`UUID_PATTERN`) and `outcome` (`applied`, `recorded` or `duplicate`) and admits no other property. `ErrorResponse.schema.json` requires `success` (the constant `false`), `error` (an object with the two required strings `message` and `code`, each of one character or more) and `messages` (a list of one or more objects with the required properties `messageType`, one of `Error`, `Warning`, `Info` and `Exception`, and `text`, a string of one character or more); the response, its object `error` and each item of `messages` admit no other property. The four values of `messageType` are the values of the result object of Part 2 of the Asset Administration Shell (AAS) specification, which is cited and not stored, so the four values are not verified against a stored text.
 
 ### 10.2 The request bodies of the operator endpoints
 
@@ -975,9 +982,9 @@ A receiving endpoint runs the checks of the first table in the order of the tabl
 
 | Order | Check | Refusal id |
 |---|---|---|
-| first | the header validates against `MessageHeader.schema.json` | `ERR-RX-HEADER-INVALID` |
-| second | the content validates against the schema of the operation; when every validator error of the content is an error of the keyword `additionalProperties`, the refusal is `ERR-RX-CHANGE-OUTSIDE-STEP` | `ERR-RX-CONTENT-INVALID` or `ERR-RX-CHANGE-OUTSIDE-STEP` |
-| third | `header.context` equals the context of the endpoint's operation | `ERR-RX-CONTEXT-MISMATCH` |
+| first | the body validates against the envelope definition of the operation, `LifecycleNotification.schema.json#/$defs/<Operation>`. A validator error at the root of the body (a body that is no object, a missing `header` or `content`, a third property) answers `ERR-RX-CONTENT-INVALID`. Otherwise a validator error below `/header`, other than an error of the keyword `const` at `/header/context`, answers `ERR-RX-HEADER-INVALID` | `ERR-RX-CONTENT-INVALID` or `ERR-RX-HEADER-INVALID` |
+| second | a validator error below `/content` answers `ERR-RX-CHANGE-OUTSIDE-STEP` when every such error is an error of the keyword `additionalProperties`, and `ERR-RX-CONTENT-INVALID` otherwise | `ERR-RX-CONTENT-INVALID` or `ERR-RX-CHANGE-OUTSIDE-STEP` |
+| third | the remaining validator error, the keyword `const` at `/header/context`, means that the header carries the context of another operation | `ERR-RX-CONTEXT-MISMATCH` |
 | fourth | `header.receiverBpn` equals `config.ownBpnl` | `ERR-RX-RECEIVER-MISMATCH` |
 | fifth | `header.senderBpn` equals the Business Partner Number of the partner subject | `ERR-RX-SENDER-MISMATCH` |
 | sixth | the endpoint reads the received record with the normalised `messageId`. A stored record with the same `sender_bpnl`, the same `header.context` and a `content` equal to the normalised received content answers 200 with the outcome `duplicate` and ends the request; the endpoint leaves `sentDateTime` and `expectedResponseBy` out of the comparison. Every other stored record answers the refusal | `ERR-RX-MESSAGE-ID-REUSED` |
@@ -999,8 +1006,8 @@ The received record stores the normalised message, `received_at` equal to the cu
 | BatteryBecameWaste | a passport of the own company whose open responsibility interval starts after the date of the notification | none | `ERR-RX-STEP-REFUSED` |
 | BatteryBecameWaste | a passport of the own company in the status `waste`, or that has ended | none | `ERR-RX-STEP-REFUSED` |
 | BatteryBecameWaste | no passport of the own company | stores the received record only (decision D7, The receiver guard) | `recorded` |
-| PassportEnded | a passport of the own company that has not ended, in every status | sets `recycling_date`, `recycler_bpnl` and the certificate reference, leaves the status unchanged, and writes the pending notification for the passport service provider of §10.3 when the variable holds a value (D20 (The end of a passport from every status), D34 [waits for the owner]) | `applied` |
-| PassportEnded | a passport of the own company that has ended | none | `ERR-RX-STEP-REFUSED` |
+| PassportEnded | a passport of the own company that has not ended, in every status, when `recyclingDate` is not before `waste_date` of a waste passport and not before `valid_from` of the open responsibility interval | sets `recycling_date`, `recycler_bpnl` and the certificate reference, leaves the status unchanged, and writes the pending notification for the passport service provider of §10.3 when the variable holds a value (D20 (The end of a passport from every status), D34 [waits for the owner]) | `applied` |
+| PassportEnded | a passport of the own company that has ended, or a `recyclingDate` before the waste date or before the start of the open responsibility interval | none | `ERR-RX-STEP-REFUSED` |
 | PassportEnded | no passport of the own company | stores the received record only (D7) | `recorded` |
 
 An error that no check names answers `ERR-RX-INTERNAL`, and the transaction rolls back. A failed authentication answers `ERR-AC-UNAUTHENTICATED`, and a missing capability answers `ERR-AC-CAPABILITY-MISSING`; neither is a refusal of a lifecycle rule. The local application of `reportEvent` applies the same step with the own Business Partner Number as the sender, inserts no received record for BatteryRepaired, BatteryBecameWaste and PassportEnded, and maps a refused step to `ERR-LC-STATUS-NOT-ADMITTED` or `ERR-LC-PASSPORT-ENDED`.
@@ -1039,13 +1046,14 @@ Every submodel offer carries the `dct:type` of CX-0160 (Battery Passport) 1.1.0 
 
 The ten stored keys of `passport_aspect_payloads.aspect_key` are the ten keys whose payload source is "stored". The stored schemas of `sources/IDTA/` and the schemas that the SAMM command line tool generates declare the draft-04 dialect `[live]`, so `server/src/validation/schemaValidator.mjs` compiles them with `ajv-draft-04` and compiles the schemas of `docs/api/schemas/` and of `server/schemas/` with the 2020-12 class of `ajv` (D21).
 
-The three models of `models/` hold exactly the properties, the entities, the characteristics and the enumeration values of sections 3.2.2, 3.3 and 3.4.2 of the proposal, with these rules for the Turtle files:
+§21 prints the three Turtle files, the three `metadata.json` files, the three `RELEASE_NOTES.md` files, the three example payloads and the script `scripts/validate-models.sh` in full, and the implementer copies them (decision D58, Normative annexes). The three models hold exactly the properties, the entities, the characteristics and the enumeration values of sections 3.2.2, 3.3 and 3.4.2 of the proposal, and these rules describe the files of §21:
 
-- Each file declares the prefixes of the stored model `sources/Tractus-X/semantic-models/io.catenax.shared.recycling_strategy_certificate/3.0.0/RecyclingStrategyCertificate.ttl` `[live]` for the SAMM meta model 2.1.0 (`samm`, `samm-c`, `samm-e`, `unit`, `rdf`, `rdfs`, `xsd`), its own namespace as the empty prefix (`urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#`, `urn:samm:io.catenax.battery.passport_successors:1.0.0#` or `urn:samm:io.catenax.battery.passport_access_map:1.0.0#`), and, in the lifecycle model and the successors model, `ext-uuid: <urn:samm:io.catenax.shared.uuid:2.1.0#>` and `ext-bpn: <urn:samm:io.catenax.shared.business_partner_number:2.0.0#>` (decision D32, The stored shared models).
-- The aspect is named as its file (`:BatteryPassportLifecycle`, `:BatteryPassportSuccessors`, `:BatteryPassportAccessMap`). Each property of the proposal's tables is one `samm:Property` whose name is the name of the table (the part after the last dot, for example `:passportIdentifier`); the name of the property in a payload is the same name, so no property carries `samm:payloadName`. Each entity of the tables (`PassportLink`, `WasteResponsibility`, `EndOfPassport`, `SuccessorLink`, `AccessMapEntry`) is one `samm:Entity`. The aspect, each property, each entity and each characteristic carries a `samm:preferredName` and a `samm:description` in English; the description of a property is the text of the column "Meaning" of the proposal, and the description of the aspect is the text of the column "Carries" of the table of section 3.1 of the proposal.
-- Each characteristic that a model declares is named after its property with the suffix `Characteristic`, an enumeration with the suffix `Enumeration`, and a trait with the suffix `Trait`: `:PredecessorsCharacteristic` (a `samm-c:List` of `:PassportLink`) inside `:PredecessorsTrait` with the constraint `:PredecessorsLengthConstraint` (`samm-c:minValue 0`); `:WasteResponsibilityCharacteristic` and `:EndOfPassportCharacteristic` (each a `samm:Characteristic` with `samm:dataType` of its entity); `:OperationEnumeration` and `:SuccessorRoleEnumeration`; `:SuccessorsCharacteristic` (a `samm-c:List` of `:SuccessorLink`); `:EntriesCharacteristic` inside `:EntriesTrait` with `:EntriesLengthConstraint` (`samm-c:minValue 1`); `:TwinLevelEnumeration` and `:AccessGroupEnumeration`; and `:ValidFromCharacteristic` (a `samm:Characteristic` with `samm:dataType xsd:date`). A property of the type `samm-c:Text` or `samm-c:Timestamp` uses that characteristic of the SAMM directly.
-- A property that the proposal marks as not mandatory is declared with `samm:optional true`. The successors model reuses no entity of the lifecycle model: the model declares its own enumeration of the four operations, because one Catena-X aspect model imports only shared models.
-- Each `metadata.json` holds `{ "status": "draft" }`. Each `RELEASE_NOTES.md` holds one entry for version 1.0.0 with the date and the words "initial version, proposed". Each `gen/<Aspect>-schema.json` is the unchanged output of the SAMM command line tool. Each `gen/<Aspect>.json` is the example payload of the proposal: the example of section 3.2.2 for the lifecycle model; for the successors model, for which the proposal holds no example, one link with the values `passportIdentifier` `urn:uuid:3c1f6c1e-5b7d-4f0a-9d2e-7a4b8c6d5e21`, `catenaXId` `urn:uuid:b7e4d2a9-1c3f-4e5a-8b6d-0f9e8d7c6b5a`, `secondLifeOperatorBpnl` `BPNL000000000002`, `operation` `remanufacturing` and `operationDate` `2031-05-04T00:00:00Z`; and the example of section 3.4.2 for the access map model.
+- Each file declares the prefixes of the SAMM meta model 2.1.0 and its own namespace, and the lifecycle model and the successors model import `urn:samm:io.catenax.shared.uuid:2.1.0#` and `urn:samm:io.catenax.shared.business_partner_number:2.0.0#`, the two shared models that `sources/Tractus-X/semantic-models/` stores `[live]` (decision D32, The stored shared models).
+- The aspect, each property, each entity, each characteristic, each enumeration, each trait and each constraint carries a `samm:preferredName` and a `samm:description` in English. The description of a property is the text of the column "Meaning" of the proposal. Each property with a scalar value carries a `samm:exampleValue`, as the stored models do. Each enumeration has the data type `xsd:string`. Each aspect holds the two empty lists `samm:operations ( )` and `samm:events ( )`.
+- The name of a property in a payload is the name of the property, so no property carries `samm:payloadName`. A property that the proposal marks as not mandatory is declared with `samm:optional true`. The successors model declares its own enumeration of the four operations, because one Catena-X aspect model imports only shared models.
+- Each `metadata.json` holds the one line `{ "status" : "draft" }`, the form of the stored files `[live]`. Each `RELEASE_NOTES.md` follows the form of the stored release notes (the heading "Changelog", the heading of the version with its date, the heading "Added") and ends with the NOTICE section.
+- Each folder `gen` holds two files: `<Aspect>-schema.json`, the unchanged output of `java -jar tools/samm-cli-2.11.1.jar aspect <file> to schema`, which the script writes, and `<Aspect>.json`, the example payload of §21, which the implementer copies. The stored models of `sources/IDTA/` hold only the schema file in their `gen` folders `[live]`. The tool has no verified sub-command for a sample payload, so the example payload is written by hand: the example of section 3.2.2 of the proposal for the lifecycle model, the example of section 3.4.2 for the access map model, and own values for the successors model, for which the proposal holds no example.
+
 
 `readSubmodel` writes the governed elements over a stored payload at the paths of the table, which the stored schemas of §6 hold `[live]`. A stored payload never supplies the value of a governed path. A governed value that is null removes the element from the served payload; the two governed values that can be null, `operator_identifier` and `date_into_service`, belong to elements that the stored nameplate schema does not require `[live]`.
 
@@ -1083,7 +1091,7 @@ The form for the owner's Windows machine (Git Bash, Docker Desktop), at the repo
 ```bash
 export MSYS_NO_PATHCONV=1
 REPO="$(pwd -W)"
-node24() { docker run --rm -v "$REPO:/work" -w /work -e TEST_DATABASE_URL -e TEST_APP_ROLE_PASSWORD node:24 "$@"; }
+node24() { docker run --rm -v "$REPO:/work" -v bpafl_server_modules:/work/server/node_modules -v bpafl_tck_modules:/work/tck/node_modules -w /work -e TEST_DATABASE_URL -e TEST_APP_ROLE_PASSWORD node:24 "$@"; }
 java21() { docker run --rm -v "$REPO:/work" -w /work eclipse-temurin:21 "$@"; }
 export TEST_DATABASE_URL="postgres://postgres:${TEST_DB_SUPERUSER_PASSWORD}@host.docker.internal:54329/refserver_test"
 export TEST_APP_ROLE_PASSWORD="$(node24 node -e "console.log(require('node:crypto').randomBytes(24).toString('hex'))")"
@@ -1091,6 +1099,8 @@ export TEST_APP_ROLE_PASSWORD="$(node24 node -e "console.log(require('node:crypt
 
 - The test database is the running container of the image `postgres:17`, published on `127.0.0.1:54329`, with the database `refserver_test` and the superuser `postgres`. A container reaches the published port through the name `host.docker.internal` of Docker Desktop. The owner sets `TEST_DB_SUPERUSER_PASSWORD` in the shell; no file holds the value.
 - `MSYS_NO_PATHCONV=1` stops Git Bash from rewriting the container path `/work`, and `pwd -W` gives the Windows form of the repository path for the mount.
+- The two named volumes `bpafl_server_modules` and `bpafl_tck_modules` hold the folders `node_modules` of `server/` and of `tck/`, so that npm writes its several thousand files into a volume of Docker and not into the repository folder, which a file synchronisation service of the machine can watch. The repository then holds two empty folders `node_modules`, which git ignores. `docker volume rm bpafl_server_modules bpafl_tck_modules` removes the installed packages.
+- Observed on 2026-11-16 in a container of the image `node:24`: Node.js 24.22.3, git 2.39.5 and curl 7.88.1 are present; the repository mounts at `/work`; the four checks run; a connection to `host.docker.internal:54329` succeeds. Observed in a container of the image `eclipse-temurin:21`: OpenJDK 21.0.13.
 
 The form for Ubuntu in the continuous integration, where the workflow installs Node.js 24 and Java 21 on the runner and starts the service container of §9.7:
 
@@ -1101,40 +1111,49 @@ java21() { "$@"; }
 
 - The workflow sets `TEST_DATABASE_URL` and `TEST_APP_ROLE_PASSWORD` as §9.7 states.
 - The commands `grep`, `find`, `ls`, `git` and `python` of the done-when signals run in the shell of the machine and need no container.
-- The four checks of the repository run as one command, which marks the mounted repository as safe for the `git` of the container: `node24 bash -c "git config --global --add safe.directory /work; node scripts/requirements-check.mjs && node scripts/check-sources.mjs && node scripts/check-license-headers.mjs && node scripts/check-private-references.mjs"`. The command is named "the four checks" in §11 and §15, and its last four lines are the result lines of §15 item 1.
+- The four checks of the repository run as one command, which marks the mounted repository as safe for the `git` of the container: `node24 bash -c "git config --global --add safe.directory /work; node scripts/requirements-check.mjs && node scripts/check-sources.mjs && node scripts/check-license-headers.mjs && node scripts/check-private-references.mjs"`. The command is named "the four checks" in §11 and §15, and its last four lines are the result lines of §15 item 1. The image `node:24` holds no `pdftotext`, so the registry check of the Windows form skips the ten quotes of the one stored PDF file and prints `0 problems, 10 quotes skipped, 95 quotes not checked (cited, not stored)`. The Ubuntu form installs `poppler-utils` (§9.7) and prints `0 problems, 0 quotes skipped, 95 quotes not checked (cited, not stored)`, and that line of the continuous integration is the gate for the ten quotes (decision D59, The registry check per environment).
+- The annex check `node24 node scripts/check-annexes.mjs --require P<n>` compares every file of §20, §21 and §22 up to phase P<n> with its block and prints a last line that ends with `0 differ, 0 missing`.
 - Each test command names the reporter `tap`, so that the summary holds the lines `# pass <n>`, `# fail <n>` and `# skipped <n>` on every version of Node.js and on a terminal as well as in a pipe. A done-when signal of a test command is the exit status 0 together with the line `# fail 0`.
 
 ### 11.1 Phase P1: the contract
 
-- **Steps.** The implementer writes the P1 files of §7. The implementer creates `server/package.json` with the name `battery-passport-lifecycle-reference-server`, `"private": true`, `"type": "module"`, the engine rule of §7, the dependencies `express`, `pg`, `ajv`, `ajv-formats` and `ajv-draft-04`, the development dependency `yaml`, and the scripts of §14.1, and runs `node24 bash -c "cd server && npm install"` once, which writes `server/package-lock.json`.
+- **Steps.** The implementer copies the eleven files of §20 into their paths. The implementer runs `git add --renormalize .` once after `.gitattributes` exists; `git status --porcelain` then lists `.gitattributes` and the new files only, because every file of the index outside `sources/` already has LF line endings `[live]`, and `sources/.gitattributes` keeps the third-party texts byte for byte. The owner commits `.gitattributes` with the files of phase P1. The implementer creates `server/package.json` with the name `battery-passport-lifecycle-reference-server`, `"private": true`, `"type": "module"`, the engine rule of §7, the dependencies `express`, `pg`, `ajv`, `ajv-formats` and `ajv-draft-04`, the development dependency `yaml`, and the scripts of §14.1, and runs `node24 bash -c "cd server && npm install"` once, which writes `server/package-lock.json`. The implementer then writes `server/test/contractSchemas.test.mjs` and the two workflow files.
+- **The lock file and the private reference check.** `scripts/check-private-references.mjs` excepts the expression of the letter M and one digit inside `server/package-lock.json` and `tck/package-lock.json`, which a base64 integrity value can hold `[live]`. Every other hit of the check inside a lock file is a finding that the implementer reports.
 - **Done when.** Each of these commands exits 0 and prints the stated text:
   1. `node24 npx --yes @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset .spectral.yaml --fail-severity error`
   2. `grep -c "operationId:" docs/api/openAPI.yaml` prints 4.
   3. `node24 bash -c "cd server && npm ci && node --test --test-reporter=tap test/contractSchemas.test.mjs"` prints the line `# fail 0`.
-  4. The four checks.
+  4. `node24 node scripts/check-annexes.mjs --require P1` prints a last line that ends with `0 differ, 0 missing`.
+  5. The four checks.
+- **The Spectral result.** The author did not run the linter. When the linter reports an error on the file of §20, the implementer stops and reports the rule and the line, because a change of the file is a change of an annex.
 
 ### 11.2 Phase P2: the models
 
-- **The tool.** The implementer downloads the SAMM command line tool once into `tools/`, which git ignores: `node24 bash -c "mkdir -p tools && curl -fsSL -o tools/samm-cli-2.11.1.jar https://github.com/eclipse-esmf/esmf-sdk/releases/download/v2.11.1/samm-cli-2.11.1.jar"`. The address names the releases of the Eclipse project `eclipse-esmf/esmf-sdk` and is not verified against a stored text until the download succeeds; the implementer reports an address that does not answer and does not use another source.
-- **Steps.** The implementer writes the three Turtle files, the three `metadata.json` files and the three `RELEASE_NOTES.md` files, then `scripts/validate-models.sh`, then runs `java21 bash scripts/validate-models.sh --generate`, which writes the three generated schemas, then writes the three example payloads and `server/test/modelExamples.test.mjs`, and extends `models/README.md` and `docs/proposals.md`.
-- **The script.** `scripts/validate-models.sh` removes and creates the directory `tools/models-root`, copies the two folders `sources/Tractus-X/semantic-models/io.catenax.shared.uuid` and `sources/Tractus-X/semantic-models/io.catenax.shared.business_partner_number` and the three namespace folders of `models/` into `tools/models-root` without the `gen` folders, and runs, for each of the three models, `java -jar tools/samm-cli-2.11.1.jar aspect tools/models-root/<namespace>/1.0.0/<Aspect>.ttl validate`. The script prints `VALID <Aspect>` when the tool exits with the status 0 and `FAILED <Aspect>` for every other status, and exits 1 after one failure or more. With the argument `--generate` the script also runs `java -jar tools/samm-cli-2.11.1.jar aspect tools/models-root/<namespace>/1.0.0/<Aspect>.ttl to json-schema -o models/<namespace>/1.0.0/gen/<Aspect>-schema.json` for each model. The form of the two sub-commands of the tool is not verified against a stored text; the implementer reads `java21 java -jar tools/samm-cli-2.11.1.jar help aspect` and reports a difference.
+- **The tool.** The implementer downloads the SAMM command line tool once into `tools/`, which git ignores: `node24 bash -c "mkdir -p tools && curl -fsSL -o tools/samm-cli-2.11.1.jar https://github.com/eclipse-esmf/esmf-sdk/releases/download/v2.11.1/samm-cli-2.11.1.jar"`. Observed on 2026-11-16: the address answers with the status 200, and the file has 110,342,711 bytes and the SHA-256 value `fab66a72e1969ff2e4d9db5d1c0eeb55936f89e2159045576301ea46c49ffc0f`. The script of §21 checks the SHA-256 value before each run and prints `CHECKSUM tools/samm-cli-2.11.1.jar` for another file.
+- **The observed behaviour of the tool.** Observed on 2026-11-16 on the image `eclipse-temurin:21`: `java -jar tools/samm-cli-2.11.1.jar aspect <file.ttl> validate` prints the line "Input model is valid" and exits 0 for a valid model. The command group `aspect <file.ttl> to` has the sub-commands html, java, json, jsonld, openapi, asyncapi, png, schema, svg, aas and sql; `aspect <file.ttl> to schema` prints the JSON schema of the model to the standard output; the tool has no sub-command `json-schema`, and the sub-command `to json` is described by the tool as the generation of an OpenAPI specification. The tool accepts no option `--models-root`.
+- **The resolution of the imported models.** The tool resolves an imported model from the folder layout `<root>/<namespace>/<version>/<File>.ttl` around the input file. The script therefore assembles the temporary models root `tools/models-root` with five namespace folders: copies of the two shared namespaces `io.catenax.shared.uuid` and `io.catenax.shared.business_partner_number` of `sources/Tractus-X/semantic-models/`, and copies of the three proposed namespaces of `models/` without their `gen` folders, and validates each proposed model at its path inside that root. The author observed this resolution on 2026-11-16 with the three files of §21 on a scratch copy. The rule is to be confirmed by the first run of phase P2 in the repository. The fallback, which the implementer applies without a stop when the tool reports an import that the tool cannot resolve: the implementer runs each validation with the working directory `tools/models-root` and the relative path `<namespace>/1.0.0/<Aspect>.ttl`, records the changed command in the completion record, and reports the change at the end of the phase.
+- **Steps.** The implementer copies the thirteen files of §21 into their paths, runs `java21 bash scripts/validate-models.sh --generate`, which creates each `gen` folder and writes the three generated schemas, writes `server/test/modelExamples.test.mjs`, and extends `models/README.md` and `docs/proposals.md`.
 - **Done when.** Each of these commands exits 0 and prints the stated text:
-  1. `java21 bash scripts/validate-models.sh` prints three lines that start with `VALID`.
-  2. `find models -name "*.ttl" | wc -l` prints 3.
-  3. `node24 bash -c "cd server && node --test --test-reporter=tap test/modelExamples.test.mjs"` prints the line `# fail 0`.
-  4. `git status --porcelain tools` prints nothing.
-  5. The four checks.
+  1. `java21 bash scripts/validate-models.sh --generate` prints three lines that start with `VALID` and three lines that start with `GENERATED`.
+  2. A second run of the same command leaves `git status --porcelain models` unchanged, and, once the owner has committed the models, `git diff --exit-code -- models` exits 0 after the run.
+  3. `find models -name "*.ttl" | wc -l` prints 3.
+  4. `node24 bash -c "cd server && node --test --test-reporter=tap test/modelExamples.test.mjs"` prints the line `# fail 0`.
+  5. `git status --porcelain tools` prints nothing.
+  6. `node24 node scripts/check-annexes.mjs --require P2` prints a last line that ends with `0 differ, 0 missing`.
+  7. The four checks.
+
 
 ### 11.3 Phase P3: the database
 
 - **The database.** The tests use the test database of §11.0. The role of `TEST_DATABASE_URL` is a superuser, so the role creates the role `refserver_app` and the schemas, and reads and writes every table in spite of `FORCE ROW LEVEL SECURITY`. `createTestDatabase` (§14.1) stops with the message `TEST_DATABASE_URL must name a superuser or a role with BYPASSRLS` when the role has neither attribute.
-- **Steps.** The implementer writes the P3 files of §7: the seven modules of `server/src/db/`, the three migration files exactly as §9.4 states them, `server/test/support/database.mjs`, `server/test/databaseRules.integration.test.mjs`, `scripts/check-dependency-licenses.mjs` with `server/test/dependencyLicenses.test.mjs`, and `.github/workflows/tests.yml`.
+- **Steps.** The implementer writes the P3 files of §7: the seven modules of `server/src/db/`, the three migration files as copies of §22, `server/test/support/database.mjs`, `server/test/databaseRules.integration.test.mjs`, `scripts/check-dependency-licenses.mjs` with `server/test/dependencyLicenses.test.mjs`, and `.github/workflows/tests.yml`.
 - **Done when.** Each of these commands exits 0 and prints the stated text:
   1. `node24 bash -c "cd server && npm ci && npm test"` prints the line `# fail 0` and runs the four test files that exist.
-  2. `node24 bash -c "cd server && node --test --test-reporter=tap test/databaseRules.integration.test.mjs"` prints the line `# fail 0` and a line `# pass <n>` with `<n>` of 90 or more.
+  2. `node24 bash -c "cd server && node --test --test-reporter=tap test/databaseRules.integration.test.mjs"` prints the line `# fail 0` and eight lines that start with `ok` and name the eight top-level tests `(a)` to `(h)` of §14.2.
   3. `node24 bash -c "cd server && node ../scripts/check-dependency-licenses.mjs"` prints `0 packages outside the licence list`.
-  4. The four checks.
-- **Inspection aids.** Three commands help a reader and prove nothing alone, because each counts lines, comments included: `grep -c "CREATE TABLE" server/src/db/migrations/001_schema.sql` prints 17; `grep -c "CREATE TRIGGER\|CREATE CONSTRAINT TRIGGER" server/src/db/migrations/002_triggers.sql` prints 21; `grep -c "CREATE POLICY" server/src/db/migrations/003_policies.sql` prints 9. The proof of the tables, the triggers, the policies and the absent `DELETE` privilege is the test file of item 2.
+  4. `node24 node scripts/check-annexes.mjs --require P3` prints a last line that ends with `0 differ, 0 missing`.
+  5. The four checks.
+- **Inspection aids.** Three commands help a reader and prove nothing alone, because each counts lines, comments included: `grep -c "CREATE TABLE" server/src/db/migrations/001_schema.sql` prints 17; `grep -c "CREATE TRIGGER\|CREATE CONSTRAINT TRIGGER" server/src/db/migrations/002_triggers.sql` prints 22; `grep -c "CREATE POLICY" server/src/db/migrations/003_policies.sql` prints 9. The proof of the tables, the triggers, the policies and the absent `DELETE` privilege is the test file of item 2.
 - **After the phase.** The owner orders the push of the repository.
 
 
@@ -1208,7 +1227,7 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D16. The permanent manufacturer.** The manufacturer identification of a passport is permanent (SyR-LIFE-155, Manufacturer identification of a passport never changed after issue; SwR-DATASET-208, Database trigger refuses a change of a passport's manufacturer). The passport stores the identification in `manufacturer_bpnl`; the trigger `trg_passport_identity` refuses every change for every database role; the foreign key is `ON DELETE RESTRICT`; and no step writes the acting company into the column. The waste step and the end step write the successor and the recycler into their own columns. This specification rejects an exemption for a migration role, because the reference server migrates no earlier data.
 
-**D17. The named waste successor.** The data provider records the successor that the BatteryBecameWaste notification names, with the role that the notification names, as section 2.1.5 item 4 of the proposal and the reworded SwR-DATASET-191 (Waste step records the named successor, never the actor as manufacturer) state (point 5 of the owner's decision of 2026-11-16, §12.1). The database refuses the status `waste` without a named successor (SwR-RDB-074, Change to waste refused without a named successor): the constraint `passports_waste_successor_check` requires the three successor columns, and the deferred trigger `trg_passport_waste_successor` requires the successor's open responsibility interval at the commit. No step writes the successor or the acting company into `manufacturer_bpnl` (D16). The owner rejected the rule of version 1, which refused a successor with the role `producer` that is not the manufacturer of record, because an importer can be the producer of a battery (Annex B point 13 of the proposal). The system requirement SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) is therefore not met for a named producer that is not the producer of the current passport, and §5.7 holds the rewording that the owner reads before the registry changes.
+**D17. The named waste successor.** The data provider records the successor that the BatteryBecameWaste notification names, with the role that the notification names, as section 2.1.5 item 4 of the proposal and the reworded SwR-DATASET-191 (Waste step records the named successor, never the actor as manufacturer) state (point 5 of the owner's decision of 2026-11-16, §12.1). The database refuses the status `waste` without a named successor (SwR-RDB-074, Change to waste refused without a named successor): the constraint `passports_waste_successor_check` requires the three successor columns, and the deferred function `check_responsibility` requires at the commit the successor's open responsibility interval, which starts at the waste date (decision D55, The dates of the waste status and of the end are rules of the database). No step writes the successor or the acting company into `manufacturer_bpnl` (D16). The owner rejected the rule of version 1, which refused a successor with the role `producer` that is not the manufacturer of record, because an importer can be the producer of a battery (Annex B point 13 of the proposal). The system requirement SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) is therefore not met for a named producer that is not the producer of the current passport, and §5.7 holds the rewording that the owner reads before the registry changes.
 
 **D18. The successor's authorisation with its period.** After the waste status the data provider changes the passport only while a written authorisation of the successor is in force. The passport stores the authorisation in three columns: a reference, a first day and an optional last day. The data provider records the authorisation through `EP-SUCCESSOR-AUTHORISATION`; a later authorisation replaces the earlier one, and each change is written to the audit table with the replaced and the recorded values (§9.2.7), so the replaced authorisation stays on record. The owner decided the design on 2026-11-16 (point 1 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The executor and the trigger `trg_passport_after_waste` read the period against the UTC date of the request (decision D53, One clock in UTC). The end of the passport is exempt (SwR-DATASET-201, End of the passport exempt from the successor authorisation check). The authorised company never writes into the data provider's database: the authorised company reports its event, and the data provider applies the event under the recorded authorisation (D6). The owner's decision rejects an authorisation without a period and a fourth table for the authorisations.
 
@@ -1216,7 +1235,7 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D20. The end of a passport from every status.** The data provider records the end of a passport after PassportEnded from every status, as section 2.1.7 item 3 and section 2.1.5 item 5 of the proposal require ("which the data provider MUST make in every case"), and leaves the status unchanged, as Table 2.1.4 of the proposal states for the recycling. A passport that ends without the waste status keeps its responsible operator and has no waste successor. `EP-REPORT-RECYCLING` sends only PassportEnded. This specification rejects the rule of version 2, which refused PassportEnded for a passport that is not waste: a waste receiver that reached no contract with the data provider sends no BatteryBecameWaste (section 4.3 item 3 of the proposal), and such a passport would otherwise never show its end.
 
-**D21. One definition of the message.** The seven schema files of `docs/api/schemas/` are the one definition of the notification message, in the 2020-12 dialect of JSON Schema that OpenAPI 3.1.0 uses. `docs/api/openAPI.yaml` references the files, and the server compiles the same files. The stored and the generated aspect schemas keep their draft-04 dialect and are compiled by a second compiler class of the same validator family (§10.6). This specification rejects a second definition of the message in code.
+**D21. One definition of the message.** The eight schema files of `docs/api/schemas/` are the one definition of the notification message, in the 2020-12 dialect of JSON Schema that OpenAPI 3.1.0 uses. `docs/api/openAPI.yaml` references the files, and the server compiles the same files. The stored and the generated aspect schemas keep their draft-04 dialect and are compiled by a second compiler class of the same validator family (§10.6). This specification rejects a second definition of the message in code.
 
 **D22. The outbox.** A lifecycle step writes its notifications as `pending` records in the transaction of the step, and the worker sends each record after the commit. A failed commit therefore leaves no notification. This specification rejects sending inside the request before the commit, which notifies a receiver of a step that a failed commit undoes.
 
@@ -1273,9 +1292,21 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D51. The form of a manufacturer name item.** The served element `$.ManufacturerName` of the nameplate is a list with one object whose one key is the language code and whose value is the legal name, the JSON form of a language string of the Semantic Aspect Meta Model. The stored nameplate schema states a list of objects and no property of an item `[live]`, so every object validates. This specification rejects an item with the two properties `language` and `text`, which no stored text states either. The form of the item is chosen by this specification; the owner has not decided.
 
-**D52. The tools in containers.** Node.js 24 runs in a container of the image `node:24`, Java 21 in a container of the image `eclipse-temurin:21`, and PostgreSQL 17 in a container of the image `postgres:17` with a published local port; nothing is installed on the machine, and the SAMM command line tool is downloaded once into `tools/` from the releases of its Eclipse project (§11.0, §11.2). The owner decided the rule on 2026-11-16 (point 5 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The owner's decision rejects an installation of the three tools on the machine.
+**D52. The tools in containers.** Node.js 24 runs in a container of the image `node:24`, Java 21 in a container of the image `eclipse-temurin:21`, and PostgreSQL 17 in a container of the image `postgres:17` with a published local port; nothing is installed on the machine, and the SAMM command line tool is downloaded once into `tools/` from the releases of its Eclipse project (§11.0, §11.2). Two named volumes of Docker hold the installed npm packages, so that the repository folder holds no installed package. The owner decided the rule on 2026-11-16 (point 5 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The owner's decision rejects an installation of the three tools on the machine.
 
 **D53. One clock in UTC.** Every time of the server comes from the injected `clock`, and every date of the server is the UTC date of that time. `createPool` sets the time zone UTC on every connection, and `withTransaction` passes the UTC date to the database in the setting `app.today`, which the trigger of the rule after the waste status reads in place of the date of the database server. This specification rejects two date sources for one rule, which disagree in a test with an advanced clock and close to midnight.
+
+**D54. The lineage of a new passport is open only inside its own transaction.** The column `passports.lineage_open` is set by a trigger at the insertion of a passport: true for a new passport, false for a first passport. The trigger of `passport_lineage_links` admits a link only while the column is true, the executor sets the column to false after the last link, a trigger refuses a change of the column from false to true, and the deferred check of the insertion refuses a commit with an open lineage. A lineage link can therefore exist only for a passport that the same transaction inserted, under a savepoint as well, and no statement of a later transaction adds a link, for the application role and for the owner alike. This specification rejects the comparison of the transaction identifier of the passport row, which version 4 held: an update of the passport by a later transaction gives the row the identifier of that transaction, and a savepoint gives the row another identifier. This specification also rejects a transaction-local setting that names the passport, because a caller that reaches the database under the application role can set the setting itself.
+
+**D55. The dates of the waste status and of the end are rules of the database.** The deferred function `check_responsibility` requires that the open interval of a waste passport starts at the waste date and that an earlier interval ends at the waste date; the constraint `passports_end_after_waste_check` refuses a recycling date before the waste date; the same function refuses a recycling date before the start of the open interval; and a trigger freezes the responsibility intervals of an ended passport, as section 2.1.7 item 4 of the proposal forbids a change of an ended passport. The executor applies the same rules first and answers the refusals of §10.4. This specification rejects rules in the executor alone, which a later implementer of the services can bypass.
+
+**D56. One schema file for the envelope, and the context as a constant.** `LifecycleNotification.schema.json` defines the envelope of each operation: exactly the two properties `header` and `content`, the context of the operation as a constant, and the content schema of the operation. The OpenAPI file references the definition of each operation, and the server validates a body against the same definition, so a body with a third property and a header with the context of another operation are refused by the published contract. Section 4.3 item 4 and Table 4.3 of the proposal fix the context of each operation. This specification rejects an envelope that only the OpenAPI file holds, which the server and the tests cannot compile.
+
+**D57. Line endings.** The file `.gitattributes` stores and checks out every text file with LF line endings (`* text=auto eol=lf`) and marks the binary file types; `sources/.gitattributes` keeps its rule for the third-party texts. A shell script with CRLF line endings fails in the Linux container, and the index of the repository already holds LF for every file outside `sources/` `[live]`. This specification rejects a rule per file type, which a new file type escapes.
+
+**D58. Normative annexes.** §20, §21 and §22 print the files of phases P1 to P3 in full, the implementer copies them, and `scripts/check-annexes.mjs` compares each file with its block. A later change of such a file is a change of this specification. This specification rejects a description in prose alone, from which three reviewers built files that differed in the points that the prose left open.
+
+**D59. The registry check per environment.** The registry check runs in the container of the image `node:24` on the owner's machine, where the check skips the ten quotes of the one stored PDF file, and on the Ubuntu runner with `poppler-utils`, where the check skips no quote; the line of the runner is the gate. This specification rejects the installation of a package in every container run, which needs the network for each check.
 
 **D49. The retry of a failed transport.** The sender repeats a notification whose transport failed with the same `messageId`, up to `NOTIFICATION_MAX_ATTEMPTS` attempts, with a pause of `NOTIFICATION_RETRY_SECONDS` multiplied by the attempt count, and `EP-NOTIFICATION-RETRY` starts a further series (§9.2.5). The duty to send of sections 2.1.4, 2.1.5 and 2.1.7 of the proposal ends only when the receiver offers no asset or refuses the contract. This specification rejects the repetition of the whole event, which sends new messages to the receivers that already applied the step. The two default values are chosen by this specification; the owner has not decided.
 
@@ -1287,6 +1318,7 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 - The implementer must not change a requirement, a decision or an architecture record of `requirements/`, except the field `implementation` in phase P8.
 - The implementer must not write a file outside §7. A file that the work needs and §7 does not list is a finding that the implementer reports.
+- The implementer must not change a file that an annex prints. A defect of an annex file is a finding that the implementer reports with the line of the annex.
 - The implementer must not name a path, a person, a host or a service of a private repository or deployment in any file. `node scripts/check-private-references.mjs` prints `0 private references` before every phase ends.
 - The implementer must not write a secret, a token, a key or a password into a file. `tck/.env.example` holds placeholder values only, and no file holds a default password of a database role.
 - The implementer must not replace a value marked "not verified against a stored text" by a guess. Phase P7 verifies each value of the connector, and a value that the implementer cannot verify is reported.
@@ -1324,10 +1356,10 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 | File | Phase | What the file asserts |
 |---|---|---|
-| `server/test/contractSchemas.test.mjs` | P1 | the seven schemas compile in the 2020-12 dialect; one valid example message per operation validates; an identifier validates in each of the four forms (with and without the prefix `urn:uuid:`, in upper and in lower case) and fails with 35 characters; for each operation, a message without each required property, with a further content property and with a Business Partner Number of 11 characters fails; `docs/api/openAPI.yaml` parses, holds exactly four paths, each with one `post` operation whose `operationId` equals the path name, each operation holds the ten responses of §10.1, the server variable has its default, and the file holds no security scheme |
-| `server/test/modelExamples.test.mjs` | P2 | each of the three generated schemas compiles in the draft-04 dialect; each of the three example files of `models/` validates against its generated schema; the two example payloads of the proposal equal the example files of the lifecycle model and of the access map model, where the test reads the proposal file, takes the first fenced block of the language `json` after the heading "#### 3.2.2 PROPERTIES" and the first such block after the heading "#### 3.4.2 PROPERTIES", and compares the parsed values; the example file of the successors model holds the values of §10.6 |
-| `server/test/databaseRules.integration.test.mjs` | P3 | (a) Through `adminClient`: a second run of `migrate` applies no file; the 17 tables, the 21 triggers and the 9 policies exist by their names in the catalogue. (b) Through `adminClient`, for each named constraint of §9.4.1 one accepted and one refused statement, where the refused statement fails with the constraint name and the SQLSTATE of its kind: `23514` for a CHECK constraint and for a domain, `23505` for a UNIQUE constraint and a unique index, `23503` for a foreign key, `23502` for a NOT NULL column. (c) Through `adminClient`, for each of the 21 triggers of §9.4.2 one accepted and one refused statement, where the refused statement fails with the SQLSTATE `P0001` and a message that starts with the refusal id of the trigger; the cases include an update of `manufacturer_bpnl` by the superuser, a deletion of a passport, a passport inserted without a responsibility interval (refused at the commit), the status `waste` without the successor's open interval (refused at the commit), a lineage link inserted for a passport of an earlier transaction, the three end columns set by one update on a passport of each of the five statuses, and a change of an ended waste passport without an authorisation, which fails with `ERR-DB-PASSPORT-ENDED`. (d) Through `adminClient` with the setting `app.today`: an update of a waste passport is refused without an authorisation, refused on the day before `valid_from`, admitted on the day of `valid_from`, admitted on the day of `valid_to`, refused on the day after `valid_to`, and refused when the setting is absent. (e) Through `appPool`, for each of the nine policies: with `app.acting_bpnl` equal to the Business Partner Number of the row, a SELECT returns the row and an INSERT and an UPDATE succeed; with another Business Partner Number, and without the setting, a SELECT returns 0 rows, an UPDATE changes 0 rows, and an INSERT fails with the SQLSTATE `42501`. (f) Through `appPool`: a `DELETE` on each of the 17 tables fails with `42501`; a SELECT on `schema_migrations` returns the three names, and an INSERT into `schema_migrations` fails with `42501`. (g) Two overlapping transactions: the first sets the end columns of a passport and waits; the second inserts an aspect payload of the passport, blocks until the first commits, and then fails with `ERR-DB-PASSPORT-ENDED`. (h) With the environment variable `TZ` of the test process set to `Pacific/Kiritimati`: a column of the type `date` is read as the stored text `YYYY-MM-DD`, a `numeric` column and a `bigint` column are read as numbers, and a `timestamptz` value is written and read as the same instant |
-| `server/test/dependencyLicenses.test.mjs` | P3 | `listLockedPackages` returns the keys of the lock file of a fixture directory and no nested `package.json`; `licencePasses` for a listed licence, for an unlisted licence, for an `OR` expression with one listed alternative, for an `AND` expression with one unlisted part, for a missing field and for a value that is not a string |
+| `server/test/contractSchemas.test.mjs` | P1 | the eight schemas compile in the 2020-12 dialect with the formats of `ajv-formats`; for each operation, one valid message validates against the envelope definition of the operation and against `LifecycleNotification.schema.json`; for each operation these messages fail: a message with a third top-level property, a message without `content`, a message without `header`, a message with the context of another operation, a message without each required property of the header and of the content, a message with a further content property, a Business Partner Number of 11 characters, an identifier of 35 characters, a `sentDateTime` without a time zone, a content date without a time zone, and the text `tomorrow` as a date; an identifier validates in each of the four forms (with and without the prefix `urn:uuid:`, in upper and in lower case); a passport identifier of 300 characters validates; `ErrorResponse.schema.json` refuses a further property in the response, in `error` and in an item of `messages`; `docs/api/openAPI.yaml` parses, holds exactly four paths, each with one `post` operation whose `operationId` equals the path name and whose request body references the envelope definition of the operation, each operation holds the ten responses of §10.1, the server variable has its default, and the file holds no security scheme |
+| `server/test/modelExamples.test.mjs` | P2 | each of the three generated schemas compiles in the draft-04 dialect; each of the three example files of `models/` validates against its generated schema; the two example payloads of the proposal equal the example files of the lifecycle model and of the access map model, where the test reads the proposal file, takes the first fenced block of the language `json` after the heading "#### 3.2.2 PROPERTIES" and the first such block after the heading "#### 3.4.2 PROPERTIES", and compares the parsed values; the example file of the successors model equals the block of §21 |
+| `server/test/databaseRules.integration.test.mjs` | P3 | The file holds eight top-level tests, named `(a) catalogue` to `(h) types`, each with one sub-test per case. (a) Through `adminClient`: a second run of `migrate` applies no file; the 17 tables, the 12 functions, the 22 triggers, the 9 policies, the two domain constraints `bpnl_check` and `bpns_check` and every named constraint of §9.4.1 exist by their names in the catalogue (`pg_tables`, `pg_proc`, `pg_trigger`, `pg_policies`, `pg_constraint`, `pg_indexes`). (b) Through `adminClient`, one accepted and one refused statement for each constraint whose refusal a statement can reach: each CHECK constraint fails with the SQLSTATE `23514` and its constraint name; a domain fails with `23514` and the constraint name `bpnl_check` or `bpns_check`; each UNIQUE constraint and each unique index fails with `23505` and its name; a NOT NULL column fails with `23502` and the name of the column, because PostgreSQL reports no constraint name for that refusal; each foreign key fails with `23503` and its name, except `passport_lineage_links_passport_fkey`, which no insert reaches because `trg_passport_lineage_links_insert` answers first with `ERR-DB-LINEAGE`, so the catalogue of group (a) proves that key. (c) Through `adminClient`, for each of the 22 triggers one accepted and one refused statement, where the refused statement fails with the SQLSTATE `P0001` and the message of §22; the cases include an update of `manufacturer_bpnl` by the superuser, a deletion of a passport, a passport inserted without a responsibility interval (refused at the commit with `ERR-DB-RESPONSIBILITY`), the status `waste` with the successor's interval that starts at another instant than the waste date (refused at the commit with `ERR-DB-WASTE-SUCCESSOR`), a recycling date before the waste date (`23514`, `passports_end_after_waste_check`), a recycling date before the start of the open interval (`ERR-DB-END-DATE`), an interval change of an ended passport (`ERR-DB-PASSPORT-ENDED`), the three end columns set by one update on a passport of each of the five statuses, and a change of an ended waste passport without an authorisation, which fails with `ERR-DB-PASSPORT-ENDED`. The lineage cases: a new passport with its link and the closing update commits, also when the three statements run under a savepoint; a new passport without the closing update fails at the commit; a transaction that first updates a first passport of an earlier transaction and then inserts a link for that passport fails with `ERR-DB-LINEAGE`; a link for a closed new passport of an earlier transaction fails; an update of `lineage_open` from false to true fails. (d) Through `adminClient` with the setting `app.today`: an update of a waste passport is refused without an authorisation, refused on the day before `valid_from`, admitted on the day of `valid_from`, admitted on the day of `valid_to`, refused on the day after `valid_to`, refused when the setting is absent, and refused with `ERR-DB-SUCCESSOR-AUTHORISATION` on a connection whose earlier transaction set the setting, where the setting is the empty text. (e) Through `appPool`, per table with a policy. For `passports`, `passport_aspect_payloads`, `passport_responsibility_intervals` and `passport_access_records`: with `app.acting_bpnl` equal to the Business Partner Number of the passport, a SELECT returns the row and an INSERT and an UPDATE succeed; with another Business Partner Number, and without the setting, a SELECT returns 0 rows, an UPDATE changes 0 rows, and an INSERT fails with `42501`. For `battery_models`, `passport_purposes`, `passport_successor_links` and `passport_repair_entries`: a SELECT and an INSERT behave in the same way, and an UPDATE fails with `42501` for every company, because the role holds no UPDATE privilege on the table. For `passport_lineage_links`: the accepted INSERT runs in the transaction that inserts the passport; an INSERT with another Business Partner Number or without the setting fails with `P0001` and `ERR-DB-LINEAGE`, because the trigger does not see the passport; an UPDATE fails with `42501`. (f) Through `appPool`: a `DELETE` on each of the 17 tables fails with `42501`; a SELECT on `schema_migrations` returns the three names, and an INSERT into `schema_migrations` fails with `42501`. (g) Two overlapping transactions on two clients: the first sets the end columns of a passport and waits; the second inserts an aspect payload of the passport, blocks until the first commits, and then fails with `ERR-DB-PASSPORT-ENDED`. (h) The test file sets `process.env.TZ = "Pacific/Kiritimati"` in its first statement, before the first `Date` of the process: a column of the type `date` is read as the stored text `YYYY-MM-DD`, a `numeric` column and a `bigint` column are read as numbers, and a `timestamptz` value is written and read as the same instant |
+| `server/test/dependencyLicenses.test.mjs` | P3 | The test builds its fixture at run time in a directory of `os.tmpdir()` (a `package-lock.json` with two packages, the two `package.json` files of the packages, and one nested `package.json` without a licence below the first package) and removes the directory in its `after` hook, because git ignores every folder `node_modules`. `listLockedPackages` returns the two keys of the lock file and not the nested file; `licencePasses` for a listed licence, for an unlisted licence, for an `OR` expression with one listed alternative, for an `AND` expression with one unlisted part, for a missing field and for a value that is not a string. The script runs its command part only when the script is the entry module of the process (`import.meta.url` equals the file address of `process.argv[1]`), so the import of the test starts no check |
 | `server/test/config.test.mjs` | P4 | `loadConfig` names every missing required variable of §9.6 and refuses a malformed value of each checked variable |
 | `server/test/operatorToken.test.mjs` | P4 | a signed token verifies; a changed signature, an expired token, a token without `exp`, a token whose lifetime is above 3600 seconds, a token with another `alg`, a token of another Business Partner Number and a `sub` outside its pattern are refused |
 | `server/test/policy.test.mjs` | P4 | the capabilities of an operator subject and of a partner subject; an unknown subject kind receives none; `requireCapability` throws for a string outside `CAPABILITIES` |
@@ -1406,9 +1438,9 @@ The two criteria of the type SHOULD in Annex A of the proposal are the criterion
 
 Every command runs at the repository root, on the commit that the last phase produces, whose base is the substrate commit of the header, in a shell that holds the two functions and the two variables of §11.0. Each command has one form, which is the same on the owner's Windows machine and on Ubuntu, because the two functions hide the difference. The implementer copies the output of each command into the completion record.
 
-1. The four checks of §11.0 print, in this order, a line that starts with `0 problems`, a line that holds `0 problems`, the line `0 files without a license header or NOTICE section` and the line `0 private references`, and the command exits 0.
+1. The four checks of §11.0 print, in this order, the registry line of the environment (§11.0: `0 problems, 10 quotes skipped` in the container of the owner's machine, `0 problems, 0 quotes skipped` on the Ubuntu runner), a line that holds `0 problems`, the line `0 files without a license header or NOTICE section` and the line `0 private references`, and the command exits 0. `node24 node scripts/check-annexes.mjs --require P3` prints a last line that ends with `0 differ, 0 missing`.
 2. `node24 npx --yes @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset .spectral.yaml --fail-severity error` exits 0.
-3. `java21 bash scripts/validate-models.sh` prints three lines that start with `VALID` and exits 0.
+3. `java21 bash scripts/validate-models.sh --generate` prints three lines that start with `VALID` and three lines that start with `GENERATED`, exits 0, and `git diff --exit-code -- models` then exits 0.
 4. `find models -name "*.ttl" | wc -l` prints 3, and `find models -name metadata.json | wc -l` prints 3.
 5. `node24 bash -c "cd server && npm ci && npm test && node ../scripts/check-dependency-licenses.mjs"` exits 0 and prints the lines `# fail 0` and `0 packages outside the licence list`, and `ls server/test/*.test.mjs | wc -l` prints 31.
 6. `node24 bash -c "cd server && npm ci && cd ../tck && npm ci && TCK_BINDING=in-process npm test && node ../scripts/check-dependency-licenses.mjs"` exits 0 and prints the lines `# fail 0`, `# skipped 0` and `0 packages outside the licence list`.
@@ -1619,9 +1651,10 @@ The table names, for each requirement of §5.1 and §5.2, each verification meas
 Each item of the checklist has its section: the header (the table at the top of the document); how to read (§1); goal (§2); scope (§3); users and success measures (§4); requirements (§5); files to read (§6); files to write (§7); deletions (§8); sources of truth (§9.1); architecture (§9.2, §9.3, §9.4, §9.6, §9.7 and §9.8, where the column "Endpoint id" of §9.3 stands for the test id column, because the specification has no screen); strings (§9.5); data contract (§10); decisions (§12); notes for the implementer (§13); tests (§14); done when (§15); import dependencies and cutover order (§16); traceability (§17); gate evidence (§18).
 
 - **Checker command**, in a POSIX shell at the repository root: `python scripts/spec_gate_check.py docs/architecture/implementation_plan.md --src . --screens-heading "Interfaces" --id-column "Endpoint id" --testid-prefix "EP-"`
-- **Checker results**: `result: PASS` on 2026-11-16 for each of the versions 1 to 4, each against the working tree of this repository with that version of this document.
-- **Registry check, version 4**: a script compared every requirement, measure and decision identifier and every title of this document with the registry of `requirements/` at the commit e9f7ba1 on 2026-11-16: 0 unknown identifiers and 0 titles that differ.
-- **Independent review**: a reviewer that is not the author reviewed version 2 against the commit 1b85963 and raised 64 findings (5 blocking, 31 major, 28 minor). The author verified each finding against the texts and found none wrong. Version 3 closed each finding by a change, as the first table states. A second reviewer that is not the author reviewed version 3 and raised 36 findings (2 blocking, 20 major, 14 minor), three of which reopen findings of the first review (R2-010, R2-020 and R2-026). The author verified each finding against the texts and found none wrong. Version 4 closes each finding by a change, as the second table states. No reviewer has reviewed version 4.
+- **Checker results**: `result: PASS` on 2026-11-16 for each of the versions 1 to 5, each against the working tree of this repository with that version of this document.
+- **Registry check, version 5**: a script compared every requirement, measure and decision identifier and every title of this document with the registry of `requirements/` at the commit 4ccd705 on 2026-11-16: 0 unknown identifiers and 0 titles that differ.
+- **Annex check, version 5**: a script compared the prose with the annexes on 2026-11-16: the 17 tables of §9.4.1, the 22 trigger names and the 12 function names of §9.4.2, the 9 policy names of §9.4.3, the property names of the header and of the four contents of §10.1, and the property names of sections 3.2.2, 3.3 and 3.4.2 of the proposal equal the names of the files of §20, §21 and §22: 0 differences.
+- **Independent review**: a reviewer that is not the author reviewed version 2 against the commit 1b85963 and raised 64 findings (5 blocking, 31 major, 28 minor). The author verified each finding against the texts and found none wrong. Version 3 closed each finding by a change, as the first table states. A second reviewer that is not the author reviewed version 3 and raised 36 findings (2 blocking, 20 major, 14 minor), three of which reopen findings of the first review (R2-010, R2-020 and R2-026). The author verified each finding against the texts and found none wrong. Version 4 closed each finding by a change, as the second table states. A third reviewer that is not the author built phases P1 to P3 from version 4 on a scratch copy and raised 19 findings (1 blocking, 6 major, 12 minor). The author verified each finding against the texts and against the SQL files and the outputs of the reviewer, and found none wrong. Version 5 closes each finding by a change, as the third table states. No reviewer has reviewed version 5.
 
 | Finding | Severity | How version 3 closes the finding | Section |
 |---|---|---|---|
@@ -1729,7 +1762,30 @@ Each item of the checklist has its section: the header (the table at the top of 
 | R3-035 | minor | the public reading needs one entry or more, and a new payload is checked against every later map version | §9.2.4 |
 | R3-036 | minor | the change of purchaser opens the records of every aspect key that holds the battery status | D30 (The change of purchaser) |
 
+| Finding of the third review | Severity | How version 5 closes the finding | Section |
+|---|---|---|---|
+| R4-001 | blocking | group (e) of the database rule test states, per table, the grant, the trigger order and the error that PostgreSQL returns | §14.2, §9.4.2 |
+| R4-002 | major | the lineage rule uses a column that the insertion sets and the executor clears; the bypass case and the savepoint case are tests, and the author ran both | D54 (The lineage of a new passport is open only inside its own transaction), §9.4.2, §22, §14.2 |
+| R4-003 | major | group (b) names the one foreign key that no statement reaches, the column name of a NOT NULL refusal and the two domain constraints | §14.2, §9.4.1 |
+| R4-004 | major | §11.2 states the observed sub-commands of the tool; the script uses `to schema` and creates each `gen` folder; the author ran the script | §11.2, §21 |
+| R4-005 | major | `.gitattributes` is a file of phase P1, with the step of the renormalisation | D57 (Line endings), §7, §11.1, §20 |
+| R4-006 | major | the header schema holds the enumeration of the four contexts, and the envelope definition of each operation fixes its context as a constant | D56 (One schema file for the envelope, and the context as a constant), §10.1, §20 |
+| R4-007 | major | one schema file defines the envelope; the OpenAPI file references the file; the first check of the receiving step refuses a body with a third property | D56, §10.1, §10.4, §20 |
+| R4-008 | minor | the registry line is stated per environment, and the line of the Ubuntu runner is the gate | D59 (The registry check per environment), §11.0, §15, §9.7 |
+| R4-009 | minor | the trigger reads the setting through `NULLIF`, and the behaviour of an absent, an empty and a wrong setting is stated and tested | §9.4.2, §22, §14.2 |
+| R4-010 | minor | the database ties the waste date and the recycling date to the responsibility intervals | D55 (The dates of the waste status and of the end are rules of the database), §9.4.1, §9.4.2, §10.4 |
+| R4-011 | minor | a trigger freezes the responsibility intervals of an ended passport | D55, §9.4.2 |
+| R4-012 | minor | a passport identifier has no upper limit in the public schemas | §10.1, §20 |
+| R4-013 | minor | the server asserts the format of a date and time, and the test holds the failing cases | §10.1, §14.2 |
+| R4-014 | minor | the annex prints the OpenAPI file and the schema files with every description, summary, tag and rule for further properties | §20, §10.1 |
+| R4-015 | minor | the annex prints the three model files, the metadata files and the release notes with the headers | §21, §10.6, §7 |
+| R4-016 | minor | the done-when signal of phase P2 and the workflow generate the schemas and compare them with the commit | §11.2, §9.7, §15 |
+| R4-017 | minor | the eight groups are named top-level tests; the test sets the time zone in its first statement; the licence fixture is built at run time; the script has its entry guard; the annex gives the sentence of each refusal | §14.2, §11.3, §22 |
+| R4-018 | minor | the private reference check excepts the one expression inside the two lock files, and every other hit is a finding | §11.1 |
+| R4-019 | minor | two named volumes hold the installed packages outside the repository folder | §11.0 |
+
 ## 19. Open points for the owner
+
 
 ### 19.1 Decisions that wait for the owner
 
@@ -1752,10 +1808,2061 @@ No decision of the table changes a file of phases P1, P2 or P3: the column `comp
 
 1. The registry texts of §5.7 that wait for the owner, the rewording of SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) first, and the sentence proposed for Table 4.4 of the next draft of the proposal.
 2. The three open decisions of the registry of §5.5.
-3. The claims marked "not verified against a stored text": the two header names and the key header of §9.6; the paths of the connector's management API, of the registry API and of the BPN-DID Resolution Service (§9.6); the patterns of the MessageHeader model other than the identifier pattern, and the four values of `messageType` (§10.1); the `dct:type` of a submodel offer (§10.5); the five semantic identifiers of §10.6 that carry the mark; the meaning of the path suffix `/$value` (§9.3); the download address and the sub-commands of the SAMM command line tool (§11.2); every image name and version of §10.7; the action names of §9.7; the major versions and the licences of §9.8; and the need for the file `DEPENDENCIES` (§3.2).
-4. The connector release that the owner names before phase P7 (§11.7).
-5. The review of version 4 by a reviewer who is not the author.
+3. The claims marked "not verified against a stored text": the two header names and the key header of §9.6; the paths of the connector's management API, of the registry API and of the BPN-DID Resolution Service (§9.6); the patterns of the MessageHeader model other than the identifier pattern, and the four values of `messageType` (§10.1); the `dct:type` of a submodel offer (§10.5); the five semantic identifiers of §10.6 that carry the mark; the meaning of the path suffix `/$value` (§9.3); every image name and version of §10.7; the action names of §9.7; the major versions and the licences of §9.8; and the need for the file `DEPENDENCIES` (§3.2).
+4. The Spectral linter has not run on the OpenAPI file of §20, and the resolution of the imported models is to be confirmed by the first run of phase P2 in the repository (§11.1, §11.2).
+5. The connector release that the owner names before phase P7 (§11.7).
+6. The review of version 5 by a reviewer who is not the author.
 
+
+
+## 20. Annex A: the files of phase P1 in full
+
+The annexes are normative (decision D58, Normative annexes). Each block below a heading "File" is the whole content of the named file. The implementer copies each block into its file without a change, with LF line endings, and `node scripts/check-annexes.mjs` compares each file with its block. The author built every file of the three annexes on 2026-11-16 and verified the files by a run: the eight schema files compile in the 2020-12 dialect and accept and refuse the cases of `server/test/contractSchemas.test.mjs` that a validator without format assertion decides; the OpenAPI file parses and holds the four operations with their ten responses. The author did not run the Spectral linter, because the run needs a download.
+
+#### File: `.gitattributes` (phase P1)
+
+````text
+################################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+################################################################################
+
+# Text files are stored and checked out with LF line endings on every machine.
+* text=auto eol=lf
+
+# Binary files are never converted.
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.xlsx binary
+````
+
+#### File: `.spectral.yaml` (phase P1)
+
+````text
+################################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+################################################################################
+
+# The ruleset of the OpenAPI lint: the OpenAPI rules of Spectral.
+extends:
+  - "spectral:oas"
+````
+
+#### File: `docs/api/openAPI.yaml` (phase P1)
+
+````text
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+openapi: 3.1.0
+info:
+  title: Battery Passport Lifecycle Notification API
+  version: 1.0.0
+  description: >-
+    The lifecycle notification API that the proposal CX-0160-4 (Battery Passport after the First Passport)
+    defines in its section 4.3. A sender reports one lifecycle event of a battery after its first passport
+    to a receiver. The API has four operations, one POST endpoint per operation. The API is proposed and
+    is not released. The connector of the receiver authenticates the caller, so this specification defines
+    no security scheme.
+  contact:
+    name: The maintainers of the repository battery-passport-after-first-life
+    url: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/issues
+  license:
+    name: CC-BY-4.0
+    identifier: CC-BY-4.0
+servers:
+  - url: "{baseUrl}/api/lifecycle-notifications"
+    description: The notification endpoints of a receiver, behind the data plane of the receiver's connector.
+    variables:
+      baseUrl:
+        default: https://provider.example
+        description: The address of the server of the receiver.
+tags:
+  - name: LifecycleNotification
+    description: The four operations of the lifecycle notification API.
+paths:
+  /NewPassportIssued:
+    post:
+      tags:
+        - LifecycleNotification
+      operationId: NewPassportIssued
+      summary: The second-life operator reports a new passport to the data provider of an original passport.
+      description: >-
+        The sender is the second-life operator that issued a new passport. The receiver is the data provider
+        of one original passport. The context of the header is
+        BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "schemas/LifecycleNotification.schema.json#/$defs/NewPassportIssued"
+      responses:
+        "200":
+          $ref: "#/components/responses/Accepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/BodyTooLarge"
+        "422":
+          $ref: "#/components/responses/StepRefused"
+        "500":
+          $ref: "#/components/responses/ReceiverFailed"
+  /BatteryRepaired:
+    post:
+      tags:
+        - LifecycleNotification
+      operationId: BatteryRepaired
+      summary: The repairer reports a repair to the data provider of the passport.
+      description: >-
+        The sender is the repairer of the battery. The receiver is the data provider of the passport of the
+        battery. The context of the header is
+        BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "schemas/LifecycleNotification.schema.json#/$defs/BatteryRepaired"
+      responses:
+        "200":
+          $ref: "#/components/responses/Accepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/BodyTooLarge"
+        "422":
+          $ref: "#/components/responses/StepRefused"
+        "500":
+          $ref: "#/components/responses/ReceiverFailed"
+  /BatteryBecameWaste:
+    post:
+      tags:
+        - LifecycleNotification
+      operationId: BatteryBecameWaste
+      summary: The waste receiver reports the waste status to the data provider of the passport and to the successor.
+      description: >-
+        The sender is the waste receiver that took the battery over as waste. The receivers are the data
+        provider of the passport of the battery and the successor that the notification names. The context of
+        the header is BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "schemas/LifecycleNotification.schema.json#/$defs/BatteryBecameWaste"
+      responses:
+        "200":
+          $ref: "#/components/responses/Accepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/BodyTooLarge"
+        "422":
+          $ref: "#/components/responses/StepRefused"
+        "500":
+          $ref: "#/components/responses/ReceiverFailed"
+  /PassportEnded:
+    post:
+      tags:
+        - LifecycleNotification
+      operationId: PassportEnded
+      summary: The recycler reports the recycling of a battery, which ends the passport.
+      description: >-
+        The sender is the recycler of the battery. The receivers are the data provider of the passport, the
+        manufacturer that the nameplate names and the successor from whom the recycler received the battery.
+        The context of the header is BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "schemas/LifecycleNotification.schema.json#/$defs/PassportEnded"
+      responses:
+        "200":
+          $ref: "#/components/responses/Accepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/BodyTooLarge"
+        "422":
+          $ref: "#/components/responses/StepRefused"
+        "500":
+          $ref: "#/components/responses/ReceiverFailed"
+components:
+  responses:
+    Accepted:
+      description: The receiver accepted the notification. The outcome is applied, recorded or duplicate.
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/NotificationAccepted.schema.json"
+    BadRequest:
+      description: >-
+        The body is not a valid notification of the operation, the context does not name the operation, or the
+        header names another receiver (ERR-RX-HEADER-INVALID, ERR-RX-CONTENT-INVALID, ERR-RX-CONTEXT-MISMATCH,
+        ERR-RX-RECEIVER-MISMATCH).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    Unauthenticated:
+      description: The request carries no valid credential (ERR-AC-UNAUTHENTICATED).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    Forbidden:
+      description: >-
+        The sender of the header differs from the participant that the connector presented, or the subject
+        lacks the capability of the endpoint (ERR-RX-SENDER-MISMATCH, ERR-AC-CAPABILITY-MISSING).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    NotFound:
+      description: No passport of the receiver carries the named passport identifier (ERR-RX-PASSPORT-UNKNOWN).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    MethodNotAllowed:
+      description: The endpoint accepts the method POST only (ERR-RX-METHOD-NOT-ALLOWED).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    Conflict:
+      description: A stored message of another sender or with another content carries the same messageId (ERR-RX-MESSAGE-ID-REUSED).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    BodyTooLarge:
+      description: The body is larger than one megabyte (ERR-RX-BODY-TOO-LARGE).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    StepRefused:
+      description: >-
+        The state of the passport does not admit the step of the operation, or the content holds a property
+        outside the content of the operation (ERR-RX-STEP-REFUSED, ERR-RX-CHANGE-OUTSIDE-STEP).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+    ReceiverFailed:
+      description: The receiver failed to store the notification (ERR-RX-INTERNAL).
+      content:
+        application/json:
+          schema:
+            $ref: "schemas/ErrorResponse.schema.json"
+````
+
+#### File: `docs/api/schemas/MessageHeader.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MessageHeader.schema.json",
+  "title": "MessageHeader",
+  "description": "The header of a lifecycle notification, with the properties of the Catena-X message header in version 3.0.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "messageId",
+    "context",
+    "sentDateTime",
+    "senderBpn",
+    "receiverBpn",
+    "version"
+  ],
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of the message, unique per message."
+    },
+    "context": {
+      "type": "string",
+      "enum": [
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1",
+        "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1"
+      ],
+      "description": "The context of the operation, as Table 4.3 of the proposal CX-0160-4 states the context."
+    },
+    "sentDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which the sender sent the message, with a time zone."
+    },
+    "senderBpn": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the legal entity that sends the message."
+    },
+    "receiverBpn": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the legal entity that receives the message."
+    },
+    "version": {
+      "const": "3.0.0",
+      "description": "The version of the message header."
+    },
+    "expectedResponseBy": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time by which the sender expects a response."
+    },
+    "relatedMessageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of a message to which this message relates."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/LifecycleNotification.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LifecycleNotification.schema.json",
+  "title": "LifecycleNotification",
+  "description": "The envelope of a lifecycle notification: an object with exactly the two properties header and content. One definition per operation fixes the context of the header and the schema of the content.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/NewPassportIssued"
+    },
+    {
+      "$ref": "#/$defs/BatteryRepaired"
+    },
+    {
+      "$ref": "#/$defs/BatteryBecameWaste"
+    },
+    {
+      "$ref": "#/$defs/PassportEnded"
+    }
+  ],
+  "$defs": {
+    "NewPassportIssued": {
+      "title": "NewPassportIssuedMessage",
+      "description": "The message of the operation NewPassportIssued: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1"
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "$ref": "NewPassportIssued.schema.json"
+        }
+      }
+    },
+    "BatteryRepaired": {
+      "title": "BatteryRepairedMessage",
+      "description": "The message of the operation BatteryRepaired: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1"
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "$ref": "BatteryRepaired.schema.json"
+        }
+      }
+    },
+    "BatteryBecameWaste": {
+      "title": "BatteryBecameWasteMessage",
+      "description": "The message of the operation BatteryBecameWaste: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1"
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "$ref": "BatteryBecameWaste.schema.json"
+        }
+      }
+    },
+    "PassportEnded": {
+      "title": "PassportEndedMessage",
+      "description": "The message of the operation PassportEnded: the header with the context of the operation, and the content of the operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "content"
+      ],
+      "properties": {
+        "header": {
+          "allOf": [
+            {
+              "$ref": "MessageHeader.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "context"
+              ],
+              "properties": {
+                "context": {
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1"
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "$ref": "PassportEnded.schema.json"
+        }
+      }
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/NewPassportIssued.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NewPassportIssued.schema.json",
+  "title": "NewPassportIssued",
+  "description": "The content of the operation NewPassportIssued: the second-life operator tells the data provider of an original passport that a new passport was issued.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "catenaXId",
+    "operation",
+    "operationDate",
+    "predecessorPassportIdentifier"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the new passport."
+    },
+    "catenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the digital twin of the new passport."
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "preparationForReUse",
+        "preparationForRepurposing",
+        "repurposing",
+        "remanufacturing"
+      ],
+      "description": "The operation that issued the new passport."
+    },
+    "operationDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which the new passport was issued."
+    },
+    "predecessorPassportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the one original passport of the receiver that the notification concerns."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/BatteryRepaired.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "BatteryRepaired.schema.json",
+  "title": "BatteryRepaired",
+  "description": "The content of the operation BatteryRepaired: the repairer tells the data provider of a passport that the battery was repaired.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "repairDate",
+    "repairCertificateCatenaXId"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the passport of the repaired battery."
+    },
+    "repairDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time of the repair."
+    },
+    "repairCertificateCatenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the digital twin of the repair certificate."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/BatteryBecameWaste.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "BatteryBecameWaste.schema.json",
+  "title": "BatteryBecameWaste",
+  "description": "The content of the operation BatteryBecameWaste: the waste receiver tells the data provider of a passport and the successor that the battery became waste.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "successorBpnl",
+    "successorRole",
+    "date"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the passport of the waste battery."
+    },
+    "successorBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the successor that takes over the responsibility for the passport."
+    },
+    "successorRole": {
+      "type": "string",
+      "enum": [
+        "producer",
+        "producerResponsibilityOrganisation",
+        "wasteManagementOperator"
+      ],
+      "description": "The role of the successor."
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which the battery became waste."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/PassportEnded.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PassportEnded.schema.json",
+  "title": "PassportEnded",
+  "description": "The content of the operation PassportEnded: the recycler tells the receivers that the battery was recycled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "recyclingDate",
+    "recyclerBpnl"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the passport of the recycled battery."
+    },
+    "recyclingDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time of the recycling."
+    },
+    "recyclerBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the recycler."
+    },
+    "materialRecyclingCertificateCatenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the digital twin of the material recycling certificate."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/NotificationAccepted.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NotificationAccepted.schema.json",
+  "title": "NotificationAccepted",
+  "description": "The body of the answer 200 of a notification endpoint.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "messageId",
+    "outcome"
+  ],
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The identifier of the received message, in lower case with the prefix urn:uuid:."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "applied",
+        "recorded",
+        "duplicate"
+      ],
+      "description": "The outcome: the receiver applied the step, recorded the message without a change of a passport, or had stored the same message before."
+    }
+  }
+}
+````
+
+#### File: `docs/api/schemas/ErrorResponse.schema.json` (phase P1)
+
+````text
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ErrorResponse.schema.json",
+  "title": "ErrorResponse",
+  "description": "The body of every refusal: the error envelope together with the messages of a result object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "success",
+    "error",
+    "messages"
+  ],
+  "properties": {
+    "success": {
+      "const": false,
+      "description": "The constant false."
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message",
+        "code"
+      ],
+      "description": "The refusal.",
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The text of the refusal: what happened, why the rule exists, who must act, and the next action."
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The identifier of the refusal."
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The messages of the result object: the text of the refusal first, then one message per detail.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "messageType",
+          "text"
+        ],
+        "properties": {
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "Error",
+              "Warning",
+              "Info",
+              "Exception"
+            ],
+            "description": "The type of the message."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The text of the message."
+          }
+        }
+      }
+    }
+  }
+}
+````
+
+## 21. Annex B: the files of phase P2 in full
+
+The author validated the three model files of this annex on 2026-11-16 with the SAMM command line tool 2.11.1 in a container of the image `eclipse-temurin:21`, on a scratch copy outside the repository: the script of this annex printed `VALID` for each of the three models, the tool printed "Input model is valid" for each, two runs of the script with the argument `--generate` wrote the same three schema files byte for byte, and each of the three example payloads validates against its generated schema. The generated schema files are the output of the tool and are not printed in this annex.
+
+#### File: `scripts/validate-models.sh` (phase P2)
+
+````text
+#!/usr/bin/env bash
+################################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+################################################################################
+
+# Validates the three proposed aspect models with the SAMM command line tool 2.11.1.
+# With the argument --generate the script also writes the JSON schema of each model.
+# The script runs at the repository root, in a shell with Java 21.
+set -euo pipefail
+
+JAR="tools/samm-cli-2.11.1.jar"
+JAR_SHA256="fab66a72e1969ff2e4d9db5d1c0eeb55936f89e2159045576301ea46c49ffc0f"
+ROOT="tools/models-root"
+SHARED="sources/Tractus-X/semantic-models"
+MODELS=(
+  "io.catenax.battery.passport_lifecycle:BatteryPassportLifecycle"
+  "io.catenax.battery.passport_successors:BatteryPassportSuccessors"
+  "io.catenax.battery.passport_access_map:BatteryPassportAccessMap"
+)
+
+if [ ! -f "$JAR" ]; then
+  echo "MISSING $JAR"
+  exit 1
+fi
+if ! echo "$JAR_SHA256  $JAR" | sha256sum -c --quiet -; then
+  echo "CHECKSUM $JAR"
+  exit 1
+fi
+
+# The tool resolves an imported model from the folder layout <root>/<namespace>/<version>/<File>.ttl
+# around the input file, so the script assembles one models root with the five namespaces.
+rm -rf "$ROOT"
+mkdir -p "$ROOT"
+cp -r "$SHARED/io.catenax.shared.uuid" "$ROOT/"
+cp -r "$SHARED/io.catenax.shared.business_partner_number" "$ROOT/"
+for entry in "${MODELS[@]}"; do
+  namespace="${entry%%:*}"
+  aspect="${entry##*:}"
+  mkdir -p "$ROOT/$namespace/1.0.0"
+  cp "models/$namespace/1.0.0/$aspect.ttl" "$ROOT/$namespace/1.0.0/$aspect.ttl"
+done
+
+failed=0
+for entry in "${MODELS[@]}"; do
+  namespace="${entry%%:*}"
+  aspect="${entry##*:}"
+  log="$ROOT/$aspect.validate.log"
+  if java -jar "$JAR" aspect "$ROOT/$namespace/1.0.0/$aspect.ttl" validate > "$log" 2>&1 && grep -q "Input model is valid" "$log"; then
+    echo "VALID $aspect"
+  else
+    echo "FAILED $aspect"
+    cat "$log"
+    failed=1
+  fi
+done
+if [ "$failed" -ne 0 ]; then
+  exit 1
+fi
+
+if [ "${1:-}" = "--generate" ]; then
+  for entry in "${MODELS[@]}"; do
+    namespace="${entry%%:*}"
+    aspect="${entry##*:}"
+    mkdir -p "models/$namespace/1.0.0/gen"
+    java -jar "$JAR" aspect "$ROOT/$namespace/1.0.0/$aspect.ttl" to schema > "models/$namespace/1.0.0/gen/$aspect-schema.json"
+    echo "GENERATED $aspect"
+  done
+fi
+````
+
+#### File: `models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl` (phase P2)
+
+````text
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#> .
+@prefix ext-uuid: <urn:samm:io.catenax.shared.uuid:2.1.0#> .
+@prefix ext-bpn: <urn:samm:io.catenax.shared.business_partner_number:2.0.0#> .
+
+:BatteryPassportLifecycle a samm:Aspect ;
+   samm:preferredName "Battery passport lifecycle"@en ;
+   samm:description "The lifecycle record of a battery passport after the first passport: the predecessor links of a new passport, the successor that takes over the responsibility for the passport when the battery becomes waste, and the end of the passport after the recycling of the battery."@en ;
+   samm:properties ( :predecessors [ samm:property :wasteResponsibility ; samm:optional true ] [ samm:property :endOfPassport ; samm:optional true ] ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:predecessors a samm:Property ;
+   samm:preferredName "Predecessors"@en ;
+   samm:description "One entry per original passport; empty on a first passport."@en ;
+   samm:characteristic :PredecessorsTrait .
+
+:PredecessorsTrait a samm-c:Trait ;
+   samm:preferredName "Predecessors trait"@en ;
+   samm:description "The list of the predecessor links with its length constraint."@en ;
+   samm-c:baseCharacteristic :PredecessorsCharacteristic ;
+   samm-c:constraint :PredecessorsLengthConstraint .
+
+:PredecessorsCharacteristic a samm-c:List ;
+   samm:preferredName "Predecessors characteristic"@en ;
+   samm:description "The list of the predecessor links of a passport."@en ;
+   samm:dataType :PassportLink .
+
+:PredecessorsLengthConstraint a samm-c:LengthConstraint ;
+   samm:preferredName "Predecessors length constraint"@en ;
+   samm:description "The list of the predecessor links holds zero or more entries."@en ;
+   samm-c:minValue "0"^^xsd:nonNegativeInteger .
+
+:PassportLink a samm:Entity ;
+   samm:preferredName "Passport link"@en ;
+   samm:description "The link from a new passport to one original passport."@en ;
+   samm:properties ( :passportIdentifier :catenaXId :dataProviderBpnl :operation :operationDate ) .
+
+:passportIdentifier a samm:Property ;
+   samm:preferredName "Passport identifier"@en ;
+   samm:description "The digitalProductPassportId of the original passport."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:uuid:5f0c1c7e-6b1e-4a37-9a59-0b1d7c3e2a10" .
+
+:catenaXId a samm:Property ;
+   samm:preferredName "Catena-X identifier"@en ;
+   samm:description "The catenaXId of the original twin."@en ;
+   samm:characteristic ext-uuid:UuidV4Trait ;
+   samm:exampleValue "urn:uuid:9a2b8f61-3c5d-4e7a-8b1f-2d6c4a0e9f33" .
+
+:dataProviderBpnl a samm:Property ;
+   samm:preferredName "Data provider BPNL"@en ;
+   samm:description "The BPNL of the data provider of the original passport (the manufacturerId of the original twin)."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000001" .
+
+:operation a samm:Property ;
+   samm:preferredName "Operation"@en ;
+   samm:description "The operation that issued the new passport."@en ;
+   samm:characteristic :OperationEnumeration ;
+   samm:exampleValue "remanufacturing" .
+
+:OperationEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Operation enumeration"@en ;
+   samm:description "The four operations after which a new passport is issued."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "preparationForReUse" "preparationForRepurposing" "repurposing" "remanufacturing" ) .
+
+:operationDate a samm:Property ;
+   samm:preferredName "Operation date"@en ;
+   samm:description "The date the new passport was issued."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2031-05-04T00:00:00Z"^^xsd:dateTime .
+
+:wasteResponsibility a samm:Property ;
+   samm:preferredName "Waste responsibility"@en ;
+   samm:description "Present once the battery is waste."@en ;
+   samm:characteristic :WasteResponsibilityCharacteristic .
+
+:WasteResponsibilityCharacteristic a samm:Characteristic ;
+   samm:preferredName "Waste responsibility characteristic"@en ;
+   samm:description "The successor that takes over the responsibility for the passport when the battery becomes waste."@en ;
+   samm:dataType :WasteResponsibility .
+
+:WasteResponsibility a samm:Entity ;
+   samm:preferredName "Waste responsibility"@en ;
+   samm:description "The successor, the role of the successor and the date on which the battery became waste."@en ;
+   samm:properties ( :successorBpnl :successorRole :date ) .
+
+:successorBpnl a samm:Property ;
+   samm:preferredName "Successor BPNL"@en ;
+   samm:description "The BPNL of the successor."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000003" .
+
+:successorRole a samm:Property ;
+   samm:preferredName "Successor role"@en ;
+   samm:description "The role of Art. 77(7), second subparagraph."@en ;
+   samm:characteristic :SuccessorRoleEnumeration ;
+   samm:exampleValue "producerResponsibilityOrganisation" .
+
+:SuccessorRoleEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Successor role enumeration"@en ;
+   samm:description "The three roles of a successor: the producer, the producer responsibility organisation and the waste management operator."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "producer" "producerResponsibilityOrganisation" "wasteManagementOperator" ) .
+
+:date a samm:Property ;
+   samm:preferredName "Date"@en ;
+   samm:description "The date the battery became waste."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2039-02-11T00:00:00Z"^^xsd:dateTime .
+
+:endOfPassport a samm:Property ;
+   samm:preferredName "End of passport"@en ;
+   samm:description "Present once the battery is recycled."@en ;
+   samm:characteristic :EndOfPassportCharacteristic .
+
+:EndOfPassportCharacteristic a samm:Characteristic ;
+   samm:preferredName "End of passport characteristic"@en ;
+   samm:description "The end of the passport after the recycling of the battery."@en ;
+   samm:dataType :EndOfPassport .
+
+:EndOfPassport a samm:Entity ;
+   samm:preferredName "End of passport"@en ;
+   samm:description "The date of the recycling and the recycler."@en ;
+   samm:properties ( :recyclingDate :recyclerBpnl ) .
+
+:recyclingDate a samm:Property ;
+   samm:preferredName "Recycling date"@en ;
+   samm:description "The date of the recycling."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2040-06-30T00:00:00Z"^^xsd:dateTime .
+
+:recyclerBpnl a samm:Property ;
+   samm:preferredName "Recycler BPNL"@en ;
+   samm:description "The BPNL of the recycler."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000004" .
+````
+
+#### File: `models/io.catenax.battery.passport_lifecycle/1.0.0/metadata.json` (phase P2)
+
+````text
+{ "status" : "draft" }
+````
+
+#### File: `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle.json` (phase P2)
+
+````text
+{
+  "predecessors": [
+    {
+      "passportIdentifier": "urn:uuid:5f0c1c7e-6b1e-4a37-9a59-0b1d7c3e2a10",
+      "catenaXId": "urn:uuid:9a2b8f61-3c5d-4e7a-8b1f-2d6c4a0e9f33",
+      "dataProviderBpnl": "BPNL000000000001",
+      "operation": "remanufacturing",
+      "operationDate": "2031-05-04T00:00:00Z"
+    }
+  ],
+  "wasteResponsibility": {
+    "successorBpnl": "BPNL000000000003",
+    "successorRole": "producerResponsibilityOrganisation",
+    "date": "2039-02-11T00:00:00Z"
+  }
+}
+````
+
+#### File: `models/io.catenax.battery.passport_lifecycle/RELEASE_NOTES.md` (phase P2)
+
+````text
+# Changelog
+
+All notable changes to this model will be documented in this file.
+
+## [Unreleased]
+
+## [1.0.0] - 2026-11-16
+
+### Added
+
+- Initial version of the proposed aspect model BatteryPassportLifecycle: the predecessor links of a new passport, the successor that takes over the responsibility for a waste battery, and the end of the passport. The model is proposed in the document CX-0160-4 (Battery Passport after the First Passport) and is not released.
+
+## NOTICE
+
+This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
+
+- SPDX-License-Identifier: CC-BY-4.0
+- SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
+- SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/models/io.catenax.battery.passport_lifecycle/RELEASE_NOTES.md
+````
+
+#### File: `models/io.catenax.battery.passport_successors/1.0.0/BatteryPassportSuccessors.ttl` (phase P2)
+
+````text
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_successors:1.0.0#> .
+@prefix ext-uuid: <urn:samm:io.catenax.shared.uuid:2.1.0#> .
+@prefix ext-bpn: <urn:samm:io.catenax.shared.business_partner_number:2.0.0#> .
+
+:BatteryPassportSuccessors a samm:Aspect ;
+   samm:preferredName "Battery passport successors"@en ;
+   samm:description "The forward links of an original battery passport: one link per new passport that the original issuer added after the notification of a new passport."@en ;
+   samm:properties ( :successors ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:successors a samm:Property ;
+   samm:preferredName "Successors"@en ;
+   samm:description "One entry per new passport to which the original issuer added a forward link."@en ;
+   samm:characteristic :SuccessorsCharacteristic .
+
+:SuccessorsCharacteristic a samm-c:List ;
+   samm:preferredName "Successors characteristic"@en ;
+   samm:description "The list of the forward links of an original passport."@en ;
+   samm:dataType :SuccessorLink .
+
+:SuccessorLink a samm:Entity ;
+   samm:preferredName "Successor link"@en ;
+   samm:description "The link from an original passport to one new passport."@en ;
+   samm:properties ( :passportIdentifier :catenaXId :secondLifeOperatorBpnl :operation :operationDate ) .
+
+:passportIdentifier a samm:Property ;
+   samm:preferredName "Passport identifier"@en ;
+   samm:description "The digitalProductPassportId of the new passport."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:uuid:3c1f6c1e-5b7d-4f0a-9d2e-7a4b8c6d5e21" .
+
+:catenaXId a samm:Property ;
+   samm:preferredName "Catena-X identifier"@en ;
+   samm:description "The catenaXId of the new twin."@en ;
+   samm:characteristic ext-uuid:UuidV4Trait ;
+   samm:exampleValue "urn:uuid:b7e4d2a9-1c3f-4e5a-8b6d-0f9e8d7c6b5a" .
+
+:secondLifeOperatorBpnl a samm:Property ;
+   samm:preferredName "Second-life operator BPNL"@en ;
+   samm:description "The BPNL of the second-life operator."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000002" .
+
+:operation a samm:Property ;
+   samm:preferredName "Operation"@en ;
+   samm:description "The operation that issued the new passport."@en ;
+   samm:characteristic :OperationEnumeration ;
+   samm:exampleValue "remanufacturing" .
+
+:OperationEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Operation enumeration"@en ;
+   samm:description "The four operations after which a new passport is issued."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "preparationForReUse" "preparationForRepurposing" "repurposing" "remanufacturing" ) .
+
+:operationDate a samm:Property ;
+   samm:preferredName "Operation date"@en ;
+   samm:description "The date the new passport was issued."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2031-05-04T00:00:00Z"^^xsd:dateTime .
+````
+
+#### File: `models/io.catenax.battery.passport_successors/1.0.0/metadata.json` (phase P2)
+
+````text
+{ "status" : "draft" }
+````
+
+#### File: `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors.json` (phase P2)
+
+````text
+{
+  "successors": [
+    {
+      "passportIdentifier": "urn:uuid:3c1f6c1e-5b7d-4f0a-9d2e-7a4b8c6d5e21",
+      "catenaXId": "urn:uuid:b7e4d2a9-1c3f-4e5a-8b6d-0f9e8d7c6b5a",
+      "secondLifeOperatorBpnl": "BPNL000000000002",
+      "operation": "remanufacturing",
+      "operationDate": "2031-05-04T00:00:00Z"
+    }
+  ]
+}
+````
+
+#### File: `models/io.catenax.battery.passport_successors/RELEASE_NOTES.md` (phase P2)
+
+````text
+# Changelog
+
+All notable changes to this model will be documented in this file.
+
+## [Unreleased]
+
+## [1.0.0] - 2026-11-16
+
+### Added
+
+- Initial version of the proposed aspect model BatteryPassportSuccessors: the forward links of an original passport. The model is proposed in the document CX-0160-4 (Battery Passport after the First Passport) and is not released.
+
+## NOTICE
+
+This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
+
+- SPDX-License-Identifier: CC-BY-4.0
+- SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
+- SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/models/io.catenax.battery.passport_successors/RELEASE_NOTES.md
+````
+
+#### File: `models/io.catenax.battery.passport_access_map/1.0.0/BatteryPassportAccessMap.ttl` (phase P2)
+
+````text
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_access_map:1.0.0#> .
+
+:BatteryPassportAccessMap a samm:Aspect ;
+   samm:preferredName "Battery passport access map"@en ;
+   samm:description "The access group of every field of the seven IDTA-02035 aspect models of the battery passport that a data provider serves, as Annex XIII of Regulation (EU) 2023/1542 sorts the information of the battery passport."@en ;
+   samm:properties ( :mapVersion :validFrom :entries ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:mapVersion a samm:Property ;
+   samm:preferredName "Map version"@en ;
+   samm:description "The version of the access map; a new version of Annex XIII or of the implementing act under Art. 77(9) leads to a new value."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "1.0.0" .
+
+:validFrom a samm:Property ;
+   samm:preferredName "Valid from"@en ;
+   samm:description "The date from which the access map applies."@en ;
+   samm:characteristic :ValidFromCharacteristic ;
+   samm:exampleValue "2027-02-18"^^xsd:date .
+
+:ValidFromCharacteristic a samm:Characteristic ;
+   samm:preferredName "Valid from characteristic"@en ;
+   samm:description "A calendar date without a time."@en ;
+   samm:dataType xsd:date .
+
+:entries a samm:Property ;
+   samm:preferredName "Entries"@en ;
+   samm:description "One entry per field of the seven IDTA-02035 aspect models that the data provider serves."@en ;
+   samm:characteristic :EntriesTrait .
+
+:EntriesTrait a samm-c:Trait ;
+   samm:preferredName "Entries trait"@en ;
+   samm:description "The list of the entries of the access map with its length constraint."@en ;
+   samm-c:baseCharacteristic :EntriesCharacteristic ;
+   samm-c:constraint :EntriesLengthConstraint .
+
+:EntriesCharacteristic a samm-c:List ;
+   samm:preferredName "Entries characteristic"@en ;
+   samm:description "The list of the entries of the access map."@en ;
+   samm:dataType :AccessMapEntry .
+
+:EntriesLengthConstraint a samm-c:LengthConstraint ;
+   samm:preferredName "Entries length constraint"@en ;
+   samm:description "The list of the entries holds one entry or more."@en ;
+   samm-c:minValue "1"^^xsd:nonNegativeInteger .
+
+:AccessMapEntry a samm:Entity ;
+   samm:preferredName "Access map entry"@en ;
+   samm:description "The access group of one field of one aspect model on one level of the digital twin."@en ;
+   samm:properties ( :aspect :twinLevel :path :accessGroup :legalBasis ) .
+
+:aspect a samm:Property ;
+   samm:preferredName "Aspect"@en ;
+   samm:description "The identifier (urn) of the aspect model that the entry covers."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate" .
+
+:twinLevel a samm:Property ;
+   samm:preferredName "Twin level"@en ;
+   samm:description "The level of the digital twin on which the entry applies to the field."@en ;
+   samm:characteristic :TwinLevelEnumeration ;
+   samm:exampleValue "PartInstance" .
+
+:TwinLevelEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Twin level enumeration"@en ;
+   samm:description "The two levels of a digital twin: the part type and the part instance."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "PartType" "PartInstance" ) .
+
+:path a samm:Property ;
+   samm:preferredName "Path"@en ;
+   samm:description "The path of the field as a JSONPath query (RFC 9535), relative to the root of the payload of the aspect model; a selector of RFC 9535 names the list elements where the entry covers only some elements of a list."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "$.LifeCycleStage" .
+
+:accessGroup a samm:Property ;
+   samm:preferredName "Access group"@en ;
+   samm:description "The access group of the field."@en ;
+   samm:characteristic :AccessGroupEnumeration ;
+   samm:exampleValue "legitimateInterestBattery" .
+
+:AccessGroupEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Access group enumeration"@en ;
+   samm:description "The four access groups of Annex XIII of Regulation (EU) 2023/1542: public (point 1), legitimateInterestModel (point 2), authorities (point 3) and legitimateInterestBattery (point 4)."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "public" "legitimateInterestModel" "authorities" "legitimateInterestBattery" ) .
+
+:legalBasis a samm:Property ;
+   samm:preferredName "Legal basis"@en ;
+   samm:description "The point and the letter of Annex XIII of Regulation (EU) 2023/1542 that list the field."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Annex XIII point 4(c)" .
+````
+
+#### File: `models/io.catenax.battery.passport_access_map/1.0.0/metadata.json` (phase P2)
+
+````text
+{ "status" : "draft" }
+````
+
+#### File: `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap.json` (phase P2)
+
+````text
+{
+  "mapVersion": "1.0.0",
+  "validFrom": "2027-02-18",
+  "entries": [
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
+      "twinLevel": "PartInstance",
+      "path": "$.ManufacturerName",
+      "accessGroup": "public",
+      "legalBasis": "Annex XIII point 1(a)"
+    },
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
+      "twinLevel": "PartInstance",
+      "path": "$.LifeCycleStage",
+      "accessGroup": "legitimateInterestBattery",
+      "legalBasis": "Annex XIII point 4(c)"
+    },
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition",
+      "twinLevel": "PartInstance",
+      "path": "$.NumberOfFullCycles",
+      "accessGroup": "legitimateInterestBattery",
+      "legalBasis": "Annex XIII point 4(d)"
+    }
+  ]
+}
+````
+
+#### File: `models/io.catenax.battery.passport_access_map/RELEASE_NOTES.md` (phase P2)
+
+````text
+# Changelog
+
+All notable changes to this model will be documented in this file.
+
+## [Unreleased]
+
+## [1.0.0] - 2026-11-16
+
+### Added
+
+- Initial version of the proposed aspect model BatteryPassportAccessMap: the access group of every field of the seven IDTA-02035 aspect models of the battery passport. The model is proposed in the document CX-0160-4 (Battery Passport after the First Passport) and is not released.
+
+## NOTICE
+
+This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
+
+- SPDX-License-Identifier: CC-BY-4.0
+- SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
+- SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/models/io.catenax.battery.passport_access_map/RELEASE_NOTES.md
+````
+
+## 22. Annex C: the files of phase P3 in full
+
+The author applied the three migration files of this annex on 2026-11-16 to an empty schema of a PostgreSQL 17 database, with the role name of the application replaced by a scratch role, and no statement was refused: the catalogue then held 17 tables, 12 functions, 22 triggers and 9 policies. The author ran the rule scenarios of §9.4.2 as the superuser and as the application role, and each scenario gave the refusal that §9.4.2 and §14.2 state, the bypass case and the savepoint case of the lineage rule included. The file `001_schema.sql` starts from the file that the third reviewer built from version 4 of this specification.
+
+#### File: `server/src/db/migrations/001_schema.sql` (phase P3)
+
+````text
+--------------------------------------------------------------------------------
+-- Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+-- Copyright (c) 2026 Contributors to the Eclipse Foundation
+--
+-- See the NOTICE file(s) distributed with this work for additional
+-- information regarding copyright ownership.
+--
+-- This program and the accompanying materials are made available under the
+-- terms of the Apache License, Version 2.0 which is available at
+-- https://www.apache.org/licenses/LICENSE-2.0.
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+-- WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+-- License for the specific language governing permissions and limitations
+-- under the License.
+--
+-- SPDX-License-Identifier: Apache-2.0
+--------------------------------------------------------------------------------
+-- Migration 001: the two domains and the seventeen tables of the reference server.
+CREATE DOMAIN bpnl AS text CONSTRAINT bpnl_check CHECK (VALUE ~ '^BPNL[a-zA-Z0-9]{12}$');
+CREATE DOMAIN bpns AS text CONSTRAINT bpns_check CHECK (VALUE ~ '^BPNS[a-zA-Z0-9]{12}$');
+
+CREATE TABLE companies (
+  bpnl bpnl CONSTRAINT companies_pkey PRIMARY KEY,
+  legal_name text NOT NULL CONSTRAINT companies_legal_name_check CHECK (length(legal_name) BETWEEN 1 AND 300),
+  legal_name_language text NOT NULL DEFAULT 'en',
+  address jsonb NOT NULL,
+  operator_identifier text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE battery_models (
+  id uuid CONSTRAINT battery_models_pkey PRIMARY KEY DEFAULT gen_random_uuid(),
+  manufacturer_bpnl bpnl NOT NULL CONSTRAINT battery_models_manufacturer_fkey REFERENCES companies(bpnl) ON DELETE RESTRICT,
+  manufacturer_part_id text NOT NULL CONSTRAINT battery_models_part_id_check CHECK (length(manufacturer_part_id) BETWEEN 1 AND 200),
+  original_model_catena_x_id uuid,
+  original_model_manufacturer_bpnl bpnl,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT battery_models_original_check CHECK ((original_model_catena_x_id IS NULL) = (original_model_manufacturer_bpnl IS NULL)),
+  CONSTRAINT battery_models_manufacturer_part_key UNIQUE (manufacturer_bpnl, manufacturer_part_id)
+);
+
+CREATE TABLE passports (
+  id uuid CONSTRAINT passports_pkey PRIMARY KEY DEFAULT gen_random_uuid(),
+  passport_identifier text NOT NULL DEFAULT ('urn:uuid:' || gen_random_uuid()::text) CONSTRAINT passports_passport_identifier_key UNIQUE,
+  battery_identifier text NOT NULL CONSTRAINT passports_battery_identifier_check CHECK (length(battery_identifier) BETWEEN 1 AND 200),
+  manufacturer_bpnl bpnl NOT NULL CONSTRAINT passports_manufacturer_fkey REFERENCES companies(bpnl) ON DELETE RESTRICT,
+  battery_model_id uuid NOT NULL CONSTRAINT passports_battery_model_fkey REFERENCES battery_models(id) ON DELETE RESTRICT,
+  lifecycle_status text NOT NULL CONSTRAINT passports_lifecycle_status_check CHECK (lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')),
+  battery_category text NOT NULL CONSTRAINT passports_battery_category_check CHECK (battery_category IN ('lmt','ev','industrial','stationary')),
+  facility_bpns bpns NOT NULL,
+  date_of_manufacture date NOT NULL,
+  date_into_service date,
+  rated_capacity_ah numeric(10,2) CONSTRAINT passports_rated_capacity_check CHECK (rated_capacity_ah > 0),
+  capacity_fade_percent numeric(5,2) CONSTRAINT passports_capacity_fade_check CHECK (capacity_fade_percent BETWEEN 0 AND 100),
+  power_fade_percent numeric(5,2) CONSTRAINT passports_power_fade_check CHECK (power_fade_percent BETWEEN 0 AND 100),
+  expected_lifetime_years numeric(4,1) CONSTRAINT passports_expected_lifetime_check CHECK (expected_lifetime_years > 0),
+  waste_successor_bpnl bpnl,
+  waste_successor_role text CONSTRAINT passports_waste_successor_role_check CHECK (waste_successor_role IN ('producer','producerResponsibilityOrganisation','wasteManagementOperator')),
+  waste_date timestamptz,
+  successor_authorisation_ref text CONSTRAINT passports_authorisation_ref_check CHECK (length(successor_authorisation_ref) BETWEEN 1 AND 500),
+  successor_authorisation_valid_from date,
+  successor_authorisation_valid_to date,
+  recycling_date timestamptz,
+  recycler_bpnl bpnl,
+  material_recycling_certificate_catena_x_id uuid,
+  lineage_open boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passports_waste_successor_check CHECK ((lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)),
+  CONSTRAINT passports_authorisation_check CHECK ((successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')),
+  CONSTRAINT passports_end_check CHECK ((recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)),
+  CONSTRAINT passports_end_after_waste_check CHECK (recycling_date IS NULL OR waste_date IS NULL OR recycling_date >= waste_date)
+);
+CREATE INDEX passports_battery_identifier_idx ON passports (battery_identifier);
+CREATE INDEX passports_battery_model_idx ON passports (battery_model_id);
+
+CREATE TABLE passport_purposes (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_purposes_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_purposes_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  purpose text NOT NULL CONSTRAINT passport_purposes_purpose_check CHECK (length(purpose) BETWEEN 1 AND 2000),
+  is_original boolean NOT NULL,
+  recorded_at timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX passport_purposes_original_key ON passport_purposes (passport_id) WHERE is_original;
+CREATE INDEX passport_purposes_passport_idx ON passport_purposes (passport_id);
+
+CREATE TABLE passport_aspect_payloads (
+  passport_id uuid NOT NULL CONSTRAINT passport_aspect_payloads_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  aspect_key text NOT NULL CONSTRAINT passport_aspect_payloads_key_check CHECK (aspect_key IN ('digital-nameplate','handover-documentation','carbon-footprint','technical-data','product-condition','material-composition','circularity','dpp-metadata','serial-part','single-level-bom-as-built')),
+  payload jsonb NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passport_aspect_payloads_pkey PRIMARY KEY (passport_id, aspect_key)
+);
+
+CREATE TABLE notifications_received (
+  message_id text CONSTRAINT notifications_received_pkey PRIMARY KEY,
+  operation text NOT NULL CONSTRAINT notifications_received_operation_check CHECK (operation IN ('NewPassportIssued','BatteryRepaired','BatteryBecameWaste','PassportEnded')),
+  sender_bpnl bpnl NOT NULL,
+  passport_identifier text NOT NULL,
+  message jsonb NOT NULL,
+  outcome text NOT NULL CONSTRAINT notifications_received_outcome_check CHECK (outcome IN ('applied','recorded')),
+  received_at timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX notifications_received_passport_idx ON notifications_received (passport_identifier, operation);
+
+CREATE TABLE notifications_sent (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT notifications_sent_pkey PRIMARY KEY,
+  message_id text NOT NULL CONSTRAINT notifications_sent_message_id_key UNIQUE,
+  operation text NOT NULL CONSTRAINT notifications_sent_operation_check CHECK (operation IN ('NewPassportIssued','BatteryRepaired','BatteryBecameWaste','PassportEnded')),
+  receiver_bpnl bpnl NOT NULL,
+  passport_identifier text NOT NULL,
+  message jsonb NOT NULL,
+  not_before timestamptz NOT NULL,
+  outcome text NOT NULL DEFAULT 'pending' CONSTRAINT notifications_sent_outcome_check CHECK (outcome IN ('pending','sent','no_asset','contract_refused','receiver_refused','receiver_unresolved','transport_failed')),
+  cause text,
+  http_status integer,
+  attempts integer NOT NULL DEFAULT 0,
+  attempted_at timestamptz,
+  receiver_did text,
+  receiver_connector_url text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX notifications_sent_due_idx ON notifications_sent (not_before, id) WHERE outcome = 'pending';
+
+CREATE TABLE passport_lineage_links (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_lineage_links_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_lineage_links_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  predecessor_passport_identifier text NOT NULL,
+  predecessor_catena_x_id uuid NOT NULL,
+  predecessor_data_provider_bpnl bpnl NOT NULL,
+  predecessor_battery_identifier text NOT NULL,
+  predecessor_status text NOT NULL CONSTRAINT passport_lineage_links_status_check CHECK (predecessor_status IN ('original','repurposed','re-used','remanufactured','waste')),
+  predecessor_original_model_catena_x_id uuid NOT NULL,
+  operation text NOT NULL CONSTRAINT passport_lineage_links_operation_check CHECK (operation IN ('preparationForReUse','preparationForRepurposing','repurposing','remanufacturing')),
+  operation_date timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passport_lineage_links_predecessor_key UNIQUE (passport_id, predecessor_passport_identifier)
+);
+
+CREATE TABLE passport_successor_links (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_successor_links_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_successor_links_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  successor_passport_identifier text NOT NULL,
+  successor_catena_x_id uuid NOT NULL,
+  second_life_operator_bpnl bpnl NOT NULL,
+  operation text NOT NULL CONSTRAINT passport_successor_links_operation_check CHECK (operation IN ('preparationForReUse','preparationForRepurposing','repurposing','remanufacturing')),
+  operation_date timestamptz NOT NULL,
+  notification_message_id text NOT NULL CONSTRAINT passport_successor_links_notification_fkey REFERENCES notifications_received(message_id) ON DELETE RESTRICT,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passport_successor_links_successor_key UNIQUE (passport_id, successor_passport_identifier)
+);
+
+CREATE TABLE passport_repair_entries (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_repair_entries_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_repair_entries_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  repair_date timestamptz NOT NULL,
+  repair_certificate_catena_x_id uuid NOT NULL,
+  repairer_bpnl bpnl NOT NULL,
+  notification_message_id text CONSTRAINT passport_repair_entries_notification_fkey REFERENCES notifications_received(message_id) ON DELETE RESTRICT,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passport_repair_entries_certificate_key UNIQUE (passport_id, repair_certificate_catena_x_id)
+);
+
+CREATE TABLE passport_responsibility_intervals (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_responsibility_intervals_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_responsibility_intervals_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  responsible_bpnl bpnl NOT NULL,
+  role text NOT NULL CONSTRAINT passport_responsibility_intervals_role_check CHECK (role IN ('economicOperator','producer','producerResponsibilityOrganisation','wasteManagementOperator')),
+  valid_from timestamptz NOT NULL,
+  valid_to timestamptz CONSTRAINT passport_responsibility_intervals_period_check CHECK (valid_to >= valid_from),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX passport_responsibility_intervals_open_key ON passport_responsibility_intervals (passport_id) WHERE valid_to IS NULL;
+
+CREATE TABLE access_map_versions (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT access_map_versions_pkey PRIMARY KEY,
+  battery_model_id uuid NOT NULL CONSTRAINT access_map_versions_model_fkey REFERENCES battery_models(id) ON DELETE RESTRICT,
+  map_version text NOT NULL,
+  valid_from date NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT access_map_versions_model_version_key UNIQUE (battery_model_id, map_version)
+);
+
+CREATE TABLE access_map_entries (
+  map_id bigint NOT NULL CONSTRAINT access_map_entries_map_fkey REFERENCES access_map_versions(id) ON DELETE RESTRICT,
+  aspect text NOT NULL,
+  twin_level text NOT NULL CONSTRAINT access_map_entries_twin_level_check CHECK (twin_level IN ('PartType','PartInstance')),
+  path text NOT NULL,
+  access_group text NOT NULL CONSTRAINT access_map_entries_group_check CHECK (access_group IN ('public','legitimateInterestModel','authorities','legitimateInterestBattery')),
+  legal_basis text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT access_map_entries_pkey PRIMARY KEY (map_id, aspect, twin_level, path)
+);
+
+CREATE TABLE passport_access_records (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_access_records_pkey PRIMARY KEY,
+  passport_id uuid NOT NULL CONSTRAINT passport_access_records_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  recipient_bpnl bpnl NOT NULL,
+  recipient_role text NOT NULL CONSTRAINT passport_access_records_role_check CHECK (recipient_role IN ('purchaser','purchaserAgent','responsibleOperator','successor','marketSurveillanceAuthority','authorisedRecipient')),
+  aspect_key text NOT NULL CONSTRAINT passport_access_records_key_check CHECK (aspect_key IN ('digital-nameplate','handover-documentation','carbon-footprint','technical-data','product-condition','material-composition','circularity','dpp-metadata','serial-part','single-level-bom-as-built','lifecycle','successors')),
+  valid_from timestamptz NOT NULL,
+  valid_to timestamptz CONSTRAINT passport_access_records_period_check CHECK (valid_to >= valid_from),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX passport_access_records_open_key ON passport_access_records (passport_id, recipient_bpnl, aspect_key, recipient_role) WHERE valid_to IS NULL;
+
+CREATE TABLE passport_write_decisions (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT passport_write_decisions_pkey PRIMARY KEY,
+  decided_at timestamptz NOT NULL,
+  decision text NOT NULL CONSTRAINT passport_write_decisions_decision_check CHECK (decision IN ('granted','refused')),
+  requester_bpnl bpnl NOT NULL,
+  requester_kind text NOT NULL CONSTRAINT passport_write_decisions_kind_check CHECK (requester_kind IN ('operator','partner')),
+  passport_id uuid,
+  action text NOT NULL,
+  relied_on text,
+  refusal_id text,
+  details jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX passport_write_decisions_passport_idx ON passport_write_decisions (passport_id);
+
+CREATE TABLE issuer_contracts (
+  id uuid CONSTRAINT issuer_contracts_pkey PRIMARY KEY DEFAULT gen_random_uuid(),
+  side text NOT NULL CONSTRAINT issuer_contracts_side_check CHECK (side IN ('provider','issuer')),
+  passport_identifier text NOT NULL,
+  battery_identifier text,
+  passport_id uuid CONSTRAINT issuer_contracts_passport_fkey REFERENCES passports(id) ON DELETE RESTRICT,
+  issuer_bpnl bpnl NOT NULL,
+  provider_bpnl bpnl NOT NULL,
+  product_condition jsonb,
+  pull_state text CONSTRAINT issuer_contracts_pull_state_check CHECK (pull_state IN ('pending','received','no_asset','contract_refused','provider_refused','receiver_unresolved','transport_failed')),
+  pull_cause text,
+  valid_from timestamptz NOT NULL,
+  valid_to timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT issuer_contracts_side_columns_check CHECK ((side = 'issuer') = (pull_state IS NOT NULL) AND (side = 'provider' OR (passport_id IS NULL AND product_condition IS NULL AND battery_identifier IS NOT NULL)) AND (side = 'issuer' OR ((passport_id IS NULL) <> (product_condition IS NULL))))
+);
+CREATE UNIQUE INDEX issuer_contracts_open_key ON issuer_contracts (side, passport_identifier, issuer_bpnl, provider_bpnl) WHERE valid_to IS NULL;
+
+CREATE TABLE received_battery_information (
+  id bigint GENERATED ALWAYS AS IDENTITY CONSTRAINT received_battery_information_pkey PRIMARY KEY,
+  contract_id uuid NOT NULL CONSTRAINT received_battery_information_contract_fkey REFERENCES issuer_contracts(id) ON DELETE RESTRICT,
+  passport_identifier text NOT NULL,
+  battery_identifier text NOT NULL,
+  agreement_id text NOT NULL,
+  payload jsonb NOT NULL,
+  received_at timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+````
+
+#### File: `server/src/db/migrations/002_triggers.sql` (phase P3)
+
+````text
+--------------------------------------------------------------------------------
+-- Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+-- Copyright (c) 2026 Contributors to the Eclipse Foundation
+--
+-- See the NOTICE file(s) distributed with this work for additional
+-- information regarding copyright ownership.
+--
+-- This program and the accompanying materials are made available under the
+-- terms of the Apache License, Version 2.0 which is available at
+-- https://www.apache.org/licenses/LICENSE-2.0.
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+-- WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+-- License for the specific language governing permissions and limitations
+-- under the License.
+--
+-- SPDX-License-Identifier: Apache-2.0
+--------------------------------------------------------------------------------
+-- Migration 002: the twelve trigger functions and the twenty-two triggers of the reference server.
+-- Every refusal is raised with the error code P0001, and its message starts with the refusal id.
+
+CREATE FUNCTION set_passport_insert_defaults() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  NEW.lineage_open := NEW.lifecycle_status IN ('re-used', 'repurposed', 'remanufactured');
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_insert BEFORE INSERT ON passports FOR EACH ROW EXECUTE FUNCTION set_passport_insert_defaults();
+
+CREATE FUNCTION refuse_passport_identity_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  IF NEW.id IS DISTINCT FROM OLD.id
+     OR NEW.passport_identifier IS DISTINCT FROM OLD.passport_identifier
+     OR NEW.battery_identifier IS DISTINCT FROM OLD.battery_identifier
+     OR NEW.manufacturer_bpnl IS DISTINCT FROM OLD.manufacturer_bpnl
+     OR NEW.battery_model_id IS DISTINCT FROM OLD.battery_model_id THEN
+    RAISE EXCEPTION 'ERR-DB-IDENTITY-PERMANENT: The identifiers, the manufacturer and the battery model of a passport never change.' USING ERRCODE = 'P0001';
+  END IF;
+  IF NEW.lineage_open AND NOT OLD.lineage_open THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: The lineage of a passport is never opened again.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_identity BEFORE UPDATE ON passports FOR EACH ROW EXECUTE FUNCTION refuse_passport_identity_change();
+
+CREATE FUNCTION refuse_battery_model_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  RAISE EXCEPTION 'ERR-DB-IDENTITY-PERMANENT: A battery model is never updated and never deleted.' USING ERRCODE = 'P0001';
+END $$;
+CREATE TRIGGER trg_battery_model_identity BEFORE UPDATE OR DELETE ON battery_models FOR EACH ROW EXECUTE FUNCTION refuse_battery_model_change();
+
+CREATE FUNCTION check_passport_status_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  IF NEW.lifecycle_status IS DISTINCT FROM OLD.lifecycle_status THEN
+    IF NEW.lifecycle_status = 'waste' THEN
+      RETURN NEW;
+    END IF;
+    IF NEW.lifecycle_status = 're-used' AND OLD.lifecycle_status IN ('original', 'repurposed', 'remanufactured') THEN
+      RETURN NEW;
+    END IF;
+    RAISE EXCEPTION 'ERR-DB-STATUS-CHANGE: The status of a passport changes only to waste, or to re-used from original, repurposed or remanufactured.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_status_change BEFORE UPDATE OF lifecycle_status ON passports FOR EACH ROW EXECUTE FUNCTION check_passport_status_change();
+
+CREATE FUNCTION refuse_change_of_ended_passport() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    RAISE EXCEPTION 'ERR-DB-PASSPORT-ENDED: A passport is never deleted.' USING ERRCODE = 'P0001';
+  END IF;
+  IF OLD.recycling_date IS NOT NULL THEN
+    RAISE EXCEPTION 'ERR-DB-PASSPORT-ENDED: An ended passport never changes.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_ended BEFORE UPDATE OR DELETE ON passports FOR EACH ROW EXECUTE FUNCTION refuse_change_of_ended_passport();
+
+CREATE FUNCTION check_passport_after_waste() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  today date := NULLIF(current_setting('app.today', true), '')::date;
+  in_force boolean;
+  exempt text[] := ARRAY['successor_authorisation_ref', 'successor_authorisation_valid_from', 'successor_authorisation_valid_to',
+                         'recycling_date', 'recycler_bpnl', 'material_recycling_certificate_catena_x_id'];
+BEGIN
+  IF OLD.recycling_date IS NOT NULL THEN
+    RETURN NEW;
+  END IF;
+  IF OLD.lifecycle_status <> 'waste' THEN
+    RETURN NEW;
+  END IF;
+  in_force := today IS NOT NULL
+    AND OLD.successor_authorisation_valid_from IS NOT NULL
+    AND OLD.successor_authorisation_valid_from <= today
+    AND (OLD.successor_authorisation_valid_to IS NULL OR OLD.successor_authorisation_valid_to >= today);
+  IF NOT in_force AND (to_jsonb(NEW) - exempt) IS DISTINCT FROM (to_jsonb(OLD) - exempt) THEN
+    RAISE EXCEPTION 'ERR-DB-SUCCESSOR-AUTHORISATION: A waste passport changes only under an authorisation of the successor that is in force.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_after_waste BEFORE UPDATE ON passports FOR EACH ROW EXECUTE FUNCTION check_passport_after_waste();
+
+CREATE FUNCTION check_passport_lineage() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  has_link boolean;
+  still_open boolean;
+BEGIN
+  IF NEW.lifecycle_status = 'waste' THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: A passport is never inserted with the status waste.' USING ERRCODE = 'P0001';
+  END IF;
+  SELECT EXISTS (SELECT 1 FROM passport_lineage_links l WHERE l.passport_id = NEW.id) INTO has_link;
+  SELECT p.lineage_open INTO still_open FROM passports p WHERE p.id = NEW.id;
+  IF NEW.lifecycle_status = 'original' AND has_link THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: A passport that is inserted with the status original has no lineage link.' USING ERRCODE = 'P0001';
+  END IF;
+  IF NEW.lifecycle_status IN ('re-used', 'repurposed', 'remanufactured')
+     AND (NOT has_link OR NEW.date_into_service IS NULL OR NEW.rated_capacity_ah IS NULL OR NEW.capacity_fade_percent IS NULL
+          OR NEW.power_fade_percent IS NULL OR NEW.expected_lifetime_years IS NULL) THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: A new passport has a lineage link, a date of putting into service and its four performance values.' USING ERRCODE = 'P0001';
+  END IF;
+  IF still_open THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: The lineage of a new passport is closed before the commit.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NULL;
+END $$;
+CREATE CONSTRAINT TRIGGER trg_passport_lineage AFTER INSERT ON passports DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION check_passport_lineage();
+
+CREATE FUNCTION check_responsibility() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  pid uuid;
+  p passports%ROWTYPE;
+  open_count integer;
+  o passport_responsibility_intervals%ROWTYPE;
+BEGIN
+  IF TG_TABLE_NAME = 'passports' THEN
+    pid := NEW.id;
+  ELSE
+    pid := NEW.passport_id;
+  END IF;
+  SELECT * INTO p FROM passports WHERE id = pid;
+  SELECT count(*) INTO open_count FROM passport_responsibility_intervals i WHERE i.passport_id = pid AND i.valid_to IS NULL;
+  IF open_count <> 1 THEN
+    RAISE EXCEPTION 'ERR-DB-RESPONSIBILITY: A passport has exactly one open responsibility interval.' USING ERRCODE = 'P0001';
+  END IF;
+  SELECT * INTO o FROM passport_responsibility_intervals i WHERE i.passport_id = pid AND i.valid_to IS NULL;
+  IF p.lifecycle_status = 'waste' THEN
+    IF o.responsible_bpnl <> p.waste_successor_bpnl OR o.role <> p.waste_successor_role OR o.valid_from <> p.waste_date
+       OR NOT EXISTS (SELECT 1 FROM passport_responsibility_intervals c WHERE c.passport_id = pid AND c.valid_to = p.waste_date) THEN
+      RAISE EXCEPTION 'ERR-DB-WASTE-SUCCESSOR: The open responsibility interval of a waste passport names the successor and starts at the waste date, at which the earlier interval ends.' USING ERRCODE = 'P0001';
+    END IF;
+  END IF;
+  IF p.recycling_date IS NOT NULL AND p.recycling_date < o.valid_from THEN
+    RAISE EXCEPTION 'ERR-DB-END-DATE: The recycling date of a passport is not before the start of its open responsibility interval.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NULL;
+END $$;
+CREATE CONSTRAINT TRIGGER trg_passport_responsibility AFTER INSERT OR UPDATE ON passports DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION check_responsibility();
+CREATE CONSTRAINT TRIGGER trg_interval_responsibility AFTER INSERT OR UPDATE ON passport_responsibility_intervals DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION check_responsibility();
+
+CREATE FUNCTION refuse_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  RAISE EXCEPTION 'ERR-DB-APPEND-ONLY: A record of this table is never updated and never deleted.' USING ERRCODE = 'P0001';
+END $$;
+CREATE TRIGGER trg_passport_lineage_links_append_only BEFORE UPDATE OR DELETE ON passport_lineage_links FOR EACH ROW EXECUTE FUNCTION refuse_change();
+CREATE TRIGGER trg_passport_repair_entries_append_only BEFORE UPDATE OR DELETE ON passport_repair_entries FOR EACH ROW EXECUTE FUNCTION refuse_change();
+CREATE TRIGGER trg_passport_successor_links_append_only BEFORE UPDATE OR DELETE ON passport_successor_links FOR EACH ROW EXECUTE FUNCTION refuse_change();
+CREATE TRIGGER trg_notifications_received_append_only BEFORE UPDATE OR DELETE ON notifications_received FOR EACH ROW EXECUTE FUNCTION refuse_change();
+CREATE TRIGGER trg_passport_write_decisions_append_only BEFORE UPDATE OR DELETE ON passport_write_decisions FOR EACH ROW EXECUTE FUNCTION refuse_change();
+CREATE TRIGGER trg_received_battery_information_append_only BEFORE UPDATE OR DELETE ON received_battery_information FOR EACH ROW EXECUTE FUNCTION refuse_change();
+
+CREATE FUNCTION check_interval_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    RAISE EXCEPTION 'ERR-DB-APPEND-ONLY: A responsibility interval is never deleted.' USING ERRCODE = 'P0001';
+  END IF;
+  IF OLD.valid_to IS NOT NULL OR (to_jsonb(NEW) - 'valid_to') IS DISTINCT FROM (to_jsonb(OLD) - 'valid_to') THEN
+    RAISE EXCEPTION 'ERR-DB-APPEND-ONLY: Only the end of an open responsibility interval is set.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_interval_change BEFORE UPDATE OR DELETE ON passport_responsibility_intervals FOR EACH ROW EXECUTE FUNCTION check_interval_change();
+
+CREATE FUNCTION refuse_child_of_ended_passport() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  pid uuid;
+  ended timestamptz;
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    pid := OLD.passport_id;
+  ELSE
+    pid := NEW.passport_id;
+  END IF;
+  SELECT recycling_date INTO ended FROM passports WHERE id = pid FOR SHARE;
+  IF ended IS NOT NULL THEN
+    RAISE EXCEPTION 'ERR-DB-PASSPORT-ENDED: A record of an ended passport never changes.' USING ERRCODE = 'P0001';
+  END IF;
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_aspect_payloads_ended BEFORE INSERT OR UPDATE OR DELETE ON passport_aspect_payloads FOR EACH ROW EXECUTE FUNCTION refuse_child_of_ended_passport();
+CREATE TRIGGER trg_passport_successor_links_ended BEFORE INSERT OR UPDATE OR DELETE ON passport_successor_links FOR EACH ROW EXECUTE FUNCTION refuse_child_of_ended_passport();
+CREATE TRIGGER trg_passport_repair_entries_ended BEFORE INSERT OR UPDATE OR DELETE ON passport_repair_entries FOR EACH ROW EXECUTE FUNCTION refuse_child_of_ended_passport();
+CREATE TRIGGER trg_passport_purposes_ended BEFORE INSERT OR UPDATE OR DELETE ON passport_purposes FOR EACH ROW EXECUTE FUNCTION refuse_child_of_ended_passport();
+CREATE TRIGGER trg_passport_responsibility_intervals_ended BEFORE INSERT OR UPDATE ON passport_responsibility_intervals FOR EACH ROW EXECUTE FUNCTION refuse_child_of_ended_passport();
+
+CREATE FUNCTION check_lineage_link_insert() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  is_open boolean;
+BEGIN
+  SELECT p.lineage_open INTO is_open FROM passports p WHERE p.id = NEW.passport_id FOR UPDATE;
+  IF is_open IS NOT TRUE THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: A lineage link is inserted only while the lineage of its new passport is open.' USING ERRCODE = 'P0001';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_lineage_links_insert BEFORE INSERT ON passport_lineage_links FOR EACH ROW EXECUTE FUNCTION check_lineage_link_insert();
+````
+
+#### File: `server/src/db/migrations/003_policies.sql` (phase P3)
+
+````text
+--------------------------------------------------------------------------------
+-- Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+-- Copyright (c) 2026 Contributors to the Eclipse Foundation
+--
+-- See the NOTICE file(s) distributed with this work for additional
+-- information regarding copyright ownership.
+--
+-- This program and the accompanying materials are made available under the
+-- terms of the Apache License, Version 2.0 which is available at
+-- https://www.apache.org/licenses/LICENSE-2.0.
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+-- WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+-- License for the specific language governing permissions and limitations
+-- under the License.
+--
+-- SPDX-License-Identifier: Apache-2.0
+--------------------------------------------------------------------------------
+-- Migration 003: the grants of the role refserver_app and the nine row-level security policies.
+-- The role refserver_app exists before this file runs; the file creates no role.
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'refserver_app') THEN
+    RAISE EXCEPTION 'The role refserver_app does not exist. Run "npm run create-role" before "npm run migrate".';
+  END IF;
+  EXECUTE format('GRANT USAGE ON SCHEMA %I TO refserver_app', current_schema());
+END $$;
+
+GRANT SELECT, INSERT, UPDATE ON companies TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON passports TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON passport_aspect_payloads TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON passport_responsibility_intervals TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON notifications_sent TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON passport_access_records TO refserver_app;
+GRANT SELECT, INSERT, UPDATE ON issuer_contracts TO refserver_app;
+GRANT SELECT, INSERT ON battery_models TO refserver_app;
+GRANT SELECT, INSERT ON passport_purposes TO refserver_app;
+GRANT SELECT, INSERT ON passport_lineage_links TO refserver_app;
+GRANT SELECT, INSERT ON passport_successor_links TO refserver_app;
+GRANT SELECT, INSERT ON passport_repair_entries TO refserver_app;
+GRANT SELECT, INSERT ON notifications_received TO refserver_app;
+GRANT SELECT, INSERT ON access_map_versions TO refserver_app;
+GRANT SELECT, INSERT ON access_map_entries TO refserver_app;
+GRANT SELECT, INSERT ON passport_write_decisions TO refserver_app;
+GRANT SELECT, INSERT ON received_battery_information TO refserver_app;
+GRANT SELECT ON schema_migrations TO refserver_app;
+
+ALTER TABLE battery_models ENABLE ROW LEVEL SECURITY;
+ALTER TABLE battery_models FORCE ROW LEVEL SECURITY;
+ALTER TABLE passports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passports FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_purposes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_purposes FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_aspect_payloads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_aspect_payloads FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_lineage_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_lineage_links FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_successor_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_successor_links FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_repair_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_repair_entries FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_responsibility_intervals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_responsibility_intervals FORCE ROW LEVEL SECURITY;
+ALTER TABLE passport_access_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE passport_access_records FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY battery_models_own ON battery_models FOR ALL TO refserver_app
+  USING (manufacturer_bpnl = current_setting('app.acting_bpnl', true))
+  WITH CHECK (manufacturer_bpnl = current_setting('app.acting_bpnl', true));
+CREATE POLICY passports_own ON passports FOR ALL TO refserver_app
+  USING (manufacturer_bpnl = current_setting('app.acting_bpnl', true))
+  WITH CHECK (manufacturer_bpnl = current_setting('app.acting_bpnl', true));
+CREATE POLICY passport_purposes_own ON passport_purposes FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_aspect_payloads_own ON passport_aspect_payloads FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_lineage_links_own ON passport_lineage_links FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_successor_links_own ON passport_successor_links FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_repair_entries_own ON passport_repair_entries FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_responsibility_intervals_own ON passport_responsibility_intervals FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY passport_access_records_own ON passport_access_records FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+````
 
 ## NOTICE
 
