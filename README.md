@@ -27,18 +27,20 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | `models/` | The two proposed aspect models (Semantic Aspect Meta Model, SAMM) | Not yet written |
 | `server/` | The reference server (Node.js 24, Express, PostgreSQL) | Not yet written |
 | `tck/` | The conformance test kit, one test per conformance criterion | Not yet written |
-| `requirements/` | The requirements registry, from stakeholder requirements to verification measures | Not yet carried over |
-| `sources/` | The source texts that their licenses allow to redistribute | 90 files, listed in `sources/SOURCES.json` |
-| `scripts/` | The checks of the repository | The license header check and the source register check |
+| `requirements/` | The requirements registry, from stakeholder requirements to verification measures | 466 records carried over, listed in `requirements/README.md` |
+| `sources/` | The source texts that their licenses allow to redistribute | 92 files, listed in `sources/SOURCES.json` |
+| `scripts/` | The checks of the repository | The license header check, the source register check and the requirement check |
 
 ## Installation and usage
 
 `INSTALL.md` describes the installation. The checks of the repository need Node.js 24.
 
-Run the license header check at the repository root:
+Run the checks at the repository root:
 
 ```bash
 node scripts/check-license-headers.mjs
+node scripts/check-sources.mjs
+node scripts/requirements-check.mjs
 ```
 
 ## License
@@ -58,4 +60,4 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 - SPDX-License-Identifier: CC-BY-4.0
 - SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
 - SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
-- Source URL: https://github.com/Khorolev/battery-passport-after-first-life/blob/main/README.md
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/README.md

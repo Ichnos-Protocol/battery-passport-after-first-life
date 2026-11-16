@@ -1,0 +1,671 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.2.BP5 Note 8 and SYS.5.BP1: the measures of the process requirements, each with its technique, pass/fail criteria, entry criteria and environment.",
+ "measures": [
+  {
+   "id": "VM-PRC-CXD-009",
+   "title": "Inspection of the six legal files of the reference implementation",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-013.",
+   "passCriteria": "Passes when: The repository root holds LICENSE (Apache-2.0 text), LICENSE_non-code (CC-BY-4.0 text), NOTICE.md naming both licences and the third-party content, SECURITY.md, CONTRIBUTING.md and CODE_OF_CONDUCT.md; a missing file or a NOTICE.md without both licences fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: ls the repository battery-passport-after-first-life; read NOTICE.md and the first lines of both licence files.",
+   "verifies": [
+    "PrR-CXD-013"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-010",
+   "title": "Inspection of the .tractusx metadata file",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-014.",
+   "passCriteria": "Passes when: The file .tractusx exists at the folder root, parses as YAML and holds the keys leadingRepository, product and openApiSpecs, the last one pointing to docs/api/openAPI.yaml; a missing key or a key spelled otherwise fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: cat battery-passport-after-first-life/.tractusx",
+   "verifies": [
+    "PrR-CXD-014"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-011",
+   "title": "Inspection of the README, INSTALL and CHANGELOG files",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-015.",
+   "passCriteria": "Passes when: README.md, INSTALL.md and CHANGELOG.md exist at the folder root, and CHANGELOG.md holds one entry per released version of the API; a missing file fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: ls the repository battery-passport-after-first-life",
+   "verifies": [
+    "PrR-CXD-015"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-012",
+   "title": "Analysis of the license headers of the reference implementation",
+   "method": "analysis",
+   "technique": "Analysis of the reference implementation repository at the commit under review against PrR-CXD-016.",
+   "passCriteria": "Passes when: Every source file of the folder (YAML, JSON schema with a comment field, Turtle, JavaScript) starts with the Eclipse copyright line and the Apache-2.0 header, and every Markdown file carries the CC-BY-4.0 header; each file without its header is listed and fails the measure.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: grep -L \"SPDX-License-Identifier\" -r the repository battery-passport-after-first-life",
+   "verifies": [
+    "PrR-CXD-016"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-013",
+   "title": "Analysis of the NOTICE sections of the documentation files",
+   "method": "analysis",
+   "technique": "Analysis of the reference implementation repository at the commit under review against PrR-CXD-017.",
+   "passCriteria": "Passes when: The last level-2 heading of every Markdown file of the folder is \"## NOTICE\"; each file without the section is listed and fails the measure.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: for f in $(find the repository battery-passport-after-first-life -name '*.md'); do grep -q '^## NOTICE' \"$f\" || echo \"$f\"; done",
+   "verifies": [
+    "PrR-CXD-017"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-014",
+   "title": "Inspection of the OpenAPI file of the reference implementation",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-018.",
+   "passCriteria": "Passes when: docs/api/openAPI.yaml exists, declares openapi: 3.1.0 and describes the lifecycle notification API of section 4.3 of the proposal; a file at another path or of another OpenAPI version fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: head -5 battery-passport-after-first-life/docs/api/openAPI.yaml",
+   "verifies": [
+    "PrR-CXD-018"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-015",
+   "title": "Analysis of the four notification operations of the OpenAPI file",
+   "method": "analysis",
+   "technique": "Analysis of the reference implementation repository at the commit under review against PrR-CXD-019.",
+   "passCriteria": "Passes when: The OpenAPI file defines exactly four operations, each a POST whose path and operationId equal NewPassportIssued, BatteryRepaired, BatteryBecameWaste or PassportEnded; each request body references the MessageHeader 3.0.0 header and a JSON schema whose required properties are those of Table 4.4 of the proposal; no path carries a version. A fifth operation, another method, a mismatched path or a missing schema fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: read the paths and components sections of battery-passport-after-first-life/docs/api/openAPI.yaml.",
+   "verifies": [
+    "PrR-CXD-019"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-016",
+   "title": "Analysis of the responses of the four notification operations",
+   "method": "analysis",
+   "technique": "Analysis of the reference implementation repository at the commit under review against PrR-CXD-020.",
+   "passCriteria": "Passes when: Each of the four operations defines the response 200, at least one 4xx response and one 5xx response; every 4xx and 5xx response references one error schema whose properties are success (false), error (message, code) and messages (each with messageType and text). An operation without a 4xx or 5xx response, or an error body of another schema, fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: read the responses of each path and the error schema in battery-passport-after-first-life/docs/api/openAPI.yaml.",
+   "verifies": [
+    "PrR-CXD-020"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-017",
+   "title": "Inspection of the arc42 architecture documentation",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-021.",
+   "passCriteria": "Passes when: docs/architecture/ holds the arc42 sections of the lifecycle notification API (introduction and goals, constraints, context and scope, solution strategy, building block view, runtime view, deployment view, crosscutting concepts, architecture decisions, quality requirements, risks and technical debts, glossary), each either filled or marked not applicable with its reason; a missing section fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: ls battery-passport-after-first-life/docs/architecture/",
+   "verifies": [
+    "PrR-CXD-021"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-018",
+   "title": "Inspection of the administrator guide",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-022.",
+   "passCriteria": "Passes when: docs/admin/ holds a guide that states the asset's dct:type, its cx-common:version, its data address, its access policy and its usage policy with the usage purposes of section 4.3 item 1 of the proposal; a missing item fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: ls battery-passport-after-first-life/docs/admin/",
+   "verifies": [
+    "PrR-CXD-022"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-019",
+   "title": "Inspection of the three KIT views",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-023.",
+   "passCriteria": "Passes when: The three files exist; the development view holds the API specification, the semantic models, the test cases, the sample data and the reference implementation sections of the graduated KIT template; a missing file or section fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: ls battery-passport-after-first-life/docs/",
+   "verifies": [
+    "PrR-CXD-023"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-020",
+   "title": "Inspection of the methodology document",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-024.",
+   "passCriteria": "Passes when: docs/methodology.md names, for each operation of the API, the article of Regulation (EU) 2023/1542 or the decision of the proposal it rests on, the stakeholder, system and software requirements of the registry that derive it, and the conformance test of tck/ that checks it; an operation without its chain fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: read battery-passport-after-first-life/docs/methodology.md and check each identifier with node scripts/requirements-check.mjs --matrix.",
+   "verifies": [
+    "PrR-CXD-024"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-021",
+   "title": "Inspection of the list of proposed items",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-025.",
+   "passCriteria": "Passes when: docs/proposals.md lists the two proposed models, the proposed taxonomy name, the four proposed notification contexts and the proposed usage purposes, each with its section of the proposal; an item of the folder that no stored standard covers and that the list omits fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: read battery-passport-after-first-life/docs/proposals.md beside the openAPI.yaml and the models.",
+   "verifies": [
+    "PrR-CXD-025"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-022",
+   "title": "Inspection of the layout of the two proposed models",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-026.",
+   "passCriteria": "Passes when: models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl and models/io.catenax.battery.passport_successors/1.0.0/BatteryPassportSuccessors.ttl exist, each with metadata.json (status draft) beside it, RELEASE_NOTES.md in its namespace folder and a gen/ folder with the generated JSON schema; a missing file fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: find battery-passport-after-first-life/models -type f",
+   "verifies": [
+    "PrR-CXD-026"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-023",
+   "title": "Validation of the proposed models with SAMM CLI 2.11.1",
+   "method": "test",
+   "technique": "Run of the tool that PrR-CXD-027 names on the reference implementation repository at the commit under review.",
+   "passCriteria": "Passes when: java -jar samm-cli-2.11.1.jar aspect <model>.ttl validate reports no error for BatteryPassportLifecycle.ttl and for BatteryPassportSuccessors.ttl; any error fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "Java 21 and the SAMM command line tool 2.11.1",
+   "how": "At the repository root, with Java 21: for m in $(find battery-passport-after-first-life/models -name '*.ttl' -not -path '*/gen/*'); do java -jar samm-cli-2.11.1.jar aspect \"$m\" validate; done",
+   "verifies": [
+    "PrR-CXD-027"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-024",
+   "title": "Inspection of the conformance tests against Annex A",
+   "method": "inspection",
+   "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-028.",
+   "passCriteria": "Passes when: tck/ holds fifteen tests, each named after one criterion CX-0160-4-CAC-001 to CX-0160-4-CAC-015 and checking the proof of conformity that Annex A states for it; a criterion without its test fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "repository only",
+   "how": "At the repository root: grep -rl \"CX-0160-4-CAC-0\" battery-passport-after-first-life/tck | sort",
+   "verifies": [
+    "PrR-CXD-028"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-025",
+   "title": "Run of the conformance tests against both bindings",
+   "method": "test",
+   "technique": "Run of the tool that PrR-CXD-029 names on the reference implementation repository at the commit under review.",
+   "passCriteria": "Passes when: The run of tck/ against the in-process binding and the run against the Tractus-X connector binding execute the same fifteen tests and both pass; a test that runs against one binding only, or a failure in either run, fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "in-process binding and a production-bound stack",
+   "how": "At the repository root: run the tck/ suite twice, once with the in-process binding and once with the Tractus-X connector binding, as INSTALL.md of the repository states.",
+   "verifies": [
+    "PrR-CXD-029"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-PRC-CXD-026",
+   "title": "Spectral lint of the OpenAPI file",
+   "method": "test",
+   "technique": "Run of the tool that PrR-CXD-030 names on the reference implementation repository at the commit under review.",
+   "passCriteria": "Passes when: The Spectral linter with its OpenAPI ruleset reports no error on docs/api/openAPI.yaml; any error fails.",
+   "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
+   "environment": "Node.js 24 and the Spectral command line tool",
+   "how": "At the repository root: npx @stoplight/spectral-cli@6 lint battery-passport-after-first-life/docs/api/openAPI.yaml",
+   "verifies": [
+    "PrR-CXD-030"
+   ],
+   "regression": "on change of the repository battery-passport-after-first-life",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process measure of the reference implementation folder)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ]
+}

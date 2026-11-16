@@ -1,0 +1,401 @@
+{
+ "about": {
+  "title": "System architecture of the reference implementation (SYS.3 System Architectural Design)",
+  "date": "2026-11-16",
+  "status": "proposed, waits for the owner's approval",
+  "note": "The elements and interfaces are the ones that the carried requirements name. Their identifiers are those of the private registry of the battery passport application. The interactions, the deviations and the architecture decisions of that registry are not carried."
+ },
+ "elements": [
+  {
+   "id": "EL-BACKEND",
+   "name": "HTTP API of the reference server (composition root and routes)",
+   "description": "The HTTP API of the reference server. One composition root creates the database pool and the connector configuration and passes them to the routes and the services.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-CONNECTOR-BACKEND",
+    "IF-BACKEND-RDB",
+    "IF-BACKEND-DOCSTORE",
+    "IF-BACKEND-SECRETS",
+    "IF-PROVISIONER-BACKEND",
+    "IF-HOSTING-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-ACCESS",
+   "name": "Access control: authentication, subject resolution and capability decision",
+   "description": "The access control of the reference server. It authenticates the caller, resolves the subject and decides each access by a capability.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-ACCESS-IDP",
+    "IF-ACCESS-AUDIT",
+    "IF-BACKEND-RDB",
+    "IF-CONNECTOR-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-TWINS",
+   "name": "Parts, part types and twin registration",
+   "description": "The part and twin registration of the reference server. It holds the PartType and PartInstance records and registers their digital twins in the Digital Twin Registry.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-TWINS-DTR",
+    "IF-BACKEND-RDB",
+    "IF-FRONTEND-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-SUBMODELS",
+   "name": "Submodel service",
+   "description": "The submodel service of the reference server. It serves each aspect of a part or of a part type as its aspect model defines it.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-CONNECTOR-BACKEND",
+    "IF-FRONTEND-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-CXCLIENT",
+   "name": "Connector client: data offers, exchange and notifications",
+   "description": "The connector client of the reference server. It publishes data offers on the company's connector, negotiates contracts, pulls data, and sends and receives the lifecycle notifications.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CXCLIENT-CONNECTOR-PULL"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-DATASET",
+   "name": "Battery passport dataset and its lifecycle",
+   "description": "The battery passport dataset of the reference server. It holds the passport records, their lineage and the lifecycle operations after the first passport.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR",
+    "IF-CONNECTOR-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-RDB",
+   "name": "Relational database",
+   "description": "The PostgreSQL database of the reference server. It holds every relational record of one deployment.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-RDB-BACKUPSTORE"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-DOCSTORE",
+   "name": "Document store",
+   "description": "A store of technical documents outside the relational database. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "external",
+   "interfaces": [
+    "IF-BACKEND-DOCSTORE"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-AUDIT",
+   "name": "Audit trail and decision trail",
+   "description": "The audit trail of the reference server. It records who did what, to which battery, when and under which contract agreement.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-ACCESS-AUDIT",
+    "IF-BACKEND-RDB"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-OBSERVABILITY",
+   "name": "Observability: logs, traces, health checks and metrics",
+   "description": "The logs, traces, health checks and metrics of a deployment. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-OBSERVABILITY-HOSTING"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-BGWORK",
+   "name": "Background work",
+   "description": "The work that must not block a request, with its retries. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-TWINS-DTR"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-CONNECTOR",
+   "name": "Connector (Eclipse Tractus-X EDC control plane and data plane)",
+   "description": "The connector of one company, which carries every exchange between that company and another. The reference server uses a connector and does not contain one.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CXCLIENT-CONNECTOR-PULL",
+    "IF-CONNECTOR-BACKEND",
+    "IF-CONNECTOR-PARTNER",
+    "IF-CONNECTOR-PARTNER-DATA",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-SECRETS",
+   "name": "Secrets and keys",
+   "description": "The store of the secrets and keys of a deployment, outside the tracked files. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-BACKEND-SECRETS"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-HOSTING",
+   "name": "Hosting and deployment",
+   "description": "The platform that runs every element of a deployment. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "shared",
+   "interfaces": [
+    "IF-HOSTING-BACKEND",
+    "IF-OBSERVABILITY-HOSTING"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-PROVISIONER",
+   "name": "Provisioning of a customer",
+   "description": "The setup of a customer company and of its connector stack. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "shared",
+   "interfaces": [
+    "IF-PROVISIONER-BACKEND"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-DATARIGHTS",
+   "name": "Data subject functions, retention, export and erasure",
+   "description": "The functions that serve the rights of data subjects and the retention, export and erasure of the data of one deployment. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "per-customer",
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB",
+    "IF-BACKEND-DOCSTORE",
+    "IF-ACCESS-IDP",
+    "IF-OBSERVABILITY-HOSTING"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "EL-BACKUPSTORE",
+   "name": "Backup storage",
+   "description": "The storage that holds the backups of the database of a deployment. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "deployment": "shared",
+   "interfaces": [
+    "IF-RDB-BACKUPSTORE"
+   ],
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  }
+ ],
+ "interfaces": [
+  {
+   "id": "IF-FRONTEND-BACKEND",
+   "from": "EL-FRONTEND",
+   "to": "EL-BACKEND",
+   "description": "REST with JSON bodies over HTTPS between a user interface and the HTTP API of the reference server.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-ACCESS-IDP",
+   "from": "EL-ACCESS",
+   "to": "EL-IDP",
+   "description": "Validation of the caller's identity token with the identity provider.",
+   "external": true,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-BACKEND-RDB",
+   "from": "EL-BACKEND",
+   "to": "EL-RDB",
+   "description": "PostgreSQL wire protocol between the HTTP API of the reference server and its database.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-BACKEND-DOCSTORE",
+   "from": "EL-BACKEND",
+   "to": "EL-DOCSTORE",
+   "description": "Reading and writing of technical documents in a document store.",
+   "external": true,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-BACKEND-SECRETS",
+   "from": "EL-BACKEND",
+   "to": "EL-SECRETS",
+   "description": "Reading of the secrets and of the configuration from the process environment at start.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-ACCESS-AUDIT",
+   "from": "EL-ACCESS",
+   "to": "EL-AUDIT",
+   "description": "In-process recording of each access decision in the audit trail.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-CXCLIENT-CONNECTOR",
+   "from": "EL-CXCLIENT",
+   "to": "EL-CONNECTOR",
+   "description": "Management API of the company's own connector: assets, policies, contract definitions, catalogue requests, contract negotiations and transfer processes.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-CXCLIENT-CONNECTOR-PULL",
+   "from": "EL-CXCLIENT",
+   "to": "EL-CONNECTOR",
+   "description": "HTTP request to the data plane endpoint of a transfer, which pulls the provider's data or delivers a notification.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-TWINS-DTR",
+   "from": "EL-TWINS",
+   "to": "EL-DTR",
+   "description": "Asset Administration Shell API of the Digital Twin Registry: registration, change and retirement of shell descriptors.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-CONNECTOR-BACKEND",
+   "from": "EL-CONNECTOR",
+   "to": "EL-BACKEND",
+   "description": "HTTP from the provider's data plane to the HTTP API of the reference server, which serves the aspect payloads and receives the notifications.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-CONNECTOR-PARTNER",
+   "from": "EL-CONNECTOR",
+   "to": "EL-PARTNER",
+   "description": "Dataspace Protocol between the control planes of two companies: catalogue, contract negotiation and transfer process.",
+   "external": true,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-CONNECTOR-PARTNER-DATA",
+   "from": "EL-CONNECTOR",
+   "to": "EL-PARTNER",
+   "description": "HTTP between the data planes of two companies after a transfer has started.",
+   "external": true,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-DPPSP-CONNECTOR",
+   "from": "EL-DPPSP",
+   "to": "EL-CONNECTOR",
+   "description": "The digital product passport service provider, as a data consumer, negotiates the offers of the economic operator's connector and pulls the battery passport dataset.",
+   "external": true,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-PROVISIONER-BACKEND",
+   "from": "EL-PROVISIONER",
+   "to": "EL-BACKEND",
+   "description": "HTTPS calls that set up a company in a deployment.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-HOSTING-BACKEND",
+   "from": "EL-HOSTING",
+   "to": "EL-BACKEND",
+   "description": "The platform runs the reference server with its environment.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-OBSERVABILITY-HOSTING",
+   "from": "EL-OBSERVABILITY",
+   "to": "EL-HOSTING",
+   "description": "Standard output of the process, liveness and readiness endpoints and metrics, which the host collects.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  },
+  {
+   "id": "IF-RDB-BACKUPSTORE",
+   "from": "EL-RDB",
+   "to": "EL-BACKUPSTORE",
+   "description": "Backups of the database written to the backup storage and read back for a restore.",
+   "external": false,
+   "status": "proposed",
+   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+  }
+ ],
+ "outside": [
+  {
+   "id": "EL-FRONTEND",
+   "name": "A user interface that calls the HTTP API. This repository holds no user interface."
+  },
+  {
+   "id": "EL-IDP",
+   "name": "The identity provider that issues the caller's token."
+  },
+  {
+   "id": "EL-DTR",
+   "name": "The Digital Twin Registry of the company's connector stack."
+  },
+  {
+   "id": "EL-PARTNER",
+   "name": "The connector of another company."
+  },
+  {
+   "id": "EL-DPPSP",
+   "name": "The digital product passport service provider that publishes the passport."
+  }
+ ]
+}

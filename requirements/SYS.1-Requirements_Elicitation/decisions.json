@@ -1,0 +1,1660 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.1.BP2 (agree on the requirements) and SYS.1.BP4 (communicate the requirements status): the decisions Francesco owes, each with the requirements it blocks.",
+ "decisions": [
+  {
+   "id": "Q-969",
+   "name": "whether a new passport keeps the battery's unique identifier",
+   "topic": "conflict between requirements",
+   "question": "When a battery that is placed on the market again receives a new battery passport (Art. 77(7)), does it keep its unique identifier, with the new passport told apart by a battery passport identifier (DIN 6.1.2.2 a) and 6.1.2.1 a)), or does the new passport receive a new unique identifier that differs from the identifier of every original passport (vision invariant 5, StR-LIFE-027, \"New unique identifier for the new passport\")?",
+   "why": "DIN 6.1.2.2 a) requires the QR code to link to 'a persistent unique battery identifier', and DIN 6.1.2.1 a) adds a separate battery passport identifier 'as there might be multiple battery passports attributed to one physical battery', which reads as one battery identifier across successive passports. The vision (invariant 5 and section 5) gives the new passport 'a new unique identifier', and StR-LIFE-027 (\"New unique identifier for the new passport\") requires it to differ from every original passport's. StR-PASS-019 (\"Unique identifier persistent for the life of the passport\") limits the persistence to changes that create no new passport, which matches the vision but not the unqualified DIN text. The Regulation does not decide: Art. 77(3) says only that the economic operator placing the battery on the market attributes the unique identifier, and Art. 13(9) requires new labels for a treated battery. Not settled for the stored text, because DIN never states the case of a new passport (the persistence across passports is a reading of 6.1.2.1 a)) and Q-02 (whether the DIN additions bind the dataset) is open. If the persistent reading is chosen, the vision's invariant 5 changes first, then StR-LIFE-027 and StR-PASS-019.",
+   "blocks": [
+    "StR-LIFE-027"
+   ],
+   "raisedBy": "pass-life",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): A battery that receives a new battery passport because it is placed on the market again after preparation for re-use, preparation for repurposing, repurposing or remanufacturing receives a new unique identifier, which differs from the identifier of every original passport, and the new passport is linked to the original passport or passports. Only a repair of a battery that is not waste keeps the passport and its unique identifier.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5 (identity and history follow the regulation)",
+      "quote": "Preparation for re-use, preparation for repurposing, repurposing and remanufacturing give the battery a new passport with a new unique identifier, linked to the passport or passports of the original battery or batteries"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5 (the passport model), What model B is",
+      "quote": "a new record with a new identifier is created and linked to the record or records of the original battery or batteries"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5, the repair",
+      "quote": "A repair of a battery that is not waste keeps its passport and its identifier"
+     },
+     {
+      "document": "architecture decision record 0003 (from edit in place to lineage and ownership events) of the battery passport application, not published",
+      "locator": "Section 1 (context), Art. 77(3)",
+      "quote": "a new transitioned passport needs a fresh serial, not the predecessor's"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-970",
+   "name": "whether treated batteries' passport content follows the original model",
+   "topic": "conflict between requirements",
+   "question": "Q-LIFE-09 extended to the passport content: on the new passport of a treated battery, are the manufacturer identifier and information, the battery category and the EU declaration of conformity held for a new battery model of the treating operator, or for the individual battery? The passport-content requirements place them at model level (DIN 6.1.2.4 e), 6.1.3.5 d), 6.2.7 b)) while StR-LIFE-029 (\"New passport takes over the battery model\") carries the original model over.",
+   "why": "StR-LIFE-029 (\"New passport takes over the battery model\") gives the new passport the battery model of the original battery. StR-PASS-037 (\"Manufacturer identifier relating to the battery model\"), StR-PASS-061 (\"Battery category of the battery model\") and StR-PASS-086 (\"EU declaration of conformity of the battery model\") relate the manufacturer identifier, the category and the declaration of conformity to the battery model, as DIN states. Together they make the new passport show the original manufacturer, category and declaration, while StR-LIFE-052 (\"Operator placing a treated battery recorded as manufacturer\") (Art. 38(11)) records the treating operator as manufacturer, StR-LIFE-030 (\"New passport may carry a different battery category\") (Art. 45(2), DIN 6.1.3.5 NOTE) lets the category change and StR-LIFE-035 (\"New passport holds the new EU declaration of conformity\") (Art. 17(3), Art. 38(3)) requires the treating operator's new declaration. The place and date of manufacture (StR-PASS-047, \"Place of manufacture of the battery model\", StR-PASS-051, \"Date of manufacture (month and year) of the battery model\") are model-level as well and face the same choice. No stored text says whether a treated battery has a new model; Q-LIFE-09 asks it for the lifecycle side only, so the passport-content requirements are not marked as depending on it.",
+   "blocks": [
+    "StR-LIFE-052",
+    "StR-PASS-037",
+    "SyR-LIFE-028",
+    "SyR-LIFE-051"
+   ],
+   "raisedBy": "pass-life",
+   "alsoAsked": [
+    {
+     "note": "Finding on StR-LIFE-029/030/035/052: SyR-LIFE-028 gives the new passport the original battery model, while SyR-LIFE-051 names the treating operator as manufacturer, SyR-LIFE-029 lets the category change and SyR-LIFE-034 requires the treating operator's declaration; DIN relates the manufacturer identifier, the category and the declaration to the battery model (6.1.2.4 e), 6.1.3.5 d), 6.2.7 b)), so the four cannot all hold on a model shared with the original passport. VM-SYS-LIFE-016, VM-SYS-LIFE-017 and VM-SYS-LIFE-021 wait for the answer, together with Q-026.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The new passport of a treated battery keeps the battery model of the original battery and names the treating operator as manufacturer of record, so the treating operator gets no new battery model. The manufacturer identifier and information, the battery category and the EU declaration of conformity of the new passport are therefore held for the individual battery of the new passport, because StR-LIFE-052 (operator placing a treated battery recorded as manufacturer), StR-LIFE-030 (new passport may carry a different battery category) and StR-LIFE-035 (new passport holds the new EU declaration of conformity) give them values that differ from those of the original model.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5 (the passport model), after the action table",
+      "quote": "Only the actions of model B carry data over from the predecessor: the model, the acting operator as the manufacturer of record, a fresh serial number and fresh performance data, and the description of the treatment."
+     },
+     {
+      "path": "requirements/Owner_instructions-Francesco_verbatim/2026-10-26_assumed_agreement_derived_decisions_and_run_4.md",
+      "locator": "Francesco's words of 2026-10-26 on the four blockers (StR-LIFE-030, StR-LIFE-035 and StR-LIFE-052 assumed correct and agreed)",
+      "quote": "Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-971",
+   "name": "whether operators without passport responsibility may record passport information",
+   "topic": "conflict between requirements",
+   "question": "May an operator that is neither the economic operator responsible for a passport nor authorised by it in writing record information on that passport: the recycler recording recovered materials and recycling efficiency (StR-LIFE-116, \"Recovered materials recorded by the recycler\", StR-LIFE-122, \"Recycling efficiency of the recycling process recorded\"), and whoever records a repair (StR-LIFE-043, \"Repair sets the status re-used\", Q-045, \"the role that records a repair\")? Or must that operator act under a written authorisation (Art. 77(4)), or be the operator to which the responsibility moved (Art. 77(7), second subparagraph), or are these records kept outside the passport dataset?",
+   "why": "StR-PASS-005 (\"Only the responsible or an authorised operator changes the dataset\") lets only the responsible economic operator or an operator it has authorised in writing introduce, modify or update passport information (Art. 77(4), Art. 78(f)). StR-LIFE-116 (\"Recovered materials recorded by the recycler\") lets the recycler record the recovered materials, which the project guidelines of the battery passport application holds as a passport column, and its acceptance refuses every other role; StR-LIFE-122 (\"Recycling efficiency of the recycling process recorded\") lets the recycler record recycling efficiency. After the change to waste the responsibility moves to the producer, a producer responsibility organisation or a waste management operator (StR-LIFE-050, \"Responsibility moves when the battery becomes waste\"), which is not always the recycler. Q-045 (\"the role that records a repair\") asks which role records a repair but not how that role relates to StR-PASS-005. The stored texts do not settle it: Annex XIII grants read access only, and the recovered materials are not Annex XIII content.",
+   "blocks": [
+    "StR-PASS-005",
+    "StR-LIFE-116",
+    "StR-LIFE-122",
+    "StR-LIFE-043",
+    "SyR-PASS-005",
+    "SyR-PASS-210",
+    "SyR-LIFE-109",
+    "SyR-LIFE-115"
+   ],
+   "raisedBy": "pass-life",
+   "alsoAsked": [
+    {
+     "note": "Finding on StR-LIFE-116/122/043: SyR-LIFE-109, SyR-LIFE-115 and SyR-LIFE-042 grant the write to the recycler and to the repairing operator as their stakeholder requirements do, while SyR-PASS-005 admits only the responsible operator or an operator it authorised in writing (Art. 77(4)); the access decision of EL-ACCESS follows the answer. SyR-PASS-005 now also carries StR-SEC-015 (merge of SyR-SEC-001).",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "the project guidelines of the battery passport application gives the recycler the write of the recovered materials ('recycler write' in the circularity vocabulary table), and the agent guidelines of the battery passport application makes the regulation-derived source of truth authoritative, but no stored text of Francesco says whether the recycler records them as the economic operator responsible for the passport, under a written authorisation of Art. 77(4), or outside the passport dataset. The role that records a repair is itself open (Q-045, the role that records a repair), and the vision leaves it to follow-up FS14 (repair on the same passport).",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-702",
+   "name": "who may read the recovered materials of a recycled battery",
+   "topic": "regulatory interpretation",
+   "question": "The recovered materials of a recycled battery are not listed in Annex XIII. the project guidelines of the battery passport application and the column access matrix make them readable by the recycler that recorded them, the manufacturer and the authorities, never by the public, and cite Art. 71 and Annex XII, which set the recycling obligations and targets, not an access right. Do you confirm this tier as a project rule (StR-PASS-901, \"Recovered materials readable only by recycler, manufacturer and authorities\"), and is 'the manufacturer' the original manufacturer or the economic operator responsible for the passport?",
+   "why": "StR-LIFE-116 (\"Recovered materials recorded by the recycler\") left the tier of the recovered materials to the passport-content area, which did not write it; without a tier, StR-PASS-013 (\"Each item marked with its access group of Art. 77(2)\") (every item marked with its access group) cannot be met for this record.",
+   "blocks": [
+    "StR-LIFE-116"
+   ],
+   "askedBy": [
+    "passport-content",
+    "lifecycle"
+   ],
+   "raisedBy": "pass-life",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The recovered materials of a recycled battery are readable only by the recycler that recorded them, the manufacturer and the authorities, and never by the general public, as a project rule of the project guidelines of the battery passport application and the agent guidelines of the battery passport application; the stored Art. 71 sets recycling targets and grants no access right, so the registry cites the project rule and not Art. 71. 'The manufacturer' is the manufacturer of record of the passport that the recycling ends: the operator that placed that battery on the market, which for a passport created by re-use, repurposing or remanufacturing is the treating operator and not the manufacturer of an original passport.",
+    "derivedFrom": [
+     {
+      "document": "the agent guidelines of the battery passport application, not published",
+      "locator": "Regulatory rules, circularity vocabulary",
+      "quote": "**Not public** (recycler/manufacturer/authority, Art. 71)."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Access control, role table, row manufacturer",
+      "quote": "Creates batteries/batches, full access to own battery data"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5, after the action table",
+      "quote": "Only the actions of model B carry data over from the predecessor: the model, the acting operator as the manufacturer of record, a fresh serial number and fresh performance data, and the description of the treatment."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 3.4, row importer",
+      "quote": "`manufacturer`: it places the pack on the Union market under its own trademark (Art. 3(33))"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariant 2",
+      "quote": "Behaviour is cited data, verified against the texts in the repository."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Art. 71(2)",
+      "quote": "Recyclers shall ensure that recycling achieves the targets for recycling efficiency and the targets for recovery of materials set out in Parts B and C of Annex XII respectively."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-972",
+   "name": "which customer data survive removal at the subscription end",
+   "topic": "conflict between requirements",
+   "question": "Conflict CA-1, end of a subscription. Which of a customer's data must survive the removal at the end of its subscription? (a) If Ichnos stores the customer's battery passport data as an operator authorised under Art. 78(c) of Regulation (EU) 2023/1542 (passport-content question Q-15), does Art. 78(e) ('the battery passport shall remain available after the economic operator ... ceases to exist or ceases its activity in the Union') oblige Ichnos to keep them after the subscription ends, against the full erasure of Data Act Art. 25(2)(h), or does only the passport service provider hold the passport, so that the application's copy may go? (b) Do the security logs of the application and the stack stay for the retention period of StR-SEC-106 (\"Security logs kept for the agreed retention period\") as a legal-obligation exception to StR-PRIV-034 (\"Return or deletion of a customer's personal data at service end\") and StR-SEC-101 (\"Customer data, keys and credentials removed when a subscription ends\"), and does that hold only if NIS2 applies (Q-SEC-01)? (c) Is the export of the data exchange contracts (StR-CXC-070, \"Stack stores every concluded data exchange contract\", StR-DATA-029, \"Export of all exportable data and digital assets of the stack\") offered before removal in every case, also when the customer ends the subscription without switching?",
+   "why": "StR-SEC-101 (\"Customer data, keys and credentials removed when a subscription ends\") removes everything, StR-DATA-026 (\"Full erasure of a customer's data in the application\") and StR-DATA-027 (\"Full erasure of a customer's stack\") require full erasure, StR-PRIV-034 (\"Return or deletion of a customer's personal data at service end\") keeps copies only where Union or Member State law requires their storage, and Art. 78(e) requires the passport to stay available after the operator ceases. No stored text says whether the application's copy is the passport's storage. The order (retrieval first, then removal) is settled in this review by Data Act Art. 25(2)(g) and (h).",
+   "blocks": [
+    "StR-SEC-101",
+    "StR-DATA-026",
+    "StR-PRIV-034"
+   ],
+   "raisedBy": "cross-areas",
+   "alsoAsked": [
+    {
+     "note": "Conflict CA-1 also covers the 10-year retention of the declaration of conformity and the technical documentation (StR-OPS-963) and of the due diligence documentation (StR-OPS-964) that the application holds: they can outlast the subscription whose end removes the customer's data. One answer with Q-964.",
+     "raisedBy": "system integration review sys-ops"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "Part (a) follows from the vision: Art. 78 binds the Digital Product Passport Service Provider, not this application, so Art. 78(e) does not oblige Ichnos to keep the application's copy of the passport data after the subscription ends. Part (b) depends on Q-001 (whether the NIS2 directive applies to Ichnos directly), which stays open, and on the period of StR-SEC-106 (security logs kept for a predefined period), a figure no source gives. No stored text of Francesco decides part (c), the export of the data exchange contracts when a customer ends its subscription without switching, or the 10-year retention of StR-OPS-963 (declaration of conformity and technical documentation kept 10 years) and StR-OPS-964 (due diligence documentation kept 10 years) after the subscription ends.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-961",
+   "name": "how the passport service provider learns a passport ended",
+   "topic": "product scope",
+   "question": "When the recycling of a battery is recorded, within what time and in what form must the passport service provider learn that the passport has ended (a status in the dataset, a notification, the withdrawal of the data offer)? Do the CX-0160 models carry it?",
+   "why": "StR-LIFE-960 (\"End of a recycled battery's passport made known to the provider\") needs the time and the form; Art. 77(8) sets neither.",
+   "blocks": [
+    "SyR-LIFE-008",
+    "SyR-LIFE-011",
+    "SyR-LIFE-049",
+    "SyR-LIFE-127"
+   ],
+   "askedBy": [
+    "completeness"
+   ],
+   "raisedBy": "completeness",
+   "alsoAsked": [
+    {
+     "note": "Findings on SyR-PASS-043 and StR-LIFE-012/960: the Digital Nameplate LifeCycleStage offers the five statuses only, so a delivered 'waste' cannot tell a recycled battery, whose passport has ceased to exist (Art. 77(8)), from a waste battery that may still be prepared for re-use or repurposing (Art. 71(1)). The IDTA and Catena-X guideline describes Part 1 as static information ('Properties like \"batteryStatus\" if changed would need a new DPP with a new DPP ID'), while two status changes happen on the same passport: waste (Art. 77(8)) and re-used after a repair (model A, SyR-LIFE-042), with the responsible operator possibly changing (SyR-LIFE-049). The question should cover how every status change on the same passport is delivered (a new nameplate submodel, a CX-0151 notification, or the end of the data offer), not only the end after recycling.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco sets the time within which the passport service provider must learn that a passport has ended, or the form (a status in the dataset, a notification, the withdrawal of the data offer); Art. 77(8) sets neither. The time is a figure that only Francesco can set, and whether the CX-Titan models carry the end of a passport is an analysis of the stored standards, not an intent.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-964",
+   "name": "whether the application archives conformity, technical and due diligence documents",
+   "topic": "product scope",
+   "question": "Is the application the customer's archive of record for the EU declaration of conformity, the technical documentation and the due diligence documentation, which the Regulation keeps for 10 years (Annex VIII, Art. 38(4), Art. 41(7), Art. 48(3))? If so, how does the period meet the erasure at the end of a customer's service (StR-DATA-026, \"Full erasure of a customer's data in the application\", StR-PRIV-034, \"Return or deletion of a customer's personal data at service end\"): a mandatory export first, or a retained copy?",
+   "why": "StR-OPS-963 (\"Declaration of conformity and technical documentation kept 10 years\") and StR-OPS-964 (\"Due diligence documentation kept 10 years\") apply only to documents the application holds, and the 10 years can outlast a subscription.",
+   "blocks": [],
+   "askedBy": [
+    "completeness"
+   ],
+   "raisedBy": "completeness",
+   "alsoAsked": [
+    {
+     "note": "SyR-OPS-056 and SyR-OPS-057 (the declaration of conformity, the technical documentation and the due diligence documentation that the application holds, kept for 10 years) depend on this answer and contradict the removal at the end of a subscription (StR-SEC-101, StR-DATA-026, StR-PRIV-034) until it and Q-972 are answered. No element of the application perimeter holds these documents today (see the note added to Q-062).",
+     "raisedBy": "system integration review sys-ops"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco says whether the application is the customer's archive of record for the EU declaration of conformity, the technical documentation and the due diligence documentation, or how the 10-year period meets the erasure at the end of a customer's service (a mandatory export first, or a retained copy). The choice is a commercial and legal decision of Francesco.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-018",
+   "name": "authority access to state of health and battery status information",
+   "topic": "regulatory interpretation",
+   "question": "May authorities read the information of Annex XIII point 4, as the project guidelines of the battery passport application implies by giving the authority role read-only access to all data, when Art. 77(2)(c) and Annex XIII point 4 make it accessible only to persons with a legitimate interest?",
+   "why": "Point 4 holds the performance and durability values, the state of health, the status and the data from use of each individual battery. The Art. 77(9) implementing act, not stored (see the question on the acts under Regulation (EU) 2023/1542 [Q-116, \"which announced battery regulation acts are adopted for storage\"]), will specify the persons with a legitimate interest.",
+   "options": [],
+   "recommendation": {
+    "text": "Until the Art. 77(9) act is stored, follow the stored text: point 4 is accessible only to persons with a legitimate interest, for the purposes of the third subparagraph of Art. 77(2). the project guidelines of the battery passport application's line on the authority role does not hold for point 4 and should be qualified; the Art. 77(9) act may later name authorities.",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 4",
+      "quote": "which shall be accessible only to persons with a legitimate interest"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(2), second subparagraph, point (c)",
+      "quote": "information accessible only to any natural or legal person with a legitimate interest in accessing and processing that information for the purposes referred to in points (a) and (b) of the third subparagraph"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Role-Based Access Control table, row authority",
+      "quote": "Read-only access to all data and documentation"
+     }
+    ]
+   },
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[4] passport-content Q-05 (about StR-PASS-014), second part"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): No, until the Art. 77(9) implementing act that names the persons with a legitimate interest is stored: the information of Annex XIII point 4 is accessible only to persons with a legitimate interest, and no stored text makes an authority such a person. the project guidelines of the battery passport application's authority row and role-column access tier, the same line of the agent guidelines of the battery passport application, the table of ADR 0002 section 2 and the column access matrix are qualified for point 4, as Francesco had ADR 0002, the project guidelines of the battery passport application and the matrix corrected to the stored Annex XIII in decision Q-979.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 2",
+      "quote": "A citation that the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 4",
+      "quote": "which shall be accessible only to persons with a legitimate interest"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(9)",
+      "quote": "the Commission shall adopt implementing acts specifying which persons are to be considered persons with a legitimate interest"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-021",
+   "name": "the reuse action that creates a new passport",
+   "topic": "regulatory interpretation",
+   "question": "Should the lifecycle action that creates a new passport be preparation for re-use, accepted only for a waste battery, while the re-use of a battery that is not waste (for example a second-hand sale) is a change of holder on the same passport?",
+   "why": "Art. 77(7) and DIN 6.1.3.7 e) require a new passport after preparation for re-use, which applies to a waste battery, not after re-use of a battery that is not waste. The vision's action 'reuse' (section 5) and the project guidelines of the battery passport application's Battery Lifecycle section ('A re-use, repurposing or remanufacturing gives the battery a new passport') create a new passport for re-use, so a second-hand battery that never became waste would receive a new passport that Art. 77(7) does not require. the principle that identity and history follow the regulation already names preparation for re-use.",
+   "options": [],
+   "recommendation": {
+    "text": "Yes. Art. 77(7) names preparation for re-use, not re-use; preparation for re-use concerns products that have become waste, and re-use concerns products that are not waste. The vision's action table and the project guidelines of the battery passport application's Battery Lifecycle sentence are corrected to match invariant 5 (vision first).",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), first subparagraph",
+      "quote": "For a battery that has been subject to preparation for re-use, preparation for repurposing, repurposing or remanufacturing, the responsibility for the fulfilment of the obligations under paragraph 4 of this Article shall be transferred"
+     },
+     {
+      "document": "DIN DKE SPEC 99100:2025-02",
+      "locator": "3.35",
+      "quote": "processes, by which products or components of products that have become waste are prepared so that they can be re-used without any other pre-processing"
+     },
+     {
+      "document": "DIN DKE SPEC 99100:2025-02",
+      "locator": "3.45",
+      "quote": "operation by which products or components that are not waste are used again for the same purpose for which they were conceived"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 5",
+      "quote": "Preparation for re-use, preparation for repurposing, repurposing and remanufacturing give the battery a new passport linked to the original passport(s) (Art. 77(7))"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Battery Lifecycle",
+      "quote": "A re-use, repurposing or remanufacturing gives the battery a"
+     }
+    ]
+   },
+   "blocks": [
+    "StR-LIFE-014"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[18] lifecycle Q-LIFE-03 (about StR-LIFE-006)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Yes. The lifecycle action that creates a new passport is preparation for re-use, accepted only for a waste battery, as invariant 5 and Art. 77(7) name it. The re-use of a battery that is not waste, for example a second-hand sale, is a change of holder on the same passport, which creates no passport; the vision's action 'reuse' cites Art. 77(7) and DIN 6.1.3.7 e) for re-use, and neither stored text supports a new passport for re-use.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 5",
+      "quote": "Preparation for re-use, preparation for repurposing, repurposing and remanufacturing give the battery a new passport linked to the original passport(s) (Art. 77(7))"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5",
+      "quote": "Ownership is an event timeline (`battery_ownership`), never a column: a change of holder closes one interval and opens the next, and creates no passport."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "5. What model A is",
+      "quote": "Repairing a waste battery to place it on the market again is preparation for re-use (Art. 3(29)), which takes a new passport under model B."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 2",
+      "quote": "A citation that the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), first subparagraph",
+      "quote": "For a battery that has been subject to preparation for re-use, preparation for repurposing, repurposing or remanufacturing"
+     },
+     {
+      "document": "DIN DKE SPEC 99100:2025-02",
+      "locator": "3.35",
+      "quote": "processes, by which products or components of products that have become waste are prepared so that they can be re-used without any other pre-processing"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-022",
+   "name": "whether waste status and recycling are recorded as separate events",
+   "topic": "regulatory interpretation",
+   "question": "Should the system record the change of a battery's status to waste when the battery becomes waste, with the transfer of responsibility of Art. 77(7) second subparagraph, and record recycling as a separate later event that ends the passport (Art. 77(8))?",
+   "why": "The project sets 'waste' when the recycler records the recycle action, and the project guidelines of the battery passport application calls 'waste' the regulated terminal status, although a waste battery may still be prepared for re-use or for repurposing (Art. 71(1), Art. 73). The responsibility transfer of Art. 77(7) then has no event, and a waste battery prepared for re-use has no path to a new passport.",
+   "options": [],
+   "recommendation": {
+    "text": "Yes. The stored text attaches the transfer of responsibility to the change of status to waste and the end of the passport to recycling, two separate events, and a waste battery can still be prepared for repurposing.",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), second subparagraph",
+      "quote": "Where the status of a battery changes to that of a waste battery, the responsibility for the fulfilment of the obligations under paragraph 4 of this Article shall be transferred"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(8)",
+      "quote": "A battery passport shall cease to exist after the battery has been recycled."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 3(1)(30)",
+      "quote": "'preparation for repurposing' means any operation, by which a waste battery, or parts thereof, is prepared so that it can be used for a different purpose or application than that for which it was originally designed"
+     }
+    ]
+   },
+   "blocks": [
+    "StR-LIFE-009",
+    "StR-LIFE-014",
+    "StR-LIFE-050"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[22] lifecycle Q-LIFE-07 (about StR-LIFE-009)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Yes. The system records the change of a battery's status to waste when the battery becomes waste, with the transfer of responsibility of Art. 77(7) second subparagraph, and records recycling as a separate later event that ends the passport (Art. 77(8)). A waste battery that is not yet recycled may still be prepared for re-use or for repurposing, as vision section 5 states for the repair of a waste battery.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 2",
+      "quote": "Behaviour is cited data, verified against the texts in the repository."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5",
+      "quote": "Recycling ends the passport (Art. 77(8)): the record stays, marked `waste`, and accepts no further dynamic data."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "5. What model A is",
+      "quote": "Repairing a waste battery to place it on the market again is preparation for re-use (Art. 3(29)), which takes a new passport under model B."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), second subparagraph",
+      "quote": "Where the status of a battery changes to that of a waste battery, the responsibility for the fulfilment of the obligations under paragraph 4 of this Article shall be transferred"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(8)",
+      "quote": "A battery passport shall cease to exist after the battery has been recycled."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-023",
+   "name": "whether a new passport may link to several original passports",
+   "topic": "regulatory interpretation",
+   "question": "Should a new passport after preparation for re-use, preparation for repurposing or repurposing be allowed to link to several original passports, instead of the project's rule of exactly one?",
+   "why": "Preparation for repurposing and repurposing apply to a battery 'or parts thereof' (Art. 3(30) and (31)), so one repurposed system, for example a stationary storage system, can be built from modules of several batteries; with exactly one link it could name only one of them (StR-LIFE-022, \"Re-use and repurposing link exactly one original passport\"). The vision's action table links re-use to one original.",
+   "options": [],
+   "recommendation": {
+    "text": "Yes. Art. 77(7) links the new passport to the passport or passports of the original battery or batteries for all four operations, and the definitions admit parts of batteries.",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), first subparagraph",
+      "quote": "Such battery shall have a new battery passport linked to the battery passport or passports of the original battery or batteries."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 3(1)(30)",
+      "quote": "'preparation for repurposing' means any operation, by which a waste battery, or parts thereof, is prepared so that it can be used for a different purpose or application than that for which it was originally designed"
+     }
+    ]
+   },
+   "blocks": [
+    "SyR-LIFE-021",
+    "SyR-LIFE-019"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[28] lifecycle Q-LIFE-13 (about StR-LIFE-022)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on StR-LIFE-022: SyR-LIFE-021 states the project rule of exactly one link for re-use, preparation for repurposing and repurposing; if the recommendation of this question is accepted (one or more links, Art. 77(7) and Art. 3(1)(30), (31)), StR-LIFE-022 and SyR-LIFE-021 change together.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Yes. The new passport after preparation for re-use, preparation for repurposing or repurposing may link to one or more original passports, as invariant 5 states for all four operations and Art. 77(7) states in the stored text. The limit of exactly one link in vision section 5 cites Art. 77(7), which the stored text does not support for a battery built from parts of several batteries.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5",
+      "quote": "give the battery a new passport with a new unique identifier, linked to the passport or passports of the original battery or batteries"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 2",
+      "quote": "A citation that the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(7), first subparagraph",
+      "quote": "Such battery shall have a new battery passport linked to the battery passport or passports of the original battery or batteries."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 3(1)(30)",
+      "quote": "means any operation, by which a waste battery, or parts thereof, is prepared so that it can be used for a different purpose or application"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-025",
+   "name": "access to the record of a recycled battery's ended passport",
+   "topic": "regulatory interpretation",
+   "question": "When a passport 'shall cease to exist' after recycling (Art. 77(8)), what happens to the record that the lineage design keeps flagged 'waste' for audit and lineage integrity: which access tiers may still read it, for how long, and does its identifier still resolve?",
+   "why": "Keeping the record serves the audit and the links of Art. 77(7); delivering it as a passport would contradict Art. 77(8). The acceptance of StR-LIFE-012 (\"Recycling ends the battery passport\") waits for the answer.",
+   "options": [],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-012"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[23] lifecycle Q-LIFE-08 (about StR-LIFE-012)"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco says which access tiers may still read the record of a recycled battery's ended passport, for how long, or whether the record's identifier still resolves. The vision keeps the record, marked waste and closed to dynamic data, and the project guidelines of the battery passport application makes the record's dynamic data read-only; neither text names the readers, the period or the resolution of the identifier, and no text gives the period, which stays the value agreed with Francesco.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-026",
+   "name": "whether a new passport gets the new manufacturer's battery model",
+   "topic": "regulatory interpretation",
+   "question": "Does the new passport after preparation for re-use, repurposing or remanufacturing get a new battery model of the new manufacturer, or are the manufacturer and the battery category held on the new passport itself?",
+   "why": "The vision carries the battery model over to the new passport, but DIN 6.1.2.4 e) relates the manufacturer identifier and DIN 6.1.3.5 d) the battery category to the battery model, while Art. 38(11) makes the treating operator the manufacturer and the category may change (Art. 45(2), DIN 6.1.3.5 NOTE). Taking over the model would show the original manufacturer and category on a battery that has another manufacturer and possibly another category.",
+   "options": [
+    "A new battery model of the new manufacturer.",
+    "The manufacturer and the category held on the new passport itself."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-052"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[24] lifecycle Q-LIFE-09 (about StR-LIFE-029)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The new passport of a battery placed on the market again after preparation for re-use, preparation for repurposing, repurposing or remanufacturing keeps the battery model of the original battery and holds the treating operator as its manufacturer of record on the passport itself. The new passport also holds its own battery category, because the vision carries the original model over unchanged while Art. 45(2) lets the category of the treated battery change. The application creates no new battery model for the treating operator.",
+    "option": 2,
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5, after the action table",
+      "quote": "Only the actions of model B carry data over from the predecessor: the model, the acting operator as the manufacturer of record, a fresh serial number and fresh performance data, and the description of the treatment."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariant 2",
+      "quote": "Behaviour is cited data, verified against the texts in the repository."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Art. 45(2)",
+      "quote": "taking into account the fact that, as a result of those operations, the battery might fall under a different battery category."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-028",
+   "name": "the passport state of a remanufacturing donor battery",
+   "topic": "regulatory interpretation",
+   "question": "What is the state of a donor battery's passport after a remanufacturing: superseded, waste, or both?",
+   "why": "the project guidelines of the battery passport application says the donor batteries 'go to a recycler and end in waste', while the lineage design marks every source passport superseded with no current holder, and a waste passport keeps its holder; the holder rules StR-LIFE-056 (\"A superseded passport has no current holder\") and StR-LIFE-058 (\"A waste passport keeps its last holder\") contradict each other for a donor that is both.",
+   "options": [
+    "Superseded.",
+    "Waste.",
+    "Both, with a holder rule for that case."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-021"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[26] lifecycle Q-LIFE-11 (about StR-LIFE-021), first part"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): A remanufacturing donor's passport is both superseded and waste: the remanufacturing marks the donor's passport superseded, and the recycling of the donor's remaining parts later marks the same passport waste. ADR 0003's invariant is the holder rule for that case: a superseded passport has no open ownership interval and no current owner in any status, and only a waste passport that is not superseded keeps its last holder.",
+    "option": 3,
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5, what model B is",
+      "quote": "The predecessor stays and is marked superseded (`superseded_by_id`)."
+     },
+     {
+      "document": "architecture decision record 0003 (from edit in place to lineage and ownership events) of the battery passport application, not published",
+      "locator": "2. Decision, first bullet",
+      "quote": "remanufacture's N→1 donor join is **Art. 3(32)** (RegMD:364)"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Battery Lifecycle, Remanufacturing",
+      "quote": "when many batteries are cannibalized into one, the highest-residual-lifetime (or capacity) unit becomes `remanufactured`; the donors go to a recycler and end in `waste`."
+     },
+     {
+      "document": "architecture decision record 0003 (from edit in place to lineage and ownership events) of the battery passport application, not published",
+      "locator": "2. Decision, invariant",
+      "quote": "**Invariant (this ADR is the single-source citation for later tickets):** a **non-superseded** passport (`superseded_by_id IS NULL`) has **exactly one open** ownership interval; a **superseded** predecessor has **zero** open intervals **and** `current_owner_id = NULL`."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-033",
+   "name": "the personal data kept after erasure for legal obligations",
+   "topic": "regulatory interpretation",
+   "question": "Which personal data must be kept after an erasure request because a legal obligation requires them (for example the audit records of changes to regulated battery data, or the security logs under NIS2), and under which obligation?",
+   "why": "GDPR Art. 17(3)(b) allows keeping only what a legal obligation needs, and the list must be explicit to be verifiable (StR-PRIV-012, \"Data required by a legal obligation kept through an erasure\"). The periods are set by the retention questions.",
+   "options": [],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "privacy-data-dpp"
+   ],
+   "mergedFrom": [
+    "questions.json[45] privacy-data-dpp Q-PRIV-09 (about StR-PRIV-012)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding 96: an application user's identifier is on the created_by_firebase_uid column of every table and on auth_event_log, which StR-OPS-057 requires (every audit record names who performed the action). The erasure of SyR-PRIV-010 is consistent with that audit trail only if the list of Q-033 keeps the pseudonymous identifier on those records under a named legal obligation and the erasure removes everything that resolves it (SyR-PRIV-022); otherwise one of the two must give way. Q-033 should state this case explicitly.",
+     "raisedBy": "system integration review sys-trust"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco lists the personal data kept through an erasure with a stored legal obligation for each item. The security guide keeps the former owner's pseudonymous identifier in the ownership history under GDPR Art. 17(3)(b) and cites a chain-of-custody obligation of Art. 73(2) of Regulation (EU) 2023/1542, but the stored Art. 73(2) makes the state of health evaluation available to end-users, so the citation is a defect under the principle that behaviour is cited data, verified against the stored texts. No text of Francesco names the obligation that would keep the application users' identifier on the created_by_firebase_uid columns and on auth_event_log (finding 96).",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-034",
+   "name": "whether the battery regulation requirements bind the delivered dataset",
+   "topic": "product scope",
+   "question": "Do the requirements derived from Regulation (EU) 2023/1542 (the Annex XIII content and the lifecycle of Art. 77(6) to (8), with the regulatory values the lifecycle area checks) bind the dataset that the application delivers to the passport service provider through CX-0160, with the perimeter 'application', or only the passport demo?",
+   "why": "Vision section 1 lists the Regulation among the texts of the passport demo and says that the data layer follows the Catena-X standards, and vision section 3.2 places the lifecycle catalogues, the lifecycle engine and the ownership timeline in the demo; the elicitation brief gives the delivered dataset the perimeter 'application', and both areas wrote their requirements that way. The perimeter decides which requirements the Catena-X certification and its verification measures cover: 298 requirements of the two areas have the perimeter 'application' and cite the Regulation (listed as related, although no note cites this question). The question on lower-case 'must' [Q-084 (\"whether lowercase must clauses are assessed for certification\")] asks whether CX-0160-3 5.3.2 (completeness of the dataset handed to the EU DPP system) is assessed, which bears on the answer.",
+   "options": [
+    "Application: the delivered dataset must meet them, as the brief reads it.",
+    "Demo only: they move to the perimeter 'demo-passport'.",
+    "Some of the requirements (to be named) move to 'demo-passport', and the rest stay 'application'."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "SyR-LIFE-008",
+    "SyR-LIFE-011",
+    "SyR-LIFE-013",
+    "SyR-LIFE-014",
+    "SyR-LIFE-015",
+    "SyR-LIFE-016",
+    "SyR-LIFE-017",
+    "SyR-LIFE-018",
+    "SyR-LIFE-019",
+    "SyR-LIFE-020",
+    "SyR-LIFE-021",
+    "SyR-LIFE-024",
+    "SyR-LIFE-026",
+    "SyR-LIFE-028",
+    "SyR-LIFE-048",
+    "SyR-LIFE-049",
+    "SyR-LIFE-051",
+    "SyR-LIFE-109",
+    "SyR-LIFE-115",
+    "SyR-LIFE-127"
+   ],
+   "relatedRequirements": [
+    "StR-LIFE-009",
+    "StR-LIFE-012",
+    "StR-LIFE-014",
+    "StR-LIFE-015",
+    "StR-LIFE-016",
+    "StR-LIFE-017",
+    "StR-LIFE-019",
+    "StR-LIFE-020",
+    "StR-LIFE-021",
+    "StR-LIFE-027",
+    "StR-LIFE-047",
+    "StR-LIFE-049",
+    "StR-LIFE-050",
+    "StR-LIFE-052",
+    "StR-LIFE-089",
+    "StR-LIFE-090",
+    "StR-LIFE-092",
+    "StR-LIFE-097",
+    "StR-LIFE-098",
+    "StR-LIFE-116",
+    "StR-LIFE-122",
+    "StR-PASS-005",
+    "StR-PASS-012",
+    "StR-PASS-013",
+    "StR-PASS-037",
+    "StR-PASS-069"
+   ],
+   "askedBy": [
+    "passport-content",
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[2] passport-content Q-03 (about SRC-EU-2023-1542)",
+    "questions.json[33] lifecycle Q-LIFE-18 (about StR-LIFE-001)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Findings on StR-LIFE-002 to StR-LIFE-960 and on SyR-PASS-003: 120 lifecycle requirements keep the perimeter 'application' while the only lifecycle engine (EL-LIFECYCLE) is a demo element. This review gives EL-DATASET the lifecycle responsibility by design, conditional on this answer (architecture change of EL-DATASET); if the answer is 'demo only', these requirements move to the perimeter 'demo-passport' and their allocation to EL-LIFECYCLE and EL-PASSPORTDEMO. Invariant 1 allows one engine only: if both perimeters keep a lifecycle, the demo calls the application's through a one-way import (AD-16). The system requirements added here already list Q-034 in dependsOn.",
+     "raisedBy": "system integration review sys-data"
+    },
+    {
+     "note": "The lineage half of SyR-DEV-064 (the passport lineage written only through a lifecycle transition handler) has the perimeter demo-passport. If the answer keeps the lineage in the data layer, the rule on its writer needs a system requirement of its own with the perimeter application.",
+     "raisedBy": "system integration review sys-ops"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "\"Q-034: I do not understand the question, since we started with the eu battery regulation as elicitation layer and then used the DIN spec, delegated acts and Catena-X as well, so what do you mean?? just follow the requirements trace\" (Francesco, 2026-10-26). A requirement elicited from Regulation (EU) 2023/1542, from DIN DKE SPEC 99100, from a delegated act or from a Catena-X text binds where its trace leads: its system and software requirements, with their perimeter and allocation, decide whether the data layer, its delivered dataset or the passport demo meets it. No requirement changes its perimeter on this question.",
+    "derivedAnswer": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Some requirements move and the rest stay. The vision makes the Catena-X standards the source of the data layer and Regulation (EU) 2023/1542 the source of the passport demo, so every requirement whose binding source is the Regulation's Annex XIII content, its lifecycle rules or its regulatory values takes the perimeter 'demo-passport', and the delivered dataset meets the Catena-X texts instead (the BatteryPass 6.1.0 aspect model under CX-Titan, decision Q-985). Invariant 5 keeps the requirements on the identity split in the perimeter 'application', because the dataspace keeps the same split: a new dataset with a new identifier linked to the predecessor dataset or datasets after preparation for re-use, preparation for repurposing, repurposing or remanufacturing, the same twin and dataset after a repair, and the end of the passport after recycling."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-041",
+   "name": "whether remanufacturing source passports must share a battery model",
+   "topic": "product scope",
+   "question": "Should the project keep the project guidelines of the battery passport application's rule that the source passports of a remanufacturing share one battery model, which Art. 3(32) does not require?",
+   "why": "The rule would refuse remanufacturings that the Regulation allows; StR-LIFE-021 (\"Remanufactured passport linked to every original passport\") links every original passport.",
+   "options": [
+    "Keep the rule.",
+    "Drop it."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-021"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[25] lifecycle Q-LIFE-10 (about StR-LIFE-037), second part"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The project drops the rule that the source passports of a remanufacturing share one battery model. The passport of a remanufactured battery is linked to the passport of every original battery whose cells or modules the battery contains, under the conditions of Art. 3(32) that the vision lists: at least 90 % of the original rated capacity, and cell states of health within 3 % of each other.",
+    "option": 2,
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariant 2 (behaviour is cited data, verified against the texts in the repository)",
+      "quote": "A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5 (the passport model), table row remanufacture",
+      "quote": "new, linked to every source passport; at least 90 % of the original rated capacity, cell states of health within 3 %"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 4 (the convergence criterion), point 3",
+      "quote": "When the newest version differs from this vision, the vision wins."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-042",
+   "name": "whether a donor battery may supply several remanufactured batteries",
+   "topic": "product scope",
+   "question": "Can one donor battery give cells or modules to more than one remanufactured battery?",
+   "why": "The answer decides whether one donor passport can be linked from several new passports (StR-LIFE-021, \"Remanufactured passport linked to every original passport\").",
+   "options": [
+    "Yes.",
+    "No."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-021"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[26] lifecycle Q-LIFE-11 (about StR-LIFE-021), second part"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco says whether one donor battery may give cells or modules to more than one remanufactured battery. the project guidelines of the battery passport application describes a remanufacturing in which 'many batteries are cannibalized into one' and the donors 'go to a recycler and end in `waste`', and the vision marks each predecessor superseded through one column, superseded_by_id; both texts describe one donor feeding one remanufactured battery. Convergence invariant 2 of the project guidelines of the battery passport application, however, refuses a lifecycle rule that the stored regulation does not support, and Art. 3(32) allows cells and modules that are 'new, used or recovered from waste' without a limit per donor. Francesco has not resolved the difference between his model and the regulation for this case.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-045",
+   "name": "the role that records a repair",
+   "topic": "product scope",
+   "question": "Which role records a repair in the system (follow-up FS14)?",
+   "why": "No stored text names the writer of the repair history (StR-LIFE-045, \"Repair history included in the passport\").",
+   "options": [],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-045"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[31] lifecycle Q-LIFE-16 (about StR-LIFE-045), second part"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): In the data layer, the company that holds the value-chain role repairer (position 9, workflow E, the in-life repairer) records a repair: the repairer records the change of composition on the same twin through screen S20, the bill of materials as maintained. The EU regulatory role that records a repair in the lifecycle action catalogue of the passport demo is the role that follow-up FS14 (repair on the same passport) names, and the vision leaves that role to FS14. Revised on 2026-11-09 for the passport: the repairer reports each repair to the data provider of the passport with a repair notification that names the CX-0131 repair certificate, and the passport's repair history holds one entry per certificate; the repairer's screen S20 stays the repairer's own record of the composition (Francesco: \"I prefer the proposal's design as more robust and modular.\").",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 3.1 (the data layer, inside the certification perimeter), canonical registry row",
+      "quote": "Bill of materials as maintained | screen S20 | the repairer"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 3.4 (the value-chain role catalogue), position 9",
+      "quote": "`repairer` | `E`, in-life repairer | CircularCo | none"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 5, last bullet",
+      "quote": "The dataspace keeps the same split. A repair records a change of composition on the same twin (the SingleLevelBomAsMaintained proposal"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 5 (the passport model), table row repair",
+      "quote": "the role follow-up FS14 names"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "answer extended with the repair notification design (before: \"Derived from Francesco's expressed intent (\\\"the open decisions must be derived by the intent expressed by me\\\" (Francesco, 2026-10-26)): In the data layer, the company that holds the value-chain role repairer (position 9, workflow E, the in-life repairer) records a repair: the repairer records the change of composition on the same twin through screen S20, the bill of materials as maintained. The EU regulatory role that records a repair in the lifecycle action catalogue of the passport demo is the role that follow-up FS14 (repair on the same passport) names, and the vision leaves that role to FS14.\")",
+     "reason": "Francesco, 2026-11-09: \"I prefer the proposal's design as more robust and modular.\"",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-046",
+   "name": "whether the system records recycling process efficiency",
+   "topic": "product scope",
+   "question": "Should the system record the recycling efficiency of the recycling process at all?",
+   "why": "StR-LIFE-122 (\"Recycling efficiency of the recycling process recorded\") lets the recycler record it per battery and StR-LIFE-123 (\"Recycling efficiency of lead-acid batteries compared with the target\") to StR-LIFE-126 (\"Recycling efficiency of other batteries compared with the target\") compare it with Annex XII Part B; the efficiency is a property of the recycling process, which Art. 75(5) asks recyclers to report per calendar year.",
+   "options": [
+    "Yes.",
+    "No: StR-LIFE-122 (\"Recycling efficiency of the recycling process recorded\") to StR-LIFE-126 (\"Recycling efficiency of other batteries compared with the target\") are rejected."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-122",
+    "SyR-LIFE-115"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[21] lifecycle Q-LIFE-06 (about StR-LIFE-117), second part"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on StR-LIFE-123 to 126: no table holds the recycling efficiency targets of Annex XII Part B (deviation recorded on SyR-LIFE-116 to SyR-LIFE-119); a threshold store for Part B, with its citation and dates, is needed only if this question is answered yes.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco says whether a recycler records the recycling efficiency of its recycling process in the system. the project guidelines of the battery passport application lists the efficiency only as a threshold ('Minimum recycling-process efficiency + per-material recovery rates a recycler must hit') and compares only the recovered materials of a battery with a threshold ('filled + compared to threshold'), and the vision has the recycler's passport show 'recovered materials compared with Annex XII'. No text names a recorded efficiency, its per-battery or per-year form, or its comparison with Annex XII Part B.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-105",
+   "name": "the removal period for customer data after a subscription ends",
+   "topic": "operations figures",
+   "question": "Within what period after a subscription ends must the customer's data, keys, secrets and credentials be removed from the application and the stack?",
+   "why": "No source sets it; the contract's exit clause (roadmap R8-2) and the Data Act's switching rules (privacy area) bound it (StR-SEC-101, \"Customer data, keys and credentials removed when a subscription ends\").",
+   "options": [],
+   "recommendation": null,
+   "blocks": [
+    "StR-SEC-101"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "security"
+   ],
+   "mergedFrom": [
+    "questions.json[70] security Q-SEC-15 (about StR-SEC-101)"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco sets the period within which a customer's data, keys, secrets and credentials are removed after the subscription ends. ADR 0004 states only that a customer's stack is provisioned when the subscription starts. The period is the value agreed with Francesco.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-409",
+   "name": "whether served aspect payloads skip the response envelope",
+   "topic": "project documents to correct",
+   "question": "Is a served aspect payload outside the response envelope rule of StR-DEV-082 (\"Every API response uses the success or error envelope\") ({ success: true, data } on success), so that the submodel routes (GET /api/parts/:id/submodel/:type and GET /api/part-types/:id/submodel/:type) and the synchronous PCF submodel GET (SyR-CXD-100, \"Synchronous PCF response body is value-only Pcf 10.0.0 JSON\") answer the bare payload that the SAMM model and CX-0136 define, while their failures keep the error envelope?",
+   "why": "StR-DEV-082 (\"Every API response uses the success or error envelope\") (the project guidelines of the battery passport application, API design) puts every API response in the envelope, while a consumer that pulls an aspect through the connector expects the payload as its model defines it (EL-SUBMODELS, IF-CONNECTOR-BACKEND), and SyR-CXD-100 (\"Synchronous PCF response body is value-only Pcf 10.0.0 JSON\") requires the value-only Pcf JSON with status 200. SyR-DEV-042 (\"Every API response in the success or error envelope\") keeps the rule unweakened, and VM-SYS-DEV-016 (\"Response envelope and status codes of every route\") reports those success bodies apart until Francesco rules. Either way the failure bodies of the two submodel routes answer error as a string in the battery passport application on 2026-10-22 and fail the rule (known deviation of SyR-DEV-042).",
+   "options": [
+    "Yes: a route that serves an aspect payload answers it bare on success, and the project guidelines of the battery passport application's API design names the exception.",
+    "No: every response keeps the envelope, and the connector-facing aspect routes are changed, with the consequences for CX-0136 and the SAMM conformance stated first."
+   ],
+   "blocks": [],
+   "raisedBy": "system integration review sys-ops",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): A route that serves an aspect payload to a data consumer answers, on success, the bare payload that the aspect model and the Catena-X standard define, and keeps the error envelope on failure; the project guidelines of the battery passport application's API design names the exception. The CX-Titan texts bind the data layer: CX-0136 requires the value-only PCF JSON as the synchronous response body, and CX-0002 the value-only serialization of a submodel.",
+    "option": 1,
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 2",
+      "quote": "Every rule has one source of truth that carries its citation: a Catena-X standard for the data layer"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "1. Sources of truth for behaviour",
+      "quote": "The data layer, inside the certification perimeter, follows the Catena-X standards."
+     },
+     {
+      "path": "requirements/Owner_instructions-Francesco_verbatim/2026-10-26_titan_release_transactions_did_documents_and_simulation_exception.md",
+      "locator": "Second message",
+      "quote": "for this release we will have to stick to Titan release."
+     },
+     {
+      "document": "Catena-X standard CX-0136 Use Case PCF (CX-Titan)",
+      "locator": "4.2.2.3 Data types (CX-0136 2.2.2, CX-Titan)",
+      "quote": "The synchronous response body MUST be the value-only JSON conforming to the PCF model"
+     },
+     {
+      "document": "Catena-X standard CX-0002 Digital Twins in Catena-X (CX-Titan)",
+      "locator": "4.1.1 Standards and Profiles (CX-0002 2.4.0, CX-Titan)",
+      "quote": "adding the path-element $value will reliably yield a response containing the value-only serialization of a Submodel"
+     }
+    ],
+    "followUps": [
+     {
+      "date": "2026-10-27",
+      "by": "Francesco",
+      "question": "AAS Part 2 requires a result object on every failure, while the answer of Q-409 kept the error envelope on failure: does Q-409 change for the routes that Catena-X partners call?",
+      "text": "\"Q409: in addition to the error for the human user return a result object in compliance to Catena-X\" (Francesco, 2026-10-27). A route that serves an aspect payload to a data consumer answers on success the bare payload, and on failure the error envelope { success: false, error: { message, code } } for the human user together with the result object of AAS Part 2 (its messages, each with messageType and text) that Catena-X requires (CX-0002 points to Part 2 for error handling).",
+      "source": "Francesco's instruction of 2026-10-27, stored in the private registry of the battery passport application"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-998",
+   "name": "whether the dataset keeps the link to the predecessor passport after the CX-Neptune go-live",
+   "topic": "lifecycle",
+   "question": "BatteryPass 6.1.0 of CX-Titan carries the identifier of the preceding passport (metadata.predecessor), and no model that CX-0160 1.1.0 requires carries it. Does the delivered dataset keep the link to the passport of each original battery after the CX-Neptune go-live?",
+   "why": "Art. 77(7) of Regulation (EU) 2023/1542 links a new battery passport to the passport or passports of the original battery or batteries, and SyR-LIFE-019 (new passport dataset links to each original battery's passport), SyR-LIFE-020 (remanufactured dataset links every original battery's passport) and SyR-LIFE-025 (navigation between new and original passports in both directions) state it for the dataset; the Catena-X compliance flags of 2026-10-26 found StR-LIFE-020, StR-LIFE-021 and StR-LIFE-026 a gap under CX-Neptune.",
+   "options": [
+    "Keep the link after the go-live, beside the CX-0160 models.",
+    "Drop the link with BatteryPass 6.1.0 at the go-live."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [
+    "SyR-LIFE-019",
+    "SyR-LIFE-020",
+    "StR-LIFE-020",
+    "StR-LIFE-021"
+   ],
+   "askedBy": [
+    "catena-x-compliance-2026-10-26"
+   ],
+   "raisedBy": "catena-x-compliance-2026-10-26",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "\"do not remove the link to the predecessor\" (Francesco, 2026-10-26). The delivered dataset keeps the link from a new battery passport to the passport of each original battery after the CX-Neptune go-live, although CX-0160 1.1.0 and its models carry no predecessor property; Francesco also asked that the gap be filed with Catena-X (\"file the Neptune predecessor link gap as a Catena-X issue\").",
+    "option": 1,
+    "source": "Francesco's instruction of 2026-10-26, stored in the private registry of the battery passport application"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1002",
+   "name": "who reads the state of health and battery status under the draft Article 77(9) act",
+   "topic": "access",
+   "question": "Article 1(4) of the draft Implementing Regulation on access to battery passport information (SRC-EU-DRAFT-IMPL-77-9, Ares(2026)9814179, feedback until 16 November 2026) names only the purchaser of the battery and a third party acting on the purchaser's behalf as persons with a legitimate interest in the Annex XIII point 4 information (state of health and battery status). Article 1(1) and 1(2) of the draft give repairers, remanufacturers, repurposers, waste treatment operators and recyclers the point 2 information of the battery model only. ADR 0002 and the project guidelines of the battery passport application open the point 4 data to every used-battery operator (second_use, repurposer, remanufacturer, recycler) and to the manufacturer. Does the application follow the draft, keep ADR 0002, or follow the draft and send feedback to the Commission before 16 November 2026?",
+   "why": "ADR 0002 (dynamic durability data in the legitimate-interest tier) and the column access matrix grant the Annex XIII point 4 columns to the used-battery operators, while the draft Article 77(9) act grants them only to the purchaser and the purchaser's agent. Draft Article 2(4)(c) lets the purchaser share point 4 information with prospective purchasers, which matches the owner's sharing act of the marketplace demo (batteries.for_sale). Decision Q-018 (authority access to state of health and battery status) waits for this act; the draft names no authority as a person with a legitimate interest, and draft Article 2(4)(c) lets the purchaser share point 4 information with the market surveillance authorities.",
+   "options": [
+    "A: follow the draft once the Commission adopts the act: the Annex XIII point 4 data are readable by the purchaser (the owner) and the owner's agent only, a used-battery operator reads them only through the owner's sharing act (draft Art. 2(4)(c)), and a new ADR supersedes ADR 0002.",
+    "B: keep ADR 0002 until the act is adopted, and change nothing now.",
+    "C: option A for the target design, and Francesco sends feedback on the Have Your Say page before 16 November 2026 asking the Commission to name the operators of Art. 77(2), third subparagraph, point (a), for the point 4 data that preparation for re-use, repurposing and remanufacturing need."
+   ],
+   "recommendation": "Option C: the draft is the only text that names the persons of Art. 77(2)(c), so the target design follows the draft. The marketplace sharing act already fits draft Art. 2(4)(c), and the feedback window is the moment to raise the gap for second-life operators.",
+   "blocks": [
+    "Q-018"
+   ],
+   "relatedRequirements": [
+    "StR-PASS-069"
+   ],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-05",
+    "by": "Francesco",
+    "text": "\"Option A: the company which prepares the battery will also be the one which in interested in buying the battery. The previous owner who wants to sell the battery is the data owner, so according to GDPR he must consent to the data usage, so I understand the intent of the legislator\" (Francesco, 2026-11-05, requirements/Owner_instructions-Francesco_verbatim/2026-11-05_after_first_passport_downloads_paid_standards_and_q1002.md). The target design follows draft Article 1(4) of the Article 77(9) implementing act (SRC-EU-DRAFT-IMPL-77-9) once the Commission adopts the act: the Annex XIII point 4 data of an individual battery (performance and durability values, state of health, battery status, usage data) are readable by the purchaser of the battery and by a third party acting on the purchaser's behalf; a repairer, remanufacturer, repurposer, waste treatment operator, recycler or manufacturer reads them only when the owner shares them as a prospective purchaser (draft Article 2(4)(c)), which the marketplace flag batteries.for_sale already models. No feedback is sent to the Commission. ADR 0002 stays in force until the act is adopted; a new ADR then supersedes it, and step 3 of the after-first-passport work derives the requirements of the target design."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1003",
+   "name": "whether the dataset carries the recycled content documentation of the draft delegated act",
+   "topic": "lifecycle",
+   "question": "The draft Delegated Regulation on recycled content (SRC-EU-DRAFT-DA-RECYCLED-CONTENT-MAIN and SRC-EU-DRAFT-DA-RECYCLED-CONTENT-ANNEX, Ares(2026)7823470) sets the methodology for the calculation and verification of the cobalt, nickel, lithium and lead recycled content and the format for its documentation. The application stores the recycled content shares per batch (batches.recycled_<metal>_pct with the pre-consumer and post-consumer shares). Does the dataset carry the documentation of the draft annex, or only the shares that Annex XIII point 1 makes public?",
+   "why": "The battery passport shows the recycled content shares (Annex XIII point 1), and the draft annex defines how the manufacturer calculates and documents them; the dataset of the application may need the plant, the period and the verification fields that the documentation format names.",
+   "options": [
+    "A: the dataset carries only the recycled content shares; the documentation stays with the manufacturer and its notified body.",
+    "B: the dataset carries the documentation fields of the draft annex beside the shares, once the act is adopted."
+   ],
+   "recommendation": "Decided after the citation catalogue of the after-first-passport work (step 2) reads the draft annex.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1004",
+   "name": "whether the Commission data point guidance and the BatteryPass-Ready long list change the dataset",
+   "topic": "passport",
+   "question": "The Commission guidance 'Digital Batteries Passport: data points by category' version 2.0 of 15 August 2026 (SRC-EC-GUIDANCE-DBP-DATAPOINTS-2-0) and the BatteryPass-Ready Data Attribute Longlist version 2.0 (SRC-BATTERYPASS-READY-LONGLIST-2-0) list the passport data points per battery category with their status (mandatory, if applicable, not to be filled). Does the dataset of the application follow the guidance where the guidance differs from CX-0160 1.1.0 and DIN DKE SPEC 99100?",
+   "why": "The data layer follows the Catena-X standards and the passport demo follows the regulation (vision section 1); the guidance is the Commission's reading of the regulation, and Francesco's own comparison of the long list version 2.0 with CX-0160 and IDTA-02035 (2026-09-15) found differences.",
+   "options": [
+    "A: the passport demo follows the guidance where the guidance differs, and each difference with CX-0160 becomes an item of the CX-0160 amendment proposal.",
+    "B: the guidance is read only; the dataset follows CX-0160 and DIN DKE SPEC 99100."
+   ],
+   "recommendation": "Option A: the guidance is the Commission's own reading of Annex XIII, and the expert group task is the channel for the CX-0160 differences.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1005",
+   "name": "which Tractus-X circular-economy aspect models the after-first-passport exchange uses",
+   "topic": "catenax-network",
+   "question": "Tractus-X publishes released aspect models for the end of a life cycle (remanufacturing certificate 3.0.0, recycling strategy certificate 3.0.0, material recycling certificate 1.0.0, waste certificate 1.0.0) and a draft waste model 2.0.0 (SRC-TX-CIRCULAR-MODELS), and the circularity KIT of release 26.09 (SRC-TX-KIT-CIRCULARITY) describes their exchange. CX-0160 1.1.0 names none of them. Do the CX-0160 amendment proposal and the reference API reuse these models for the lifecycle events, or define new battery-specific models?",
+   "why": "Invariant 1 (one executor per capability) and the Catena-X practice of reusing released models favour reuse; the certificates mark a status change of an asset but carry no link between a predecessor and a successor battery passport.",
+   "options": [
+    "A: reuse the released certificates for the events and propose only the missing link between passports as a new model or property.",
+    "B: define a new battery lifecycle event model that replaces the certificates for batteries."
+   ],
+   "recommendation": "Decided after the gap analysis (step 4) compares the certificates with the requirements.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1006",
+   "name": "how the producers of a battery learn its recycling result after re-use or remanufacturing",
+   "topic": "lifecycle",
+   "question": "Delegated Regulation (EU) 2025/606 (SRC-EU-2025-606) sets the methodology and the documentation format of the recycling efficiency and the recovery of materials from waste batteries. Francesco's premise of 2026-11-05: the manufacturers and economic operators must report statistics on the recycling of their batteries, so they must receive notifications and data when their batteries are recycled, even after the batteries have been re-used or remanufactured. Which party receives the recycling result of a battery whose passport has predecessors, and through which channel?",
+   "why": "The open point of Francesco's task for the Digital Product Passport Expert Group: CX-0160 1.1.0 defines no notification of the end of a passport, and the application's notifyRemoteManufacturers broadcasts a custom payload to every company. The citation catalogue checks the premise against Art. 56, 61, 75 and 76 and Recital (102) of Regulation (EU) 2023/1542 before a recommendation.",
+   "options": [
+    "A: relay along the lineage chain, each operator forwarding a CX-0151 notification to the operator of the predecessor passport.",
+    "B: direct notice from the recycler, which walks the predecessor links and notifies each operator found through the BPN Discovery Service and the Connector Discovery Service.",
+    "C: subscription carried forward: an operator subscribes to end-of-life events on its twin, and each new passport inherits the subscriptions.",
+    "D: publish and pull: the final passport and its twin publish the end of the passport and the recovered materials, and producers query the twins of their own passports."
+   ],
+   "recommendation": "Decided after the citation catalogue (step 2) checks the premise and the system requirements (step 3) are derived.",
+   "blocks": [],
+   "relatedRequirements": [
+    "SyR-LIFE-109",
+    "SyR-LIFE-127"
+   ],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-09",
+    "by": "Francesco",
+    "text": "\"Approve all\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md), accepting option B plus D. The first recycler, or the treatment operator acting for the producer, sends a CX-0151 notification with the end of the passport and the recovered materials recorded for the battery to the producer of the passport that the recycling ends; that producer finances the reporting (Art. 56(4)(d)) and its producer responsibility organisation publishes the recycling efficiencies of its producers (Art. 57(5)). The recycler may also notify the economic operator responsible for each predecessor passport that the backward links reach, when a contract with that operator exists, which serves the cost sharing of Art. 56(5) and use case UC-5a. The end of the passport is published on the final passport dataset and its digital twin (SyR-LIFE-011, SyR-LIFE-127). No stored text obliges the recycler to report to a manufacturer, so the notices rest on the producer's financing and on contracts."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1007",
+   "name": "which producer takes over the passport of a second-life battery that becomes waste",
+   "topic": "lifecycle",
+   "question": "Art. 77(7), second subparagraph, of Regulation (EU) 2023/1542 transfers the responsibility for the passport of a battery that becomes waste \"either to the producer\", to the producer responsibility organisation, or to the waste management operator. A battery placed on the market again after preparation for re-use, preparation for repurposing, repurposing or remanufacturing has two producers: the original producer and the second-life operator, which Art. 56(2) makes \"the producer of such battery\". Which producer receives the passport responsibility when such a battery becomes waste?",
+   "why": "The step 2 citation catalogue (the citation catalogue, section 4) found that Art. 77(7) does not name which producer, and that recital 2 of the draft Art. 77(9) act repeats the wording. The answer decides whom the waste status transfer of the lifecycle engine addresses and whom the recycler reaches for decision Q-1006 (how the producers of a battery learn its recycling result).",
+   "options": [
+    "A: the producer of the passport that is current when the battery becomes waste, which is the second-life operator for a battery placed on the market again (Art. 56(2), Art. 38(11)), and the original producer for a battery that is only re-used (Recital 16).",
+    "B: the original producer of the first passport in every case."
+   ],
+   "recommendation": "Option A: Art. 56(2) makes the second-life operator the producer with the extended producer responsibility for the battery it places on the market, and Recital 102 states that the original producer should not bear the costs of the battery's later life.",
+   "blocks": [
+    "Q-1006"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-05",
+    "by": "Francesco",
+    "text": "\"Accept all four\" (Francesco, 2026-11-05, requirements/Owner_instructions-Francesco_verbatim/2026-11-05_after_first_passport_downloads_paid_standards_and_q1002.md), accepting the recommendation. Option A. When a battery becomes waste, the passport responsibility of Art. 77(7), second subparagraph, goes to the producer of the passport that is current at that moment (or its producer responsibility organisation or selected waste management operator): the second-life operator for a battery placed on the market again after preparation for re-use, preparation for repurposing, repurposing or remanufacturing (Art. 56(2), Art. 38(11)), and the original producer for a battery that is only re-used (Recital 16)."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1008",
+   "name": "whether the original passport records a link to its successor passport",
+   "topic": "lifecycle",
+   "question": "Art. 77(7) of Regulation (EU) 2023/1542 requires the new passport to be \"linked to the battery passport or passports of the original battery or batteries\", which is a link from the new passport back to the original passports. Should the original passport also record a link forward to its successor, and who writes that link, given that Art. 78(c) gives the storage of the original passport to its own economic operator and Art. 78(f) restricts the right to modify a passport?",
+   "why": "The step 2 citation catalogue (the citation catalogue, section 4) found no text that states the direction, the content or the writer of the link. A forward link lets a reader of an original passport find the later life of the battery; writing the forward link needs the original economic operator, because the second-life operator has no right to modify the original passport.",
+   "options": [
+    "A: the backward link only, on the new passport, as Art. 77(7) states; the data layer answers the forward question from its lineage records.",
+    "B: the backward link, and the original economic operator adds a forward link to the original passport when the second-life operator notifies it."
+   ],
+   "recommendation": "Option A: Art. 77(7) requires the backward link only, and option B would make the second-life operator depend on the original operator's action. Step 3 checks option A against the alternatives of decision Q-1006, because a recycler notice along the predecessor links needs only the backward links.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-09",
+    "by": "Francesco",
+    "text": "\"agreed to all your 3 points: 1. Decision Q-1008 revised: the original issuer may write a forward link into its own passport, after the second-life operator's notice. 2. The access group of the forward link: the same group as the battery status\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md). The new passport links back to the original passport or passports, as Art. 77(7) requires. The economic operator responsible for an original passport may write a link to the new passport into its own passport after the second-life operator's notice of the new passport; no other operator writes into the original passport (Art. 78(c) and (f)). The forward link is offered to the recipients that the issuer authorises (draft Art. 2(4)(e) of the Art. 77(9) act) and to the market surveillance authorities, because the link reveals the status change of the battery (Francesco, 2026-11-09, \"Accept both\"). No stored text requires the forward link, so the link is optional."
+   },
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "answer revised (before: \"\\\"Accept all four\\\" (Francesco, 2026-11-05, requirements/Owner_instructions-Francesco_verbatim/2026-11-05_after_first_passport_downloads_paid_standards_and_q1002.md), accepting the recommendation. Option A. Only the new passport carries a link, back to the original passport or passports, as Art. 77(7) states; the original passport records no forward link, because the second-life operator has no right to modify the original passport (Art. 78(c) and (f)). The data layer answers the forward question from its lineage records. Step 3 checks the option against the alternatives of decision Q-1006.\")",
+     "reason": "Francesco's proposal and agreement of 2026-11-09 (requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md): the issuer of the superseded passport may add a link to the new passport",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "answer: the access of the forward link changed (before: \"\\\"agreed to all your 3 points: 1. Decision Q-1008 revised: the original issuer may write a forward link into its own passport, after the second-life operator's notice. 2. The access group of the forward link: the same group as the battery status\\\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md). The new passport links back to the original passport or passports, as Art. 77(7) requires. The economic operator responsible for an original passport may write a link to the new passport into its own passport after the second-life operator's notice of the new passport; no other operator writes into the original passport (Art. 78(c) and (f)). The forward link carries the access group of the battery status (Annex XIII point 4), because the link reveals the status change of the battery. No stored text requires the forward link, so the link is optional.\")",
+     "reason": "Francesco's answer of 2026-11-09 (\"Accept both\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1009",
+   "name": "whether a new passport after a second-life operation is a new registration in the EU registry",
+   "topic": "passport",
+   "question": "Implementing Regulation (EU) 2026/1778 links each new version of a registered passport to its original registration identifier, while Art. 11(d) of Regulation (EU) 2024/1781 (ESPR) and Art. 77(7) of Regulation (EU) 2023/1542 require a new passport linked to the original passport. Is the new passport of a battery placed on the market again a new registration in the registry of digital product passports, or a new version of the original registration?",
+   "why": "The step 2 citation catalogue (the citation catalogue, section 4) found that the registry act leaves the registry actions of remanufacturers to other Union law. Decision Q-969 gives the new passport a new unique identifier, which points to a new registration; decision Q-988 (which registry data the dataset carries) is open.",
+   "options": [
+    "A: a new registration with the new unique identifier of decision Q-969, which carries the identifiers of the original passports.",
+    "B: a new version of the original registration."
+   ],
+   "recommendation": "Option A: decision Q-969 gives the new passport a new unique identifier, and Art. 77(10) of Regulation (EU) 2023/1542, which Regulation (EU) 2024/1781 adds, makes the economic operator placing the battery on the market upload the unique identifier in the registry. The second-life operator places the battery on the market again, so the second-life operator uploads the new identifier; the versioning recital of Implementing Regulation (EU) 2026/1778 concerns the versions of one passport.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-05",
+    "by": "Francesco",
+    "text": "\"Accept all four\" (Francesco, 2026-11-05, requirements/Owner_instructions-Francesco_verbatim/2026-11-05_after_first_passport_downloads_paid_standards_and_q1002.md), accepting the recommendation. Option A. The new passport of a battery placed on the market again is a new registration in the registry of digital product passports, with the new unique identifier of decision Q-969, which the second-life operator uploads (Art. 77(10) of Regulation (EU) 2023/1542, added by Regulation (EU) 2024/1781); the registration data carry the identifiers of the original passports."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1010",
+   "name": "who authorises the wider sharing of a second-life battery's passport data",
+   "topic": "access",
+   "question": "Art. 2(4)(e) of the draft Art. 77(9) act lets \"the economic operator placing the battery on the market\" authorise the persons with a legitimate interest to share or publish the information of Annex XIII point 2(a) to (c) and point 4. A battery placed on the market again has a second such operator. Which economic operator authorises the sharing for the new passport of such a battery?",
+   "why": "The step 2 citation catalogue (the citation catalogue, section 4) found that the draft act does not distinguish the two operators. Art. 38(11) makes the second-life operator a manufacturer, and Art. 77(7) transfers the passport obligations to that operator.",
+   "options": [
+    "A: the economic operator responsible for the new passport, which is the second-life operator.",
+    "B: the economic operator of the first placing on the market, for the model information of Annex XIII point 2, and the second-life operator for the individual battery information of point 4."
+   ],
+   "recommendation": "Option A for the individual battery information of point 4, which the new passport holds. Step 3 checks the model information of point 2: decision Q-026 keeps the original battery model on the new passport, and the original manufacturer may hold rights on that model information.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-05"
+   ],
+   "raisedBy": "after-first-passport-2026-11-05",
+   "answer": {
+    "date": "2026-11-05",
+    "by": "Francesco",
+    "text": "\"Accept all four\" (Francesco, 2026-11-05, requirements/Owner_instructions-Francesco_verbatim/2026-11-05_after_first_passport_downloads_paid_standards_and_q1002.md), accepting the recommendation. Option A for the individual battery information of Annex XIII point 4: the second-life operator, which is responsible for the new passport, authorises its wider sharing under Art. 2(4)(e) of the draft Art. 77(9) act. Step 3 checks who authorises the sharing of the model information of point 2, which decision Q-026 keeps from the original battery model."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1011",
+   "name": "whether the reference implementation builds use case UC-5",
+   "topic": "lifecycle",
+   "question": "Use case UC-5 lets the economic operator that issued a passport follow the later life cycles of its battery: UC-5a, the notices of the lifecycle events (a new passport, the waste status, the end of the passport), and UC-5b, the purchase of degradation data from second-life operators under a Catena-X contract. Does the reference implementation of step 8 build UC-5, or does the CX-0160 amendment proposal document UC-5 only?",
+   "why": "Francesco's rule of 2026-11-09 (requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md): \"If not implemented this feature should be documented\". The notice of a new passport also triggers the optional forward link of the revised decision Q-1008, and the notice of the end of the passport is the recycling notice of decision Q-1006.",
+   "options": [
+    "A: build UC-5a and UC-5b in step 8.",
+    "B: build UC-5a in step 8 and document UC-5b only.",
+    "C: document UC-5 only."
+   ],
+   "recommendation": "Option A: UC-5a reuses the notification of decision Q-1006 and triggers the forward link of decision Q-1008, and UC-5b reuses the contract negotiation and transfer of use case UC-1 with the roles of provider and consumer exchanged, so both parts add little to step 8.",
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "after-first-passport-2026-11-09"
+   ],
+   "raisedBy": "after-first-passport-2026-11-09",
+   "answer": {
+    "date": "2026-11-09",
+    "by": "Francesco",
+    "text": "\"Approve all\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md), accepting option A: the reference implementation of step 8 builds use case UC-5a (the notices of the lifecycle events) and UC-5b (the purchase of degradation data from second-life operators)."
+   },
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "wording: \"later lives\" replaced by \"later life cycles\"",
+     "reason": "the metaphor watch-list of the project guidelines of the battery passport application (\"lives\"), which the specification quality gate checks",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1012",
+   "name": "whether the battery identifier changes when a new passport is issued",
+   "topic": "passport",
+   "question": "Art. 77(3) of Regulation (EU) 2023/1542 assigns the unique identifier to the battery passport, and decision Q-969 gives every new passport a new unique identifier. DIN DKE SPEC 99100 §6.1.2.2 a) calls the battery identifier (the serial number) persistent. Does the battery identifier change when a new passport is issued after preparation for re-use, preparation for repurposing, repurposing or remanufacturing?",
+   "why": "The independent review of draft 0.1 of the CX-0160 amendment proposal (question 6) found that the proposal did not say which identifier changes, and that DIN DKE SPEC 99100 §6.1.2.2 a) calls the battery identifier persistent.",
+   "options": [
+    "A: the passport identifier is new for every new passport; the battery identifier persists after preparation for re-use and after repurposing of one battery; a battery remanufactured or assembled from several batteries gets a new battery identifier.",
+    "B: both identifiers change after every operation."
+   ],
+   "recommendation": "Option A: the passport identifier follows Art. 77(3) and decision Q-969, and the battery identifier follows DIN DKE SPEC 99100 §6.1.2.2 a) wherever one physical battery keeps its identity.",
+   "blocks": [],
+   "relatedRequirements": [
+    "SyR-LIFE-026"
+   ],
+   "askedBy": [
+    "after-first-passport-2026-11-09"
+   ],
+   "raisedBy": "after-first-passport-2026-11-09",
+   "answer": {
+    "date": "2026-11-09",
+    "by": "Francesco",
+    "text": "\"Accept all three\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The three design points of draft 0.2 of the CX-0160 amendment proposal\"), accepting option A."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1013",
+   "name": "where the lifecycle rules of the battery after its first passport are built",
+   "topic": "lifecycle",
+   "question": "Architecture decision AD-16 places the lifecycle engine (EL-LIFECYCLE: the lifecycle executor and the ownership timeline) in the passport demo, outside the Catena-X certification perimeter, while the registry allocates the lifecycle rules to the battery passport dataset aggregation (EL-DATASET), which is design only (deviation DEV-01). Does step 8 of the after-first-passport work build the lifecycle rules in the data layer, inside the certification perimeter, or in the demo engine?",
+   "why": "The reference implementation of the CX-0160-4 proposal must be certifiable, and its conformance tests must test code inside the perimeter; invariant 1 (one executor per capability) allows one lifecycle engine only.",
+   "options": [
+    "A: move the lifecycle rules into the data layer (EL-DATASET) and correct the defects there; AD-16 changes accordingly.",
+    "B: keep the lifecycle rules in the demo engine (EL-LIFECYCLE), outside the certification perimeter."
+   ],
+   "recommendation": "Option A: the reference implementation is a Catena-X conformance artefact, and only code inside the perimeter can be certified.",
+   "blocks": [],
+   "relatedRequirements": [
+    "SyR-LIFE-143",
+    "SyR-LIFE-154"
+   ],
+   "askedBy": [
+    "after-first-passport-2026-11-09"
+   ],
+   "raisedBy": "after-first-passport-2026-11-09",
+   "answer": {
+    "date": "2026-11-09",
+    "by": "Francesco",
+    "text": "\"into the data layer\" (Francesco, 2026-11-09, requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The answers to the step 7 explanations\"), accepting option A: step 8 moves the lifecycle rules into the battery passport dataset aggregation (EL-DATASET), inside the certification perimeter, as the one lifecycle executor; the demo keeps only its screens, which call the data layer."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-1014",
+   "name": "where the reference implementation of the after-first-passport work is built",
+   "topic": "lifecycle",
+   "question": "Step 6 of the after-first-passport work placed the reference implementation in a folder of the battery passport repository (a folder of the battery passport application), whose server is the application backend (the conventions note of the Tractus-X reference implementations, section 2). Is the reference implementation built in that folder, or in a repository of its own?",
+   "why": "A pull request to Eclipse Tractus-X needs content under the Tractus-X licences that runs without the private battery passport application; the 18 process requirements PrR-CXD-013 to PrR-CXD-030 name the place.",
+   "options": [
+    "A: a folder of the battery passport repository, with the application backend as its server.",
+    "B: a public repository of its own, battery-passport-after-first-life, under the Tractus-X licences, with its own server, its own requirements registry and no dependency on the battery passport repository."
+   ],
+   "recommendation": "Option B: Francesco's instruction of 2026-11-16 states it.",
+   "blocks": [],
+   "relatedRequirements": [
+    "PrR-CXD-013",
+    "PrR-CXD-029"
+   ],
+   "askedBy": [
+    "after-first-passport-2026-11-16"
+   ],
+   "raisedBy": "after-first-passport-2026-11-16",
+   "answer": {
+    "date": "2026-11-16",
+    "by": "Francesco",
+    "text": "\"in a new repository, which must be not private and open source according to Tractus-X standards\" and \"a new repository without external dependencies\" (Francesco, 2026-11-16, requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The instruction\"), option B. The GitHub account Khorolev creates the repository and the Ichnos Protocol team owns it (\"it should be made by Khorolev but owned by the Ichnos Protocol team\", section \"The owner of the GitHub repository\", which changes the earlier answer \"the repository will be on my personal GitHub for now\"); the repository is named battery-passport-after-first-life, carries the Tractus-X licences (\"the license must be the same as Tractus-X\"), and holds the contract, its own server on Node.js and PostgreSQL, the conformance tests and its own public registry (section \"The four choices of the plan\"). The result is implemented back in the battery passport application \"after the Catena-X expert group will have approved\"; until then the step 8 plan of the application is deferred."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "answer: the owner of the GitHub repository changed from Francesco's personal account to the Ichnos Protocol team (before: \"\\\"in a new repository, which must be not private and open source according to Tractus-X standards\\\" and \\\"a new repository without external dependencies\\\" (Francesco, 2026-11-16, requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \\\"The instruction\\\"), option B. The repository is on Francesco's personal GitHub account (\\\"the repository will be on my personal GitHub for now\\\"), is named battery-passport-after-first-life, carries the Tractus-X licences (\\\"the license must be the same as Tractus-X\\\"), and holds the contract, its own server on Node.js and PostgreSQL, the conformance tests and its own public registry (section \\\"The four choices of the plan\\\"). The result is implemented back in the battery passport application \\\"after the Catena-X expert group will have approved\\\"; until then the step 8 plan of the application is deferred.\")",
+     "reason": "Francesco, 2026-11-16: \"it should be made by Khorolev but owned by the Ichnos Protocol team\"",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ]
+}

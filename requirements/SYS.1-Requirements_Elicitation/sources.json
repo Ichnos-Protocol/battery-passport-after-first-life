@@ -1,0 +1,1817 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.1.BP1 (identify stakeholders and obtain their expectations and requests); requirements/method.md sections 4 and 7.",
+ "sources": [
+  {
+   "id": "SRC-ADR-0004",
+   "title": "ADR 0004: connector topology, a per-customer stack run by Ichnos",
+   "version": "Accepted 2026-09-27",
+   "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies",
+   "applicabilityReason": "privacy-data-dpp: ADR 0004 makes Ichnos the operator of one stack per customer, which makes Ichnos a provider of a data processing service for the stack (Data Act Chapter VI) and the holder of the customers' keys and wallets. | security: ADR 0004 defines the stack part of the item and its security properties: one isolated stack per customer, built from released and unmodified Tractus-X components, with no self-assigned BPNL and no self-issued trust in production, and Ichnos's custody of every customer's keys and wallet. | catenax-certification: Francesco's decision that Ichnos runs one stack per customer, assessed as an Enablement Service Provider capability, with production BPNLs from onboarding and certification on the latest release. | catenax-network: Francesco's decision: the application uses the customer's stack on the customer's behalf, each stack is isolated with its own DID and credentials, and in production no BPNL is self-assigned and no trust is self-issued. ADR 0004 binds the application, the stack and Ichnos as operator. | operations-quality-owner: Francesco's accepted decision on how Ichnos runs the stack of each customer; ADR 0004 binds Ichnos as operator and the stack.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+     "locator": "Status",
+     "quote": "Accepted (2026-09-27, Francesco)."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+     "locator": "section 2, decision 1",
+     "quote": "Ichnos runs one stack per customer company (connector, twin registry, wallet), and the application uses it on the customer's behalf (option C)."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+     "locator": "section 2, decision 2",
+     "quote": "In production the stack is an Enablement Service Provider capability. Ichnos is assessed"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+     "locator": "2 Decision, item 1",
+     "quote": "Ichnos runs one stack per customer company (connector, twin registry, wallet), and the application uses it on the customer's behalf (option C)"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+     "locator": "1 Context",
+     "quote": "Every exchange with another company passes through the connector"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "ADR 0004 makes Ichnos the operator of one stack per customer, which makes Ichnos a provider of a data processing service for the stack (Data Act Chapter VI) and the holder of the customers' keys and wallets."
+    },
+    {
+     "area": "security",
+     "applicability": "applies",
+     "reason": "ADR 0004 defines the stack part of the item and its security properties: one isolated stack per customer, built from released and unmodified Tractus-X components, with no self-assigned BPNL and no self-issued trust in production, and Ichnos's custody of every customer's keys and wallet."
+    },
+    {
+     "area": "catenax-certification",
+     "applicability": "applies",
+     "reason": "Francesco's decision that Ichnos runs one stack per customer, assessed as an Enablement Service Provider capability, with production BPNLs from onboarding and certification on the latest release."
+    },
+    {
+     "area": "catenax-network",
+     "applicability": "applies",
+     "reason": "Francesco's decision: the application uses the customer's stack on the customer's behalf, each stack is isolated with its own DID and credentials, and in production no BPNL is self-assigned and no trust is self-issued. ADR 0004 binds the application, the stack and Ichnos as operator."
+    },
+    {
+     "area": "operations-quality-owner",
+     "applicability": "applies",
+     "reason": "Francesco's accepted decision on how Ichnos runs the stack of each customer; ADR 0004 binds Ichnos as operator and the stack."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CLAUDE-MD",
+   "title": "Project guidelines of the battery passport application",
+   "version": "working tree of 2026-10-22",
+   "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "passport-content: Francesco's rules for the repository. the project guidelines of the battery passport application makes DIN DKE SPEC 99100 the audit standard and states that recycled content is declared pre-consumer and post-consumer separately. | lifecycle: the project guidelines of the battery passport application mirrors the vision's invariants and holds the lifecycle table, the ownership rule, the circularity vocabulary and the threshold rules that Francesco set for every change. | privacy-data-dpp: Francesco's project rules; the GDPR and PII rules, the logging rules and the marketplace rule of the project guidelines of the battery passport application bind every change. | security: Invariant 9 makes secure development, least privilege and deny by default law; invariant 7 makes Francesco's approval a condition of every merge; the logging rules name the audit question the logs must answer. The logging rules themselves are requirements of the area OPS. | catenax-certification: Francesco's rules for Ichnos-branded material: Catena-X labels shown only for statuses held, never modified. | operations-quality-owner: The code and architecture guidelines of the project guidelines of the battery passport application (invariants, validation, naming, logging, Don'ts) bind the development of the application. The writing-style and visual-identity sections of the project guidelines of the battery passport application govern slides and branding and are outside this registry by the brief.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Core Principles",
+     "quote": "DIN SPEC 99100 is the audit standard."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Circularity vocabulary",
+     "quote": "declared **pre-consumer vs post-consumer separately**"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Convergence invariants, invariant 5",
+     "quote": "Identity and history follow the regulation: model B for every battery placed on the market again, model A for repair only."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Convergence invariants",
+     "quote": "These govern all work and supersede issue-by-issue patching."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Convergence invariants, invariant 7",
+     "quote": "Copilot reviews each pull request, and Francesco approves the merge."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Visual identity, Catena-X labels",
+     "quote": "Show labels only for statuses actually held"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Catena-X branch guidelines",
+     "quote": "The sections above are the code and architecture guidelines. The sections below govern specifications, written copy and brand material."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies",
+     "reason": "Francesco's rules for the repository. the project guidelines of the battery passport application makes DIN DKE SPEC 99100 the audit standard and states that recycled content is declared pre-consumer and post-consumer separately."
+    },
+    {
+     "area": "lifecycle",
+     "applicability": "applies",
+     "reason": "the project guidelines of the battery passport application mirrors the vision's invariants and holds the lifecycle table, the ownership rule, the circularity vocabulary and the threshold rules that Francesco set for every change."
+    },
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "Francesco's project rules; the GDPR and PII rules, the logging rules and the marketplace rule of the project guidelines of the battery passport application bind every change."
+    },
+    {
+     "area": "security",
+     "applicability": "applies",
+     "reason": "Invariant 9 makes secure development, least privilege and deny by default law; invariant 7 makes Francesco's approval a condition of every merge; the logging rules name the audit question the logs must answer. The logging rules themselves are requirements of the area OPS."
+    },
+    {
+     "area": "catenax-certification",
+     "applicability": "applies",
+     "reason": "Francesco's rules for Ichnos-branded material: Catena-X labels shown only for statuses held, never modified."
+    },
+    {
+     "area": "operations-quality-owner",
+     "applicability": "applies-in-part",
+     "reason": "The code and architecture guidelines of the project guidelines of the battery passport application (invariants, validation, naming, logging, Don'ts) bind the development of the application. The writing-style and visual-identity sections of the project guidelines of the battery passport application govern slides and branding and are outside this registry by the brief."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-COLUMN-ACCESS-MATRIX",
+   "title": "Column access matrix of the battery passport application: role and column access",
+   "version": "working tree of 2026-10-22",
+   "path": "requirements/Owner_documents-extracts/Column_access_matrix-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "A design document (columns and views), below the stakeholder level, so the column access matrix yields no stakeholder requirement here. the column access matrix is registered because several of its cells contradict the stored texts that the requirements of this area rest on; each contradiction is a question for Francesco.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Column_access_matrix-extract.md",
+     "locator": "introduction",
+     "quote": "This file is the **audit Source of Truth** for role-based column access to the"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies-in-part",
+     "reason": "A design document (columns and views), below the stakeholder level, so the column access matrix yields no stakeholder requirement here. the column access matrix is registered because several of its cells contradict the stored texts that the requirements of this area rest on; each contradiction is a question for Francesco."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0003-NEPTUNE",
+   "title": "CX-0003 SAMM Aspect Meta Model, with its conformity assessment criteria",
+   "version": "1.3.0 (CX-Neptune preview; criteria separated)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "Same text as the CX-Titan entry; the preview adds a conformity assessment criteria page (Catena-X standard CX-0003 SAMM Aspect Meta Model, conformity assessment criteria (CX-Neptune)), whose six criteria appear as requirements of this area. The CX-Neptune preview is not yet in force (go-live 24 November 2026).",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0003 SAMM Aspect Meta Model (CX-Neptune)",
+     "locator": "1.2 Audience & Scope",
+     "quote": "Business Application Providers who want to request or create proprietary new"
+    },
+    {
+     "document": "Catena-X standard CX-0003 SAMM Aspect Meta Model, conformity assessment criteria (CX-Neptune)",
+     "locator": "General Information",
+     "quote": "name: SAMM Aspect Meta Model"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "Same text as the CX-Titan entry; the preview adds a conformity assessment criteria page (Catena-X standard CX-0003 SAMM Aspect Meta Model, conformity assessment criteria (CX-Neptune)), whose six criteria appear as requirements of this area. The CX-Neptune preview is not yet in force (go-live 24 November 2026)."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Neptune",
+   "locator": "CX-0003 SAMM Aspect Meta Model, with its conformity assessment criteria, version 1.3.0 (CX-Neptune preview; criteria separated), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0003-TITAN",
+   "title": "CX-0003 SAMM Aspect Meta Model",
+   "version": "1.3.0 (CX-Titan)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "The application provides data conformant to Catena-X and IDTA aspect models and defines its own aspect models in the io.ichnos namespace (cell, module, cathode material, electrode passports, a bill of material as maintained). The application is a business application provider that creates proprietary aspect models and a data provider of twins.",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0003 SAMM Aspect Meta Model (CX-Titan)",
+     "locator": "1.2 Audience & Scope",
+     "quote": "Business Application Providers who want to request or create proprietary new"
+    },
+    {
+     "document": "Catena-X standard CX-0003 SAMM Aspect Meta Model (CX-Titan)",
+     "locator": "1.2 Audience & Scope",
+     "quote": "Data Providers who need to create digital twins offering data conformant to a specific"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "The application provides data conformant to Catena-X and IDTA aspect models and defines its own aspect models in the io.ichnos namespace (cell, module, cathode material, electrode passports, a bill of material as maintained). The application is a business application provider that creates proprietary aspect models and a data provider of twins."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Titan",
+   "locator": "CX-0003 SAMM Aspect Meta Model, version 1.3.0 (CX-Titan), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0127-NEPTUNE",
+   "title": "CX-0127 Industry Core: Part Instance",
+   "version": "3.0.0 (CX-Neptune preview)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "Same scope as the CX-Titan entry; it moves the aspect models to version 4.0.0 in the industry_core namespace and adds backward compatibility with the CX-Titan models. The CX-Neptune preview is not yet in force (go-live 24 November 2026).",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0127 Industry Core: Part Instance (CX-Neptune)",
+     "locator": "For whom is the standard designed",
+     "quote": "This standard is designed for everybody who wants to register, describe and use digital twins on part instance level."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "Same scope as the CX-Titan entry; it moves the aspect models to version 4.0.0 in the industry_core namespace and adds backward compatibility with the CX-Titan models. The CX-Neptune preview is not yet in force (go-live 24 November 2026)."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Neptune",
+   "locator": "CX-0127 Industry Core: Part Instance, version 3.0.0 (CX-Neptune preview), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0127-TITAN",
+   "title": "CX-0127 Industry Core: Part Instance",
+   "version": "2.0.2 (CX-Titan)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "The application registers and describes instance twins of serialized batteries and components and of material batches, linked by bill of material relationships.",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0127 Industry Core: Part Instance (CX-Titan)",
+     "locator": "For whom is the standard designed",
+     "quote": "This standard is designed for everybody who wants to register, describe and use digital twins on"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "It provides data along a distributed battery value chain, from components to the battery pack, and aggregates it into a battery passport dataset that follows the latest version of CX-0160"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "The application registers and describes instance twins of serialized batteries and components and of material batches, linked by bill of material relationships."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Titan",
+   "locator": "CX-0127 Industry Core: Part Instance, version 2.0.2 (CX-Titan), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0151-NEPTUNE",
+   "title": "CX-0151 Industry Core: Basics",
+   "version": "1.1.0 (CX-Neptune preview; normative text identical to CX-Titan)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "Same scope as the CX-Titan entry; the stored Markdown source has the same normative statements as the CX-Titan page. The CX-Neptune preview is not yet in force (go-live 24 November 2026).",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0151 Industry Core: Basics (CX-Neptune)",
+     "locator": "For whom is the standard designed",
+     "quote": "This standard is primarily intended for use cases that want to integrate Industry Core features into their use case as well as application and data providers/consumers that want to implement use cases based on Industry Core."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "Same scope as the CX-Titan entry; the stored Markdown source has the same normative statements as the CX-Titan page. The CX-Neptune preview is not yet in force (go-live 24 November 2026)."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Neptune",
+   "locator": "CX-0151 Industry Core: Basics, version 1.1.0 (CX-Neptune preview; normative text identical to CX-Titan), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-CX-0151-TITAN",
+   "title": "CX-0151 Industry Core: Basics",
+   "version": "1.1.0 (CX-Titan)",
+   "storage": "cited-not-stored",
+   "role": "catena-x-normative",
+   "applicability": "applies",
+   "applicabilityReason": "The application sends and receives notifications built on the Industry Core notification feature: the digital twin event notification of CX-0160 and the connect-to-parent push of CX-0126 and CX-0127.",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X standard CX-0151 Industry Core: Basics (CX-Titan)",
+     "locator": "For whom is the standard designed",
+     "quote": "This standard is primarily intended for use cases that want to integrate Industry Core features into their use case as well as application and data providers/consumers that want to implement use cases based on Industry Core."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "The application sends and receives notifications built on the Industry Core notification feature: the digital twin event notification of CX-0160 and the connect-to-parent push of CX-0126 and CX-0127."
+    }
+   ],
+   "party": "Catena-X-Association_standards_and_governance",
+   "release": "CX-Titan",
+   "locator": "CX-0151 Industry Core: Basics, version 1.1.0 (CX-Titan), in the standard library of the Catena-X Association, https://catenax-ev.github.io",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-DATA-ACT",
+   "title": "Regulation (EU) 2023/2854 (Data Act)",
+   "version": "OJ L, 22.12.2023; checked on EUR-Lex on 2026-10-26: no amending act, and the corrigendum of 9.12.2024 (2024/90790) corrects only Article 48, which the registry does not quote",
+   "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "Chapter VI (switching between data processing services) and Chapter VII (international governmental access) bind Ichnos as a provider of data processing services to customers in the Union, whatever its place of establishment: the application is offered as software as a service and each customer's stack as a hosted service (Art. 1(3)(f), Art. 2(8), recital 81). Chapter VIII Art. 33 binds the customers as participants in the Catena-X data space that offer data, which they do through the application and the stack (Art. 1(3)(g)). Chapter V binds the customers as data holders that are legal persons. Chapter IV binds Ichnos's contracts on data access and use concluded after 12 September 2025. Chapter II binds manufacturers of connected products and data holders; whether a battery with a battery management system is a connected product whose product data the application holds for a customer is undecided. Chapter III applies only to obligations to make data available that enter into force after 12 September 2025, which Regulation (EU) 2023/1542 did not; its Art. 77(9) implementing act is undecided. Art. 36 applies only if the connector's automated contract negotiation is a smart contract, which is undecided. The application is not a related service, because it does not act on the operation of the battery (recital 17).",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Art. 1(3)(f)",
+     "quote": "providers of data processing services, irrespective of their place of establishment, providing such services to customers in the Union"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Art. 1(3)(g)",
+     "quote": "participants in data spaces and vendors of applications using smart contracts"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Art. 2(8)",
+     "quote": "a digital service that is provided to a customer and that enables ubiquitous and on-demand network access to a shared pool of configurable, scalable and elastic computing resources"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Recital 81",
+     "quote": "data processing services fall into one or more of the following three data processing service delivery models, namely Infrastructure as a Service (IaaS), Platform as a service (PaaS) and Software as a Service (SaaS)"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Art. 50",
+     "quote": "Chapter III shall apply in relation to obligations to make data available under Union law or national legislation adopted in accordance with Union law, which enters into force after 12 September 2025."
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Recital 17",
+     "quote": "Services which do not have an impact on the operation of the connected product and which do not involve the transmitting of data or commands to the connected product by the service provider"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-2854 Data Act.pdf",
+     "locator": "Recital 17",
+     "quote": "should not be considered to be related services"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies-in-part",
+     "reason": "Chapter VI (switching between data processing services) and Chapter VII (international governmental access) bind Ichnos as a provider of data processing services to customers in the Union, whatever its place of establishment: the application is offered as software as a service and each customer's stack as a hosted service (Art. 1(3)(f), Art. 2(8), recital 81). Chapter VIII Art. 33 binds the customers as participants in the Catena-X data space that offer data, which they do through the application and the stack (Art. 1(3)(g)). Chapter V binds the customers as data holders that are legal persons. Chapter IV binds Ichnos's contracts on data access and use concluded after 12 September 2025. Chapter II binds manufacturers of connected products and data holders; whether a battery with a battery management system is a connected product whose product data the application holds for a customer is undecided. Chapter III applies only to obligations to make data available that enter into force after 12 September 2025, which Regulation (EU) 2023/1542 did not; its Art. 77(9) implementing act is undecided. Art. 36 applies only if the connector's automated contract negotiation is a smart contract, which is undecided. The application is not a related service, because it does not act on the operation of the battery (recital 17)."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-DIN-DKE-SPEC-99100",
+   "title": "DIN DKE SPEC 99100, Requirements for data attributes of the battery passport",
+   "version": "2025-02",
+   "storage": "cited-not-stored",
+   "role": "harmonised-or-industry-standard",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "passport-content: A DIN SPEC made by the PAS procedure is not part of the body of German Standards and binds nobody by itself. The project makes it binding: the project guidelines of the battery passport application names it the audit standard, and the vision lists it among the texts of the passport demo. The 'must' clauses of DIN DKE SPEC 99100 repeat the Regulation; the 'shall' and 'should' clauses of DIN DKE SPEC 99100 are additions. Whether the additions bind the dataset the application delivers (perimeter application) or only the passport demo is a question for Francesco (vision section 1 lists DIN for the demo only). The scope of DIN DKE SPEC 99100 itself excludes batteries with external storage. | lifecycle: A DIN SPEC is a voluntary specification and binds no one by law. DIN DKE SPEC 99100 addresses the economic operators that implement the battery passport; DIN DKE SPEC 99100 marks with 'must' what DIN DKE SPEC 99100 adopts from the Regulation and with 'shall' and 'should' its own requirements and recommendations. The project makes it its audit standard (the project guidelines of the battery passport application), so the 'must' and 'shall' clauses of DIN DKE SPEC 99100 bind the application and the 'should' clauses of DIN DKE SPEC 99100 are recommendations of priority should. | privacy-data-dpp: the project guidelines of the battery passport application names DIN SPEC 99100 the audit standard of the passport demo. The privacy-data-dpp area cites only the DIN SPEC 99100 clause 6.7.8.4 f) on personal data in the information on accidents; the passport-content area covers its attributes.",
+   "applicabilityEvidence": [
+    {
+     "document": "DIN DKE SPEC 99100:2025-02",
+     "locator": "Clause 1 Scope",
+     "quote": "this document gives guidance for battery passport data attributes."
+    },
+    {
+     "document": "DIN DKE SPEC 99100:2025-02",
+     "locator": "Foreword",
+     "quote": "DIN DKE SPECs are not part of the body of German Standards."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+     "locator": "Core Principles",
+     "quote": "DIN SPEC 99100 is the audit standard."
+    },
+    {
+     "document": "DIN DKE SPEC 99100:2025-02",
+     "locator": "Introduction",
+     "quote": "Additional requirements and recommendations to conform with this DIN DKE SPEC, which are neither stated by the BattReg nor contradictory to latter, are indicated with \"shall (not)\" and \"should (not)\" respectively."
+    },
+    {
+     "document": "DIN DKE SPEC 99100:2025-02",
+     "locator": "Introduction",
+     "quote": "This document addresses therefore all economic operators who are subject to obligations in relation to the battery passport in accordance with the current status of EU Battery Regulation."
+    },
+    {
+     "document": "DIN DKE SPEC 99100:2025-02",
+     "locator": "Scope",
+     "quote": "In the context of a digital product passport for batteries (short: battery passport), this document gives guidance for battery passport data attributes."
+    }
+   ],
+   "question": "Do the DIN DKE SPEC 99100 additions ('shall' and 'should') bind the dataset the application delivers to the passport service provider, or only the passport demo, as vision section 1 lists them?",
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies-in-part",
+     "reason": "A DIN SPEC made by the PAS procedure is not part of the body of German Standards and binds nobody by itself. The project makes it binding: the project guidelines of the battery passport application names it the audit standard, and the vision lists it among the texts of the passport demo. The 'must' clauses of DIN DKE SPEC 99100 repeat the Regulation; the 'shall' and 'should' clauses of DIN DKE SPEC 99100 are additions. Whether the additions bind the dataset the application delivers (perimeter application) or only the passport demo is a question for Francesco (vision section 1 lists DIN for the demo only). The scope of DIN DKE SPEC 99100 itself excludes batteries with external storage.",
+     "question": "Do the DIN DKE SPEC 99100 additions ('shall' and 'should') bind the dataset the application delivers to the passport service provider, or only the passport demo, as vision section 1 lists them?"
+    },
+    {
+     "area": "lifecycle",
+     "applicability": "applies",
+     "reason": "A DIN SPEC is a voluntary specification and binds no one by law. DIN DKE SPEC 99100 addresses the economic operators that implement the battery passport; DIN DKE SPEC 99100 marks with 'must' what DIN DKE SPEC 99100 adopts from the Regulation and with 'shall' and 'should' its own requirements and recommendations. The project makes it its audit standard (the project guidelines of the battery passport application), so the 'must' and 'shall' clauses of DIN DKE SPEC 99100 bind the application and the 'should' clauses of DIN DKE SPEC 99100 are recommendations of priority should."
+    },
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "the project guidelines of the battery passport application names DIN SPEC 99100 the audit standard of the passport demo. The privacy-data-dpp area cites only the DIN SPEC 99100 clause 6.7.8.4 f) on personal data in the information on accidents; the passport-content area covers its attributes."
+    }
+   ],
+   "party": "DIN_DKE-DIN_SPEC_99100_battery_passport_data_attributes",
+   "locator": "DIN DKE SPEC 99100:2025-02, published by DIN Media",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-DIN99100-ACCESS-RIGHTS-ANALYSIS",
+   "title": "Battery Passport Access Rights to DIN 99100 Data Fields (Ichnos analysis)",
+   "version": "2026-06-09",
+   "path": "requirements/Owner_documents-extracts/Access_rights_to_DIN_DKE_SPEC_99100_data_fields-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "An analysis prepared for Ichnos, not a standard. In the access-rights analysis, the rule that the Annex XIII tiers govern read access, the public base view read without authentication and the note that legitimate-interest membership waits for the Art. 77(9) act agree with the stored texts and are used. Several cells of the access-rights analysis contradict the stored texts (due diligence report and substance lists withheld from the public, Art. 14 named for the passport, the carbon footprint stages restricted) and are not used; the erratum of 2026-06-22 corrects the last one.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Access_rights_to_DIN_DKE_SPEC_99100_data_fields-extract.md",
+     "locator": "page 2",
+     "quote": "Annex XIII tiers govern READ."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Access_rights_to_DIN_DKE_SPEC_99100_data_fields-extract.md",
+     "locator": "page 5",
+     "quote": "Owner identity, due-diligence reports, substance lists, and instance-level usage are NOT in this view."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies-in-part",
+     "reason": "An analysis prepared for Ichnos, not a standard. In the access-rights analysis, the rule that the Annex XIII tiers govern read access, the public base view read without authentication and the note that legitimate-interest membership waits for the Art. 77(9) act agree with the stored texts and are used. Several cells of the access-rights analysis contradict the stored texts (due diligence report and substance lists withheld from the public, Art. 14 named for the passport, the carbon footprint stages restricted) and are not used; the erratum of 2026-06-22 corrects the last one."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-DIR-2008-98",
+   "title": "Directive 2008/98/EC of the European Parliament and of the Council on waste",
+   "version": "consolidated text 02008L0098-20251016 (16 October 2025)",
+   "path": "sources/EU/Directive EC 2008-98 Waste Framework consolidated 2025-10-16.xhtml",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "The definitions of waste, re-use and preparing for re-use in Directive 2008/98/EC apply through Art. 3(1), points (29) and (50), and Art. 3(2)(a) of Regulation (EU) 2023/1542. The consolidated text of 16 October 2025 is stored, so a requirement may quote the definitions from the Directive itself; DIN DKE SPEC 99100 clauses 3.35, 3.45 and 3.51 reproduce the same definitions.",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 3(1), point (29)",
+     "quote": "'preparation for re-use' means preparing for re-use as defined in Article 3, point (16), of Directive 2008/98/EC"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 3(1), point (50)",
+     "quote": "'waste battery' means any battery which is waste as defined in Article 3, point (1), of Directive 2008/98/EC"
+    },
+    {
+     "path": "sources/EU/Directive EC 2008-98 Waste Framework consolidated 2025-10-16.xhtml",
+     "locator": "Art. 3, point (1)",
+     "quote": "means any substance or object which the holder discards or intends or is required to discard;"
+    },
+    {
+     "path": "sources/EU/Directive EC 2008-98 Waste Framework consolidated 2025-10-16.xhtml",
+     "locator": "Art. 3, point (13)",
+     "quote": "‘re-use’ means any operation by which products or components that are not waste are used again for the same purpose for which they were conceived;"
+    },
+    {
+     "path": "sources/EU/Directive EC 2008-98 Waste Framework consolidated 2025-10-16.xhtml",
+     "locator": "Art. 3, point (16)",
+     "quote": "‘preparing for re-use’ means checking, cleaning or repairing recovery operations, by which products or components of products that have become waste are prepared so that they can be re-used without any other pre-processing;"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "lifecycle",
+     "applicability": "applies-in-part",
+     "reason": "The definitions of waste, re-use and preparing for re-use in Directive 2008/98/EC apply through Art. 3(1), points (29) and (50), and Art. 3(2)(a) of Regulation (EU) 2023/1542. The consolidated text of 16 October 2025 is stored, so a requirement may quote the definitions from the Directive itself; DIN DKE SPEC 99100 clauses 3.35, 3.45 and 3.51 reproduce the same definitions."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored (consolidated text of 16 October 2025) and the definitions quoted from the Directive",
+     "reason": "Step 2 of the after-first-passport work: the waste status requirements of step 3 rest on the definitions",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-ESPR",
+   "title": "Regulation (EU) 2024/1781 (Ecodesign for Sustainable Products Regulation)",
+   "version": "OJ L, 28.6.2024; checked on EUR-Lex on 2026-10-26: no amending act; the corrigendum of 7.8.2024 (2024/90493) restates Articles 77 and 78 with the wording the registry quotes, and the corrigendum of 28.4.2025 (2025/90356) corrects Articles 10(1)(d), 20, 41(4), 65(3) and 69(5), none of which the registry quotes",
+   "path": "sources/EU/Regulation EU 2024-1781 ESPR/Regulation EU 2024-1781 ESPR.md",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to Spherity or another provider, and the application does not communicate with the EU database.",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation EU 2024-1781 ESPR/Regulation EU 2024-1781 ESPR.md",
+     "locator": "Art. 9(1)",
+     "quote": "products can only be placed on the market or put into service if a digital product passport is available in accordance with the applicable delegated acts adopted pursuant to Article 4"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2024-1781 ESPR/Regulation EU 2024-1781 ESPR.md",
+     "locator": "Art. 13(1)",
+     "quote": "The registry shall store the unique identifiers for batteries as referred to in Article 77(3) of Regulation (EU) 2023/1542"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2024-1781 ESPR/Regulation EU 2024-1781 ESPR.md",
+     "locator": "Art. 78 (new Art. 77(10) of Regulation (EU) 2023/1542)",
+     "quote": "The economic operator placing the battery on the market or putting it into service shall upload the unique identifier in the registry referred to in Article 13(1)"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 78(a)",
+     "quote": "the battery passport shall be fully interoperable with other digital product passports required by Union law concerning eco-design, in relation to the technical, semantic and organisational aspects of end-to-end communication and data transfer"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "Section 0",
+     "quote": "It does not communicate with the EU database."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies-in-part",
+     "reason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to Spherity or another provider, and the application does not communicate with the EU database."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-2023-1542",
+   "title": "Regulation (EU) 2023/1542 concerning batteries and waste batteries",
+   "version": "consolidated text 02023R1542-20260813 (003.001) of 13 August 2026: OJ L 191, 28.7.2023, amended by Regulation (EU) 2024/1781, Regulation (EU) 2025/1561 and Regulation (EU) 2026/1738, corrected by the corrigenda C1 (17.4.2024), C2 (7.8.2024), C3 (8.10.2025) and C4 (10.4.2026); the recitals are quoted from the published text (stored Markdown of the PDF), which alone holds them",
+   "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "passport-content: Regulation (EU) 2023/1542 binds the economic operator that places an LMT, EV or industrial battery above 2 kWh on the market (STK-01, a customer of the application) to hold a battery passport with the content of Annex XIII. The application produces that dataset for the operator, so Art. 77, Annex XIII and the annexes and articles Annex XIII points to oblige the dataset. Art. 78 binds the technical design and operation of the passport, which the passport service provider carries; the application supports it only where the dataset must. The other chapters bind manufacturers, producers, Member States and the Commission and give no requirement of the dataset. | lifecycle: The Regulation binds the economic operators that place batteries on the market, the operators that prepare them for re-use or repurposing, repurpose or remanufacture them, the producers and the recyclers: the customers of the application. Regulation (EU) 2023/1542 binds neither Ichnos nor the application directly; Ichnos can act as an operator that the economic operator authorises in writing (Art. 77(4)). The application must hold, compute and check the data by which its customers meet the provisions of this area: Art. 77(4), (7) and (8), Annex XIII point 4, Art. 7 with Annex II, Art. 8, Art. 10 with Annex IV, Art. 13(9), Art. 17(3), Art. 38(11), Art. 45 to 47, Art. 70, 71 and 73 with Annex XII. The chapters on notified bodies, extended producer responsibility, collection, reporting by Member States and market surveillance do not oblige the system. | privacy-data-dpp: Regulation (EU) 2023/1542 sets the battery passport that the application's dataset serves. The privacy-data-dpp area cites only Art. 78(a) (interoperability with the eco-design passports), Art. 78(d) (operators acting for the economic operator may not use the data beyond the service), Art. 78(h) (privacy), Annex XIII point 4(d) (data from use) and recital 44 (accessibility of QR codes); the passport-content and lifecycle areas cover the rest. | versions: the consolidated text of 13 August 2026 is the version in force on 2026-10-26. Its changes that reach the registry are Art. 48(1) and (5) (Regulation (EU) 2025/1561: due diligence from 18 August 2027, guidelines by 26 July 2026), Art. 77(10) (added by Regulation (EU) 2024/1781 and corrected by C2: the economic operator uploads the unique identifier to the registry of Art. 13(1) of that Regulation, SRC-ESPR), Annex I (replaced by Regulation (EU) 2026/1738) and Annex XIII point 1(q) (corrected by C4: the markings of Art. 13(4) and (5)).",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(1)",
+     "quote": "From 18 February 2027 each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service shall have an electronic record ('battery passport')."
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(4)",
+     "quote": "The economic operator placing the battery on the market shall ensure that the information in the battery passport is accurate, complete and up to date. It may give written authorisation to any other operator to act on its behalf."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "Art. 78 of Regulation (EU) 2023/1542 binds that provider, not this application"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 1(1)",
+     "quote": "This Regulation lays down requirements on sustainability, safety, labelling, marking and information to allow the placing on the market or putting into service of batteries within the Union."
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 96(2)",
+     "quote": "It shall apply from 18 February 2024, save as set out in the second subparagraph and in other provisions of this Regulation."
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(1)",
+     "quote": "From 18 February 2027 each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service shall have an electronic record"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(4)",
+     "quote": "It may give written authorisation to any other operator to act on its behalf."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies-in-part",
+     "reason": "Regulation (EU) 2023/1542 binds the economic operator that places an LMT, EV or industrial battery above 2 kWh on the market (STK-01, a customer of the application) to hold a battery passport with the content of Annex XIII. The application produces that dataset for the operator, so Art. 77, Annex XIII and the annexes and articles Annex XIII points to oblige the dataset. Art. 78 binds the technical design and operation of the passport, which the passport service provider carries; the application supports it only where the dataset must. The other chapters bind manufacturers, producers, Member States and the Commission and give no requirement of the dataset."
+    },
+    {
+     "area": "lifecycle",
+     "applicability": "applies-in-part",
+     "reason": "The Regulation binds the economic operators that place batteries on the market, the operators that prepare them for re-use or repurposing, repurpose or remanufacture them, the producers and the recyclers: the customers of the application. Regulation (EU) 2023/1542 binds neither Ichnos nor the application directly; Ichnos can act as an operator that the economic operator authorises in writing (Art. 77(4)). The application must hold, compute and check the data by which its customers meet the provisions of this area: Art. 77(4), (7) and (8), Annex XIII point 4, Art. 7 with Annex II, Art. 8, Art. 10 with Annex IV, Art. 13(9), Art. 17(3), Art. 38(11), Art. 45 to 47, Art. 70, 71 and 73 with Annex XII. The chapters on notified bodies, extended producer responsibility, collection, reporting by Member States and market surveillance do not oblige the system."
+    },
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "Regulation (EU) 2023/1542 sets the battery passport that the application's dataset serves. The privacy-data-dpp area cites only Art. 78(a) (interoperability with the eco-design passports), Art. 78(d) (operators acting for the economic operator may not use the data beyond the service), Art. 78(h) (privacy), Annex XIII point 4(d) (data from use) and recital 44 (accessibility of QR codes); the passport-content and lifecycle areas cover the rest."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-GDPR",
+   "title": "Regulation (EU) 2016/679 (General Data Protection Regulation)",
+   "version": "OJ L 119, 4.5.2016; checked on EUR-Lex on 2026-10-26: no amending act, and the corrigendum of 23.5.2018 (OJ L 127, p. 2) corrects recital 71 and Articles 37, 41 to 43, 57, 64, 65, 69 and 70, none of which the registry quotes",
+   "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "applies",
+   "applicabilityReason": "The application and the stack process personal data wholly by automated means: the identity and activity records of the users of customer companies, the contact details of companies and plants, and, in the passport and marketplace demos, the accounts of private battery owners. The customers are controllers established in the Union and Ichnos processes the data on their behalf as a processor, so the processing falls under Art. 3(1) through the customers, and Art. 28 binds Ichnos through the processing contract. Chapter V governs every transfer to Ichnos in Singapore and to sub-processors outside the Union. Whether Art. 3(2) also binds Ichnos directly, whether Ichnos is a controller for some processing, and whether it needs a representative under Art. 27 are counsel's questions (roadmap R8-3), recorded in the questions.",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+     "locator": "Art. 2(1)",
+     "quote": "This Regulation applies to the processing of personal data wholly or partly by automated means"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+     "locator": "Art. 3(1)",
+     "quote": "This Regulation applies to the processing of personal data in the context of the activities of an establishment of a controller or a processor in the Union, regardless of whether the processing takes place in the Union or not."
+    },
+    {
+     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+     "locator": "Art. 4(8)",
+     "quote": "means a natural or legal person, public authority, agency or other body which processes personal data on behalf of the controller"
+    },
+    {
+     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+     "locator": "Art. 28(3)",
+     "quote": "Processing by a processor shall be governed by a contract or other legal act under Union or Member State law"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "R8-3",
+     "quote": "Counsel's opinion on Ichnos's GDPR position as a Singapore company: processor terms, transfers, and whether it needs an EU representative (GDPR Art. 27)."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "The application and the stack process personal data wholly by automated means: the identity and activity records of the users of customer companies, the contact details of companies and plants, and, in the passport and marketplace demos, the accounts of private battery owners. The customers are controllers established in the Union and Ichnos processes the data on their behalf as a processor, so the processing falls under Art. 3(1) through the customers, and Art. 28 binds Ichnos through the processing contract. Chapter V governs every transfer to Ichnos in Singapore and to sub-processors outside the Union. Whether Art. 3(2) also binds Ichnos directly, whether Ichnos is a controller for some processing, and whether it needs a representative under Art. 27 are counsel's questions (roadmap R8-3), recorded in the questions."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-LINEAGE-DESIGN",
+   "title": "Passport lineage and ownership: target schema design (model B)",
+   "version": "as stored on 2026-10-22",
+   "path": "requirements/Owner_documents-extracts/Passport_lineage_and_ownership_schema_design-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies",
+   "applicabilityReason": "The target model of model B that the vision names (section 6). The rules of the passport lineage design on links, holders and the waste status are project rules; the table and column names of the passport lineage design are design and are not carried into the statements.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Passport_lineage_and_ownership_schema_design-extract.md",
+     "locator": "header",
+     "quote": "The target relational model for the lifecycle"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "Section 6",
+     "quote": "ADR 0003, epic E15 | model B (§5)"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "lifecycle",
+     "applicability": "applies",
+     "reason": "The target model of model B that the vision names (section 6). The rules of the passport lineage design on links, holders and the waste status are project rules; the table and column names of the passport lineage design are design and are not carried into the statements."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-ROADMAP",
+   "title": "Production readiness roadmap of the battery passport application",
+   "version": "Version 13, 2026-09-28",
+   "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "privacy-data-dpp: Francesco's plan to certification; the roadmap steps R1-5, R1-6, R8-2 and R8-3 fix the production identity, the hosting regions, the contract set and the open GDPR questions. | security: The production readiness roadmap states the TISAX need, the scope of the ISMS (people, devices, stacks, repositories, AI agents and suppliers) and the hardening and assessment steps that the security requirements feed. | catenax-certification: Francesco's plan to certification and listing. Section 2 of the production readiness roadmap records what Cofinity-X and Catena-X require; by the roadmap's own rule a row marked research decides nothing until a stored text confirms it. Rows that no stored text confirms give requirements with the note 'unconfirmed: needs the stored source'. | operations-quality-owner: Francesco's plan to certification and production. The steps and findings of the production readiness roadmap that state a need of the operator or the customer bind Ichnos and the application; the order, the owners and the external facts of the roadmap (prices, dates of other parties) are planning, not requirements.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "R8",
+     "quote": "Owner: F, with an audit provider ENX approves, and"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "section 2",
+     "quote": "Every Catena-X provider, the Business Application Provider included, needs TISAX Level 2"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "section 2, preamble",
+     "quote": "Read on 2026-09-27. \"Fetched\" means the page itself was read in that session. \"Research\" means a research summary with its source: confirm it before it decides anything."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "Section 0",
+     "quote": "This is a roadmap, not a specification."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "Section 0",
+     "quote": "Every finding has exactly one owning step (§9)."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "Francesco's plan to certification; the roadmap steps R1-5, R1-6, R8-2 and R8-3 fix the production identity, the hosting regions, the contract set and the open GDPR questions."
+    },
+    {
+     "area": "security",
+     "applicability": "applies",
+     "reason": "The production readiness roadmap states the TISAX need, the scope of the ISMS (people, devices, stacks, repositories, AI agents and suppliers) and the hardening and assessment steps that the security requirements feed."
+    },
+    {
+     "area": "catenax-certification",
+     "applicability": "applies",
+     "reason": "Francesco's plan to certification and listing. Section 2 of the production readiness roadmap records what Cofinity-X and Catena-X require; by the roadmap's own rule a row marked research decides nothing until a stored text confirms it. Rows that no stored text confirms give requirements with the note 'unconfirmed: needs the stored source'."
+    },
+    {
+     "area": "operations-quality-owner",
+     "applicability": "applies-in-part",
+     "reason": "Francesco's plan to certification and production. The steps and findings of the production readiness roadmap that state a need of the operator or the customer bind Ichnos and the application; the order, the owners and the external facts of the roadmap (prices, dates of other parties) are planning, not requirements."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-VDA-ISA-2027",
+   "title": "VDA Information Security Assessment (ISA), the TISAX catalogue",
+   "version": "2027.1 (2026-09-30)",
+   "storage": "cited-not-stored",
+   "role": "harmonised-or-industry-standard",
+   "applicability": "applies",
+   "applicabilityReason": "The same reason as ISA 6.0.3: TISAX Level 2 is mandatory for Catena-X providers, and ISA2027 is the catalogue of an assessment ordered from 1 January 2027, which the order of the roadmap's steps (R8 after R2 to R7) makes the likely case. The Information Security tab of ISA2027 binds Ichnos as operator at a target maturity level of 3 for every control; the 'should' requirements of ISA2027 must be met unless a deviation is plausibly justified; the requirements of ISA2027 for high protection needs apply if the assessed scope has high protection needs (assessment objective 'Info high', Q-SEC-04). Prototype Protection does not apply. Data Protection depends on Q-SEC-04 and maps to the GDPR processor requirements of the area PRIV.",
+   "applicabilityEvidence": [
+    {
+     "document": "Catena-X Conformity Assessment Framework, roles and certification objects (CX-Neptune)",
+     "locator": "Certification objects, Provider, Compliance Period",
+     "quote": "has up to three months after the issuing date of the Catena-X certificate to achieve TISAX (Level 2) or the replacing certifications listed above"
+    },
+    {
+     "document": "VDA Information Security Assessment (ISA) 2027.1",
+     "locator": "Definitions, tab Information Security",
+     "quote": "Requirements always refer to the own company with respect to its organization, processes and infrastructure."
+    },
+    {
+     "document": "VDA Information Security Assessment (ISA) 2027.1",
+     "locator": "Definitions, tab Maturity levels",
+     "quote": "the target maturity level for all control questions is consistently 3 (Established)"
+    },
+    {
+     "document": "VDA Information Security Assessment (ISA) 2027.1",
+     "locator": "Definitions, tab Data Protection",
+     "quote": "edited additionally in case of processing within the meaning of Art. 28 of the EU General Data Protection Regulation"
+    },
+    {
+     "document": "VDA Information Security Assessment (ISA) 2027.1",
+     "locator": "Definitions, tab Prototype Protection",
+     "quote": "Prototype protection protects physical prototypes which are classified as requiring protection."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
+     "locator": "section 3.4",
+     "quote": "Catena-X requires TISAX Level 2 of every provider"
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "security",
+     "applicability": "applies",
+     "reason": "The same reason as ISA 6.0.3: TISAX Level 2 is mandatory for Catena-X providers, and ISA2027 is the catalogue of an assessment ordered from 1 January 2027, which the order of the roadmap's steps (R8 after R2 to R7) makes the likely case. The Information Security tab of ISA2027 binds Ichnos as operator at a target maturity level of 3 for every control; the 'should' requirements of ISA2027 must be met unless a deviation is plausibly justified; the requirements of ISA2027 for high protection needs apply if the assessed scope has high protection needs (assessment objective 'Info high', Q-SEC-04). Prototype Protection does not apply. Data Protection depends on Q-SEC-04 and maps to the GDPR processor requirements of the area PRIV."
+    }
+   ],
+   "party": "VDA_ENX-Automotive_SPICE_TISAX_and_ISA",
+   "locator": "VDA ISA 2027.1 (2026-09-30), published by the German Association of the Automotive Industry (VDA) and the ENX Association",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-VISION",
+   "title": "EU battery DPP data layer: desired end state (vision)",
+   "version": "4, 2026-09-28",
+   "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies",
+   "applicabilityReason": "passport-content: The top project document. The vision defines the dataset delivered to the passport service provider as the product and the passport screens as a demo that shows every field with the access tiers of Art. 77(2). | lifecycle: The top document of the project, owned by Francesco. Invariant 5 and section 5 of the vision set model B for every battery placed on the market again and model A for repair, and the action table of the vision maps each lifecycle operation to a status, a model and its data. | privacy-data-dpp: The vision is the top document; section 0 of the vision sets what the application is and that the passport screens and the marketplace are demos. | security: The vision defines the application part of the item, its boundary (the passport service provider and the EU database outside it) and the demos outside the certification perimeter. | catenax-certification: The top project document. Section 0.1 sets the two certificates, the two listings and their order. | catenax-data: The vision is the top project rule (the principle that behaviour is cited data, verified against the stored texts and section 0); Francesco owns it. | catenax-network: The top document of the project (Francesco). Section 0 defines the application's dataspace explorer and the only flow between companies (offer, catalogue, negotiation, agreement, transfer); the section 0 clauses on the explorer and on the flow bind the application. The invariants of the vision are area OPS's. | operations-quality-owner: The vision is Francesco's top document: the vision defines the system of interest and the nine convergence invariants that every change to the application and its stack must pass.",
+   "applicabilityEvidence": [
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "aggregates it into a battery passport dataset that follows the latest version of CX-0160"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "They show every field of the dataset as an official passport would, with the access tiers of Art. 77(2), outside the certification perimeter."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "header",
+     "quote": "This is the top document. The repository converges to the end state it describes"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "Section 6",
+     "quote": "ADR 0003, epic E15 | model B (§5)"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "Header",
+     "quote": "This is the top document."
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "It provides data along a distributed battery value chain, from components to the battery pack, and aggregates it into a battery passport dataset"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0.1",
+     "quote": "Ichnos Protocol seeks two Catena-X certificates from a Conformity Assessment Body: one for the"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "section 0",
+     "quote": "It lets a company discover the connectors of the dataspace, read their data offers and usage policies, and negotiate contracts, separate from the marketplace"
+    },
+    {
+     "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+     "locator": "Introduction",
+     "quote": "A change is not done if it breaks an invariant or leaves two of something."
+    }
+   ],
+   "areaDecisions": [
+    {
+     "area": "passport-content",
+     "applicability": "applies",
+     "reason": "The top project document. The vision defines the dataset delivered to the passport service provider as the product and the passport screens as a demo that shows every field with the access tiers of Art. 77(2)."
+    },
+    {
+     "area": "lifecycle",
+     "applicability": "applies",
+     "reason": "The top document of the project, owned by Francesco. Invariant 5 and section 5 of the vision set model B for every battery placed on the market again and model A for repair, and the action table of the vision maps each lifecycle operation to a status, a model and its data."
+    },
+    {
+     "area": "privacy-data-dpp",
+     "applicability": "applies",
+     "reason": "The vision is the top document; section 0 of the vision sets what the application is and that the passport screens and the marketplace are demos."
+    },
+    {
+     "area": "security",
+     "applicability": "applies",
+     "reason": "The vision defines the application part of the item, its boundary (the passport service provider and the EU database outside it) and the demos outside the certification perimeter."
+    },
+    {
+     "area": "catenax-certification",
+     "applicability": "applies",
+     "reason": "The top project document. Section 0.1 sets the two certificates, the two listings and their order."
+    },
+    {
+     "area": "catenax-data",
+     "applicability": "applies",
+     "reason": "The vision is the top project rule (the principle that behaviour is cited data, verified against the stored texts and section 0); Francesco owns it."
+    },
+    {
+     "area": "catenax-network",
+     "applicability": "applies",
+     "reason": "The top document of the project (Francesco). Section 0 defines the application's dataspace explorer and the only flow between companies (offer, catalogue, negotiation, agreement, transfer); the section 0 clauses on the explorer and on the flow bind the application. The invariants of the vision are area OPS's."
+    },
+    {
+     "area": "operations-quality-owner",
+     "applicability": "applies",
+     "reason": "The vision is Francesco's top document: the vision defines the system of interest and the nine convergence invariants that every change to the application and its stack must pass."
+    }
+   ],
+   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-OWNER-INSTRUCTIONS",
+   "title": "Francesco's instructions, stored verbatim",
+   "version": "extracts of the instructions of 2026-10-26 to 2026-11-16",
+   "path": "requirements/Owner_instructions-Francesco_verbatim/",
+   "storage": "stored",
+   "role": "project-rule",
+   "applicability": "applies",
+   "applicabilityReason": "Francesco owns the application and decides its system requirements; his words are the source of the owner's rules of SYS.2 that no external party imposes.",
+   "applicabilityEvidence": [],
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-DRAFT-IMPL-77-9",
+   "title": "Draft Commission Implementing Regulation laying down rules for the application of Regulation (EU) 2023/1542 as regards access to and use of certain information in the battery passport",
+   "version": "draft, Ares(2026)9814179, 19 October 2026; feedback period 19 October to 16 November 2026 (Have Your Say initiative 16473)",
+   "storage": "cited-not-stored",
+   "role": "law",
+   "applicability": "undecided",
+   "applicabilityReason": "A draft that the Commission has not adopted binds no one. Once adopted as the implementing act of Art. 77(9) of Regulation (EU) 2023/1542, the act names the persons with a legitimate interest of Art. 77(2)(c) and the information each of them reads, which sets the access tiers of the passport demo and of the dataset; decision Q-1002 asks how the application follows its Article 1(4), which names only the purchaser and the purchaser's agent for the Annex XIII point 4 information.",
+   "question": "Q-1002",
+   "applicabilityEvidence": [
+    {
+     "document": "draft Commission Implementing Regulation under Article 77(9) of Regulation (EU) 2023/1542, Ares(2026)9814179",
+     "locator": "citation of the legal basis",
+     "quote": "and in particular Article 77(9) thereof"
+    },
+    {
+     "document": "draft Commission Implementing Regulation under Article 77(9) of Regulation (EU) 2023/1542, Ares(2026)9814179",
+     "locator": "cover page",
+     "quote": "This draft has not been adopted or endorsed by the European Commission."
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "locator": "draft, Ares(2026)9814179, 19 October 2026; feedback period 19 October to 16 November 2026 (Have Your Say initiative 16473), on the \"Have your say\" portal of the European Commission",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-DRAFT-DA-RECYCLED-CONTENT-MAIN",
+   "title": "Draft Commission Delegated Regulation supplementing Regulation (EU) 2023/1542 by establishing the methodology for the calculation and verification of cobalt, nickel, lithium and lead recycled content in certain batteries, and the format for the documentation of such recycled content (main text)",
+   "version": "draft, Ares(2026)7823470, 12 August 2026",
+   "storage": "cited-not-stored",
+   "role": "law",
+   "applicability": "undecided",
+   "applicabilityReason": "A draft that the Commission has not adopted binds no one. Once adopted as the delegated act of Art. 8(1), the act binds the manufacturers that document the recycled content of their batteries; decision Q-1003 asks whether the dataset carries that documentation or only the shares of Annex XIII point 1.",
+   "question": "Q-1003",
+   "applicabilityEvidence": [
+    {
+     "document": "draft Commission Delegated Regulation on recycled content, Ares(2026)7823470",
+     "locator": "title",
+     "quote": "establishing the methodology for the calculation and verification of cobalt, nickel, lithium and lead recycled content in certain batteries"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "locator": "draft, Ares(2026)7823470, 12 August 2026, on the \"Have your say\" portal of the European Commission",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-DRAFT-DA-RECYCLED-CONTENT-ANNEX",
+   "title": "Annexes to the draft Commission Delegated Regulation on the methodology for the calculation and verification of recycled content and the format of its documentation",
+   "version": "draft, Ares(2026)7823470, 12 August 2026",
+   "storage": "cited-not-stored",
+   "role": "law",
+   "applicability": "undecided",
+   "applicabilityReason": "The operative methodology of the draft above, with the same status: not adopted, binding no one. Decision Q-1003 decides whether the dataset carries the documentation format of the annexes.",
+   "question": "Q-1003",
+   "applicabilityEvidence": [
+    {
+     "document": "annexes to the draft Commission Delegated Regulation on recycled content, Ares(2026)7823470",
+     "locator": "Annex, title",
+     "quote": "Methodology for the calculation and verification of the recycled content in industrial batteries"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "locator": "draft, Ares(2026)7823470, 12 August 2026, on the \"Have your say\" portal of the European Commission",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-2025-606",
+   "title": "Commission Delegated Regulation (EU) 2025/606 supplementing Regulation (EU) 2023/1542 by establishing the methodology for calculation and verification of rates for recycling efficiency and recovery of materials from waste batteries, and the format for the documentation",
+   "version": "of 21 March 2025, OJ L, 2025/606",
+   "path": "sources/EU/DelegatedReg_EU_2025-606_RecyclingEfficiency_RecoveryRates/DelegatedReg_EU_2025-606_RecyclingEfficiency_RecoveryRates.md",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "undecided",
+   "applicabilityReason": "Delegated Regulation (EU) 2025/606 binds the recyclers that calculate and document the recycling efficiency and the recovery of materials (Art. 71(4) of Regulation (EU) 2023/1542); the application records the recovered materials that the recycler reports (SyR-LIFE-109). Decision Q-1006 asks which party receives the recycling result of a battery whose passport has predecessors, and through which channel.",
+   "question": "Q-1006",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/DelegatedReg_EU_2025-606_RecyclingEfficiency_RecoveryRates/DelegatedReg_EU_2025-606_RecyclingEfficiency_RecoveryRates.md",
+     "locator": "Art. 1",
+     "quote": "the format for the documentation on recycling efficiency and recovery of materials from waste batteries and on the destination and yield of the final output fractions, are laid down in the Annex"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-2025-934",
+   "title": "Commission Delegated Decision (EU) 2025/934 amending Decision 2000/532/EC as regards an update of the list of waste in relation to battery-related waste",
+   "version": "of 5 March 2025, OJ L, 2025/934",
+   "path": "sources/EU/DelegatedDecision_EU_2025-934_ListOfWaste_Batteries/DelegatedDecision_EU_2025-934_ListOfWaste_Batteries.md",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "Delegated Decision (EU) 2025/934 updates the list of waste codes with which waste holders classify battery-related waste under Directive 2008/98/EC; the data layer classifies no waste, and the waste status of a battery follows Art. 77(7) of Regulation (EU) 2023/1542 and Annex XIII point 4(c). Delegated Decision (EU) 2025/934 yields no requirement of the system; Francesco reviews this reading at the step 1 checkpoint.",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/DelegatedDecision_EU_2025-934_ListOfWaste_Batteries/DelegatedDecision_EU_2025-934_ListOfWaste_Batteries.md",
+     "locator": "Recital (4)",
+     "quote": "it is necessary to update the list of waste set out in Decision 2000/532/EC to take into account new battery chemistries"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EU-2024-1157",
+   "title": "Regulation (EU) 2024/1157 on shipments of waste",
+   "version": "of 11 April 2024, OJ L, 2024/1157",
+   "path": "sources/EU/Regulation_EU_2024-1157_WasteShipments/Regulation_EU_2024-1157_WasteShipments.md",
+   "storage": "stored",
+   "role": "law",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "Regulation (EU) 2024/1157 sets the procedures and control regimes for shipments of waste, which bind the persons who ship waste batteries and black mass; the data layer ships no waste. Regulation (EU) 2024/1157 yields no requirement of the system; Francesco reviews this reading at the step 1 checkpoint.",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/EU/Regulation_EU_2024-1157_WasteShipments/Regulation_EU_2024-1157_WasteShipments.md",
+     "locator": "Art. 1",
+     "quote": "It establishes procedures and control regimes for shipments of waste"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EC-GUIDANCE-DBP-DATAPOINTS-2-0",
+   "title": "European Commission, DG GROW: Guidance Document 'Digital Batteries Passport: data points by category'",
+   "version": "version 2.0, 15 August 2026",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A Commission guidance document binds no one; the guidance is the Commission's reading of Annex XIII per battery category. Decision Q-1004 asks whether the dataset follows the guidance where the guidance differs from CX-0160 1.1.0 and DIN DKE SPEC 99100.",
+   "question": "Q-1004",
+   "applicabilityEvidence": [
+    {
+     "document": "guidance of the European Commission on the data points of the digital battery passport, version 2.0",
+     "locator": "page 3",
+     "quote": "This guidance document aims to assist economic operators and other relevant stakeholders in preparing the implementation of the"
+    }
+   ],
+   "party": "EU-European_Union_legislation",
+   "locator": "version 2.0, 15 August 2026, published by the European Commission",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-BATTERYPASS-READY-LONGLIST-2-0",
+   "title": "BatteryPass-Ready consortium: Battery Passport Data Attribute Longlist",
+   "version": "version 2.0, 2026, CC BY 4.0",
+   "path": "sources/BatteryPass-Ready/2026_BatteryPass-Ready_DataAttributeLongList_v2.0.xlsx",
+   "storage": "stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A consortium publication binds no one; the long list maps each passport data attribute to its regulatory source and its technical name. Decision Q-1004 decides its use together with the Commission guidance.",
+   "question": "Q-1004",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/BatteryPass-Ready/2026_BatteryPass-Ready_DataAttributeLongList_v2.0.xlsx",
+     "locator": "introduction sheet",
+     "quote": "This document is made available under a CC BY Licence (Attribution)."
+    }
+   ],
+   "party": "BatteryPass_Ready-Battery_passport_consortium",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-CIRCULAR-MODELS",
+   "title": "Tractus-X semantic models for the end of a life cycle: remanufacturing certificate 3.0.0, recycling strategy certificate 3.0.0, material recycling certificate 1.0.0, waste certificate 1.0.0, waste 2.0.0 (draft), secondary material content 1.0.0 (deprecated), traction battery code 2.0.0, generic digital product passport 7.0.0, battery pass 6.1.0",
+   "version": "sldt-semantic-models at e3d6c3e76 (2026-10-22)",
+   "path": "sources/Tractus-X/semantic-models/",
+   "storage": "stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A Tractus-X aspect model obliges a data provider only when a Catena-X standard names it; CX-0160 1.1.0 names none of these models. Decision Q-1005 asks whether the CX-0160 amendment proposal and the reference API reuse them. The generic digital product passport model 5.0.0, from which BatteryPass 6.1.0 takes its status property, and the recycling strategy certificate 2.0.0, which the waste certificate 1.0.0 and the material recycling certificate 1.0.0 import, were added on 2026-11-05 at the same pin.",
+   "question": "Q-1005",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/Tractus-X/semantic-models/io.catenax.remanufacturing_certificate/3.0.0/RemanufacturingCertificate.ttl",
+     "locator": "aspect RemanufacturingCertificate, samm:description",
+     "quote": "This certificate represents the meticulous reconstruction and enhancement of an asset"
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "added generic digital product passport 5.0.0 and recycling strategy certificate 2.0.0",
+     "reason": "Step 2 of the after-first-passport work: the two models are imported by stored models",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-KIT-CIRCULARITY",
+   "title": "Tractus-X Circularity KIT, release 26.09 (adoption view, documentation, development and operation views)",
+   "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A KIT is adoption guidance, not a standard; the Circularity KIT describes the exchange of the circular-economy certificates. Decision Q-1005 decides whether the after-first-passport exchange uses them.",
+   "question": "Q-1005",
+   "applicabilityEvidence": [
+    {
+     "document": "Tractus-X KITs, release 26.09, circularity-kit/adoption-view.md",
+     "locator": "Adoption View, introduction",
+     "quote": "The Circularity KIT shall empower stakeholders to transition towards a circular economy"
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "locator": "Tractus-X KITs, release 26.09, file circularity-kit/adoption-view.md, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-KIT-ECO-PASS",
+   "title": "Tractus-X Eco Pass KIT, release 26.09 (adoption view, development and operation views, DPP rulebook)",
+   "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
+   "path": "sources/Tractus-X/kits-26.09/eco-pass-kit/adoption-view.md",
+   "storage": "stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A KIT is adoption guidance, not a standard; the Eco Pass KIT describes how a digital product passport is provided and consumed in Catena-X, which the reference API follows. Decision Q-1005 decides which of its patterns the after-first-passport exchange reuses.",
+   "question": "Q-1005",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/Tractus-X/kits-26.09/eco-pass-kit/adoption-view.md",
+     "locator": "Adoption View, introduction",
+     "quote": "The EcoPass KIT will be the key enabler for various stakeholders to use digital product passports"
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-KIT-INDUSTRY-CORE",
+   "title": "Tractus-X Industry Core KIT, release 26.09 (adoption, architecture, development and operation views, notifications and the notification schema)",
+   "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A KIT is adoption guidance, not a standard; the Industry Core KIT describes the message-based notifications between Catena-X partners that CX-0151 standardises. Decision Q-1006 decides whether the recycling result reaches the producers by such a notification.",
+   "question": "Q-1006",
+   "applicabilityEvidence": [
+    {
+     "document": "Tractus-X KITs, release 26.09, industry-core-kit/software-development-view/notifications.mdx",
+     "locator": "Notifications, introduction",
+     "quote": "Industry Core covers the foundation for message-based data sharing using notifications."
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "locator": "Tractus-X KITs, release 26.09, file industry-core-kit/software-development-view/notifications.mdx, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-KIT-TRACEABILITY",
+   "title": "Tractus-X Traceability KIT, release 26.09 (adoption, architecture, development and operation views, notification OpenAPI 1.2.1 and 2.0.0)",
+   "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A KIT is adoption guidance, not a standard; the Traceability KIT holds the notification API (OpenAPI) that Catena-X applications implement for quality alerts, the closest published reference for a lifecycle notification. Decision Q-1006 decides its reuse.",
+   "question": "Q-1006",
+   "applicabilityEvidence": [
+    {
+     "document": "Tractus-X KITs, release 26.09, traceability-kit/adoption-view.mdx",
+     "locator": "Adoption View, introduction",
+     "quote": "The aim of the Traceability KIT is to enable app- and data-providers to trace parts and materials across the entire value chain without compromising data sovereignty."
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "locator": "Tractus-X KITs, release 26.09, file traceability-kit/adoption-view.mdx, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-TX-KIT-DATA-CHAIN",
+   "title": "Tractus-X Data Chain KIT, release 26.09 (the Item Relationship Service of CX-0005)",
+   "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
+   "path": "sources/Tractus-X/kits-26.09/data-chain-kit/adoption-view.md",
+   "storage": "stored",
+   "role": "best-practice",
+   "applicability": "undecided",
+   "applicabilityReason": "A KIT is adoption guidance, not a standard; the Data Chain KIT describes how the Item Relationship Service walks the bill of materials across connectors, which option B of decision Q-1006 (the recycler walks the predecessor links) would use.",
+   "question": "Q-1006",
+   "applicabilityEvidence": [
+    {
+     "path": "sources/Tractus-X/kits-26.09/data-chain-kit/adoption-view.md",
+     "locator": "Adoption View, introduction",
+     "quote": "DataChainKit brings valuable data chain information to your use-cases and services through connected data"
+    }
+   ],
+   "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EN-18219",
+   "title": "EN 18219:2026, digital product passport, unique identifiers",
+   "version": "2026",
+   "storage": "cited-not-stored",
+   "role": "harmonised-or-industry-standard",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "Commission Implementing Decision (EU) 2026/1736 lists EN 18219 as a harmonised standard under Regulation (EU) 2024/1781; the identifier of a new passport after preparation for re-use, repurposing or remanufacturing (decision Q-969) needs it. The text is not bought, so every rule that cites the standard carries the status \"citation pending\" and never quotes it.",
+   "applicabilityEvidence": [],
+   "party": "CEN_CENELEC-European_standards",
+   "locator": "EN 18219:2026, digital product passport, unique identifiers, available from the members of CEN and CENELEC",
+   "note": "The text is not stored anywhere, and no requirement quotes it.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "registered as a placeholder, not bought",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport; Francesco buys the standard later",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EN-18221",
+   "title": "EN 18221:2026, digital product passport, data storage, archiving and data persistence",
+   "version": "2026",
+   "storage": "cited-not-stored",
+   "role": "harmonised-or-industry-standard",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "The persistence of a passport that recycling ends (Art. 77(8) of Regulation (EU) 2023/1542) and of the predecessor passports that a new passport links to needs it. The text is not bought, so every rule that cites the standard carries the status \"citation pending\" and never quotes it.",
+   "applicabilityEvidence": [],
+   "party": "CEN_CENELEC-European_standards",
+   "locator": "EN 18221:2026, digital product passport, data storage, archiving and data persistence, available from the members of CEN and CENELEC",
+   "note": "The text is not stored anywhere, and no requirement quotes it.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "registered as a placeholder, not bought",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport; Francesco buys the standard later",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EN-18222",
+   "title": "EN 18222:2026, digital product passport, application programming interfaces for passport lifecycle management and searchability",
+   "version": "2026",
+   "storage": "cited-not-stored",
+   "role": "harmonised-or-industry-standard",
+   "applicability": "applies-in-part",
+   "applicabilityReason": "The reference API of the after-first-passport work compares its lifecycle operations with the operations the European standard defines. The text is not bought, so every rule that cites the standard carries the status \"citation pending\" and never quotes it.",
+   "applicabilityEvidence": [],
+   "party": "CEN_CENELEC-European_standards",
+   "locator": "EN 18222:2026, digital product passport, application programming interfaces for passport lifecycle management and searchability, available from the members of CEN and CENELEC",
+   "note": "The text is not stored anywhere, and no requirement quotes it.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "registered as a placeholder, not bought",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport; Francesco buys the standard later",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-GBA-WHITEPAPER-EUBR-2026-02",
+   "title": "Global Battery Alliance white paper: how the GBA Battery Passport helps companies prepare for compliance with the EU Batteries Regulation",
+   "version": "February 2026, no licence stated",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "A position paper binds no one. The after-first-passport work reads it as the position of its authors and cites it only as that position, never as a rule. The white paper maps the GBA Battery Passport to the regulation; the CX-0160 amendment proposal (step 5) compares its tiered access with the Catena-X one.",
+   "applicabilityEvidence": [
+    {
+     "document": "white paper of the Global Battery Alliance on the GBA Battery Passport and the EU Batteries Regulation, February 2026",
+     "locator": "table of the regulation's requirements, row 'Data disclosure and confidentiality'",
+     "quote": "Producers are responsible for the confidentiality of the data in their possession"
+    }
+   ],
+   "party": "GBA-Global_Battery_Alliance",
+   "locator": "February 2026, no licence stated, published by the Global Battery Alliance",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored locally and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature); Francesco approved the download on 2026-11-05",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-GBA-EU-ROUNDTABLE-2026-03",
+   "title": "Global Battery Alliance roundtable event report 'One year until the EU Battery Passport'",
+   "version": "event of 10 March 2026, no licence stated",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "A position paper binds no one. The after-first-passport work reads it as the position of its authors and cites it only as that position, never as a rule. The report records the industry's concerns about access to sensitive passport data before the draft Article 77(9) act.",
+   "applicabilityEvidence": [
+    {
+     "document": "roundtable report of the Global Battery Alliance of 10 March 2026",
+     "locator": "section on data access and confidentiality",
+     "quote": "Expectations are high for forthcoming implementing act defining \"persons with legitimate interest\""
+    }
+   ],
+   "party": "GBA-Global_Battery_Alliance",
+   "locator": "event of 10 March 2026, no licence stated, published by the Global Battery Alliance",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored locally and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature); Francesco approved the download on 2026-11-05",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-EUROBAT-FEEDBACK-77-9",
+   "title": "EUROBAT feedback on the draft Implementing Act on Article 77(9) of Regulation (EU) 2023/1542",
+   "version": "27 May 2026, no licence stated",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "A position paper binds no one. The after-first-passport work reads it as the position of its authors and cites it only as that position, never as a rule. The feedback asks the Commission to verify each person with a legitimate interest; decision Q-1002 (who reads the state of health and battery status) did not depend on it.",
+   "applicabilityEvidence": [
+    {
+     "document": "EUROBAT feedback on the draft implementing act on Article 77(9), 27 May 2026",
+     "locator": "section 2, verification of legitimate interest",
+     "quote": "EUROBAT recommends that the implementing act introduce an explicit verification step before access is granted to persons with legitimate interest under Article 77(9)."
+    }
+   ],
+   "party": "EUROBAT-Association_of_European_battery_manufacturers",
+   "locator": "27 May 2026, no licence stated, published by EUROBAT",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored locally and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature); Francesco approved the download on 2026-11-05",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SRC-BATTERYPASS-SECONDARY-ACTS-1-1",
+   "title": "Battery Pass consortium: secondary legislation following the Battery Regulation, a perspective on upcoming Delegated and Implementing Acts with a focus on the battery passport",
+   "version": "version 1.1, October 2024, CC BY-NC 4.0",
+   "storage": "cited-not-stored",
+   "role": "best-practice",
+   "applicability": "does-not-apply",
+   "applicabilityReason": "A position paper binds no one. The after-first-passport work reads it as the position of its authors and cites it only as that position, never as a rule. The overview lists the secondary acts of the regulation; step 1 used it only to check that the literature inventory misses no act.",
+   "applicabilityEvidence": [
+    {
+     "document": "Battery Pass consortium overview of the secondary legislation, version 1.1",
+     "locator": "title page",
+     "quote": "A perspective on upcoming Delegated and Implementing Acts with a focus on the battery passport"
+    }
+   ],
+   "party": "BatteryPass-Battery_Pass_consortium",
+   "locator": "version 1.1, October 2024, CC BY-NC 4.0, published by the Battery Pass consortium",
+   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "stored locally and registered",
+     "reason": "Digital Product Passport Expert Group task on the battery's life after its first passport, step 1 (literature); Francesco approved the download on 2026-11-05",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ]
+}

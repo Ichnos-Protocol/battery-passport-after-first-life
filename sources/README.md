@@ -4,14 +4,14 @@ This folder holds the third-party source texts that their licenses allow to redi
 and the proposal quote these texts. Each text keeps its own license and its own copyright notice. The licenses of this
 repository (`LICENSE`, `LICENSE_non-code`) do not apply to the content of this folder.
 
-The register `SOURCES.json` lists each of the 90 stored files with its path, its SHA-256 value, its size, its origin
+The register `SOURCES.json` lists each of the 92 stored files with its path, its SHA-256 value, its size, its origin
 and its license. The script `scripts/check-sources.mjs` compares every stored file with the register.
 
 ## Stored texts
 
 | Folder | Source family | Files | License | Origin |
 |---|---|---|---|---|
-| `EU/` | European Union legislation | 18 | Reuse authorised under Commission Decision 2011/833/EU, provided the source is acknowledged | EUR-Lex and the Publications Office of the European Union |
+| `EU/` | European Union legislation | 20 | Reuse authorised under Commission Decision 2011/833/EU, provided the source is acknowledged | EUR-Lex and the Publications Office of the European Union |
 | `Tractus-X/semantic-models/` | Eclipse Tractus-X semantic models | 31 | CC-BY-4.0 | `eclipse-tractusx/sldt-semantic-models`, commit `e3d6c3e76813a7ffc2f4fd84ed353a463f3982ff` |
 | `Tractus-X/kits-26.09/` | Eclipse Tractus-X KITs, release 26.09 | 9 | CC-BY-4.0 for documentation, Apache-2.0 for the OpenAPI file | `eclipse-tractusx/eclipse-tractusx.github.io`, commit `dc71de65307cefeacdadc6722e8ffc44016dd38a` |
 | `IDTA/` | Aspect models of the Industrial Digital Twin Association (IDTA) | 31 | CC-BY-4.0 | `admin-shell-io/smt-semantic-models`, commit `9c047bddc51b9f4f1a0d1b5381c81979f15a7f5c` |
@@ -29,6 +29,8 @@ and its license. The script `scripts/check-sources.mjs` compares every stored fi
 | Commission Delegated Regulation (EU) 2025/606 on the rates for recycling efficiency and recovery of materials from waste batteries | Markdown conversion of the Official Journal PDF |
 | Commission Delegated Decision (EU) 2025/934 updating the list of waste in relation to battery-related waste | Markdown conversion of the Official Journal PDF |
 | Regulation (EU) 2024/1157 on shipments of waste | Markdown conversion of the Official Journal PDF |
+| Regulation (EU) 2023/2854 on harmonised rules on fair access to and use of data (Data Act) | PDF of the Official Journal |
+| Regulation (EU) 2016/679 (General Data Protection Regulation) | Markdown conversion of the Official Journal PDF |
 
 Notice for the European Union texts: © European Union, https://eur-lex.europa.eu, 1998-2026. Only the Official Journal
 of the European Union is authentic. A Markdown conversion can differ from the Official Journal in its layout, its
@@ -56,4 +58,4 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 - SPDX-License-Identifier: CC-BY-4.0
 - SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
 - SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
-- Source URL: https://github.com/Khorolev/battery-passport-after-first-life/blob/main/sources/README.md
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/sources/README.md

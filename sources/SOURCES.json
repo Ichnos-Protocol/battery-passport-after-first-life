@@ -991,6 +991,28 @@
    "license": "CC-BY-4.0",
    "notice": "BatteryPass-Ready consortium, 2026.",
    "form": "Copy of the published spreadsheet"
+  },
+  {
+   "path": "EU/Regulation EU 2023-2854 Data Act.pdf",
+   "sha256": "0d100d513136adfaa5655d77784d3af00f477b8588471cbb51dea7aff8687838",
+   "bytes": 1407157,
+   "family": "European Union legislation",
+   "title": "Regulation (EU) 2023/2854 on harmonised rules on fair access to and use of data (Data Act), as published in OJ L, 22.12.2023",
+   "origin": "https://eur-lex.europa.eu/eli/reg/2023/2854/oj",
+   "license": "Reuse authorised (Commission Decision 2011/833/EU)",
+   "notice": "© European Union, https://eur-lex.europa.eu, 1998-2026. Reuse is authorised under Commission Decision 2011/833/EU, provided the source is acknowledged. Only the Official Journal of the European Union is authentic.",
+   "form": "PDF of the Official Journal"
+  },
+  {
+   "path": "EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
+   "sha256": "4cd727e0bf95c352e1860d67e2c36effd8a889988598284e9b28b9426837ebf6",
+   "bytes": 355932,
+   "family": "European Union legislation",
+   "title": "Regulation (EU) 2016/679 on the protection of natural persons with regard to the processing of personal data (General Data Protection Regulation), as published in OJ L 119, 4.5.2016",
+   "origin": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+   "license": "Reuse authorised (Commission Decision 2011/833/EU)",
+   "notice": "© European Union, https://eur-lex.europa.eu, 1998-2026. Reuse is authorised under Commission Decision 2011/833/EU, provided the source is acknowledged. Only the Official Journal of the European Union is authentic.",
+   "form": "Markdown conversion of the Official Journal PDF, made with a PDF conversion tool."
   }
  ]
 }

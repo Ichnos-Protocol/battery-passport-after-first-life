@@ -38,7 +38,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 The source code is maintained in the following repository:
 
-* <https://github.com/Khorolev/battery-passport-after-first-life>
+* <https://github.com/Ichnos-Protocol/battery-passport-after-first-life>
 
 ## Third-party Content
 

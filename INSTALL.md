@@ -21,4 +21,4 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 - SPDX-License-Identifier: CC-BY-4.0
 - SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
 - SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
-- Source URL: https://github.com/Khorolev/battery-passport-after-first-life/blob/main/INSTALL.md
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/INSTALL.md

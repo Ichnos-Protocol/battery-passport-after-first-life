@@ -1,0 +1,133 @@
+{
+ "requirement": "Automotive SPICE 4.1 SWE.4.BP1 (specify the software unit verification measures): the unit measures of the software requirements.",
+ "measures": [
+  {
+   "id": "VM-SWE-DATARIGHTS-001",
+   "title": "Data rights functions over test doubles of every store",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Jest unit tests of the data rights element with each store reached through a test double of its adapter contract (database, document store, identity provider, audit records, host logs, message service) and an injected clock; requirements-based cases per function and negative cases per refusal.",
+   "passCriteria": "Passes when: the locator reports, per store, presence and categories for a seeded person and nothing for an unknown one; the copy holds every located item as JSON or CSV; the recipient list equals the recorded disclosures and the sub-processors and holds no other; a rectification is written to every store holding the item and no other copy remains; an erasure leaves no item that identifies the person except those of the keep-list, each with its obligation; the restriction mark is held with its date and returned to the decision; the lifting is refused without the recorded notice; the portable export validates against its published schema and holds only the data the person provided; the direct transmission sends the same content to the named endpoint; a request from another channel stays held until the confirmation is recorded; the notice is sent with the first communication or at the latest one month after the data were recorded; the retention run removes or anonymises exactly the records older than their category's period; a tenant export imported into an empty double reproduces every entity, relation and document; the tenant erasure is refused before the retrieval period has expired without the customer's decision and afterwards leaves only the keep-list items. At d5080b5 nothing can run: the element does not exist.",
+   "entry": "The data rights element exists with its store adapter contracts; the agreed values (retention periods Q-095 and Q-114, keep-list Q-033) set for the cases that use them.",
+   "environment": "unit partition",
+   "how": "To write: the test suite dataRightsService of the reference server. At the repository root: run the unit suite dataRightsService of the reference server",
+   "verifies": [
+    "SwR-DATARIGHTS-016"
+   ],
+   "regression": "on change of the data rights element or of a store adapter",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BACKEND-051",
+   "title": "First recycler's report of every facility",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the report service with an in-memory data-access double holding the received values of two facilities over two periods.",
+   "passCriteria": "Passes when: SwR-BACKEND-205: The report for a first recycler lists, for the requested period, one row per facility of the received values, each with its recycling efficiency and its recovery of materials as received; a request for a period without received values is answered 404. Any other observation fails the requirement concerned.",
+   "entry": "The commit under review is checked out; no database is needed (the unit partition's test environment).",
+   "environment": "unit partition",
+   "how": "the test suite firstRecyclerReport of the reference server (to write, unit partition). At the repository root: run the unit suite firstRecyclerReport of the reference server",
+   "verifies": [
+    "SwR-BACKEND-205"
+   ],
+   "regression": "on change of EL-BACKEND; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (software measure of the SWE.1 refinement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "passCriteria: the case of the 404 answer of the rederived SwR-BACKEND-205 added",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-027",
+   "title": "Aggregator purpose in the purchaser's point 4 policy",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the connector client's builder, one describe block named SwR-CXCLIENT-171.",
+   "passCriteria": "Passes when: The policy built for a point 4 offer to the purchaser holds the purposes of draft Art. 2(1) and the aggregator purpose in one constraint; the policy built for a point 4 offer to a prospective purchaser holds no aggregator purpose. Any other observation fails SwR-CXCLIENT-171.",
+   "entry": "The commit under review is checked out; no database and no connector are needed.",
+   "environment": "unit partition",
+   "how": "the test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-171. At the repository root: run the unit suite cxclient.afterFirstPassport of the reference server, describe block \"SwR-CXCLIENT-171\"",
+   "verifies": [
+    "SwR-CXCLIENT-171"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-171, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-040",
+   "title": "One notification per receiver and passport in the plan",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the connector client's builder, one describe block named SwR-CXCLIENT-184.",
+   "passCriteria": "Passes when: The plan for a remanufacturing from two original passports of data provider A and one of data provider B holds three notifications: two to A, each naming one passport, and one to B; the plan of a repurpose holds one notification. Any other observation fails SwR-CXCLIENT-184.",
+   "entry": "The commit under review is checked out; no database and no connector are needed.",
+   "environment": "unit partition",
+   "how": "the test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-184. At the repository root: run the unit suite cxclient.afterFirstPassport of the reference server, describe block \"SwR-CXCLIENT-184\"",
+   "verifies": [
+    "SwR-CXCLIENT-184"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-184, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ]
+}

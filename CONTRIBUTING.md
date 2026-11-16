@@ -36,4 +36,4 @@ that your contribution can move to Eclipse Tractus-X.
 
 ## Contact
 
-Contact the maintainer through the issues of this repository: <https://github.com/Khorolev/battery-passport-after-first-life/issues>
+Contact the maintainer through the issues of this repository: <https://github.com/Ichnos-Protocol/battery-passport-after-first-life/issues>

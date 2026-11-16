@@ -1,0 +1,2233 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.5.BP1 (specify the verification measures for the system verification): the measures of the system requirements, each with its technique, pass/fail criteria, entry criteria and environment.",
+ "measures": [
+  {
+   "id": "VM-SYS-PASS-009",
+   "title": "Access marking complete, one group per field, changeable",
+   "method": "test",
+   "technique": "System test at the interface to the passport service provider: the stand-in provider pulls all aspects and the access marking of every test battery and checks the marking against the payloads, against the catalogue of groups, and before and after a change of one group in the catalogue.",
+   "passCriteria": "Passes when: SyR-PASS-011: every field of every delivered aspect of every test battery has exactly one entry in the access marking, and the entry is one of the four groups of Art. 77(2); SyR-PASS-012: every field holding Annex XIII point 2 information is marked as also accessible to notified bodies and market surveillance authorities (once Q-017 is answered for this reading); SyR-PASS-013: changing the group of one field in the catalogue changes its marking in the next delivered dataset while every aspect payload stays byte-identical; SyR-PASS-095: the fields of the detailed composition are marked as accessible also to sorters, dismantlers and recyclers; SyR-PASS-149: every value of the delivered dataset of a performance and durability parameter of Art. 10(1) of the individual battery, recorded at its placing on the market or at a change of its status, is marked legitimate interest. Any other observation fails the requirement concerned.",
+   "entry": "EL-DATASET serves the battery passport dataset in its delivered model (BatteryPass 6.1.0 under CX-Titan) with the access marking on the economic operator's deployment (DEV-01 closed); the form of the access marking is decided (finding on the access marking); one test battery of each category (LMT, electric vehicle, stationary battery energy storage system, other industrial above 2 kWh) is seeded with a known value for every item this measure names; for a requirement with open decisions in dependsOn the result is recorded as not run until they are answered.",
+   "environment": "Tractus-X simulation",
+   "how": "1. start the PostgreSQL database of the reference server, then start the Tractus-X simulation of the stack (the compose files of the Tractus-X simulation) with the economic operator's backend and a stand-in provider connector. 2. Seed the test batteries. 3. Run the dataset system test passportDataset.accessMarking.integration.test.js (to be added with EL-DATASET; none exists yet). 4. Compare the set of field paths of each payload with the set of paths of the marking; change the group of one field in the catalogue and pull again. 5. Record for each requirement pass, fail or not run with its reason, with the commit.",
+   "verifies": [
+    "SyR-PASS-011"
+   ],
+   "regression": "every release, and on change of EL-DATASET, EL-SUBMODELS, the mapping table of the delivered model, sources/IDTA/ or the model version delivered",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entry (before: \"EL-DATASET serves the seven IDTA-02035 aspects and the access marking on the economic operator's deployment (DEV-01 closed); the form of the access marking is decided (finding on the access marking); one test battery of each category (LMT, electric vehicle, stationary battery energy storage system, other industrial above 2 kWh) is seeded with a known value for every field this measure names; for a requirement with open decisions in dependsOn the result is recorded as not run until they are answered.\"); regression (before: \"every release, and on change of EL-DATASET, EL-SUBMODELS, sources/IDTA/ or the CX-0160 version followed\")",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): VM-SYS-PASS-009 (access marking complete, one group per field, changeable) checked the requirements it verifies in IDTA-02035 fields or against IDTA-02035 schemas, which SyR-CXD-185 (battery passport dataset provided as a BatteryPass 6.1.0 submodel) replaces for this release under decision Q-985 (which battery passport rules bind this release under CX-Titan), so VM-SYS-PASS-009 now checks each information item in the property that the mapping table of the delivered model names, BatteryPass 6.1.0 under CX-Titan and the IDTA-02035 aspects after the CX-Neptune go-live, and the set rewrites every clause of VM-SYS-PASS-009, those of SyR-PASS-095, SyR-PASS-149 included, so that one set of VM-SYS-PASS-009 serves whichever group's operations file carries it.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"Passes when: SyR-PASS-011: every field of every delivered aspect of every test battery has exactly one entry in the access marking, and the entry is one of the four groups of Art. 77(2); SyR-PASS-012: every field holding Annex XIII point 2 information is marked as also accessible to notified bodies and market surveillance authorities (once Q-017 is answered for this reading); SyR-PASS-013: changing the group of one field in the catalogue changes its marking in the next delivered dataset while every aspect payload stays byte-identical; SyR-PASS-095: the fields of the detailed composition are marked as accessible also to sorters, dismantlers and recyclers; SyR-PASS-149: every Technical Data field served on the PartInstance twin with a value recorded at placing or at a status change is marked legitimate interest, while the same field on the PartType twin keeps its own group. Any other observation fails the requirement concerned.\")",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): VM-SYS-PASS-009 (access marking complete, one group per field, changeable) named IDTA-02035 fields or aspects in the clause of SyR-PASS-149 (individual battery performance values marked legitimate interest), so that clause now checks each information item in the delivered dataset, in the property that the mapping table of the delivered model names, as decision Q-985 (BatteryPass 6.1.0 under CX-Titan) requires, while the 4 clauses from SyR-PASS-011 (every dataset field marked with exactly one access group) to SyR-PASS-095 (detailed composition also for sorters, dismantlers and recyclers), which belong to the other groups of the area PASS (battery passport dataset content), stay as they stand for those groups to reword.",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-014",
+   "title": "Writes to the dataset refused unless responsible or authorised",
+   "method": "test",
+   "technique": "API test through the application with the real security chain (authenticate, applyRlsContext, requireCapability), as subjects of three companies: the responsible economic operator, a company holding a recorded written authorisation, and a company holding none; each attempts to introduce, modify and update a field of a test battery's dataset.",
+   "passCriteria": "Passes when: SyR-PASS-005: a write by a company that is neither the responsible economic operator nor holder of a recorded written authorisation is refused (403) and leaves the dataset unchanged; the same write by the responsible operator and by an authorised operator succeeds; each decision is in the decision trail. Any other observation fails the requirement concerned.",
+   "entry": "The write path of the dataset and the record of written authorisations exist; Q-971 is answered for recyclers and repairers.",
+   "environment": "local substrate",
+   "how": "1. start the PostgreSQL database of the reference server. 2. Provision the three companies with claims-v2 subjects. 3. Run the write-access test (to be added). 4. Read the decision trail (GET /api/audit/decisions). 5. Record the result with the commit.",
+   "verifies": [
+    "SyR-PASS-005"
+   ],
+   "regression": "every review touching EL-ACCESS, the capabilities catalogue of the reference server or the authorization policy catalogue of the reference server, and every release",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-018",
+   "title": "Recovered materials readable only by the three entitled subjects",
+   "method": "test",
+   "technique": "API test through the application with the real security chain under the api_app pool, as the recording recycler, the battery's manufacturer, an authority, another recycler, another operator, an end user, the public role and an unauthenticated request, each reading the recovered materials of a recycled test battery.",
+   "passCriteria": "Passes when: SyR-PASS-210: the recycler that recorded the materials, the manufacturer of record of the battery's passport and an authority read them; another recycler, another operator, an end user, the public role and a request without sign-in are refused. Any other observation fails the requirement concerned.",
+   "entry": "A recycled test battery with recorded recovered materials is seeded; Q-702 (the tier and which manufacturer) is answered.",
+   "environment": "local substrate",
+   "how": "1. start the PostgreSQL database of the reference server. 2. Run the integration test run of the reference server with the read-access test (to be added beside the integration test suite batteriesRecoveredMaterials of the reference server). 3. Record the result with the commit.",
+   "verifies": [
+    "SyR-PASS-210"
+   ],
+   "regression": "on change of EL-ACCESS, of the recovered materials' storage or of the column access matrix, and every release",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"Passes when: SyR-PASS-210: the recycler that recorded the materials, the battery's manufacturer and an authority read them; another recycler, another operator, an end user, the public role and a request without sign-in are refused. Any other observation fails the requirement concerned.\")",
+     "reason": "Decision Q-702 (who may read the recovered materials of a recycled battery), answered on 2026-10-26, applied with Francesco's \"apply the next round\": VM-SYS-PASS-018 checks the manufacturer of record of the battery's passport, the reader that SyR-PASS-210 names under decision Q-702.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-005",
+   "title": "Change to waste on the existing passport with transfer of responsibility",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "Setting 'waste' keeps the dataset's unique identifier and creates no dataset; the change is refused when none of the producer, the producer responsibility organisation or the waste management operator is named; with each of the three named in turn, the change is accepted and the dataset names that successor as its responsible operator.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-022 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-008",
+    "SyR-LIFE-049"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-006",
+   "title": "Operations admitted by the battery's status",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key); a table of every operation against the statuses 'waste' and not 'waste'.",
+   "passCriteria": "From 'waste': preparation for re-use, preparation for repurposing and recycling are accepted as compliant; repurposing is refused; a repair is handled as a preparation for re-use and creates a new dataset with the status 're-used' linked to the waste battery's passport. From a status other than 'waste': preparation for re-use and preparation for repurposing are refused and repurposing is accepted. Any other outcome fails.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-021 and Q-022 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-013",
+    "SyR-LIFE-014"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-008",
+   "title": "Purpose rules of repurposing, remanufacturing and preparation for re-use",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A preparation for repurposing or a repurposing whose recorded purpose equals the original purpose is refused and one with a different purpose accepted; a remanufacturing or a preparation for re-use whose recorded purpose differs from the original purpose is refused and one with the same purpose accepted.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; a datum for the purpose or application for which a battery was originally designed exists (finding on SyR-LIFE-015).",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-015",
+    "SyR-LIFE-016",
+    "SyR-LIFE-017"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-009",
+   "title": "Recycling ends the battery's passport dataset",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "After the recycling of a battery is recorded, the dataset is no longer delivered as a current dataset (the served aspects answer it as ended, in the form Q-025 decides), every later write to it is refused, and the record is kept for the tiers and the period that Q-025 states.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-025 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-011"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-010",
+   "title": "End of a recycled battery's passport reaches the passport service provider",
+   "method": "test",
+   "technique": "A conformance case on the Tractus-X simulation: a test consumer stands in for the passport service provider, holds the contract for the battery's passport offers, and records what it receives over IF-DPPSP-CONNECTOR.",
+   "passCriteria": "After the recycling of a test battery is recorded, the test consumer receives the end of that battery's passport in the form agreed with Francesco within the agreed time; no message, another form or a later arrival fails.",
+   "entry": "Q-961 and Q-025 answered; the Tractus-X simulation exists (ADR 0004 decision 5, roadmap R2-4); EL-DATASET offers the passport dataset.",
+   "environment": "Tractus-X simulation",
+   "how": "Run the conformance case of this measure (to be written with roadmap R3-1) against the simulation on the commit under review, and read its report.",
+   "verifies": [
+    "SyR-LIFE-127"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-CXCLIENT or EL-BGWORK",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-012",
+   "title": "New passport dataset, identifier, link and superseded mark per operation",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key); one case per operation of Art. 77(7).",
+   "passCriteria": "For each of preparation for re-use, preparation for repurposing, repurposing and remanufacturing: a new dataset distinct from the original is delivered; its unique identifier is the one the treating operator attributed and differs from every original identifier; it holds a link to each original passport, each resolving to that passport and naming the operation, and the operation matches the new status; the original dataset is still readable at its tiers and is marked superseded by the new one.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-969 answered; a carrier for the link agreed at IF-DPPSP-CONNECTOR (finding on the IDTA aspects).",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-018",
+    "SyR-LIFE-019",
+    "SyR-LIFE-024",
+    "SyR-LIFE-026"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"For each of preparation for re-use, preparation for repurposing, repurposing and remanufacturing: a new dataset distinct from the original is delivered; its unique identifier is the one the treating operator attributed and differs from every original identifier; it holds a link that resolves to the original passport and names the operation, and the operation matches the new status; the original dataset is still readable at its tiers and is marked superseded by the new one.\")",
+     "reason": "Decision Q-023 (whether a new passport may link to several original passports), answered on 2026-10-26, applied with Francesco's \"apply the next round\": VM-SYS-LIFE-012 checks a link to each original passport, because SyR-LIFE-019 links to each original passport under decision Q-023.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-013",
+   "title": "Number of links of each new passport dataset",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A remanufacturing from three original batteries gives a dataset linked to all three original passports; a re-use, a preparation for repurposing or a repurposing with zero original passports is refused, and one with one or with two original passports is accepted and linked to each of them.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-023, Q-028, Q-041 and Q-042 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-020",
+    "SyR-LIFE-021"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"A remanufacturing from three original batteries gives a dataset linked to all three original passports; a re-use, a preparation for repurposing or a repurposing with zero or with two original passports is refused and with one is accepted.\"); entry (before: \"EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-023, Q-028, Q-041 and Q-042 answered (Q-023 may replace the second criterion).\")",
+     "reason": "Decision Q-023 (whether a new passport may link to several original passports), answered on 2026-10-26, applied with Francesco's \"apply the next round\": VM-SYS-LIFE-013 accepts one or two original passports for a re-use or repurposing and refuses zero, because decision Q-023 replaces the second criterion as the measure foresaw.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-016",
+   "title": "Data carried over and not carried over to the new passport",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "The new dataset names the battery model of the original battery, as decision Q-026 (whether a new passport gets the new manufacturer's battery model) decides; an electric vehicle battery repurposed for stationary storage gets a new dataset whose category is industrial battery while the original keeps electric vehicle battery; the new dataset has no batch and the original keeps its batch; the new dataset's date of putting into service is on or after the transition date and the original keeps its date.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-026 and Q-970 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-028"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"The new dataset names the battery model of the original battery (or what Q-026 decides); an electric vehicle battery repurposed for stationary storage gets a new dataset whose category is industrial battery while the original keeps electric vehicle battery; the new dataset has no batch and the original keeps its batch; the new dataset's date of putting into service is on or after the transition date and the original keeps its date.\")",
+     "reason": "Decision Q-026 (whether a new passport gets the new manufacturer's battery model), answered on 2026-10-26, is no longer open, so the text states its answer: Decision Q-026 (whether a new passport gets the new manufacturer's battery model) is answered, so the pass criteria of VM-SYS-LIFE-016 check the battery model of the original battery without the open alternative.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-021",
+   "title": "Responsible economic operator and manufacturer through the lifecycle",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "Every dataset names exactly one responsible economic operator in the operator identifier of the Digital Nameplate aspect, and one without is refused; an authorised operator is recorded with its start and end dates and the record stays after the end; after a transition the new dataset names the treating operator as responsible operator and as manufacturer while the original keeps its own; after a change to waste the history shows the earlier and the current responsible operator with the date of the change.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-026, Q-970 and Q-971 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-048",
+    "SyR-LIFE-051"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-041",
+   "title": "Recovered materials recorded only by the recycler, in kg",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key); subjects of every assignment and value-chain role. Each case names in its title the provision it checks and asserts the unit of every quantity it reads.",
+   "passCriteria": "The recycler of a recycled battery records the recovered masses of cobalt, copper, lead, lithium and nickel, and a value given in g is stored and delivered in kg (1 500 g as 1.5 kg); every other subject is refused with 403 at its capability and writes nothing; each decision is in the decision trail.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'; Q-971 and Q-702 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-109"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server; on change of EL-ACCESS",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-043",
+   "title": "Recycling efficiency recorded and compared with the Annex XII Part B targets",
+   "method": "test",
+   "technique": "A unit test of the efficiency with masses in kg and an integration test of the comparison on threshold rows of the Part B targets. Each case names in its title the provision it checks and asserts the unit of every quantity it reads.",
+   "passCriteria": "The recorded efficiency in % equals the mass of the output fractions accounting for recycling divided by the mass of the input fraction; an efficiency below the target applicable at the recycling date is flagged and one at the target passes, for lead-acid (75 % and 80 %), lithium-based (65 % and 70 %), nickel-cadmium (80 %) and other waste batteries (50 %); each flag names Annex XII Part B.",
+   "entry": "Q-046 and Q-031 answered; a threshold store for the Part B targets exists (finding); EL-DATASET serves the battery passport dataset (DEV-01 closed); Q-034 answered with the perimeter 'application'.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written with the passport dataset module of the reference server; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-115"
+   ],
+   "regression": "every review; on change of EL-DATASET, EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server; on change of a threshold row",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-DATA-017",
+   "title": "End of a customer's service: return export and complete erasure",
+   "method": "test",
+   "technique": "An integration test with an injected clock: a test tenant's service ends; the return export runs where chosen; erasure is requested before the retrieval period has expired without the customer's decision, then after it; the test searches the database, the document store, the user accounts, the captured host logs and a backup after its rotation.",
+   "passCriteria": "The early erasure without the customer's decision is refused; after the erasure no record of the tenant and no personal data of its persons remain in any store, except the items the agreed legal-obligation list keeps.",
+   "entry": "Q-972, Q-964 and Q-033 answered.",
+   "environment": "local substrate",
+   "how": "At the repository root: start the PostgreSQL database of the reference server; run the integration suite tenantErasure of the reference server (suite to be written). Then restore the rotated backup into a scratch database and search it.",
+   "verifies": [
+    "SyR-DATA-021",
+    "SyR-PRIV-025"
+   ],
+   "regression": "on change of any store of the application or of the backup rotation",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "privacy-data-dpp",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-SEC-029",
+   "title": "Battery passport dataset delivery and integrity test",
+   "method": "test",
+   "technique": "In the Tractus-X simulation, the designated passport service provider and another participant each try to negotiate and pull the dataset of a pack; between assembly and delivery a user without the capability and a counterparty outside its contract try to change the dataset; the delivered dataset is compared with the assembled one through the recorded integrity value.",
+   "passCriteria": "Pass when every requirement this measure verifies shows the observable result its statement names, in particular: only the designated provider, identified by its verified business partner number, obtains the dataset; every unauthorised change is refused; the integrity value is recorded with the delivery and the delivered dataset matches it.",
+   "entry": "EL-DATASET implemented (design-only in the battery passport application on 2026-10-22, DEV-01); the Tractus-X simulation (roadmap R2-4) with a passport service provider participant.",
+   "environment": "Tractus-X simulation",
+   "how": "Run the dataset delivery scenario of the conformance suite (roadmap R3-1) with a second, non-designated consumer.",
+   "verifies": [
+    "SyR-PASS-005"
+   ],
+   "regression": "on change of EL-DATASET or EL-CXCLIENT",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "security",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-SEC-036",
+   "title": "Removal of an ended customer from the application",
+   "method": "test",
+   "technique": "A test subscription is ended and its retrieval period allowed to pass; the application's database, document store, deployment environment and secret store are inspected for the tenant.",
+   "passCriteria": "Pass when every requirement this measure verifies shows the observable result its statement names, in particular: no data, key, secret or credential of the tenant remains, its credentials are revoked, and a removal record names the date, within the agreed period.",
+   "entry": "Q-105 and Q-972 answered; automatic setup and removal implemented (DEV-48).",
+   "environment": "preview deployment",
+   "how": "End the test subscription; after the retrieval period, query every table for the tenant's company id and list the secret store paths and environment entries for its key.",
+   "verifies": [
+    "SyR-SEC-019"
+   ],
+   "regression": "on change of EL-PROVISIONER",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "security",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-SEC-037",
+   "title": "Third-party penetration test of the application against ASVS level 2",
+   "method": "test",
+   "technique": "A third party tests the production-like environment against the ASVS 5.0.0 level 2 requirements, cross-company access and account takeover included, and maps each test to its ASVS requirement.",
+   "passCriteria": "Pass when every requirement this measure verifies shows the observable result its statement names, in particular: the report records no open finding against the requirements this measure verifies; every finding is fixed or accepted by Francesco before the launch.",
+   "entry": "A production-like environment (roadmap R9-1); the ASVS verification record.",
+   "environment": "preview deployment",
+   "how": "Hand the tester the scope, the ASVS record and test accounts of two companies; read the report against each verified requirement.",
+   "verifies": [
+    "SyR-PASS-005"
+   ],
+   "regression": "before the production launch and at the interval agreed with Francesco (Q-111)",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "security",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-040",
+   "title": "Reproduces CX-0151 1.3 proof 3: notification API OpenAPI and response codes",
+   "method": "test",
+   "technique": "Inspection of the OpenAPI specification of every notification API the application exposes through a connector, reproducing the third proof of CX-0151 1.3, and a live test of its response codes.",
+   "passCriteria": "Every operation of every notification API the application offers or calls is a POST; an accepted notification is answered 200; a malformed one 4xx; a notification the application cannot process for a server cause 5xx. Any other method or code fails.",
+   "entry": "The Tractus-X simulation of the stack definition (roadmap R2-4) runs a provider stack and a consumer stack, each with connector, registry and wallet and a membership and framework agreement credential; the provider company is provisioned; the OpenAPI specification of each exposed notification API is available from the application.",
+   "environment": "Tractus-X simulation",
+   "how": "Read the methods of every path of each OpenAPI; through the connector's data plane send a valid notification, a malformed one and one while the application's database is stopped; record the codes.",
+   "verifies": [
+    "SyR-CXD-092",
+    "SyR-CXD-096"
+   ],
+   "regression": "every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-023",
+   "title": "Individual battery information shared with the passport issuer under contract",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-215 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "With a contract record between the owner of a seeded battery and the company that issued its passport, the issuer's connector receives the Annex XIII point 4 information of that battery through a transfer; with no contract record, the issuer's connector finds no offer of that information in the owner's catalogue. Fails when: The issuer receives the information without a contract record, receives it outside the connector, or receives no information while the contract record exists.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-215"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-077",
+   "title": "Issuer's contract negotiation for individual battery information without a manual step",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-CXD-218 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "With the contract record in place, the issuer's negotiation request concludes in a contract agreement with no user action in the owner's application or the issuer's application; the test records no confirmation request on either side. Fails when: The negotiation waits for a user action, ends without an agreement while the contract record exists, or concludes after the contract record has ended.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-218"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-078",
+   "title": "Transfer of individual battery information to the issuer without a manual step",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-CXD-219 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "After the agreement of SyR-CXD-218, the issuer's transfer process completes and delivers the point 4 information with no user action on either side; a transfer under an agreement whose contract record has ended is refused. Fails when: The transfer waits for a user action, fails while the agreement and the contract record are valid, or completes after the contract record has ended.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-219"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-024",
+   "title": "Reselling purchaser shares individual battery information with a prospective purchaser",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-216 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "The purchaser of a seeded battery names one prospective purchaser; that prospective purchaser's connector receives the point 4 information through a transfer, and the connector of a second company that the purchaser did not name finds no offer of it. Fails when: A company that the purchaser did not name receives the information, or the named prospective purchaser does not receive it.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-216"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-025",
+   "title": "Reselling purchaser shares individual battery information with the named authorities",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A share by the purchaser that names a market surveillance authority lets a subject of that authority read the point 4 information of that battery; a subject of an authority that no share names receives 403 naming the capability. Fails when: An authority reads the information without a share that names it, or the named authority is refused.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-217"
+   ],
+   "regression": "every review; on change of EL-ACCESS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-026",
+   "title": "Used-battery operators read individual battery information only through the purchaser's share",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "For each of the six operator kinds, a subject of an operator that no share of the purchaser names receives 403 for the point 4 information of a seeded battery; after the purchaser's share with that operator, the same subject reads it. Fails when: An operator reads the point 4 information without a share of the purchaser, or a named operator is refused.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-218"
+   ],
+   "regression": "every review; on change of EL-ACCESS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-027",
+   "title": "Individual battery information marked for the purchaser and the purchaser's agent",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "In the delivered dataset of a seeded battery, every Annex XIII point 4 item carries the access group of the purchaser and the purchaser's agents, and no point 4 item carries another group. Fails when: A point 4 item carries no access group, another access group, or more than one group.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-219"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-028",
+   "title": "Detailed composition marked for second-life operators, recyclers and training centres",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "In the delivered dataset, every item of the detailed composition carries the access group that lists the six kinds of persons of draft Art. 1(1) and the Commission. Fails when: An item of the detailed composition carries another group or no group.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-220"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-029",
+   "title": "Dismantling information marked for second-life operators, recyclers and training centres",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "In the delivered dataset, every item of the dismantling information carries the access group that lists the six kinds of persons of draft Art. 1(1) and the Commission. Fails when: An item of the dismantling information carries another group or no group.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-221"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-030",
+   "title": "Part numbers and spare sources marked for second-life operators and purchaser",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "In the delivered dataset, every part number and every contact detail of a source for replacement spares carries the access group that lists the persons of draft Art. 1(2) and the Commission. Fails when: One of those items carries another group or no group.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-222"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-031",
+   "title": "Safety measures marked for second-life operators and vehicle and electronics treatment",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "In the delivered dataset, every item of the safety measures carries the access group that lists the persons of draft Art. 1(3) and the Commission. Fails when: An item of the safety measures carries another group or no group.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-223"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-032",
+   "title": "Restricted information offered only for evaluation and second-life purposes",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-224 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "Every data offer of the providing customer that holds information of Annex XIII points 2(a) to 2(c) or 4 carries a usage policy whose usage purpose names only the activities of draft Art. 2(1); a consumer whose negotiation states another purpose concludes no agreement. Fails when: An offer of that information carries no usage purpose, another purpose, or concludes an agreement for another purpose.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-224"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-033",
+   "title": "Purchaser's offer of individual battery information also admits energy aggregators",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-225 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "The point 4 offer to the purchaser carries the purpose of making the battery available to independent aggregators or market participants beside the purposes of draft Art. 2(1); the point 4 offer to a prospective purchaser does not carry it. Fails when: The purchaser's offer lacks the purpose, or an offer to another consumer carries it.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-225"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-034",
+   "title": "Restricted information offered under a policy that forbids sharing outside the exceptions",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-226 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "Every data offer that holds information of Annex XIII points 2(a) to 2(c) or 4 carries in its usage policy the prohibition to share or publish the information outside the cases of draft Art. 2(4)(a) to (e). Fails when: An offer of that information carries no such prohibition.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-226"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-035",
+   "title": "Economic operator may authorise wider sharing of restricted information",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A subject of the responsible economic operator records an authorisation that names a person, the information and the battery; the record is readable with those three items; a subject of another company cannot record one. Fails when: The authorisation cannot be recorded by the responsible operator, lacks one of the three items, or is recorded by another company.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-227"
+   ],
+   "regression": "every review; on change of EL-ACCESS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-036",
+   "title": "Second-life operator authorises wider sharing of the new passport's battery information",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "For a battery with a new passport, the authorisation for point 4 information is accepted from a subject of the operator responsible for the new passport and refused with 403 from a subject of the operator responsible for an original passport. Fails when: The original operator's authorisation is accepted for the new passport, or the responsible operator's is refused.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-228"
+   ],
+   "regression": "every review; on change of EL-ACCESS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-037",
+   "title": "Safety measures may be offered without restriction on further use",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-PASS-229 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "The offer of the safety measures to a person of draft Art. 1(3) carries no usage purpose limit and no prohibition to share or publish. Fails when: The offer of the safety measures carries a restriction on use, download, sharing, publication or re-use.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-229"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-038",
+   "title": "Passport data held only for the responsible or an authorised operator",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "Each passport dataset of the seed is held only in the deployment of the company that the dataset names as responsible economic operator or of the company an authorisation names; no other deployment holds it. Fails when: A passport dataset is held in the deployment of a company that is neither responsible nor authorised.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-230"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-048",
+   "title": "Producer of the current passport takes over a waste battery's passport",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A battery with a new passport after repurposing changes to 'waste' with the producer as successor: the change is accepted only when the producer named is the second-life operator; for a battery with only its original passport, only the original producer is accepted. Fails when: The change to 'waste' is accepted with a producer that is not the producer of the battery's current passport.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-129"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-049",
+   "title": "No forward link written into an original passport",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "After a repurposing and after a remanufacturing from two donors, every field of each original passport dataset equals its value before the operation, and the forward relation is readable from the lineage records. Fails when: A field of an original passport dataset changed, or the original dataset holds a link to the new passport.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-130"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-050",
+   "title": "New passport delivered as a passport of its own, not a version",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "The new passport dataset of a repurposed battery is delivered as a separate data offer under the new unique identifier, and the offer carries no version reference to an original passport's offer or identifier. Fails when: The new dataset is delivered under an original identifier or as a version of an original passport.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-131"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-051",
+   "title": "Remanufacturing donor's passport later accepts the status waste",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "After a remanufacturing from two donors, the change of status to 'waste' on each donor's passport, with a successor named, is accepted and recorded. Fails when: The change of status to 'waste' on a donor's passport is refused.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-132"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-052",
+   "title": "Direct re-use without preparation keeps the passport and its identifier",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A direct re-use of a battery that is not waste leaves the number of passport datasets and lineage records unchanged and keeps the battery's dataset under the same unique identifier. Fails when: A direct re-use creates a dataset or a lineage record, or changes the unique identifier.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-133"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-053",
+   "title": "Direct re-use leaves the responsible economic operator unchanged",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "A direct re-use of a battery that is not waste leaves the responsible economic operator of its dataset unchanged. Fails when: The responsible economic operator changes at a direct re-use.",
+   "entry": "EL-DATASET serves the battery passport dataset (DEV-01 closed); the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-134"
+   ],
+   "regression": "every review; on change of EL-DATASET, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-039",
+   "title": "New holder after direct re-use recorded as the battery's purchaser",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "After a recorded change of holder of a battery that is not waste, the new holder reads the point 4 information as the purchaser, and the record holds the new holder as the current purchaser. Fails when: The new holder is not recorded as the purchaser, or the record holds two current purchasers.",
+   "entry": "The Commission has adopted the implementing act under Art. 77(9) and the wording of the adopted act has replaced the draft quotes; until then the measure is recorded as not run, with that condition; the local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-231"
+   ],
+   "regression": "every review; on change of EL-ACCESS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-054",
+   "title": "First recycler receives every later facility's recycling efficiency and recovery",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-LIFE-135 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "A first recycler customer receives through its connector the recycling efficiency and the recovery of materials published by two other facilities for fractions of its waste batteries, each stored with its facility and fraction. Fails when: A value of a facility is not received, or is stored without its facility or its fraction.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-135"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-055",
+   "title": "First recycler's report of every facility for the competent authorities",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard), with company-operator subjects from the test helpers of the reference server, against a seeded local substrate under the runtime role api_app; the delivered dataset is read as the provider's data plane reads it (IF-CONNECTOR-BACKEND, with the data-plane key).",
+   "passCriteria": "The report for a first recycler lists, for the requested period, each facility of SyR-LIFE-135 with its recycling efficiency and its recovery of materials as received. Fails when: The report lacks a facility, a value, or shows a value different from the one received.",
+   "entry": "The local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-136"
+   ],
+   "regression": "every review; on change of EL-BACKEND, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-056",
+   "title": "Preparation-for-recycling operator provides its data to the first recycler",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the providing customer and the counterparty that SyR-LIFE-137 names, each with its own connector, registry and wallet; the test drives the application of the providing customer through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "A customer conducting preparation for recycling publishes the data of points 1 and 2 of section 5 of the Annex to Delegated Regulation (EU) 2025/606; the named first recycler receives them through a transfer, and another company finds no offer of them. Fails when: The named first recycler does not receive the data, or another company receives them.",
+   "entry": "Decision Q-1006 answered; the Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: start the Tractus-X simulation with two customer stacks, run the system test of this measure (to be written beside the connector client's suites; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-137"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT, EL-CONNECTOR, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-079",
+   "title": "Digital twin created for each serialized part and batch to be traced",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard) against a seeded local substrate under the runtime role api_app; the twins and submodels are read from the customer's digital twin registry as a partner's connector reads them.",
+   "passCriteria": "For each serialized part, just-in-sequence part, vehicle and batch of the seed, one PartInstance twin exists in the customer's registry after the record. Fails when: An item recorded for tracing has no twin, or has two.",
+   "entry": "The local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-220"
+   ],
+   "regression": "every review; on change of EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-080",
+   "title": "New digital twin for a battery that receives a new passport",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard) against a seeded local substrate under the runtime role api_app; the twins and submodels are read from the customer's digital twin registry as a partner's connector reads them.",
+   "passCriteria": "After a repurposing, a new PartInstance twin under the new unique identifier exists, and every shell descriptor and submodel of the original battery's twin equals its state before the operation. Fails when: No new twin exists, the new twin carries an original identifier, or the original twin changed.",
+   "entry": "The local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-221"
+   ],
+   "regression": "every review; on change of EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-081",
+   "title": "As-built bill of material may reference a child's part type twin",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard) against a seeded local substrate under the runtime role api_app; the twins and submodels are read from the customer's digital twin registry as a partner's connector reads them.",
+   "passCriteria": "A SingleLevelBomAsBuilt submodel of a battery with a child that has no PartInstance twin references the child's PartType twin, and a child with a PartInstance twin is referenced by that twin only. Fails when: A child with a PartInstance twin is referenced by its PartType twin.",
+   "entry": "The local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-222"
+   ],
+   "regression": "every review; on change of EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-CXD-082",
+   "title": "As-built usage never references a parent's part type twin",
+   "method": "test",
+   "technique": "An API test through the application (HTTP requests against the application of the reference server, the real capability chain, no mocked guard) against a seeded local substrate under the runtime role api_app; the twins and submodels are read from the customer's digital twin registry as a partner's connector reads them.",
+   "passCriteria": "A SingleLevelUsageAsBuilt submodel of a part whose parent has no PartInstance twin holds no reference to the parent's PartType twin. Fails when: A SingleLevelUsageAsBuilt submodel references a PartType twin.",
+   "entry": "The local substrate is up, the schema rebuilt and the demo seed loaded.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite of this measure, to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-CXD-223"
+   ],
+   "regression": "every review; on change of EL-TWINS, the regulatory catalogues of the reference server or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "catenax-data",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SYS.5 measure of the derived system requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-057",
+   "title": "Original issuer notified of a new passport under contract",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the second-life operator or holder and the original issuer, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "SyR-LIFE-138 holds for a seeded battery with and without the contract or the notification it names. Fails when: the observed behaviour differs from the statement of SyR-LIFE-138.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-138"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-058",
+   "title": "Original issuer may add a forward link to its own passport",
+   "method": "test",
+   "technique": "An API test on the local substrate: the test creates a new passport for a seeded battery, drives the application through its API (IF-FRONTEND-BACKEND) and reads the delivered battery passport datasets.",
+   "passCriteria": "SyR-LIFE-139 holds for a seeded battery with and without the contract or the notification it names. Fails when: the observed behaviour differs from the statement of SyR-LIFE-139.",
+   "entry": "The local substrate holds a seeded battery with an original passport.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-139"
+   ],
+   "regression": "every review; on change of EL-DATASET",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-040",
+   "title": "Forward link marked with the access group of the battery status",
+   "method": "test",
+   "technique": "An API test on the local substrate: the test creates a new passport for a seeded battery, drives the application through its API (IF-FRONTEND-BACKEND) and reads the delivered battery passport datasets.",
+   "passCriteria": "SyR-PASS-232 holds for a seeded battery with and without the contract or the notification it names. Fails when: the observed behaviour differs from the statement of SyR-PASS-232.",
+   "entry": "The local substrate holds a seeded battery with an original passport.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-232"
+   ],
+   "regression": "every review; on change of EL-DATASET",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-041",
+   "title": "Degradation data of a second-life battery offered to the original issuer",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the second-life operator or holder and the original issuer, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "SyR-PASS-233 holds for a seeded battery with and without the contract or the notification it names. Fails when: the observed behaviour differs from the statement of SyR-PASS-233.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-233"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-042",
+   "title": "Original manufacturer authorises sharing of model information on a new passport",
+   "method": "test",
+   "technique": "An API test on the local substrate: the test drives the application through its API (IF-FRONTEND-BACKEND) on a seeded battery and reads the delivered dataset and the access decisions.",
+   "passCriteria": "SyR-PASS-234 holds for a seeded battery in each case that its statement names. Fails when: the observed behaviour differs from the statement of SyR-PASS-234.",
+   "entry": "The local substrate holds a seeded battery.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-234"
+   ],
+   "regression": "every review; on change of EL-ACCESS",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-043",
+   "title": "Previous holder loses access to individual battery information after a resale",
+   "method": "test",
+   "technique": "An API test on the local substrate: the test drives the application through its API (IF-FRONTEND-BACKEND) on a seeded battery and reads the delivered dataset and the access decisions.",
+   "passCriteria": "SyR-PASS-235 holds for a seeded battery in each case that its statement names. Fails when: the observed behaviour differs from the statement of SyR-PASS-235.",
+   "entry": "The local substrate holds a seeded battery.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-235"
+   ],
+   "regression": "every review; on change of EL-ACCESS",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-059",
+   "title": "Battery status unchanged after a direct re-use",
+   "method": "test",
+   "technique": "An API test on the local substrate: the test drives the application through its API (IF-FRONTEND-BACKEND) on a seeded battery and reads the delivered dataset and the access decisions.",
+   "passCriteria": "SyR-LIFE-140 holds for a seeded battery in each case that its statement names. Fails when: the observed behaviour differs from the statement of SyR-LIFE-140.",
+   "entry": "The local substrate holds a seeded battery.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-140"
+   ],
+   "regression": "every review; on change of EL-DATASET",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-060",
+   "title": "Producer of the ended passport notified of the recycling result",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the recycler and the producer or predecessor issuer, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "SyR-LIFE-141 holds for a seeded battery in each case that its statement names. Fails when: the observed behaviour differs from the statement of SyR-LIFE-141.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-141"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-061",
+   "title": "Predecessor issuers may be notified of the recycling under contract",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with two customer stacks, the recycler and the producer or predecessor issuer, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector.",
+   "passCriteria": "SyR-LIFE-142 holds for a seeded battery in each case that its statement names. Fails when: the observed behaviour differs from the statement of SyR-LIFE-142.",
+   "entry": "The Tractus-X simulation runs two customer stacks.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-142"
+   ],
+   "regression": "every review; on change of EL-CXCLIENT",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-062",
+   "title": "Writes into a passport only from its data provider's deployment",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: A second-life operator's stack that issues a new passport for a seeded battery of another company's stack leaves every row and every submodel of the original passport in the original data provider's stack unchanged; a write request that the second-life operator's stack addresses to the original passport is refused; the original data provider's stack changes its own passport. Fails when: the observed behaviour differs from the statement of SyR-LIFE-143.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-143"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-063",
+   "title": "End of the passport recorded without the successor's authorisation",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: For a seeded passport in 'waste' with a recorded successor and no written authorisation of that successor, a notification of the end of the passport makes the data provider's stack record the end; a change of any other information of the same passport is refused. Fails when: the observed behaviour differs from the statement of SyR-LIFE-144.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-144"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-064",
+   "title": "Repair notified to the data provider of the passport",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After a repairer customer's stack records the repair of a seeded battery whose passport another stack provides, the data provider's connector receives one repair notification naming the passport, the repair date and the repair certificate; no other company's connector receives it. Fails when: the observed behaviour differs from the statement of SyR-LIFE-145.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-145"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-065",
+   "title": "Repair certificate held as the record of the repair",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After the data provider's stack accepts a repair notification for a seeded passport, the passport's repair record holds the repair date and the reference to the repair certificate that the notification names; a second repair adds a second record and keeps the first. Fails when: the observed behaviour differs from the statement of SyR-LIFE-146.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-146"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-066",
+   "title": "Waste status notified to the data provider and the named successor",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After a waste receiver customer's stack records that a seeded battery has become waste and names a producer responsibility organisation as successor, the data provider's connector and the successor's connector each receive one waste notification naming the passport, the successor, the role and the date; no third company receives it. Fails when: the observed behaviour differs from the statement of SyR-LIFE-147.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-147"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-067",
+   "title": "Successor, role and date held in the waste passport",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After a waste notification for a seeded passport, the passport dataset that the data provider's stack serves holds the successor, the successor's role and the date that the notification named, and the status 'waste'. Fails when: the observed behaviour differs from the statement of SyR-LIFE-148.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-148"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-068",
+   "title": "Date of the recycling and the recycler held in the ended passport",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After a notification of the end of a seeded passport, the passport dataset that the data provider's stack serves holds the date of the recycling and the recycler that the notification named. Fails when: the observed behaviour differs from the statement of SyR-LIFE-149.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-149"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-069",
+   "title": "Last battery status kept on a superseded original passport",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: After a second-life operator's stack issues a new passport for a seeded battery in 'original' and notifies the original data provider, the original passport that the original data provider's stack serves still holds the status 'original'. Fails when: the observed behaviour differs from the statement of SyR-LIFE-150.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-150"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-070",
+   "title": "New passport accepted only with the four performance values",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: A reuse, repurpose or remanufacture request that carries the rated capacity, the capacity fade, the power fade and the expected lifetime creates the new passport, which holds the four values; the same request without any one of the four values is refused and creates no passport. Fails when: the observed behaviour differs from the statement of SyR-LIFE-151.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-151"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-PASS-044",
+   "title": "Lifecycle record offered only to the persons of section 2.2 item 7",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: The catalogue of the data provider's connector shows the offer of a seeded passport's lifecycle record to the purchaser, the purchaser's agent, the responsible operator, the successor and a market surveillance authority, each with its own BPNL; a used-battery operator's connector finds no offer of it and its negotiation is refused. Fails when: the observed behaviour differs from the statement of SyR-PASS-236.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-PASS-236"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "passport-content",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-071",
+   "title": "Receiver without a notification asset recorded by the sender",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: When the receiver's stack offers no lifecycle notification asset, the sender's stack sends nothing and its record holds the receiver's BPNL and the date of the attempt; the same holds when the receiver's connector refuses the negotiation. Fails when: the observed behaviour differs from the statement of SyR-LIFE-152.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-152"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-072",
+   "title": "One lifecycle notification per receiver and per passport",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: A remanufacturing from two seeded original passports of one data provider and one of a second data provider makes the first data provider's connector receive two notifications, each naming one original passport, and the second receive one. Fails when: the observed behaviour differs from the statement of SyR-LIFE-153.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-153"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-073",
+   "title": "Notification changes a passport only by the assigned steps",
+   "method": "test",
+   "technique": "A system test on the Tractus-X simulation with the customer stacks that the case names, each with its own connector, registry and wallet; the test drives the application through its API (IF-FRONTEND-BACKEND) and observes the counterparty's connector and the served passport dataset.",
+   "passCriteria": "Passes when: Each of the four lifecycle notifications sent to the data provider's stack for a seeded passport changes only the information of its step; a notification whose content would change another item of the passport, the recovered materials included, leaves the passport unchanged and is answered with a 4xx status. Fails when: the observed behaviour differs from the statement of SyR-LIFE-154.",
+   "entry": "The Tractus-X simulation runs the customer stacks that the case names.",
+   "environment": "Tractus-X simulation",
+   "how": "At the repository root, on the commit under review: run the system test of this measure (to be written; every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-154"
+   ],
+   "regression": "every review; on change of the elements the requirement is allocated to",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "releasePlan": "this-release",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SYS.5 measure of the SYS.2 alignment)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SYS-LIFE-074",
+   "title": "Manufacturer identification of a passport never changed after issue",
+   "method": "test",
+   "technique": "An integration test on the local substrate under the role api_app: the test issues a passport, then tries to change its manufacturer identification through the lifecycle routes (recycle, waste, repair, lineage steps) and through a direct UPDATE statement.",
+   "passCriteria": "SyR-LIFE-155 holds: every attempt is refused and the manufacturer identification stays the value set at issue. Fails when: any attempt changes the value.",
+   "entry": "The local substrate holds a seeded battery with a passport.",
+   "environment": "local substrate",
+   "how": "At the repository root, on the commit under review: run the integration test of this measure (to be written); every case passes and none is skipped.",
+   "verifies": [
+    "SyR-LIFE-155"
+   ],
+   "regression": "every review; on change of EL-DATASET or the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "area": "lifecycle",
+   "history": [
+    {
+     "date": "2026-11-11",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's rule of 2026-11-11 on the permanent manufacturer identification (SYS.2 derivation), SYS.5 measure",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}

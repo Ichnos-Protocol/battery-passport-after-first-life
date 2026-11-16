@@ -1,0 +1,124 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.1.BP1 (identify stakeholders and obtain their expectations and requests); requirements/method.md section 4, level 0.",
+ "note": "Carried over from the private registry of the battery passport application on 2026-11-16. Each stakeholder names the document that makes it a stakeholder.",
+ "stakeholders": [
+  {
+   "id": "STK-01",
+   "name": "Economic operator placing the battery on the market",
+   "description": "The battery manufacturer (or importer, distributor) that places a battery on the EU market and is responsible for its battery passport. A customer company of the application.",
+   "expectations": "A complete, correct and verified battery passport dataset for each battery it places on the market, delivered to its passport service provider, with its own data kept confidential except where the regulation requires disclosure.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77; the vision of the end state of the battery passport application section 0"
+  },
+  {
+   "id": "STK-02",
+   "name": "Upstream value-chain data provider",
+   "description": "A supplier of materials, cells, modules or other components that provides its part data, bill of materials and carbon footprint along the value chain. A customer company or a partner with its own connector.",
+   "expectations": "Provide its data once, under its own usage policies, to the customers it chooses, and keep control over who uses it and for what.",
+   "basis": "the vision of the end state of the battery passport application section 0 (data along a distributed battery value chain); CX-0126, CX-0127, CX-0152"
+  },
+  {
+   "id": "STK-03",
+   "name": "Operator of preparation for re-use, repurposing or remanufacturing",
+   "description": "The operator that prepares a battery for re-use or repurposing, repurposes it or remanufactures it, and places it on the market again under a new passport linked to the original.",
+   "expectations": "Access the data it needs to assess and treat the battery, and create the new passport linked to the original passport or passports.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77(7); DIN DKE SPEC 99100 6.1.3.7"
+  },
+  {
+   "id": "STK-04",
+   "name": "Recycler and waste management operator",
+   "description": "The operator that treats the waste battery and recovers its materials.",
+   "expectations": "Access the dismantling, composition and safety data it needs, and record the end of the battery's life.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77(2), Art. 77(8), Annex XIII"
+  },
+  {
+   "id": "STK-05",
+   "name": "Member of the public",
+   "description": "Any person who reads the public part of a battery passport, for example by scanning the data carrier.",
+   "expectations": "Read the public information of a battery without registration and without disclosure of personal data.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77(2)(a), Annex XIII point 1"
+  },
+  {
+   "id": "STK-06",
+   "name": "Person with a legitimate interest",
+   "description": "A person or company that the regulation entitles to the legitimate-interest part of the passport, including the owner of the battery.",
+   "expectations": "Read the legitimate-interest information of the batteries it has a legitimate interest in, and nothing more.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77(2)(b), Annex XIII point 4; architecture decision record 0002 (dynamic durability data in the legitimate-interest tier) of the battery passport application, not published"
+  },
+  {
+   "id": "STK-07",
+   "name": "Notified bodies, market surveillance authorities and the Commission",
+   "description": "The authorities and bodies entitled to the restricted part of the passport.",
+   "expectations": "Read every part of the passport they are entitled to, and audit the evidence behind it.",
+   "basis": "Regulation (EU) 2023/1542 Art. 77(2)(c), Annex XIII points 2 and 3"
+  },
+  {
+   "id": "STK-08",
+   "name": "Digital product passport service provider",
+   "description": "The provider (Spherity or another) that receives the complete, verified dataset and publishes the passport for the economic operator. Bound by Art. 78.",
+   "expectations": "Receive a complete dataset in the agreed format, through the agreed interface, with its provenance.",
+   "basis": "the vision of the end state of the battery passport application section 0; Regulation (EU) 2023/1542 Art. 78"
+  },
+  {
+   "id": "STK-09",
+   "name": "Catena-X Association and its Conformity Assessment Body",
+   "description": "The association that sets the Catena-X standards and rulebooks, and the body that assesses the application and the stack against them.",
+   "expectations": "Evidence that every mandatory criterion of the standards in scope is met, through inspection, self-assessment and re-run test cases.",
+   "basis": "the vision of the end state of the battery passport application section 0.1; Catena-X Conformity Assessment Framework handbook"
+  },
+  {
+   "id": "STK-11",
+   "name": "Dataspace participant",
+   "description": "Any other Catena-X participant whose connector exchanges data with a customer's connector.",
+   "expectations": "Exchange data with the customer's connector as the standards define, under policies it can read and accept.",
+   "basis": "CX-0018; CX-0152; the vision of the end state of the battery passport application section 0 (data offers, contract negotiation, transfer)"
+  },
+  {
+   "id": "STK-12",
+   "name": "Ichnos Protocol as provider and operator",
+   "description": "The company that provides the application as a Business Application Provider and operates one stack per customer as an Enablement Service Provider. Francesco owns the product.",
+   "expectations": "An application that can be certified, listed, operated, supported and audited at any moment, built by its rules (the vision, the project guidelines of the battery passport application, the rulebook).",
+   "basis": "the vision of the end state of the battery passport application sections 0 and 0.1; architecture decision record 0004 (connector topology) of the battery passport application; the project guidelines of the battery passport application"
+  },
+  {
+   "id": "STK-14",
+   "name": "Data subject",
+   "description": "A natural person whose personal data the application processes: a user of a customer company, a private owner of a battery.",
+   "expectations": "Lawful, minimal and secure processing of their personal data, and the exercise of their rights.",
+   "basis": "Regulation (EU) 2016/679; the project guidelines of the battery passport application (GDPR and PII rules)"
+  },
+  {
+   "id": "STK-15",
+   "name": "Auditors",
+   "description": "The auditors who examine the application or the company: the DIN SPEC 99100 audit, the TISAX assessment of the company, the Catena-X assessment.",
+   "expectations": "Every rule traceable from its requirement to the code and to its verification, at any commit.",
+   "basis": "the project guidelines of the battery passport application (hard rules for the DIN SPEC 99100 audit); the production readiness roadmap of the battery passport application sections 3.4 and R8; the vision of the end state of the battery passport application invariant 7"
+  },
+  {
+   "id": "STK-17",
+   "name": "Producer and producer responsibility organisation",
+   "description": "The producer of a battery, or the producer responsibility organisation appointed under Art. 57(1), which makes available the information on the prevention and management of waste batteries of Art. 74(1) that the passport carries (Annex XIII point 1(s)), and to which the responsibility for the passport may pass when the battery becomes waste (Art. 77(7), second subparagraph).",
+   "expectations": "Its waste prevention and management information carried in the dataset of the batteries it supplies, and the passport obligations it takes over when a battery becomes waste recorded with it as the responsible operator.",
+   "basis": "Regulation (EU) 2023/1542 Art. 74(1), Art. 77(7) second subparagraph, Annex XIII point 1(s)",
+   "addedBy": "integration review completeness",
+   "reason": "Merges the two proposals of passport-content (Art. 74(1)) and lifecycle (Art. 77(7)): one party with two roles towards the passport, distinct from the economic operator of STK-01 and the waste management operator of STK-04."
+  },
+  {
+   "id": "STK-18",
+   "name": "Repairer (independent operator)",
+   "description": "A natural or legal person that repairs or maintains a battery that is not waste, such as an independent operator (Art. 3(1), point (23)); a repair keeps the passport and records 'repaired' under the status 're-used' (DIN DKE SPEC 99100 6.1.3.7 f) and g)).",
+   "expectations": "Read the data it needs to repair a battery, and record the repair on the existing passport with its repair history.",
+   "basis": "Regulation (EU) 2023/1542 Art. 3(1), point (23); DIN DKE SPEC 99100 6.1.3.7 f) and g); the vision of the end state of the battery passport application sections 3.1 and 3.4 (the repairer)",
+   "addedBy": "integration review completeness",
+   "reason": "Proposed by lifecycle. STK-03 creates new passports (model B); the repairer keeps the passport (model A) and is a value-chain role of the vision (position 9, token repairer)."
+  },
+  {
+   "id": "STK-19",
+   "name": "Competent authority for waste batteries",
+   "description": "The authority a Member State designates for the obligations of Chapter VIII (Art. 54(1)). It may ask a battery holder to demonstrate that a waste battery prepared for re-use or repurposing is no longer waste (Art. 73(1)), and it receives the reports of treatment operators and recyclers on recycling efficiency and recovery of materials (Art. 75(5)).",
+   "expectations": "On request, the evidence that a waste battery is no longer waste; the data that recyclers report on recycling efficiency and recovery of materials.",
+   "basis": "Regulation (EU) 2023/1542 Art. 54(1), Art. 73(1), Art. 75(5)",
+   "addedBy": "integration review completeness",
+   "reason": "Proposed by lifecycle. STK-07 names the notified bodies, the market surveillance authorities and the Commission, which the Regulation keeps separate from the Chapter VIII competent authorities."
+  }
+ ]
+}

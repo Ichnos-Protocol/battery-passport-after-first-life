@@ -1,0 +1,927 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.2.BP5 Note 8 (process requirements that no system requirement traces to, still verified); requirements/method.md section 4.",
+ "requirements": [
+  {
+   "id": "PrR-CXD-013",
+   "title": "Six Tractus-X legal files at the reference implementation repository's root",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold at its root the six legal files of TRG 7.01 (legal documentation): LICENSE with the Apache-2.0 text, LICENSE_non-code with the CC-BY-4.0 text, NOTICE.md naming both licences and the third-party content, SECURITY.md, CONTRIBUTING.md and CODE_OF_CONDUCT.md.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-013 applies to the reference implementation repository the convention that TRG 7.01, research note sections 1.1 and 2 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-009"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 7.01 (legal documentation) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold at its root the six legal files of TRG 7.01 (legal documentation): LICENSE with the Apache-2.0 text, LICENSE_non-code with the CC-BY-4.0 text, NOTICE.md naming both licences and the third-party content, SECURITY.md, CONTRIBUTING.md and CODE_OF_CONDUCT.md.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-014",
+   "title": ".tractusx metadata file with leadingRepository, product and openApiSpecs keys",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold a .tractusx metadata file with the keys leadingRepository, product and openApiSpecs, spelled as TRG 2.05 (repository metafile) and TRG 1.08 (interface documentation) spell them.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-014 applies to the reference implementation repository the convention that TRG 2.05 and 1.08, research note section 1.3 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-010"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 2.05 (repository metafile) and TRG 1.08 (interface documentation) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold a .tractusx metadata file with the keys leadingRepository, product and openApiSpecs, spelled as TRG 2.05 (repository metafile) and TRG 1.08 (interface documentation) spell them.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-015",
+   "title": "README, INSTALL and CHANGELOG files at the reference implementation's root",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold README.md, INSTALL.md and CHANGELOG.md at its root, as TRG 1.01, TRG 1.02 and TRG 1.03 of the Tractus-X Release Guidelines require.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-015 applies to the reference implementation repository the convention that TRG 1.01, 1.02, 1.03 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-011"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 1.01, 1.02 and 1.03 of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold README.md, INSTALL.md and CHANGELOG.md at its root, as TRG 1.01, TRG 1.02 and TRG 1.03 of the Tractus-X Release Guidelines require.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-016",
+   "title": "License header of its kind in every reference implementation file",
+   "statement": "Every file of the reference implementation repository battery-passport-after-first-life that can hold a comment shall carry the header of its kind that TRG 7.02 requires: the Eclipse copyright line with the Apache-2.0 header in a source file, and the CC-BY-4.0 header in a non-code file.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-016 applies to the reference implementation repository the convention that TRG 7.02, research note section 2.1 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-012"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 7.02 (license header) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"Every file of the reference implementation folder a folder of the battery passport application that can hold a comment shall carry the header of its kind that TRG 7.02 requires: the Eclipse copyright line with the Apache-2.0 header in a source file, and the CC-BY-4.0 header in a non-code file.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-017",
+   "title": "Visible NOTICE section at the end of every documentation file",
+   "statement": "Every Markdown documentation file of the reference implementation repository battery-passport-after-first-life shall end with a visible section headed \"## NOTICE\", as TRG 7.07 of the Tractus-X Release Guidelines requires.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-017 applies to the reference implementation repository the convention that TRG 7.07, research note section 2 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-013"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 7.07 (legal notice for documentation) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"Every Markdown documentation file of the reference implementation folder a folder of the battery passport application shall end with a visible section headed \\\"## NOTICE\\\", as TRG 7.07 of the Tractus-X Release Guidelines requires.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-018",
+   "title": "Lifecycle notification API specified in docs/api/openAPI.yaml, OpenAPI 3.1.0",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold the OpenAPI specification of the lifecycle notification API of section 4.3 of the CX-0160-4 amendment proposal at docs/api/openAPI.yaml in OpenAPI 3.1.0, as TRG 1.08 of the Tractus-X Release Guidelines places it.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-018 applies to the reference implementation repository the convention that TRG 1.08, research note section 4.1 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-014"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 1.08 (interface documentation) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold the OpenAPI specification of the lifecycle notification API of section 4.3 of the CX-0160-4 amendment proposal at docs/api/openAPI.yaml in OpenAPI 3.1.0, as TRG 1.08 of the Tractus-X Release Guidelines places it.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-019",
+   "title": "Four notification operations with JSON schemas, following the Industry Core KIT",
+   "statement": "The OpenAPI specification of the reference implementation shall define the operations NewPassportIssued, BatteryRepaired, BatteryBecameWaste and PassportEnded as POST operations whose path and operationId equal the operation name, each with a request body made of the MessageHeader 3.0.0 header and a JSON schema of the operation's content of Table 4.4 of the CX-0160-4 amendment proposal, and with the API version only in info.version, as the notification rules of the Industry Core KIT require.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [
+    "StR-CXD-091",
+    "StR-CXD-092",
+    "StR-CXD-095"
+   ],
+   "rationale": "PrR-CXD-019 applies to the reference implementation repository the convention that Industry Core KIT, research note section 4.4 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-015"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "The stakeholder requirements in tracesTo state the Catena-X rule that the convention applies; the form of the convention in the reference implementation folder rests on Francesco's acceptance of the folder layout on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-020",
+   "title": "Notification responses 200, 4xx and 5xx with the error body of Q-409",
+   "statement": "The OpenAPI specification of the reference implementation shall define for each notification operation the response 200 and the 4xx and 5xx responses, each error response with a mandatory body that holds the error envelope of the repository's API design together with the result object of AAS Part 2, whose text states what failed, the reason of the failure and what the sender must do.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [
+    "StR-CXD-099"
+   ],
+   "rationale": "PrR-CXD-020 applies to the reference implementation repository the convention that Industry Core KIT, research note section 4.3; decision Q-409 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-409",
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-016"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    },
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 7 review",
+     "quote": "Error body is optional in Catena-X by I want a descriptive text to be there"
+    }
+   ],
+   "traceNote": "The stakeholder requirements in tracesTo state the Catena-X rule that the convention applies; the form of the convention in the reference implementation folder rests on Francesco's acceptance of the folder layout on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "statement: the error body is mandatory and its text is descriptive (before: \"The OpenAPI specification of the reference implementation shall define for each notification operation the response 200 and the 4xx and 5xx responses, each error response with a body that holds the error envelope of the repository's API design together with the result object of AAS Part 2, following the reading of decision Q-409 that step 7 chose.\")",
+     "reason": "Francesco, 2026-11-09 (\"Error body is optional in Catena-X by I want a descriptive text to be there\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The step 7 review\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-021",
+   "title": "Arc42 architecture documentation of the lifecycle notification API",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold, in docs/architecture/, the architecture documentation of the lifecycle notification API in the arc42 template, as TRG 1.05 of the Tractus-X Release Guidelines requires.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-021 applies to the reference implementation repository the convention that TRG 1.05 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-017"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 1.05 (architecture documentation) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold, in docs/architecture/, the architecture documentation of the lifecycle notification API in the arc42 template, as TRG 1.05 of the Tractus-X Release Guidelines requires.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-022",
+   "title": "Administrator guide for the notification asset and its policies",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold, in docs/admin/, an administrator guide that states the configuration of the lifecycle notification connector asset and of its access and usage policies, as TRG 1.06 of the Tractus-X Release Guidelines requires.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-022 applies to the reference implementation repository the convention that TRG 1.06 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-018"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 1.06 (administration guide) of the Tractus-X Release Guidelines, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold, in docs/admin/, an administrator guide that states the configuration of the lifecycle notification connector asset and of its access and usage policies, as TRG 1.06 of the Tractus-X Release Guidelines requires.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-023",
+   "title": "Adoption, development and operations views in the KIT template",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold docs/adoption-view.md, docs/development-view.md and docs/operations-view.md, each in the sections of the graduated Tractus-X KIT template, as TRG 10.02 and the KIT framework require.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-023 applies to the reference implementation repository the convention that TRG 10.02, research note section 5 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-019"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: TRG 10.02 and the KIT framework of Eclipse Tractus-X, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold docs/adoption-view.md, docs/development-view.md and docs/operations-view.md, each in the sections of the graduated Tractus-X KIT template, as TRG 10.02 and the KIT framework require.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-024",
+   "title": "Methodology document tracing the API to the regulation",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold docs/methodology.md, which states how the lifecycle notification API was derived from Regulation (EU) 2023/1542 through the requirement registry of requirements/, from the stakeholder requirements to the software requirements.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-024 applies to the reference implementation repository the convention that plan of 2026-11-05; layout of section 3 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-020"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes a methodology document: the plan of 2026-11-05 for the Digital Product Passport Expert Group task names it, and Francesco accepted the layout of the reference implementation folder that holds it on 2026-11-09 (the conventions note of the Tractus-X reference implementations, section 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold docs/methodology.md, which states how the lifecycle notification API was derived from Regulation (EU) 2023/1542 through the requirement registry of requirements/, from the stakeholder requirements to the software requirements.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-025",
+   "title": "List of the items that no stored standard covers",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold docs/proposals.md, which lists every item of the reference implementation that no stored Catena-X standard covers, each with the section of the CX-0160-4 amendment proposal that proposes it.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-025 applies to the reference implementation repository the convention that layout of section 3 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-021"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes a list of the items that no standard covers: the layout of the reference implementation folder in section 3 of the conventions note of the Tractus-X reference implementations names docs/proposals.md, and Francesco accepted that layout on 2026-11-09.",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold docs/proposals.md, which lists every item of the reference implementation that no stored Catena-X standard covers, each with the section of the CX-0160-4 amendment proposal that proposes it.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-026",
+   "title": "Two proposed models in the sldt-semantic-models layout",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold the models BatteryPassportLifecycle and BatteryPassportSuccessors of the CX-0160-4 amendment proposal in the layout of the Tractus-X sldt-semantic-models repository: models/<namespace>/<version>/<Aspect>.ttl with a metadata.json of status draft beside each model, a RELEASE_NOTES.md per namespace, and the generated files in gen/.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-026 applies to the reference implementation repository the convention that sldt-semantic-models, research note section 6.1 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-022"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: the layout of the Tractus-X sldt-semantic-models repository, section 6.1 of the research note, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold the models BatteryPassportLifecycle and BatteryPassportSuccessors of the CX-0160-4 amendment proposal in the layout of the Tractus-X sldt-semantic-models repository: models/<namespace>/<version>/<Aspect>.ttl with a metadata.json of status draft beside each model, a RELEASE_NOTES.md per namespace, and the generated files in gen/.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-027",
+   "title": "Proposed models validated with SAMM CLI 2.11.1",
+   "statement": "Every aspect model of the reference implementation repository battery-passport-after-first-life shall pass the validation of the SAMM command line tool 2.11.1 without error.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [
+    "StR-CXD-152"
+   ],
+   "rationale": "PrR-CXD-027 applies to the reference implementation repository the convention that sldt-semantic-models, research note section 6 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-023"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "The stakeholder requirements in tracesTo state the Catena-X rule that the convention applies; the form of the convention in the reference implementation folder rests on Francesco's acceptance of the folder layout on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"Every aspect model of the reference implementation folder a folder of the battery passport application shall pass the validation of the SAMM command line tool 2.11.1 without error.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-028",
+   "title": "One conformance test per criterion CX-0160-4-CAC-001 to 015",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold in tck/ one conformance test for each criterion CX-0160-4-CAC-001 to CX-0160-4-CAC-015 of Annex A of the CX-0160-4 amendment proposal.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-028 applies to the reference implementation repository the convention that tractusx-sdk tck/, research note section 7 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-024"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: the Test Compatibility Kit convention of tractusx-sdk (tck/), section 7 of the research note, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The reference implementation folder a folder of the battery passport application shall hold in tck/ one conformance test for each criterion CX-0160-4-CAC-001 to CX-0160-4-CAC-015 of Annex A of the CX-0160-4 amendment proposal.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-029",
+   "title": "Conformance tests run against the in-process binding and the connector binding",
+   "statement": "The conformance tests of the reference implementation repository battery-passport-after-first-life, path tck/, shall run with one test code against the in-process binding and against the Tractus-X connector binding of the reference server.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-029 applies to the reference implementation repository the end-to-end test convention of tractusx-edc edc-tests/e2e (research note section 7) and the Liskov substitution principle: every implementation of a contract replaces any other without a change to its callers, so one contract test runs against each binding. The statement of 2026-11-09 named the Tractus-X simulation and the production binding of the connector client of the battery passport application; decision Q-1014 (where the reference implementation of the after-first-passport work is built) moves the reference implementation to a repository without that application, so the two bindings are those of the reference server. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-025"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The rewording of 2026-11-16 is proposed and waits for Francesco's approval.",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: the end-to-end test convention of tractusx-edc (edc-tests/e2e/), section 7 of the research note, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"The conformance tests of the reference implementation folder a folder of the battery passport application shall run with one test code against the Tractus-X simulation and against the production binding of the connector client, as the SOLID principles requires of every implementation of a contract.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "PrR-CXD-030",
+   "title": "OpenAPI file linted with Spectral on every change",
+   "statement": "Every change of battery-passport-after-first-life/docs/api/openAPI.yaml shall pass the Spectral linter without error, as the Spectral workflow of the Tractus-X item-relationship-service repository runs it.",
+   "kind": "process",
+   "perimeter": "application",
+   "tracesTo": [],
+   "rationale": "PrR-CXD-030 applies to the reference implementation repository the convention that item-relationship-service Spectral workflow, research note section 7 states, as section 2 of the conventions note of the Tractus-X reference implementations decides; Francesco accepted the folder layout on 2026-11-09. A rule on how the reference implementation is built is a process requirement (method.md section 6, point 5).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1014"
+   ],
+   "verification": [
+    "VM-PRC-CXD-026"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "area": "catenax-data",
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md",
+     "locator": "The step 6 checkpoint",
+     "quote": "Accept, start step 7"
+    }
+   ],
+   "traceNote": "No stakeholder requirement imposes the convention: the Spectral workflow of the Tractus-X item-relationship-service repository, section 7 of the research note, which states it, is not stored in the source register, and the research note the research note on the Tractus-X conventions cites it with a pinned commit. Francesco accepted the layout of the reference implementation folder on 2026-11-09 (the conventions note of the Tractus-X reference implementations, sections 2 and 3).",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (process requirements of the reference implementation folder, step 6 conventions accepted on 2026-11-09)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "the place of the reference implementation changed from the folder a folder of the battery passport application to the repository battery-passport-after-first-life (statement before: \"Every change of a folder of the battery passport application shall pass the Spectral linter without error, as the Spectral workflow of the Tractus-X item-relationship-service repository runs it.\")",
+     "reason": "Francesco, 2026-11-16: \"in a new repository, which must be not private and open source according to Tractus-X standards\" (decision Q-1014, where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}

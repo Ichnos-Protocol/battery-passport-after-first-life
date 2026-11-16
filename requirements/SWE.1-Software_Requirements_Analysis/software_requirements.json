@@ -1,0 +1,3195 @@
+{
+ "requirement": "Automotive SPICE 4.1 SWE.1 (Software Requirements Analysis): the software requirements of each software element, traced to the system requirements and the architecture; requirements/method.md sections 4 to 8.",
+ "requirements": [
+  {
+   "id": "SwR-DATARIGHTS-016",
+   "title": "All of a customer's data erased at the end of its service",
+   "statement": "Once the retrieval period of a completed switch has expired, or when the customer decides it, and after the return export where the customer chose one, the data rights element shall erase all of the customer's exportable data, digital assets and personal data, with every copy in the database, the document store, the identity provider accounts and the host logs, leaving the backups to their rotation and keeping only the items that the agreed list of legal obligations names.",
+   "kind": "functional",
+   "element": "EL-DATARIGHTS",
+   "tracesTo": [
+    "SyR-DATA-021",
+    "SyR-PRIV-025",
+    "SyR-SEC-019"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB",
+    "IF-BACKEND-DOCSTORE",
+    "IF-ACCESS-IDP",
+    "IF-OBSERVABILITY-HOSTING"
+   ],
+   "rationale": "Data Act Art. 25(2)(h) and 25(3)(c) and GDPR Art. 28(3)(g) end in the same erasure of the tenant, decided by one measure; the backups are erased by their rotation (EL-BACKUPSTORE).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-972",
+    "Q-964",
+    "Q-033"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATARIGHTS-001",
+    "VM-SWE-DATARIGHTS-002",
+    "VM-SWE-BACKEND-037"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "notes": "System measure VM-SYS-DATA-017.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "derived",
+     "reason": "SWE.1 software requirements analysis, group access-datarights",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "tracesTo: SyR-SEC-019 taken over from SwR-BACKEND-127 (retired as its duplicate)",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-BACKEND-127 (customer's data, personal data included, erased at service end) gives EL-BACKEND (backend API) the same data subject function that SwR-DATARIGHTS-016 (all of a customer's data erased at the end of its service) gives EL-DATARIGHTS (data subject functions, retention, tenant export and erasure), the one element that the architecture names as executor of that capability. The responsibility of EL-DATARIGHTS names the erasure of a customer's data at the end of its service. The completion period of SyR-SEC-019 (ended customer's data and secrets removed) belongs on SwR-DATARIGHTS-016 ",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification: added VM-SWE-BACKEND-037",
+     "reason": "Two-way trace rule of 2026-10-26 (part of Francesco's \"apply the next round\"): VM-SWE-BACKEND-037 (Erasure, restriction, hold and tenant erasure through the real chain) verifies SwR-DATARIGHTS-016, so SwR-DATARIGHTS-016 names it.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-RDB-051",
+   "title": "Privileged erasure of one company after its retrieval period",
+   "statement": "The relational database shall offer the tenant erasure a privileged path that deletes every row of one customer company from every table, and refuses to run before the retrieval period has expired unless the customer's decision to erase is recorded.",
+   "kind": "functional",
+   "element": "EL-RDB",
+   "tracesTo": [
+    "SyR-DATA-021",
+    "SyR-PRIV-025",
+    "SyR-SEC-019"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SyR-DATA-021, SyR-PRIV-025 and SyR-SEC-019 end with the company's data gone from the database; the order (retrieval first) is a precondition the element can check.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-033",
+    "Q-105",
+    "Q-964",
+    "Q-972"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-RDB-026"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "notes": "The system measures of the refined requirements are VM-SYS-DATA-017, VM-SYS-SEC-036.",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "derived",
+     "reason": "SWE.1 software requirements analysis, group rdb",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes: the requirement named as the subject of its subjectless sentences (\"Refines\", \"Depends on\", \"Threats answered\" and similar); no other word changed",
+     "reason": "Francesco's sentence rule of 2026-10-22 (every sentence has a named subject, a verb and its context)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-166",
+   "title": "Point 4 offer for the passport issuer gated by a recorded contract",
+   "statement": "The connector client shall publish a data offer of a battery's Annex XIII point 4 information to the company that issued the battery's passport only while a contract between the battery's owner and that company is recorded, with an access policy that admits only that company's BPNL and a usage policy that carries the usage purpose cx.circular.dpp:1.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-215"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-166 refines SyR-PASS-215 (Individual battery information shared with the passport issuer under contract) for EL-CXCLIENT. EL-CXCLIENT adds the offer, its BPNL access policy, its usage purpose of CX-0160 1.1.0 section 2.2 and its withdrawal when the contract record ends.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002",
+    "Q-1010"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-022"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-023.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Individual battery information shared with the passport issuer under contract\". Old statement: \"The connector client shall offer the information of Annex XIII point 4 on a battery to the connector of the economic operator that issued the battery's passport only while the record of a contract between the battery's owner and that economic operator exists, and shall withdraw the offer when that record ends.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-167",
+   "title": "Issuer's negotiation for point 4 information run without a user step",
+   "statement": "The connector client shall run, on the issuer's deployment, the catalogue request, the contract negotiation and the storage of the agreement for the offer of SwR-CXCLIENT-166 as one automatic sequence that the recorded contract starts, ending with the stored agreement or with the counterparty's refusal reason.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-CXD-218"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER"
+   ],
+   "rationale": "SwR-CXCLIENT-167 refines SyR-CXD-218 (Issuer's contract negotiation for individual battery information without a manual step) for EL-CXCLIENT. EL-CXCLIENT adds the start of the sequence by the contract record, the storage of the agreement and the report of a refusal.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-023"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-077.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Issuer's contract negotiation for individual battery information without a manual step\". Old statement: \"The connector client shall start and conclude the contract negotiation for the offer of SwR-CXCLIENT-166 when the issuer's connector requests it, with no confirmation step by a user of either company, while the contract record of SwR-CXCLIENT-166 exists.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-168",
+   "title": "Point 4 transfer to the issuer stored without a user step",
+   "statement": "The connector client shall start the transfer under the agreement of SwR-CXCLIENT-167, pull the point 4 information through the data plane and store the received values with the battery identifier, the agreement identifier and the time of receipt, with no user action, refusing a transfer under an agreement whose contract record has ended.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-CXD-219"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-168 refines SyR-CXD-219 (Transfer of individual battery information to the issuer without a manual step) for EL-CXCLIENT. EL-CXCLIENT adds the transfer start, the pull, the stored values with their provenance and the refusal after the end of the contract.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-024"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-078.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Transfer of individual battery information to the issuer without a manual step\". Old statement: \"The connector client shall serve the transfer process that the issuer's connector starts under the contract agreement of SwR-CXCLIENT-167 with no confirmation step by a user of either company, and shall refuse a transfer under an agreement whose contract record has ended.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-169",
+   "title": "Resale point 4 offer restricted to the named prospective purchaser",
+   "statement": "The connector client shall publish the point 4 offer of a battery for a resale with an access policy that admits only the BPNL of the one prospective purchaser that the reselling purchaser names in the share request, refusing a share request that names no valid BPNL with status 400.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-216"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-169 refines SyR-PASS-216 (Reselling purchaser shares individual battery information with a prospective purchaser) for EL-CXCLIENT. EL-CXCLIENT adds the BPNL access policy of the named prospective purchaser and the refusal of an invalid share request.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-025"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-024.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Reselling purchaser shares individual battery information with a prospective purchaser\". Old statement: \"The connector client shall offer the information of Annex XIII point 4 on a battery to the connector of a prospective purchaser that the battery's purchaser, or a third party acting on the purchaser's behalf, has named, and to no other connector.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-123",
+   "title": "Purchaser's grant of point 4 access to a named authority",
+   "statement": "The access control shall grant a market surveillance authority or a Chapter VIII authority the reading of one battery's point 4 information only through a grant that the battery's purchaser or the purchaser's agent records for that authority and that battery, refusing a read without a grant with status 403.",
+   "kind": "functional",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-217"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND"
+   ],
+   "rationale": "SwR-ACCESS-123 refines SyR-PASS-217 (Reselling purchaser shares individual battery information with the named authorities) for EL-ACCESS. EL-ACCESS adds the recorded grant per authority and battery and the deny-by-default answer.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002",
+    "Q-018"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-033"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-025.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Reselling purchaser shares individual battery information with the named authorities\". Old statement: \"The access control shall grant a subject holding an authority assignment the read capability on the information of Annex XIII point 4 of one battery only while a share by that battery's purchaser, or by a third party acting on the purchaser's behalf, names that authority.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-124",
+   "title": "Used-battery operators' point 4 reads gated by the purchaser's named share",
+   "statement": "The access control shall let a company acting as repairer, remanufacturer, repurposer, waste management operator, recycler or manufacturer read a battery's point 4 information only when a recorded share of the battery's purchaser names that company's BPNL, refusing every other read of that company with status 403.",
+   "kind": "constraint",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-218"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-CONNECTOR-BACKEND"
+   ],
+   "rationale": "SwR-ACCESS-124 refines SyR-PASS-218 (Used-battery operators read individual battery information only through the purchaser's share) for EL-ACCESS. EL-ACCESS adds the share record per named company in place of the for_sale flag that opens the data to every operator of a role.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-034"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-026.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Used-battery operators read individual battery information only through the purchaser's share\". Old statement: \"The access control shall refuse a subject acting for a repairer, a remanufacturer, a repurposer, a waste management operator, a recycler or a manufacturer every read of the information of Annex XIII point 4 on a battery for which no share by the battery's purchaser names that subject's company.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-185",
+   "title": "Point 4 fields marked for the purchaser and the purchaser's agent",
+   "statement": "The dataset aggregation shall write, for each field of Annex XIII point 4 in the access-group aspect that it serves beside the seven IDTA aspects (decision Q-200), the access group of the purchaser and the purchaser's agent, failing the aggregation of a dataset in which a point 4 field carries no access group.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-219"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-185 refines SyR-PASS-219 (Individual battery information marked for the purchaser and the purchaser's agent) for EL-DATASET. EL-DATASET adds the access-group aspect entry of each point 4 field and the failure of an unmarked field.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002",
+    "Q-018"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-049"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-027.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Individual battery information marked for the purchaser and the purchaser's agent\". Old statement: \"The battery passport dataset aggregation shall assign every item of Annex XIII point 4 in the access marking of the dataset to the access group of the purchaser of the battery and the third parties acting on the purchaser's behalf.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-186",
+   "title": "Detailed composition fields marked for the second-life and training group",
+   "statement": "The dataset aggregation shall write, for each field of the detailed composition of Annex XIII point 2(a) in the access-group aspect, the access group of SyR-PASS-220, failing the aggregation of a dataset in which such a field carries no access group.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-220"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-186 refines SyR-PASS-220 (Detailed composition marked for second-life operators, recyclers and training centres) for EL-DATASET. EL-DATASET adds the access-group aspect entry of each point 2(a) field and the failure of an unmarked field.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-050"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-028.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Detailed composition marked for second-life operators, recyclers and training centres\". Old statement: \"The battery passport dataset aggregation shall assign every item of Annex XIII point 2(a) in the access marking of the dataset to the access group of the repairers, the remanufacturers, the persons carrying out repurposing, the waste management operators carrying out treatment, the recyclers and the vocational training centres for battery repair, repurposing or remanufacturing, besides the Commission.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-187",
+   "title": "Dismantling information fields marked for the second-life and training group",
+   "statement": "The dataset aggregation shall write, for each field of the dismantling information of Annex XIII point 2(c) in the access-group aspect, the access group of SyR-PASS-221, failing the aggregation of a dataset in which such a field carries no access group.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-221"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-187 refines SyR-PASS-221 (Dismantling information marked for second-life operators, recyclers and training centres) for EL-DATASET. EL-DATASET adds the access-group aspect entry of each point 2(c) field and the failure of an unmarked field.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-051"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-029.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Dismantling information marked for second-life operators, recyclers and training centres\". Old statement: \"The battery passport dataset aggregation shall assign every item of Annex XIII point 2(c) in the access marking of the dataset to the access group of the repairers, the remanufacturers, the persons carrying out repurposing, the waste management operators carrying out treatment, the recyclers and the vocational training centres for battery repair, repurposing or remanufacturing, besides the Commission.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-188",
+   "title": "Part number and spare source fields marked for the second-life group",
+   "statement": "The dataset aggregation shall write, for each field of the part numbers and spare sources of Annex XIII point 2(b) in the access-group aspect, the access group of SyR-PASS-222, failing the aggregation of a dataset in which such a field carries no access group.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-222"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-188 refines SyR-PASS-222 (Part numbers and spare sources marked for second-life operators and purchaser) for EL-DATASET. EL-DATASET adds the access-group aspect entry of each point 2(b) field and the failure of an unmarked field.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-052"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-030.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Part numbers and spare sources marked for second-life operators and purchaser\". Old statement: \"The battery passport dataset aggregation shall assign every item of Annex XIII point 2(b) in the access marking of the dataset to the access group of the repairers, the remanufacturers, the persons carrying out repurposing and the purchaser of the battery, besides the Commission.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-189",
+   "title": "Safety measure fields marked for the treatment operators' group",
+   "statement": "The dataset aggregation shall write, for each field of the safety measures of Annex XIII point 2(d) in the access-group aspect, the access group of SyR-PASS-223, failing the aggregation of a dataset in which such a field carries no access group.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-223"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-189 refines SyR-PASS-223 (Safety measures marked for second-life operators and vehicle and electronics treatment) for EL-DATASET. EL-DATASET adds the access-group aspect entry of each point 2(d) field and the failure of an unmarked field.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-053"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-031.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Safety measures marked for second-life operators and vehicle and electronics treatment\". Old statement: \"The battery passport dataset aggregation shall assign every item of Annex XIII point 2(d) in the access marking of the dataset to the access group of every person of draft Art. 1(1) and 1(2), the establishments permitted to carry out treatment operations on end-of-life vehicles and the treatment facilities of waste from electrical and electronic equipment, besides the Commission.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-170",
+   "title": "Restricted offers limited to the purposes of draft Art. 2(1)",
+   "statement": "The connector client shall build the usage policy of every offer that holds information of Annex XIII points 2(a) to 2(c) or 4 through the policy builder of the policy module of the connector client of the reference server with a usage purpose constraint whose values name only the activities of draft Art. 2(1) of the Art. 77(9) act.",
+   "kind": "constraint",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-224"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-170 refines SyR-PASS-224 (Restricted information offered only for evaluation and second-life purposes) for EL-CXCLIENT. EL-CXCLIENT adds the purpose constraint of the policy builder and the rule that every restricted offer uses the builder.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-026"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-032.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Restricted information offered only for evaluation and second-life purposes\". Old statement: \"The connector client shall publish every data offer that holds information of Annex XIII points 2(a) to 2(c) or 4 with a usage policy whose usage purpose names only the activities of draft Art. 2(1) of the Art. 77(9) act, and with no other usage purpose.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-171",
+   "title": "Purchaser's point 4 offer also carries the aggregator purpose",
+   "statement": "The connector client shall add, through the policy builder of the policy module of the connector client of the reference server, to the usage policy of a point 4 offer whose consumer is the purchaser or a third party acting on the purchaser's behalf, the purpose of making the battery available to independent aggregators or market participants, beside the purposes of SwR-CXCLIENT-170.",
+   "kind": "constraint",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-225"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-171 refines SyR-PASS-225 (Purchaser's offer of individual battery information also admits energy aggregators) for EL-CXCLIENT. EL-CXCLIENT adds a policy builder that holds several usage purposes in one constraint.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-027"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-033.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Purchaser's offer of individual battery information also admits energy aggregators\". Old statement: \"The connector client shall add the usage purpose of making the battery available to independent aggregators or market participants only to the usage policy of a point 4 offer whose consumer is the purchaser of the battery or a third party acting on the purchaser's behalf.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-172",
+   "title": "Point 2 and point 4 offers prohibit sharing outside draft Art. 2(4)",
+   "statement": "The connector client shall build the usage policy of every offer that holds information of Annex XIII points 2(a) to 2(c) or 4 through the policy builder of the policy module of the connector client of the reference server with a prohibition of sharing and publication whose constraint names the exceptions of draft Art. 2(4)(a) to (e) of the Art. 77(9) act.",
+   "kind": "constraint",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-226"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-172 refines SyR-PASS-226 (Restricted information offered under a policy that forbids sharing outside the exceptions) for EL-CXCLIENT. EL-CXCLIENT adds the prohibition and its exception constraint to the policy builder.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-028"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-034.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Restricted information offered under a policy that forbids sharing outside the exceptions\". Old statement: \"The connector client shall publish every data offer that holds information of Annex XIII points 2(a) to 2(c) or 4 with a usage policy that prohibits the consumer from sharing or publishing the information outside the cases of draft Art. 2(4)(a) to (e) of the Art. 77(9) act.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-125",
+   "title": "Operator's authorisation for wider sharing recorded per named person",
+   "statement": "The access control may store an authorisation of the responsible economic operator of a passport that names the persons of draft Art. 1(1), 1(2) or 1(4) allowed to share or publish the passport's restricted information, accepting the authorisation only from a subject with the company-admin assignment of that operator.",
+   "kind": "functional",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-227"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-ACCESS-125 refines SyR-PASS-227 (Economic operator may authorise wider sharing of restricted information) for EL-ACCESS. EL-ACCESS adds the stored authorisation and the check of its author.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1010"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-035"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-035.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Economic operator may authorise wider sharing of restricted information\". Old statement: \"The access control may accept from a subject acting for the economic operator responsible for a battery's passport the record of an authorisation that names the persons, the information of Annex XIII points 2(a) to 2(c) or 4 and the battery it covers.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-126",
+   "title": "New passport's point 4 authorisation accepted only from its operator",
+   "statement": "The access control shall accept the authorisation of SwR-ACCESS-125 for the point 4 information of a new passport only from a subject of the company recorded as the new passport's responsible economic operator, refusing every other subject with status 403.",
+   "kind": "constraint",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-228"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND"
+   ],
+   "rationale": "SwR-ACCESS-126 refines SyR-PASS-228 (Second-life operator authorises wider sharing of the new passport's battery information) for EL-ACCESS. EL-ACCESS adds the author check for a new passport.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1010"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-036"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-036.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Second-life operator authorises wider sharing of the new passport's battery information\". Old statement: \"The access control shall refuse the record of an authorisation for the information of Annex XIII point 4 of a battery with a new passport from every subject that does not act for the economic operator responsible for that new passport.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-173",
+   "title": "Safety measures offer may carry a bare use permission",
+   "statement": "The connector client may publish the safety measures of Annex XIII point 2(d) to the persons of draft Art. 1(3) in an offer whose usage policy holds a bare use permission with no constraint and no prohibition.",
+   "kind": "constraint",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-229"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-173 refines SyR-PASS-229 (Safety measures may be offered without restriction on further use) for EL-CXCLIENT. EL-CXCLIENT adds the unrestricted policy of the safety measures offer.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-029"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-037.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Safety measures may be offered without restriction on further use\". Old statement: \"The connector client may publish the data offer of the safety measures of Annex XIII point 2(d) with a usage policy that holds neither the usage purpose of SwR-CXCLIENT-170 nor the prohibition of SwR-CXCLIENT-172.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-190",
+   "title": "Passport rows written only under the responsible operator's context",
+   "statement": "The passport dataset lifecycle shall write a passport row only in a transaction whose row-level security context names the company recorded as the passport's responsible economic operator or a company holding that operator's recorded written authorisation, refusing any other write with status 403.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-230"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-190 refines SyR-PASS-230 (Passport data held only for the responsible or an authorised operator) for EL-DATASET. EL-DATASET adds the check of the responsible operator or its authorisation on every write. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-054"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-038.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Passport data held only for the responsible or an authorised operator\". Old statement: \"The battery passport dataset aggregation shall hold each battery passport dataset in the deployment of the company that the dataset names as its responsible economic operator, or of the company that an authorisation recorded under SyR-LIFE-047 names, and in no other deployment.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-191",
+   "title": "Waste step records the current passport's producer, not the actor",
+   "statement": "The terminal transition of the passport dataset lifecycle shall record as the responsible operator of a passport that reaches 'waste' and passes to its producer the manufacturer recorded on that passport row, without writing the acting company into the manufacturer of record.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-129"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-191 refines SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) for EL-DATASET. EL-DATASET adds the reading of the producer from the current passport row and the protection of the manufacturer of record. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1007",
+    "Q-022"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-055"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-048.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Producer of the current passport takes over a waste battery's passport\". Old statement: \"The battery passport dataset aggregation shall accept the change of a battery's status to 'waste' with the producer as successor only when the producer named is the responsible economic operator of the battery's current passport dataset at the time of the change.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-192",
+   "title": "Lineage step writes no link into an original passport row",
+   "statement": "The lineage transition of the passport dataset lifecycle shall write a link to the new passport into an original passport row only on a forward link request of the original passport's responsible operator (SwR-DATASET-197), keeping the supersession of a lineage transition in the second-life operator's lineage records.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-130"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-192 refines SyR-LIFE-130 (Only the original issuer writes into an original passport) for EL-DATASET. EL-DATASET adds the rule that the lineage transition leaves every original row unwritten. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008",
+    "Q-998"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-056"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-049.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "title and statement follow the revised decision Q-1008 (before: {\"t\":\"No forward link written into an original passport\",\"s\":\"The battery passport dataset aggregation shall leave every field of each original battery passport dataset unchanged when it creates a new battery passport dataset, and shall hold the relation from the original to the new passport only in its lineage records.\"})",
+     "reason": "Francesco's agreement of 2026-11-09 (requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md): the original issuer may write a forward link into its own passport",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Only the original issuer writes into an original passport\". Old statement: \"The battery passport dataset aggregation shall leave every field of each original battery passport dataset unchanged when the aggregation creates a new battery passport dataset, except a link to the new passport that the economic operator responsible for that original passport adds.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-193",
+   "title": "New passport served under its own DPP Metadata identifier",
+   "statement": "The dataset aggregation shall serve the dataset of a new passport on the new PartInstance twin with a new digitalProductPassportId in the IDTA DPP Metadata, never as a new version of an original passport's DPP Metadata.",
+   "kind": "interface",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-131"
+   ],
+   "interfaces": [
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-193 refines SyR-LIFE-131 (New passport delivered as a passport of its own, not a version) for EL-DATASET. EL-DATASET adds the DPP Metadata of the new passport and its identifier.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1009",
+    "Q-969"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-057"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-050.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"New passport delivered as a passport of its own, not a version\". Old statement: \"The battery passport dataset aggregation shall deliver a new battery passport dataset as a separate data offer under the new unique identifier, with no version reference to the data offer or the identifier of an original passport.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-194",
+   "title": "Remanufacturing donor accepted for the waste status",
+   "statement": "The terminal transition of the passport dataset lifecycle shall accept the status 'waste' on a remanufacturing donor's passport row, which the remanufactured passport supersedes, when the request comes from the company that holds the donor battery or from the donor passport's data provider.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-132"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-194 refines SyR-LIFE-132 (Remanufacturing donor's passport later accepts the status waste) for EL-DATASET. EL-DATASET adds the acceptance of a superseded donor row. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-028",
+    "Q-022"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-058"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-051.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Remanufacturing donor's passport later accepts the status waste\". Old statement: \"The battery passport dataset aggregation shall accept the change of status to 'waste' on a battery passport dataset that a remanufactured dataset links to as a donor, with one of the successors of Art. 77(7), second subparagraph, named.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-195",
+   "title": "Direct re-use recorded as an ownership event, never as a lineage step",
+   "statement": "The passport dataset lifecycle shall record a direct re-use of a battery that is not waste through the ownership event of the ownership service of the reference server on the existing passport row, writing no new passport row and no lineage edge.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-133"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-195 refines SyR-LIFE-133 (Direct re-use without preparation keeps the passport and its identifier) for EL-DATASET. EL-DATASET adds the direct re-use as an act of its own, distinct from the action reuse that prepares the battery. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-021"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-059"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-052.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Direct re-use without preparation keeps the passport and its identifier\". Old statement: \"The battery passport dataset aggregation shall record a direct re-use of a battery that is not waste on the battery's existing dataset and unique identifier, and shall create no new dataset and no lineage record for it.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-196",
+   "title": "Direct re-use leaves the responsible operator unchanged",
+   "statement": "The passport dataset lifecycle shall leave the responsible economic operator and the manufacturer of record of a passport row unchanged when it records a direct re-use.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-134"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-196 refines SyR-LIFE-134 (Direct re-use leaves the responsible economic operator unchanged) for EL-DATASET. EL-DATASET adds the protection of the two columns in the direct re-use act. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-021",
+    "Q-1007"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-060"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-053.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Direct re-use leaves the responsible economic operator unchanged\". Old statement: \"The battery passport dataset aggregation shall keep the responsible economic operator of a battery passport dataset unchanged when it records a direct re-use of the battery.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-127",
+   "title": "Purchaser for point 4 access taken from the open ownership interval",
+   "statement": "The access control shall take the purchaser of a battery for the point 4 access decisions from the open interval of the ownership timeline that the sale event of the ownership service of the reference server opens.",
+   "kind": "data",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-231"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-ACCESS-127 refines SyR-PASS-231 (New holder after direct re-use recorded as the battery's purchaser) for EL-ACCESS. EL-ACCESS adds the reading of the purchaser from the ownership timeline, through the current_owner_id cache that the timeline keeps.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002",
+    "Q-021"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-037"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-039.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"New holder after direct re-use recorded as the battery's purchaser\". Old statement: \"The access control shall hold, for each battery, the company or the person recorded as its current purchaser, replaced at each recorded change of holder, and shall read the purchaser of draft Art. 1(4) from that record only.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-174",
+   "title": "Received facility results stored per facility and fraction",
+   "statement": "The connector client shall store each recycling efficiency and recovery of materials that a first recycler customer receives from another facility through its connector with that facility's identifier, the fraction and the reporting period, refusing to store a payload that names no facility.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-135"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-174 refines SyR-LIFE-135 (First recycler receives every later facility's recycling efficiency and recovery) for EL-CXCLIENT. EL-CXCLIENT adds the reception through the connector, the stored provenance of each value and the refusal of a payload without a facility.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-030"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-054.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"First recycler receives every later facility's recycling efficiency and recovery\". Old statement: \"The connector client shall negotiate and receive, for a customer that is a first recycler, the data offers of the recycling efficiency and the recovery of materials that each facility recycling fractions of the customer's waste batteries publishes, and store each received value with the facility and the fraction it concerns.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-BACKEND-205",
+   "title": "First recycler's facility report answered per reporting period",
+   "statement": "The backend API shall answer a first recycler customer's report request for a reporting period with one row per facility that the received values of SwR-CXCLIENT-174 name, each with its recycling efficiency and its recovery of materials as received, answering 404 for a period without received values.",
+   "kind": "functional",
+   "element": "EL-BACKEND",
+   "tracesTo": [
+    "SyR-LIFE-136"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND"
+   ],
+   "rationale": "SwR-BACKEND-205 refines SyR-LIFE-136 (First recycler's report of every facility for the competent authorities) for EL-BACKEND. EL-BACKEND adds the report route, its rows per facility and the answer for an empty period; the route calls a report service and runs no SQL (the SOLID principles).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-971"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-BACKEND-051"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-055.",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"First recycler's report of every facility for the competent authorities\". Old statement: \"The backend API shall return to a subject acting for a first recycler a report that lists, for each facility recorded under SwR-CXCLIENT-174 and for the reporting period requested, the recycling efficiency and the recovery of materials received.\". Old verification: VM-SWE-BACKEND-051",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-175",
+   "title": "Preparation-for-recycling data offered only to the named first recycler",
+   "statement": "The connector client shall publish the data of points 1 and 2 of section 5 of the Annex to Delegated Regulation (EU) 2025/606 of a customer conducting preparation for recycling in one offer whose access policy admits only the BPNL of the first recycler that the customer names.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-137"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-175 refines SyR-LIFE-137 (Preparation-for-recycling operator provides its data to the first recycler) for EL-CXCLIENT. EL-CXCLIENT adds the offer and its BPNL access policy.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1006"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-031"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-056.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Preparation-for-recycling operator provides its data to the first recycler\". Old statement: \"The connector client shall publish, for a customer that conducts preparation for recycling, a data offer of the information and data of points 1 and 2 of section 5 of the Annex to Delegated Regulation (EU) 2025/606 whose access policy admits only the first recycler that the customer names.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-TWINS-153",
+   "title": "PartInstance twin registered for each traced item",
+   "statement": "The twin registration shall register a PartInstance twin with the specific asset IDs of CX-0127 for each serialized part, just-in-sequence part, vehicle and batch that a customer creates for tracing, failing the creation of the item when the registration fails.",
+   "kind": "functional",
+   "element": "EL-TWINS",
+   "tracesTo": [
+    "SyR-CXD-220"
+   ],
+   "interfaces": [
+    "IF-TWINS-DTR"
+   ],
+   "rationale": "SwR-TWINS-153 refines SyR-CXD-220 (Digital twin created for each serialized part and batch to be traced) for EL-TWINS. EL-TWINS adds the registration per item kind and the failure of the creation without a twin.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-TWINS-044"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-079.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Digital twin created for each serialized part and batch to be traced\". Old statement: \"The parts and twins module shall create a PartInstance twin with its specific asset identifiers for each serialized part, just-in-sequence part, vehicle and batch that a customer records for tracing, at the time of the record.\". Old verification: VM-SWE-TWINS-043",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-TWINS-154",
+   "title": "New PartInstance twin registered for a new passport, originals untouched",
+   "statement": "After a lineage transition commits, the twin registration shall register a new PartInstance twin for the new passport with a new catenaXId, the second-life operator's BPNL as manufacturerId, the battery identifier as partInstanceId and intrinsicId, and digitalTwinType PartInstance, sending no change to the twin of any original battery.",
+   "kind": "functional",
+   "element": "EL-TWINS",
+   "tracesTo": [
+    "SyR-CXD-221"
+   ],
+   "interfaces": [
+    "IF-TWINS-DTR"
+   ],
+   "rationale": "SwR-TWINS-154 refines SyR-CXD-221 (New digital twin for a battery that receives a new passport) for EL-TWINS. EL-TWINS adds the specific asset IDs of Table 2.1.1 of the CX-0160-4 amendment proposal and the rule that no request reaches an original twin.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-969",
+    "Q-1008"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-TWINS-045"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-080.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"New digital twin for a battery that receives a new passport\". Old statement: \"The parts and twins module shall create a new PartInstance twin under the new unique identifier when a new battery passport dataset is created, and shall change no shell descriptor or submodel of the twin of an original battery.\". Old verification: VM-SWE-TWINS-043",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-TWINS-155",
+   "title": "As-built child item may reference a PartType twin",
+   "statement": "The twin registration may write, in the SingleLevelBomAsBuilt submodel that the submodel mapper module of the reference server maps, the catenaXId of the child's PartType twin for a child item that has no PartInstance twin, instead of failing the mapping.",
+   "kind": "data",
+   "element": "EL-TWINS",
+   "tracesTo": [
+    "SyR-CXD-222"
+   ],
+   "interfaces": [
+    "IF-TWINS-DTR"
+   ],
+   "rationale": "SwR-TWINS-155 refines SyR-CXD-222 (As-built bill of material may reference a child's part type twin) for EL-TWINS. EL-TWINS adds the PartType fallback of the as-built mapping.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-TWINS-046"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-081.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"As-built bill of material may reference a child's part type twin\". Old statement: \"The parts and twins module may write the catenaXId of a child item's PartType twin into the childItems of a SingleLevelBomAsBuilt submodel only when no PartInstance twin of that child item exists.\". Old verification: VM-SWE-TWINS-043",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-TWINS-156",
+   "title": "As-built usage parents taken only from part instance edges",
+   "statement": "The twin registration shall build the parent items of the SingleLevelUsageAsBuilt submodel that the submodel mapper module of the reference server maps only from bill-of-material edges whose parent is a part instance, never placing a PartType twin's catenaXId among them.",
+   "kind": "data",
+   "element": "EL-TWINS",
+   "tracesTo": [
+    "SyR-CXD-223"
+   ],
+   "interfaces": [
+    "IF-TWINS-DTR"
+   ],
+   "rationale": "SwR-TWINS-156 refines SyR-CXD-223 (As-built usage never references a parent's part type twin) for EL-TWINS. EL-TWINS adds the source of the parent items, the part instance edges of part_bom_edges.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-TWINS-047"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-CXD-082.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "derived",
+     "reason": "after-first-passport work, step 3 (SWE.1 refinement of the derived system requirement for its allocated element, which the requirement check requires)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"As-built usage never references a parent's part type twin\". Old statement: \"The parts and twins module shall refuse to write the catenaXId of a PartType twin into the parentItems of a SingleLevelUsageAsBuilt submodel.\". Old verification: VM-SWE-TWINS-043",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-176",
+   "title": "NewPassportIssued sent to each original passport's data provider under contract",
+   "statement": "After a lineage transition of the lifecycle executor of the reference server commits, the connector client shall send to the data provider of each original passport, whose BPNL the predecessor link names, a CX-0151 notification of the operation NewPassportIssued whose content names the new passport identifier, the new twin's catenaXId, the operation, the operation date and the receiver's original passport identifier, only after a contract for the receiver's lifecycle notification asset is concluded.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-138"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-176 refines SyR-LIFE-138 (Original issuer notified of a new passport under contract) for EL-CXCLIENT. EL-CXCLIENT adds the receivers taken from the predecessor links, the CX-0151 message with the content of Table 4.4 of the CX-0160-4 amendment proposal, and the contract before sending.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008",
+    "Q-1011"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-032"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-057.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Original issuer notified of a new passport under contract\". Old statement: \"When the battery passport dataset aggregation creates a new battery passport dataset after preparation for re-use, preparation for repurposing, repurposing or remanufacturing, and the record of a contract between the second-life operator and the economic operator responsible for an original passport exists, the connector client shall send that economic operator's connector a notification that names the unique identifier of the new passport.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-197",
+   "title": "Forward link added on the original data provider's request",
+   "statement": "The passport dataset lifecycle may add to an original passport, on a request of that passport's responsible operator that names a NewPassportIssued notification received for it, a successors record with the new passport identifier, the new twin's catenaXId, the second-life operator's BPNL, the operation and the operation date, refusing a request that names no received notification with status 404.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-139"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-197 refines SyR-LIFE-139 (Original issuer may add a forward link to its own passport) for EL-DATASET. EL-DATASET adds the successors record of section 3.3 of the CX-0160-4 amendment proposal and its precondition, a received notification. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-061"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-058.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Original issuer may add a forward link to its own passport\". Old statement: \"The battery passport dataset aggregation may add to an original battery passport dataset a link to the new passport that a notification of a new passport names, on the instruction of the economic operator responsible for that original passport.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-198",
+   "title": "Successors record served as a submodel of its own",
+   "statement": "The dataset aggregation shall serve the successors record of an original passport as a submodel of its own on the original twin, separate from every other submodel, so that the connector client can offer the record to the authorised recipients and the market surveillance authorities only.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-PASS-232"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-198 refines SyR-PASS-232 (Forward link offered to the issuer's authorised recipients and authorities) for EL-DATASET. EL-DATASET adds the separate submodel that a separate offer requires.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008",
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-062"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-040.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "title and statement follow SyR-PASS-232 (before: \"The battery passport dataset aggregation shall mark a link from an original passport to a new passport with the access group of the battery status.\")",
+     "reason": "Francesco's answer of 2026-11-09 (\"Accept both\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Forward link offered to the issuer's authorised recipients and authorities\". Old statement: \"The battery passport dataset aggregation shall mark a link from an original passport to a new passport as information for the recipients that the economic operator responsible for the original passport authorises and for the market surveillance authorities.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-177",
+   "title": "Second-life battery's point 4 offer to the original data provider",
+   "statement": "The connector client shall publish the point 4 information of a battery with a new passport to the data provider of an original passport of that battery, whose BPNL the predecessor link names, only while a contract between the battery's holder and that data provider is recorded, with an access policy that admits only that BPNL.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-233"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-177 refines SyR-PASS-233 (Degradation data of a second-life battery offered to the original issuer) for EL-CXCLIENT. EL-CXCLIENT adds the receiver taken from the predecessor link and the contract-gated BPNL access policy, the provider and consumer of SwR-CXCLIENT-166 exchanged.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002",
+    "Q-1011"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-033"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-041.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's forward link and use case UC-5 of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "kept proposed: derived again in step 7 (SWE.1 Software Requirements Analysis)",
+     "reason": "Francesco's approval of 2026-11-09 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The approval of the SYS.2 set\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Degradation data of a second-life battery offered to the original issuer\". Old statement: \"The connector client shall offer the information of Annex XIII point 4 on a battery with a new passport to the connector of the economic operator responsible for an original passport of that battery only while the record of a contract between the holder of the battery and that economic operator exists, and shall withdraw the offer when that record ends.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-128",
+   "title": "Model information authorisation on a new passport accepted from the original issuer",
+   "statement": "The access control shall accept the authorisation of SwR-ACCESS-125 for the information of Annex XIII points 2(a) to 2(c) of a new passport only from a subject of the company responsible for the original passport whose battery model the new passport carries, refusing every other subject with status 403.",
+   "kind": "functional",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-234"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-ACCESS-128 refines SyR-PASS-234 (Original manufacturer authorises sharing of model information on a new passport) for EL-ACCESS. EL-ACCESS adds the author check through the battery model's original passport.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1010",
+    "Q-026"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-038"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-042.",
+   "group": "access",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Original manufacturer authorises sharing of model information on a new passport\". Old statement: \"The access policy shall accept the authorisation of SyR-PASS-227 for the information of Annex XIII points 2(a) to 2(c) on a battery with a new passport only from the economic operator responsible for the original passport whose battery model the new passport carries.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-ACCESS-129",
+   "title": "Previous holder's point 4 access ends with the closed ownership interval",
+   "statement": "The access control shall deny the previous holder of a battery the point 4 information once the sale event of the ownership service of the reference server closes that holder's ownership interval.",
+   "kind": "functional",
+   "element": "EL-ACCESS",
+   "tracesTo": [
+    "SyR-PASS-235"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-ACCESS-129 refines SyR-PASS-235 (Previous holder loses access to individual battery information after a resale) for EL-ACCESS. EL-ACCESS adds the denial through the owner view, which follows the current_owner_id cache of the timeline.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-ACCESS-039"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-PASS-043.",
+   "group": "access",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Previous holder loses access to individual battery information after a resale\". Old statement: \"The access policy shall refuse the previous holder of a battery the access to the information of Annex XIII point 4 on that battery from the moment the battery changes holder.\". Old verification: VM-SWE-ACCESS-032",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-199",
+   "title": "Direct re-use leaves the battery status unchanged",
+   "statement": "The passport dataset lifecycle shall leave the lifecycle status of a passport row unchanged when it records a direct re-use.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-140"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-199 refines SyR-LIFE-140 (Battery status unchanged after a direct re-use) for EL-DATASET. EL-DATASET adds the protection of the status in the direct re-use act. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-021"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-063"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-059.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Battery status unchanged after a direct re-use\". Old statement: \"The battery passport dataset aggregation shall leave the battery status of a battery's passport dataset unchanged when the battery is used again for the same purpose without any preparation.\". Old verification: VM-SWE-DATASET-048",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-178",
+   "title": "PassportEnded sent to the data provider, nameplate manufacturer and successor",
+   "statement": "After the recycle action of the lifecycle executor of the reference server commits, the connector client shall send a CX-0151 notification of the operation PassportEnded, whose content names the passport identifier, the recycling date, the recycler's BPNL and, where registered, the catenaXId of the material recycling certificate, to the BPNL of the twin's manufacturerId, to the BPNL of the nameplate's ManufacturerIdentifier and to the BPNL of the successor from whom the recycler received the battery.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-141"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-178 refines SyR-LIFE-141 (Passport's data provider, nameplate manufacturer and successor notified of the recycling) for EL-CXCLIENT. EL-CXCLIENT adds the three receivers of decision D16 of the CX-0160-4 amendment proposal, each found by its BPNL, and the CX-0151 message with the content of Table 4.4.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1006",
+    "Q-1007",
+    "Q-971"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-034"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-060.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Producer of the ended passport notified of the recycling result\". Old statement: \"The connector client shall send the connector of the producer of a battery passport that a recorded recycling ends a CX-0151 notification that names the end of the passport and the recovered materials recorded for the battery.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-179",
+   "title": "PassportEnded may be sent to predecessor data providers under contract",
+   "statement": "The connector client may send the notification PassportEnded of SwR-CXCLIENT-178 to the BPNL that each predecessor link of the ended passport names, only after a contract for that receiver's lifecycle notification asset is concluded.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-142"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-179 refines SyR-LIFE-142 (Predecessor issuers may be notified of the recycling under contract) for EL-CXCLIENT. EL-CXCLIENT adds the walk over the predecessor links and the contract before sending.",
+   "priority": "could",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1006",
+    "Q-1008"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-035"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-061.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's approval of 2026-11-09 (SYS.2 derivation), SWE.1 refinement for the allocated element, which the requirement check requires",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "derived again: title, statement, rationale, implementation and verification. Old title: \"Predecessor issuers may be notified of the recycling under contract\". Old statement: \"The connector client may send the connector of the economic operator responsible for each predecessor passport that the backward links of an ended passport reach the notification of SwR-CXCLIENT-178 while the record of a contract with that economic operator exists.\". Old verification: VM-SWE-CXCLIENT-021",
+     "reason": "after-first-passport work, step 7 (SWE.1 derivation of the element's share: module, data, error behaviour and observable result; implementation read from the code and the gap analysis)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-180",
+   "title": "BatteryRepaired sent to the data provider of the repaired battery's passport",
+   "statement": "After the repair of a battery is recorded for a repairer customer, the connector client shall send to the BPNL of the twin's manufacturerId a CX-0151 notification of the operation BatteryRepaired whose content names the passport identifier, the repair date and the catenaXId of the CX-0131 repair certificate.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-145"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-180 refines SyR-LIFE-145 (Repair notified to the data provider of the passport) for EL-CXCLIENT. EL-CXCLIENT adds the receiver found by the twin's manufacturerId and the CX-0151 message with the content of Table 4.4 of the CX-0160-4 amendment proposal.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-036"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-145 for EL-CXCLIENT)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-181",
+   "title": "BatteryBecameWaste sent to the data provider and the named successor",
+   "statement": "After a waste receiver customer records that a battery has become waste, the connector client shall send to the BPNL of the twin's manufacturerId and to the BPNL of the named successor a CX-0151 notification of the operation BatteryBecameWaste whose content names the passport identifier, the successor's BPNL, the successor's role and the date.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-147"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR",
+    "IF-CONNECTOR-PARTNER-DATA"
+   ],
+   "rationale": "SwR-CXCLIENT-181 refines SyR-LIFE-147 (Waste status notified to the data provider and the named successor) for EL-CXCLIENT. EL-CXCLIENT adds the two receivers and the CX-0151 message with the content of Table 4.4 of the CX-0160-4 amendment proposal.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-022",
+    "Q-1007"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-037"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-147 for EL-CXCLIENT)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-182",
+   "title": "Lifecycle record offer restricted to purchaser, operators and authorities",
+   "statement": "The connector client shall publish the lifecycle record of a passport in an offer of its own whose access policy, built by the policy module of the connector client of the reference server, admits only the BPNLs of the purchaser, the purchaser's agent, the responsible economic operator, the successor and the market surveillance authorities that the passport's access records name.",
+   "kind": "constraint",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-PASS-236"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-182 refines SyR-PASS-236 (Lifecycle record offered only to purchaser, operators and authorities) for EL-CXCLIENT. EL-CXCLIENT adds the separate offer and its BPNL access policy.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1002"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-038"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-PASS-236 for EL-CXCLIENT)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-183",
+   "title": "Sender's record of a receiver without an asset or a contract",
+   "statement": "When the catalogue of a receiver holds no lifecycle notification asset or the negotiation for that asset is refused, the connector client shall store, instead of sending, a record of the receiver's BPNL, the operation, the passport identifier, the date of the attempt and the cause.",
+   "kind": "functional",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-152"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-183 refines SyR-LIFE-152 (Receiver without a notification asset recorded by the sender) for EL-CXCLIENT. EL-CXCLIENT adds the stored record in place of the debug log line that drops the attempt today.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-039"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-152 for EL-CXCLIENT)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-CXCLIENT-184",
+   "title": "Notification plan holds one notification per receiver and passport",
+   "statement": "The connector client shall build, for each lifecycle event, one notification for each pair of receiver BPNL and passport identifier that the event concerns, so that a remanufacturing from two original passports of one data provider sends that data provider two notifications.",
+   "kind": "interface",
+   "element": "EL-CXCLIENT",
+   "tracesTo": [
+    "SyR-LIFE-153"
+   ],
+   "interfaces": [
+    "IF-CXCLIENT-CONNECTOR"
+   ],
+   "rationale": "SwR-CXCLIENT-184 refines SyR-LIFE-153 (One lifecycle notification per receiver and per passport) for EL-CXCLIENT. EL-CXCLIENT adds the notification plan that pairs receivers and passports.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-CXCLIENT-040"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-153 for EL-CXCLIENT)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-200",
+   "title": "Passport rows written only in the data provider's deployment",
+   "statement": "The passport dataset lifecycle shall write a passport row only when the company that registered the passport's digital twin is the deployment's own company, refusing any other write with status 403.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-143"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-200 refines SyR-LIFE-143 (Only the data provider of a passport writes into that passport) for EL-DATASET. EL-DATASET adds the data provider check on every write. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-064"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-143 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-201",
+   "title": "End of the passport exempt from the successor authorisation check",
+   "statement": "The passport dataset lifecycle shall exempt the write of the end-of-passport entry of SwR-DATASET-204 from the check of the successor's written authorisation that guards every other write on a passport in 'waste'.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-144"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-201 refines SyR-LIFE-144 (End of the passport recorded without the successor's authorisation) for EL-DATASET. EL-DATASET adds the one exemption from the authorisation check. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1006"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-065"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-144 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-202",
+   "title": "Repair entry stored with the repair certificate's catenaXId",
+   "statement": "The passport dataset lifecycle shall store, for each accepted BatteryRepaired notification, a repair entry of the passport with the repair date and the catenaXId of the repair certificate, refusing a notification without a repair certificate catenaXId with status 400.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-146"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-202 refines SyR-LIFE-146 (Repair certificate held as the record of the repair) for EL-DATASET. EL-DATASET adds the repair entry and its certificate reference. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-066"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-146 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-203",
+   "title": "Successor, role and date stored with the waste status",
+   "statement": "The terminal transition of the passport dataset lifecycle shall store, in the lifecycle record of a passport that reaches 'waste', the successor's BPNL, the successor's role (producer, producer responsibility organisation or waste management operator) and the date, refusing a waste transition without a successor with status 400.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-148"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-203 refines SyR-LIFE-148 (Successor, successor's role and date of the waste status held) for EL-DATASET. EL-DATASET adds the waste responsibility of the lifecycle record of section 3.2 of the CX-0160-4 amendment proposal. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1007"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-067"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-148 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-204",
+   "title": "Recycling date and recycler stored as the end of the passport",
+   "statement": "The passport dataset lifecycle shall store, in the lifecycle record of a passport whose battery is recycled, an end-of-passport entry with the recycling date and the recycler's BPNL.",
+   "kind": "data",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-149"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-204 refines SyR-LIFE-149 (Date of the recycling and the recycler held in the ended passport) for EL-DATASET. EL-DATASET adds the end-of-passport entry of the lifecycle record of section 3.2 of the CX-0160-4 amendment proposal. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-961"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-068"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-149 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-205",
+   "title": "Original passport's status kept when a new passport supersedes it",
+   "statement": "The passport dataset lifecycle shall leave the lifecycle status of an original passport row unchanged when it accepts a NewPassportIssued notification for that passport.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-150"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB",
+    "IF-DPPSP-CONNECTOR"
+   ],
+   "rationale": "SwR-DATASET-205 refines SyR-LIFE-150 (Last battery status kept on a superseded original passport) for EL-DATASET. EL-DATASET adds the protection of the status on the receiving side. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1008"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-069"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-150 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-206",
+   "title": "Lineage step requires the treated battery's four performance values",
+   "statement": "The lineage transition of the passport dataset lifecycle shall refuse with status 400 a reuse, repurpose or remanufacture request that lacks the rated capacity in Ah, the capacity fade in %, the power fade in % or the expected lifetime of the treated battery.",
+   "kind": "functional",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-151"
+   ],
+   "interfaces": [
+    "IF-FRONTEND-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-206 refines SyR-LIFE-151 (New passport accepted only with the treated battery's performance values) for EL-DATASET. EL-DATASET adds the four values to the required data of the three lineage actions. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-026"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-070"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-151 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-207",
+   "title": "Received notification applied only through its operation's step",
+   "statement": "The passport dataset lifecycle shall apply a received lifecycle notification only through the step of its operation (the forward link request for NewPassportIssued, the repair entry and the status 're-used' for BatteryRepaired, the waste status and successor for BatteryBecameWaste, the end-of-passport entry for PassportEnded), refusing with status 422 a notification whose content would change another item of the passport.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-154"
+   ],
+   "interfaces": [
+    "IF-CONNECTOR-BACKEND",
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-207 refines SyR-LIFE-154 (Notification changes a passport only by the receiver's assigned steps) for EL-DATASET. EL-DATASET adds the mapping from each operation to its one step, in place of the SECURITY DEFINER function that writes any status and any recovered materials. The lifecycle of the passport dataset runs today in the lifecycle executor of the reference server of EL-LIFECYCLE, which architecture decision AD-16 moves into EL-DATASET (follow-up FS3); the lines cited are that module's.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-071"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-LIFE-154 for EL-DATASET)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-BACKEND-206",
+   "title": "Lifecycle notification failures answered with envelope and result object",
+   "statement": "The backend API shall answer each operation of the lifecycle notification API with status 200 when the backend API accepts the notification and, when the backend API cannot process the notification, with a 4xx or 5xx status and a mandatory body that holds the error envelope { success: false, error: { message, code } } together with the result object of AAS Part 2 (messages, each with messageType and text), where each text states what failed, the reason of the failure and what the sender must do.",
+   "kind": "interface",
+   "element": "EL-BACKEND",
+   "tracesTo": [
+    "SyR-CXD-096"
+   ],
+   "interfaces": [
+    "IF-CONNECTOR-BACKEND"
+   ],
+   "rationale": "SwR-BACKEND-206 refines SyR-CXD-096 (Notification endpoints answer 200, or 4xx or 5xx on failure) for EL-BACKEND. EL-BACKEND adds the error body that decision Q-409 sets for the routes that Catena-X partners call (follow-up of 2026-10-27) to the status codes of CX-0151 4.1.3; the Industry Core KIT makes the body optional, and the reading follows Q-409.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-409"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-BACKEND-052"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-CXD-096 for EL-BACKEND)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-09",
+     "change": "statement: should to shall; the error body is mandatory and its text is descriptive (before: \"The backend API should answer each operation of the lifecycle notification API with status 200 when it accepts the notification and, when it cannot process the notification, with a 4xx or 5xx status whose body holds the error envelope { success: false, error: { message, code } } together with the result object of AAS Part 2 (messages, each with messageType and text).\")",
+     "reason": "Francesco, 2026-11-09 (\"Error body is optional in Catena-X by I want a descriptive text to be there\", requirements/Owner_instructions-Francesco_verbatim/2026-11-09_forward_link_and_use_case_5.md, section \"The step 7 review\")",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-BACKEND-207",
+   "title": "Four lifecycle notification operations received as POST endpoints",
+   "statement": "The backend API shall receive the lifecycle notification API at four POST endpoints whose paths are the operation names NewPassportIssued, BatteryRepaired, BatteryBecameWaste and PassportEnded, validating the MessageHeader and the content of each request against the operation's JSON schema and answering 400 when the request does not validate.",
+   "kind": "interface",
+   "element": "EL-BACKEND",
+   "tracesTo": [
+    "SyR-CXD-092"
+   ],
+   "interfaces": [
+    "IF-CONNECTOR-BACKEND"
+   ],
+   "rationale": "SwR-BACKEND-207 refines SyR-CXD-092 (Notification APIs offered and called with HTTP POST only) for EL-BACKEND. EL-BACKEND adds the four routes, behind the data-plane principal and the capability notification.receive, each of which reads the request, validates it and calls the passport dataset lifecycle (the SOLID principles).",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-BACKEND-053"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (SWE.1 refinement of SyR-CXD-092 for EL-BACKEND)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "SwR-DATASET-208",
+   "title": "Database trigger refuses a change of a passport's manufacturer",
+   "statement": "The relational database shall refuse, through a BEFORE UPDATE trigger on batteries, every UPDATE that changes manufacturer_id or the stored manufacturer identification of a passport row, for every role except the migrator role during a migration.",
+   "kind": "constraint",
+   "element": "EL-DATASET",
+   "tracesTo": [
+    "SyR-LIFE-155"
+   ],
+   "interfaces": [
+    "IF-BACKEND-RDB"
+   ],
+   "rationale": "SwR-DATASET-208 refines SyR-LIFE-155 (manufacturer identification of a passport never changed after issue) for EL-DATASET; the guard is a trigger, so that a defect of a route or a script cannot bypass the rule.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "dependsOn": [
+    "Q-1013"
+   ],
+   "implementation": {
+    "state": "missing",
+    "where": [],
+    "note": "The reference server of this repository is not built yet."
+   },
+   "verification": [
+    "VM-SWE-DATASET-072"
+   ],
+   "status": "proposed",
+   "owner": "Francesco",
+   "notes": "The system measure of the refined requirement is VM-SYS-LIFE-074.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-11",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's rule of 2026-11-11 on the permanent manufacturer identification (SYS.2 derivation), SWE.1 refinement",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}

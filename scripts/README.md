@@ -1,6 +1,6 @@
 # Repository checks
 
-This folder holds the checks of the repository. The script `check-license-headers.mjs` lists every file without the license header of its kind or without a NOTICE section. The script `check-sources.mjs` compares every file under `sources/` with the register `sources/SOURCES.json`.
+This folder holds the checks of the repository. The script `check-license-headers.mjs` lists every file without the license header of its kind or without a NOTICE section. The script `check-sources.mjs` compares every file under `sources/` with the register `sources/SOURCES.json`. The script `requirements-check.mjs` checks the requirements registry of `requirements/` with the rules of `lib/requirementsRules.mjs` and prints the traceability matrix with the option `--matrix`.
 
 ## NOTICE
 
@@ -9,4 +9,4 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 - SPDX-License-Identifier: CC-BY-4.0
 - SPDX-FileCopyrightText: 2026 Ichnos Protocol Pte. Ltd.
 - SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
-- Source URL: https://github.com/Khorolev/battery-passport-after-first-life/blob/main/scripts/README.md
+- Source URL: https://github.com/Ichnos-Protocol/battery-passport-after-first-life/blob/main/scripts/README.md

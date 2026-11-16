@@ -1,0 +1,82 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.1 (Requirements Elicitation); requirements/method.md sections 4 to 7. The stakeholder requirements that quote the party VDA ENX-Automotive SPICE TISAX and ISA; a requirement that quotes several parties is held, identical, in the folder of each.",
+ "requirements": [
+  {
+   "id": "StR-SEC-101",
+   "title": "Customer information assets securely removed when the service ends",
+   "statement": "When a customer ends its use of the Ichnos service, Ichnos shall securely remove the customer's information assets from the service through a defined and implemented procedure.",
+   "kind": "functional",
+   "stakeholders": [
+    "STK-01",
+    "STK-02",
+    "STK-12"
+   ],
+   "perimeter": "stack",
+   "sources": [
+    {
+     "source": "SRC-VDA-ISA-2027",
+     "locator": "Information Security 5.3.3, Requirements (must)",
+     "quote": "A procedure for the return and secure removal of information assets from each external IT service is defined and implemented."
+    }
+   ],
+   "rationale": "For its customers Ichnos is an external IT service, so a customer that holds TISAX needs the secure removal of its information assets from Ichnos (ISA 5.3.3). The keys and credentials of an ended tenant must not survive as a way into the dataspace. The return of the data (export, switching between data processing services under the Data Act, roadmap R8-2) is a requirement of the area PRIV. No source sets the period: Q-105.",
+   "acceptance": "After a test subscription ends, its stack's secret store, database, wallet and registry entries and its tenant data in the application are gone, its credentials are revoked, and a removal record names the date (inspection), within the agreed period.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "",
+   "carriesOver": [],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "security",
+   "notes": "Order settled in the integration review: retrieval (StR-DATA-025, export StR-DATA-028 and StR-DATA-029, return of personal data StR-PRIV-034) before removal. The stack holds the customer's only copy of its data exchange contracts (StR-CXC-070), which leave with the export. Open: conflict CA-1 (passport data under Art. 78(c) and (e), security logs under StR-SEC-106).",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area security",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "statement changed from \"When a customer's subscription ends, Ichnos shall securely remove that customer's data, keys, secrets and credentials from the application and from its stack, within the period agreed with Francesco.\"",
+     "reason": "Settled for the stored law (the project guidelines of the battery passport application, direction of change): Data Act Art. 25(2)(g) guarantees 'a minimum period for data retrieval of at least 30 calendar days, starting after the termination of the transitional period' and Art. 25(2)(h) allows full erasure only 'after the expiry of the retrieval period' (StR-DATA-025, StR-DATA-026, StR-DATA-027); a removal at the end of the subscription could precede them. ISA 5.3.3 asks for 'the return and secure removal', so the return comes first. The agreed period of Q-SEC-15 counts from the end of the retrieval period. Which data must survive the removal is conflict CA-1.",
+     "approver": "",
+     "by": "integration review cross-areas"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes changed from undefined",
+     "reason": "Traceability of the settlement.",
+     "approver": "",
+     "by": "integration review cross-areas"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "rationale changed from \"For its customers Ichnos is an external IT service, so a customer that holds TISAX needs the secure removal of its information assets from Ichnos (ISA 5.3.3). The keys and credentials of an ended tena\"",
+     "reason": "Finding 202: the text cited the area's first question numbers, which decisions.json renumbered (mergedFrom of each decision); only the question ids change.",
+     "approver": "",
+     "by": "system integration review sys-trust"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-SEC-019, SyR-SEC-227; statement (before: \"When a customer's subscription ends, Ichnos shall securely remove that customer's data, keys, secrets and credentials from the application and from its stack, after the end of the period in which the customer can still retrieve its exportable data and within the period agreed with Francesco.\"); title (before: \"Customer data, keys and credentials removed when a subscription ends\")",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. VDA ISA control 5.3.3 (return and secure removal of information assets from external IT services) asks a customer for a procedure that removes its information assets from each external IT service, and Ichnos is such an external IT service for its customers. The listing of keys, secrets and credentials, the removal from the application and from each customer's stack under ADR 0004 (connector topology), the start after the retrieval period and the period agreed with Francesco (question Q-105) are owner choices. SyR-SEC-019 (ended customer's data and secrets removed from the application) and SyR-SEC-227 (ended customer's stack removed with its keys and credentials revoked) state the owner choices.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}

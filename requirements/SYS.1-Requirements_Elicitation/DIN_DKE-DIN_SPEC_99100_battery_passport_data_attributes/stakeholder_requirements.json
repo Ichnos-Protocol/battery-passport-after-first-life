@@ -1,0 +1,1587 @@
+{
+ "requirement": "Automotive SPICE 4.1 SYS.1 (Requirements Elicitation); requirements/method.md sections 4 to 7. The stakeholder requirements that quote the party DIN DKE-DIN SPEC 99100 battery passport data attributes; a requirement that quotes several parties is held, identical, in the folder of each.",
+ "requirements": [
+  {
+   "id": "StR-PASS-037",
+   "title": "Manufacturer identifier relating to the battery model",
+   "statement": "The battery passport dataset shall contain the manufacturer identifier, relating to the battery model.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-01",
+    "STK-05",
+    "STK-08",
+    "STK-15"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex VI Part A point 1",
+     "quote": "information identifying the manufacturer in accordance with Article 38(7)"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 1(a)",
+     "quote": "(a) the information specified in Part A of Annex VI;"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.2.4 a)",
+     "quote": "A battery passport must include information identifying the manufacturer."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.2.4 e)",
+     "quote": "The manufacturer identifier must relate to the battery model."
+    }
+   ],
+   "rationale": "Annex VI Part A point 1 and Annex XIII point 1(a) require information identifying the manufacturer; DIN 6.1.2.4 adds an identifier at model level.",
+   "acceptance": "Inspection of the dataset delivered for a test battery of each category to which the item applies shows the manufacturer identifier recorded for the battery model.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "DIN-ID-002",
+    "EU-ANNEX13-001"
+   ],
+   "notes": "",
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "passport-content",
+   "catenaXCompliance": {
+    "titan": "met",
+    "neptune": "met",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 aspect model, JSON schema (urn:samm:io.catenax.battery.battery_pass:6.1.0, CX-Titan)",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "operation.manufacturer.manufacturer"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate aspect model 1.0.0, JSON schema (CX-Neptune, CX-0160 section 3.2)",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "ManufacturerIdentifier"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data aspect model 1.0.1, JSON schema (CX-Neptune, CX-0160 section 3.5)",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "GeneralInformation.ManufacturerIdentifier"
+     },
+     {
+      "text": "CX-0160 Battery Passport Data Management Base 1.1.0 (CX-Neptune)",
+      "locator": "3 Semantic models, Application of the Data Models"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) requires `operation.manufacturer.manufacturer` (Business Partner Number of a legal entity of the manufacturer) in each passport. The Digital Nameplate model IDTA-02035-1 (battery nameplate) and the Technical Data model IDTA-02035-4 (battery technical data) require `ManufacturerIdentifier` (manufacturer identifier), and CX-0160 (Battery Passport) 1.1.0 base section 3 requires a valid Business Partner Number of a legal entity in that field."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area passport-content",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): Both releases are met because each release requires the manufacturer identifier.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-PASS-069",
+   "title": "Battery status: legitimate-interest access",
+   "statement": "The battery passport dataset shall mark the status of the battery as information accessible only to persons with a legitimate interest.",
+   "kind": "constraint",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-06",
+    "STK-08",
+    "STK-15"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 d)",
+     "quote": "The information on the battery status must be accessible only to persons with a legitimate interest."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 4",
+     "quote": "A battery passport shall include the following specific information and data relating to an individual battery, which shall be accessible only to persons with a legitimate interest:"
+    }
+   ],
+   "rationale": "Annex XIII point 4 restricts information on the individual battery to persons with a legitimate interest. The passport service provider restricts access by Annex XIII and the Art. 77(9) implementing act (Art. 78(b) and (f)) and needs each item's tier in the dataset.",
+   "acceptance": "Inspection of the dataset delivered for a test battery shows the status of the battery marked for persons with a legitimate interest and for no wider access group.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "EU-ANNEX13-027"
+   ],
+   "notes": "",
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "passport-content",
+   "catenaXCompliance": {
+    "titan": "gap",
+    "neptune": "gap",
+    "basis": [],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) carries `sustainability.status` (battery status) but no property for an access group, and CX-0143 (Use Case Circular Economy, Digital Product Passport) 1.4.0 introduction section 1.2 limits its scope to access-controlled information between identified participants, so no CX-Titan text marks the battery status as accessible only to persons with a legitimate interest. The CX-Neptune models carry `LifeCycleStage` (battery status) without an access group, CX-0160 (Battery Passport) 1.1.0 base section 1.1 puts public information without access restrictions out of scope, and use case 3 section 5.2 leaves role-based access control to a proxy outside the Catena-X dataspace."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area passport-content",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): Both releases are a gap because no Catena-X model marks the battery status as legitimate-interest information.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-009",
+   "title": "Status waste recorded on the battery passport",
+   "statement": "When a battery becomes a waste battery, the system shall record the battery status 'waste' on the battery's passport.",
+   "kind": "functional",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-04",
+    "STK-06",
+    "STK-07",
+    "STK-12"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(7), second subparagraph",
+     "quote": "Where the status of a battery changes to that of a waste battery"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "3.51",
+     "quote": "battery which the holder intends to or is required to discard or discards"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 b)",
+     "quote": "The status of the battery must be defined as 'original', 'repurposed', 're-used', 'remanufactured' or 'waste'."
+    }
+   ],
+   "rationale": "DIN DKE SPEC 99100 6.1.3.7 b) lists 'waste' among the statuses of the battery, and Art. 77(7) treats the change to waste as a change of the battery's status. DIN 3.51 says when a battery is waste: when its holder discards it, intends to or is required to. Decision Q-022 (whether waste status and recycling are recorded as separate events) records the status waste when the battery becomes waste, and the recycling as a separate later event that ends the passport (Art. 77(8)).",
+   "acceptance": "Test: recording that a battery has become waste sets the status 'waste' on its passport.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1)), for each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service",
+   "carriesOver": [],
+   "notes": "Decision Q-022 (whether waste status and recycling are recorded as separate events) decides that the system records the status 'waste' when the battery becomes waste, with the transfer of responsibility of Art. 77(7) second subparagraph, and records recycling as a separate later event that ends the passport (Art. 77(8)).",
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "met",
+    "neptune": "met",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "sustainability.status"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) sustainability.status (the battery status) and the Industrial Digital Twin Association (IDTA) Digital Nameplate IDTA-02035-1 of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) LifeCycleStage (the battery status) both carry the value 'waste' on the existing battery passport."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "question numbers replaced by the ids of decisions.json",
+     "reason": "the register's consolidated questions (their mergedFrom)",
+     "approver": "",
+     "by": "system integration review integrator"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes: the requirement named as the subject of its subjectless sentences (\"Refines\", \"Depends on\", \"Threats answered\" and similar); no other word changed",
+     "reason": "Francesco's sentence rule of 2026-10-22 (every sentence has a named subject, a verb and its context)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-008",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Art. 77(7) second subparagraph treats the change to waste as a change of the status of the battery that transfers the Art. 77(4) obligation for the existing passport, and DIN DKE SPEC 99100 3.51 defines when a battery is a waste battery. The vision quote about recycling adds a timing that the statement does not contain.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "title (before: \"Status waste recorded on the existing passport\"); statement (before: \"When a battery becomes a waste battery, the system shall record the status 'waste' on its existing battery passport without creating a new passport.\"); sources (before: [{\"source\":\"SRC-EU-2023-1542\",\"path\":\"sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml\",\"locator\":\"Art. 77(7), second subparagraph\",\"quote\":\"Where the status of a battery changes to that of a waste battery, the responsibility for the fulfilment of the obligations under paragraph 4 of this Article shall be transferred either to the producer\"},{\"source\":\"SRC-DIN-DKE-SPEC-99100\",\"path\":\"DIN DKE SPEC 99100:2025-02\",\"locator\":\"3.51\",\"quote\":\"battery which the holder intends to or is required to discard or discards\"}]); rationale (before: \"Art. 77(7) treats the change to waste as a change of status of the same battery, with a transfer of responsibility (StR-LIFE-050) and no new passport. DIN 3.51 says when a battery is waste: when its holder discards it, intends to or is required to. The project sets 'waste' when the recycler records the recycling, which can be much later than the moment the battery becomes waste (Q-022).\"); acceptance (before: \"Test: recording that a battery has become waste sets 'waste' on its passport, creates no passport and keeps the passport's identifier.\"); title (before: \"Status waste recorded on the existing passport\"); statement (before: \"When a battery becomes a waste battery, the system shall record the status 'waste' on its existing battery passport without creating a new passport.\"); sources (before: [{\"source\":\"SRC-EU-2023-1542\",\"path\":\"sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml\",\"locator\":\"Art. 77(7), second subparagraph\",\"quote\":\"Where the status of a battery changes to that of a waste battery, the responsibility for the fulfilment of the obligations under paragraph 4 of this Article shall be transferred either to the producer\"},{\"source\":\"SRC-DIN-DKE-SPEC-99100\",\"path\":\"DIN DKE SPEC 99100:2025-02\",\"locator\":\"3.51\",\"quote\":\"battery which the holder intends to or is required to discard or discards\"}]); rationale (before: \"Art. 77(7) treats the change to waste as a change of status of the same battery, with a transfer of responsibility (StR-LIFE-050) and no new passport. DIN 3.51 says when a battery is waste: when its holder discards it, intends to or is required to. The project sets 'waste' when the recycler records the recycling, which can be much later than the moment the battery becomes waste (Q-022).\"); acceptance (before: \"Test: recording that a battery has become waste sets 'waste' on its passport, creates no passport and keeps the passport's identifier.\")",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): StR-LIFE-009 (status waste recorded on the existing passport) claimed 'without creating a new passport', which neither quote states, so the stakeholder requirement keeps the status 'waste' of DIN DKE SPEC 99100 6.1.3.7 b) and the rule of no new passport stays with SyR-LIFE-008 (status waste set on the existing passport, with no new passport) at SYS.2.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes (before: \"StR-LIFE-009 depends on Q-022.\"); notes (before: \"StR-LIFE-009 depends on Q-022.\")",
+     "reason": "Decision Q-022 (whether waste status and recycling are recorded as separate events), answered on 2026-10-26, is no longer open, so the text states its answer: Decision Q-022 (whether waste status and recycling are recorded as separate events) is answered, so the note of StR-LIFE-009 states that the status 'waste' is recorded when the battery becomes waste and recycling is a separate later event.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "rationale: \"The project sets 'waste' when the recycler records the recycling, which can be much later than the moment the battery becomes waste (Q-022).\" replaced",
+     "reason": "Decision Q-022 (whether waste status and recycling are recorded as separate events), answered on 2026-10-26: the rationale described the project setting waste at the recycling, which the decision replaces.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is met in both releases because both status enumerations contain the value waste.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-014",
+   "title": "Preparation for re-use or repurposing only for a waste battery",
+   "statement": "The system shall accept preparation for re-use or preparation for repurposing only for a battery whose status is 'waste'.",
+   "kind": "constraint",
+   "stakeholders": [
+    "STK-03",
+    "STK-04",
+    "STK-07"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 3(1), point (30)",
+     "quote": "'preparation for repurposing' means any operation, by which a waste battery, or parts thereof, is prepared so that it can be used for a different purpose or application than that for which it was originally designed"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 3(1), point (29)",
+     "quote": "'preparation for re-use' means preparing for re-use as defined in Article 3, point (16), of Directive 2008/98/EC"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "3.35 (preparation for re-use, from Directive 2008/98/EC Art. 3(16))",
+     "quote": "processes, by which products or components of products that have become waste are prepared so that they can be re-used without any other pre-processing"
+    }
+   ],
+   "rationale": "Both operations are defined on waste: Art. 3(30) on a waste battery, Art. 3(29) through Directive 2008/98/EC, which DIN 3.35 reproduces as products that have become waste. The operations that apply to a battery that is not waste are repurposing (StR-LIFE-015), remanufacturing and repair.",
+   "acceptance": "Test: preparation for re-use and preparation for repurposing of a battery whose status is not 'waste' are refused; of a waste battery, accepted.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1)), for each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service",
+   "carriesOver": [],
+   "notes": "Decision Q-022 (whether waste status and recycling are recorded as separate events) decides that the system records the status 'waste' when the battery becomes waste and records recycling as a separate later event, so a waste battery that is not yet recycled may still be prepared for re-use or for repurposing.",
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "sustainability.status"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) sustainability.status and the Industrial Digital Twin Association (IDTA) Digital Nameplate IDTA-02035-1 of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) LifeCycleStage carry the status 'waste' from which an admission check can start. No Catena-X text admits preparation for re-use or preparation for repurposing only for a waste battery, and neither model distinguishes a battery prepared for re-use from a re-used battery."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "question numbers replaced by the ids of decisions.json",
+     "reason": "the register's consolidated questions (their mergedFrom)",
+     "approver": "",
+     "by": "system integration review integrator"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes: the requirement named as the subject of its subjectless sentences (\"Refines\", \"Depends on\", \"Threats answered\" and similar); no other word changed",
+     "reason": "Francesco's sentence rule of 2026-10-22 (every sentence has a named subject, a verb and its context)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes (before: \"StR-LIFE-014 depends on Q-021 and Q-022.\"); notes (before: \"StR-LIFE-014 depends on Q-021 and Q-022.\")",
+     "reason": "Decision Q-021 (the reuse action that creates a new passport), answered on 2026-10-26, applied with Francesco's \"apply the next round\": Decision Q-021 accepts preparation for re-use only for a waste battery, as StR-LIFE-014 (preparation for re-use or repurposing only for a waste battery) states, so StR-LIFE-014 keeps its statement and its notes drop the dependency on Q-021.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes (before: \"StR-LIFE-014 depends on Q-022.\"); notes (before: \"StR-LIFE-014 depends on Q-022.\")",
+     "reason": "Decision Q-022 (whether waste status and recycling are recorded as separate events), answered on 2026-10-26, is no longer open, so the text states its answer: Decision Q-022 (whether waste status and recycling are recorded as separate events) is answered, so the note of StR-LIFE-014 states that a waste battery that is not yet recycled may still be prepared for re-use or for repurposing.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the status is carried but the admission rule is not stated.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-018",
+   "title": "Preparation for re-use requires the original purpose",
+   "statement": "The system shall accept preparation for re-use only when the battery's recorded purpose is the one for which it was originally conceived.",
+   "kind": "constraint",
+   "stakeholders": [
+    "STK-03",
+    "STK-07"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "3.45 (re-use, from Directive 2008/98/EC Art. 3(13))",
+     "quote": "operation by which products or components that are not waste are used again for the same purpose for which they were conceived"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "3.35 (preparation for re-use)",
+     "quote": "processes, by which products or components of products that have become waste are prepared so that they can be re-used without any other pre-processing"
+    }
+   ],
+   "rationale": "Preparation for re-use prepares a waste battery to be re-used (DIN 3.35), and re-use is use for the same purpose (DIN 3.45).",
+   "acceptance": "Test: a preparation for re-use whose recorded purpose differs from the original purpose is refused.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1)), for each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service",
+   "carriesOver": [],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "commercial.purpose; identification.category"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data 1.0.1 (urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "GeneralInformation.BatteryCategory"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) commercial.purpose (the intended industries, which must include 'automotive' when exchanged through Catena-X) and identification.category (the battery category), and the Industrial Digital Twin Association (IDTA) Technical Data IDTA-02035-4 GeneralInformation.BatteryCategory (lmt, ev, industrial or stationary) of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) only approximate the purpose of the battery. No Catena-X text records the application for which the battery was originally designed or admits preparation for re-use only for the original purpose."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-017",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. DIN DKE SPEC 99100 3.35 defines preparation for re-use as preparing waste so that the product can be re-used, and DIN DKE SPEC 99100 3.45 defines re-use as use for the same purpose for which the product was conceived. The vision quote repeats the definitions.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because only the industry and the category are carried and the purpose rule is not stated.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-019",
+   "title": "New passport when a treated battery is placed on the market again",
+   "statement": "The system shall create a new battery passport for a battery that has been subject to preparation for re-use, preparation for repurposing, repurposing or remanufacturing and is placed on the market again.",
+   "kind": "functional",
+   "stakeholders": [
+    "STK-03",
+    "STK-06",
+    "STK-07",
+    "STK-08",
+    "STK-12"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 77(7), first subparagraph",
+     "quote": "Such battery shall have a new battery passport linked to the battery passport or passports of the original battery or batteries."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 e)",
+     "quote": "A new battery passport must be issued when a battery was subject to remanufacturing, repurpose or one of the treatment operations preparing for re-use and preparing for repurpose and is placed on the market again."
+    }
+   ],
+   "rationale": "Art. 77(7) and DIN 6.1.3.7 e) require a new passport; Art. 3(1) counts a battery that has undergone these operations as a battery in its own right. A new passport after preparation for re-use, preparation for repurposing, repurposing or remanufacturing is model B of the vision (invariant 5, ADR 0003). Repair is the only exception (SyR-LIFE-041).",
+   "acceptance": "Demonstration and test for each of the four operations: the treated battery placed on the market again has a new passport, distinct from the original one.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "18 February 2027 (Art. 77(1)), for each LMT battery, each industrial battery with a capacity greater than 2 kWh and each electric vehicle battery placed on the market or put into service",
+   "carriesOver": [],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "met",
+    "basis": [
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     },
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "metadata.predecessor"
+     }
+    ],
+    "note": "The Industrial Digital Twin Association (IDTA) Digital Nameplate IDTA-02035-1 of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) describes LifeCycleStage (the battery status) with the rule that a new battery passport must be issued when a battery was subject to remanufacturing, repurposing, preparation for re-use or preparation for repurposing and is placed on the market again. BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) carries metadata.predecessor (the identifier of the preceding passport), whose description quotes the linking rule of the Ecodesign for Sustainable Products Regulation (ESPR), but states no condition for issuing a new battery passport."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "rationale: reworded so that every sentence names its subject; meaning unchanged",
+     "reason": "Francesco's sentence rule of 2026-10-22 (every sentence has a named subject, a verb and its context)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-018",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Art. 77(7) first subparagraph and DIN DKE SPEC 99100 6.1.3.7 e) require a new battery passport for a battery that has undergone one of the four operations and is placed on the market again. The the project guidelines of the battery passport application quote of invariant 5 repeats the rule.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "rationale: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial for CX-Titan and met for CX-Neptune because only the CX-Neptune nameplate states when a new passport must be issued.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-043",
+   "title": "Repair sets the status re-used",
+   "statement": "After a repair, the system shall set the battery's status to 're-used'.",
+   "kind": "functional",
+   "stakeholders": [
+    "STK-06",
+    "STK-07",
+    "STK-12",
+    "STK-18"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 g)",
+     "quote": "The repair of a battery shall be made transparent and be recorded as \"repaired\" under the battery status \"re-used\""
+    }
+   ],
+   "rationale": "Francesco ruled on 2026-09-27 for the literal reading of DIN 6.1.3.7 g): the status after a repair is 're-used'.",
+   "acceptance": "Test: a repair of a battery with status 'original' leaves the passport with status 're-used'.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "",
+   "carriesOver": [],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "sustainability.status"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     },
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Titan",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     },
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Neptune",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) sustainability.status and the Industrial Digital Twin Association (IDTA) Digital Nameplate IDTA-02035-1 of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) LifeCycleStage carry the value 're-used', and CX-0131 1.1.1 (Circularity Core, the same text in CX-Titan and CX-Neptune) names a Repair Certificate that the repairer should issue. No Catena-X text states that a repair sets the battery status to 're-used'."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "stakeholders changed from [\"STK-06\",\"STK-07\",\"STK-12\"]",
+     "reason": "Completeness review: the requirement serves STK-18 (Repairer (independent operator)), added by this review.",
+     "approver": "",
+     "by": "integration review completeness"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-042",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. DIN DKE SPEC 99100 6.1.3.7 g) records a repair as 'repaired' under the battery status 're-used'. Francesco's ruling of 2026-09-27 adopts the literal reading of the DIN text, and the the project guidelines of the battery passport application quote repeats the rule.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the value re-used is carried but the repair rule is not stated.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-044",
+   "title": "Repair recorded with the description repaired",
+   "statement": "The system shall record a repair with the description 'repaired' under the battery status 're-used'.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-06",
+    "STK-07",
+    "STK-12",
+    "STK-18"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 g)",
+     "quote": "The repair of a battery shall be made transparent and be recorded as \"repaired\" under the battery status \"re-used\""
+    }
+   ],
+   "rationale": "The description makes the repair transparent and distinguishes it from a preparation for re-use, which has the same status on a new passport.",
+   "acceptance": "Test: after a repair the status is 're-used' and its description includes 'repaired'.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "",
+   "carriesOver": [],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "sustainability.status"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     },
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Titan",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     },
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Neptune",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) sustainability.status and the Industrial Digital Twin Association (IDTA) Digital Nameplate IDTA-02035-1 of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) LifeCycleStage carry the status 're-used' but hold no property for the description 'repaired' beside it. CX-0131 1.1.1 (Circularity Core, the same text in CX-Titan and CX-Neptune) names a Repair Certificate whose content is not stored in the repository."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "stakeholders changed from [\"STK-06\",\"STK-07\",\"STK-12\"]",
+     "reason": "Completeness review: the requirement serves STK-18 (Repairer (independent operator)), added by this review.",
+     "approver": "",
+     "by": "integration review completeness"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-043",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. DIN DKE SPEC 99100 6.1.3.7 g) requires the repair to be recorded as 'repaired' under the battery status 're-used'. The vision quote repeats that the description never replaces the status.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the status is carried but the description repaired is not.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-045",
+   "title": "Repair history included in the passport",
+   "statement": "The battery passport dataset shall include the battery's repair history.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-06",
+    "STK-07",
+    "STK-12",
+    "STK-18"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.1.3.7 f)",
+     "quote": "Additionally to the battery status, the battery's repair history shall be included"
+    }
+   ],
+   "rationale": "DIN adds the repair history to the status; under model A it is the only record of what a repair changed on the same passport.",
+   "acceptance": "Test: two repairs on one battery give two entries in its repair history, each with its date and its treatment.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "",
+   "carriesOver": [],
+   "notes": "StR-LIFE-045 depends on Q-030 (the access tier for a battery's repair history). Decision Q-045 (the role that records a repair) names, in the data layer, the company that holds the value-chain role repairer as the writer of the repair record (SyR-LIFE-044); the EU regulatory role of the passport demo stays with follow-up FS14 (repair on the same passport).",
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Titan",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     },
+     {
+      "text": "CX-0131 Circularity Core 1.1.1, CX-Neptune",
+      "locator": "2.4.2 Additional requirements; 2.4.2.1 Registration of the Digital Twin; 3.16 to 3.22 certificate models"
+     },
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "sustainability.status"
+     },
+     {
+      "text": "IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0 (urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json",
+      "locator": "LifeCycleStage"
+     }
+    ],
+    "note": "CX-0131 1.1.1 (Circularity Core, the same text in CX-Titan and CX-Neptune) lets the repairer issue a Repair Certificate registered as repairCrt_{PartInstanceId} (the repair certificate shell of the part) beside the battery twin, so each repair can leave a record. BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) and the models of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) hold no repair history in the battery passport dataset, and the content of the certificate is not stored in the repository."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "stakeholders changed from [\"STK-06\",\"STK-07\",\"STK-12\"]",
+     "reason": "Completeness review: the requirement serves STK-18 (Repairer (independent operator)), added by this review.",
+     "approver": "",
+     "by": "integration review completeness"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "question numbers replaced by the ids of decisions.json",
+     "reason": "the register's consolidated questions (their mergedFrom)",
+     "approver": "",
+     "by": "system integration review integrator"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes: the requirement named as the subject of its subjectless sentences (\"Refines\", \"Depends on\", \"Threats answered\" and similar); no other word changed",
+     "reason": "Francesco's sentence rule of 2026-10-22 (every sentence has a named subject, a verb and its context)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes (before: \"StR-LIFE-045 depends on Q-030 and Q-045 (access tier of the repair history and the role that records a repair, follow-up FS14).\")",
+     "reason": "Decision Q-045 (the role that records a repair), answered on 2026-10-26, applied with Francesco's \"apply the next round\": StR-LIFE-045 keeps its statement and drops its dependency on Q-045 (the role that records a repair) from its notes, because decision Q-045 names the value-chain role repairer as the writer in the application perimeter.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because repair certificates exist beside the twin but the passport dataset holds no repair history.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-089",
+   "title": "Rated capacity recorded at placing and at each status change",
+   "statement": "The battery passport dataset shall contain the rated capacity (in Ah) of the individual battery recorded when it is placed on the market and again at each change of its status, keeping each earlier value.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-06",
+    "STK-07",
+    "STK-08",
+    "STK-15"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII, point 4(a)",
+     "quote": "(a) the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status;"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1), first subparagraph",
+     "quote": "rechargeable industrial batteries with a capacity greater than 2 kWh, LMT batteries and electric vehicle batteries shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV, Part A",
+     "quote": "Rated capacity (in Ah) and capacity fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.2.2 e)",
+     "quote": "The update interval shall be upon placement on the market and change of status."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 4(a)",
+     "quote": "the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1)",
+     "quote": "shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV Part A point 1",
+     "quote": "1. Rated capacity (in Ah) and capacity fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.2.4 f)",
+     "quote": "The update interval must be upon placement on the market and change of status."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.3.4 e)",
+     "quote": "The update interval must be upon placement on the market and upon change of the battery status"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.4.5 e)",
+     "quote": "The energy round trip efficiency fade must be updated upon placement on the market and change of the battery status"
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.5.3 f)",
+     "quote": "The internal resistance increase must be updated upon change of the battery status"
+    }
+   ],
+   "rationale": "Annex XIII point 4(a) asks for the Annex IV Part A values at the placing on the market and at each change of status. Under model B the change of status comes with a new passport, which carries the new value; under model A (repair) the same passport carries both. The earlier values stay, because the point names both moments.",
+   "acceptance": "Test: a battery placed on the market and later repaired shows on its passport the value at placing and the value at the repair; after it becomes waste and is prepared for re-use, the new passport carries the new value and the original passport keeps its values.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "Art. 10(1): from 18 August 2024 for the accompanying document; in the battery passport from 18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "EU-ANNEX13-025"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "notes": "Kept over StR-LIFE-089 (integration review pass-life), whose sources are merged here. DIN DKE SPEC 99100 relates these parameters to the battery model and does not ask for a value of the individual battery at each change of status; the Regulation does (Annex XIII point 4(a)). Art. 10(4) disapplies Art. 10(1) to (3) to a treated battery whose original battery was placed on the market or put into service before the dates of those paragraphs (StR-LIFE-115). The access tier is StR-PASS-252.",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "performance.rated.capacity.value; performance.dynamic.capacity.capacity"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data 1.0.1 (urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "TechnicalPropertyAreas.CapacityEnergyVoltage.RatedCapacity"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) performance.rated.capacity.value (rated capacity in ampere-hours), and the Industrial Digital Twin Association (IDTA) Technical Data IDTA-02035-4 RatedCapacity (in Ah) of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) carry one value per passport. Neither release keeps the value recorded at placing on the market beside the values recorded at each later change of status; with a new passport per status change the earlier value remains only in the predecessor passport, which BatteryPass links and CX-Neptune does not."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took the citations of StR-PASS-242",
+     "reason": "Both require the rated capacity of the individual battery in the dataset at placing on the market and at each change of status (Annex XIII point 4(a), Art. 10(1), Annex IV Part A); one test (place a battery, change its status, inspect the values) passes or fails both. StR-LIFE-089 is kept: it is more precise (it states that each earlier value is kept, and its acceptance covers both the repair on the same passport and the new passport of model B) and better sourced (it adds the DIN update clause where DIN has one and the project rule of the project guidelines of the battery passport application). The access tier of these values stays with StR-PASS-252. StR-PASS-242 carried EU-ART10 and EU-ANNEX13-025 identifiers: the EU-ART10 one stays claimed by the model-level passport-content requirement, EU-ANNEX13-025 moves to lifecycle.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-242",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes changed from undefined",
+     "reason": "Carries over the context note of the rejected duplicate StR-PASS-242.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took the citations of StR-PASS-232",
+     "reason": "Not atomic (six values in one shall) and fully covered: the update at placing on the market and at each change of status of the rated capacity, capacity fade, power fade, energy round trip efficiency fade, internal resistance increase and expected lifetime in calendar years is stated one value each by StR-LIFE-089, StR-LIFE-090, StR-LIFE-092, StR-LIFE-096, StR-LIFE-094 and StR-LIFE-098, which quote the same DIN clauses and Annex XIII point 4(a). The test of StR-PASS-232 (after a status change the values are set for the new status and the values at placing stay readable) is the test of those six. Its sources are merged into the six, each with its own DIN clause.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-232 (6.7.2.2 e), Annex XIII point 4(a))",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-087",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Annex XIII point 4(a), Art. 10(1) and Annex IV Part A point 1 require the value of the rated capacity in Ah at the placing on the market and at each change of status, and DIN DKE SPEC 99100 6.7.2.2 e) sets the same update interval. The the project guidelines of the battery passport application quote only repeats that the performance and durability data are updated to the new condition.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the rated capacity is carried without the value history across status changes.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-090",
+   "title": "Capacity fade recorded at placing and at each status change",
+   "statement": "The battery passport dataset shall contain the capacity fade (in %) of the individual battery recorded when it is placed on the market and again at each change of its status, keeping each earlier value.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-06",
+    "STK-07",
+    "STK-08"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII, point 4(a)",
+     "quote": "(a) the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status;"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1), first subparagraph",
+     "quote": "rechargeable industrial batteries with a capacity greater than 2 kWh, LMT batteries and electric vehicle batteries shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV, Part A",
+     "quote": "Rated capacity (in Ah) and capacity fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.2.4 e) and f)",
+     "quote": "The capacity fade must be updated upon change of the battery status"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 4(a)",
+     "quote": "the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1)",
+     "quote": "shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV Part A point 1",
+     "quote": "1. Rated capacity (in Ah) and capacity fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.2.4 f)",
+     "quote": "The update interval must be upon placement on the market and change of status."
+    }
+   ],
+   "rationale": "Annex XIII point 4(a) asks for the Annex IV Part A values at the placing on the market and at each change of status. Under model B the change of status comes with a new passport, which carries the new value; under model A (repair) the same passport carries both. The earlier values stay, because the point names both moments.",
+   "acceptance": "Test: a battery placed on the market and later repaired shows on its passport the value at placing and the value at the repair; after it becomes waste and is prepared for re-use, the new passport carries the new value and the original passport keeps its values.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "Art. 10(1): from 18 August 2024 for the accompanying document; in the battery passport from 18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "EU-ANNEX13-025"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "notes": "Kept over StR-LIFE-090 (integration review pass-life), whose sources are merged here. DIN DKE SPEC 99100 relates these parameters to the battery model and does not ask for a value of the individual battery at each change of status; the Regulation does (Annex XIII point 4(a)). Art. 10(4) disapplies Art. 10(1) to (3) to a treated battery whose original battery was placed on the market or put into service before the dates of those paragraphs (StR-LIFE-115). The access tier is StR-PASS-252.",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "performance.dynamic.capacity.fade"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data 1.0.1 (urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "TechnicalPropertyAreas.CapacityEnergyVoltage.CapacityFade"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) performance.dynamic.capacity.fade (capacity fade in percent with its time), and the Industrial Digital Twin Association (IDTA) Technical Data IDTA-02035-4 CapacityFade of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) carry one value per passport. Neither release keeps the value recorded at placing on the market beside the values recorded at each later change of status; with a new passport per status change the earlier value remains only in the predecessor passport, which BatteryPass links and CX-Neptune does not."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took the citations of StR-PASS-243",
+     "reason": "Both require the capacity fade of the individual battery in the dataset at placing on the market and at each change of status (Annex XIII point 4(a), Art. 10(1), Annex IV Part A); one test (place a battery, change its status, inspect the values) passes or fails both. StR-LIFE-090 is kept: it is more precise (it states that each earlier value is kept, and its acceptance covers both the repair on the same passport and the new passport of model B) and better sourced (it adds the DIN update clause where DIN has one and the project rule of the project guidelines of the battery passport application). The access tier of these values stays with StR-PASS-252. StR-PASS-243 carried EU-ART10 and EU-ANNEX13-025 identifiers: the EU-ART10 one stays claimed by the model-level passport-content requirement, EU-ANNEX13-025 moves to lifecycle.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-243",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes changed from undefined",
+     "reason": "Carries over the context note of the rejected duplicate StR-PASS-243.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-232 (6.7.2.4 f))",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-088",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Annex XIII point 4(a), Art. 10(1) and Annex IV Part A point 1 require the value of the capacity fade in % at the placing on the market and at each change of status, and DIN DKE SPEC 99100 6.7.2.4 e) and f) set the same update interval. The the project guidelines of the battery passport application quote only repeats that the performance and durability data are updated to the new condition.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the capacity fade is carried without the value history across status changes.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-092",
+   "title": "Power fade recorded at placing and at each status change",
+   "statement": "The battery passport dataset shall contain the power fade (in %) of the individual battery recorded when it is placed on the market and again at each change of its status, keeping each earlier value.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-06",
+    "STK-07",
+    "STK-08"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII, point 4(a)",
+     "quote": "(a) the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status;"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1), first subparagraph",
+     "quote": "rechargeable industrial batteries with a capacity greater than 2 kWh, LMT batteries and electric vehicle batteries shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV, Part A",
+     "quote": "Power (in W) and power fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.3.4 a) and e)",
+     "quote": "The battery passport must contain information on the power fade."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 4(a)",
+     "quote": "the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1)",
+     "quote": "shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV Part A point 2",
+     "quote": "2. Power (in W) and power fade (in %)."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.3.4 e)",
+     "quote": "The update interval must be upon placement on the market and upon change of the battery status"
+    }
+   ],
+   "rationale": "Annex XIII point 4(a) asks for the Annex IV Part A values at the placing on the market and at each change of status. Under model B the change of status comes with a new passport, which carries the new value; under model A (repair) the same passport carries both. The earlier values stay, because the point names both moments.",
+   "acceptance": "Test: a battery placed on the market and later repaired shows on its passport the value at placing and the value at the repair; after it becomes waste and is prepared for re-use, the new passport carries the new value and the original passport keeps its values.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "Art. 10(1): from 18 August 2024 for the accompanying document; in the battery passport from 18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "EU-ANNEX13-025"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "notes": "Kept over StR-LIFE-092 (integration review pass-life), whose sources are merged here. DIN DKE SPEC 99100 relates these parameters to the battery model and does not ask for a value of the individual battery at each change of status; the Regulation does (Annex XIII point 4(a)). Art. 10(4) disapplies Art. 10(1) to (3) to a treated battery whose original battery was placed on the market or put into service before the dates of those paragraphs (StR-LIFE-115). The access tier is StR-PASS-252.",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "performance.dynamic.power.fade"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data 1.0.1 (urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "TechnicalPropertyAreas.PowerCapability.PowerFade"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) performance.dynamic.power.fade (power fade in percent with its time), and the Industrial Digital Twin Association (IDTA) Technical Data IDTA-02035-4 PowerFade (in %) of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) carry one value per passport. Neither release keeps the value recorded at placing on the market beside the values recorded at each later change of status; with a new passport per status change the earlier value remains only in the predecessor passport, which BatteryPass links and CX-Neptune does not."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took the citations of StR-PASS-245",
+     "reason": "Both require the power fade of the individual battery in the dataset at placing on the market and at each change of status (Annex XIII point 4(a), Art. 10(1), Annex IV Part A); one test (place a battery, change its status, inspect the values) passes or fails both. StR-LIFE-092 is kept: it is more precise (it states that each earlier value is kept, and its acceptance covers both the repair on the same passport and the new passport of model B) and better sourced (it adds the DIN update clause where DIN has one and the project rule of the project guidelines of the battery passport application). The access tier of these values stays with StR-PASS-252. StR-PASS-245 carried EU-ART10 and EU-ANNEX13-025 identifiers: the EU-ART10 one stays claimed by the model-level passport-content requirement, EU-ANNEX13-025 moves to lifecycle.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-245",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes changed from undefined",
+     "reason": "Carries over the context note of the rejected duplicate StR-PASS-245.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-232 (6.7.3.4 e))",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-090",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Annex XIII point 4(a), Art. 10(1) and Annex IV Part A point 2 require the value of the power fade in % at the placing on the market and at each change of status, and DIN DKE SPEC 99100 6.7.3.4 e) sets the same update interval. The the project guidelines of the battery passport application quote only repeats that the performance and durability data are updated to the new condition.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the power fade is carried without the value history across status changes.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "StR-LIFE-098",
+   "title": "Expected lifetime in years recorded at placing and each status change",
+   "statement": "The battery passport dataset shall contain the expected lifetime in calendar years of the individual battery recorded when it is placed on the market and again at each change of its status, keeping each earlier value.",
+   "kind": "data",
+   "stakeholders": [
+    "STK-01",
+    "STK-03",
+    "STK-06",
+    "STK-07",
+    "STK-08"
+   ],
+   "perimeter": "application",
+   "sources": [
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII, point 4(a)",
+     "quote": "(a) the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status;"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1), first subparagraph",
+     "quote": "rechargeable industrial batteries with a capacity greater than 2 kWh, LMT batteries and electric vehicle batteries shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV, Part A",
+     "quote": "The expected life-time of the battery under the reference conditions for which it has been designed, in terms of cycles, except for non-cycle applications, and calendar years."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.6.2 a) and d)",
+     "quote": "The battery passport must include information about the expected battery lifetime in calendar years."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex XIII point 4(a)",
+     "quote": "the values for performance and durability parameters referred to in Article 10(1), when the battery is placed on the market and when it is subject to changes in its status"
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Art. 10(1)",
+     "quote": "shall be accompanied by a document containing values for the electrochemical performance and durability parameters set out in Part A of Annex IV."
+    },
+    {
+     "source": "SRC-EU-2023-1542",
+     "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+     "locator": "Annex IV Part A point 5",
+     "quote": "5. The expected life-time of the battery under the reference conditions for which it has been designed, in terms of cycles, except for non-cycle applications, and calendar years."
+    },
+    {
+     "source": "SRC-DIN-DKE-SPEC-99100",
+     "locator": "6.7.6.2 d)",
+     "quote": "The update interval must be upon placement on the market and upon change of the battery status"
+    }
+   ],
+   "rationale": "Annex XIII point 4(a) asks for the Annex IV Part A values at the placing on the market and at each change of status. Under model B the change of status comes with a new passport, which carries the new value; under model A (repair) the same passport carries both. The earlier values stay, because the point names both moments.",
+   "acceptance": "Test: a battery placed on the market and later repaired shows on its passport the value at placing and the value at the repair; after it becomes waste and is prepared for re-use, the new passport carries the new value and the original passport keeps its values.",
+   "priority": "must",
+   "releasePlan": "this-release",
+   "appliesFrom": "Art. 10(1): from 18 August 2024 for the accompanying document; in the battery passport from 18 February 2027 (Art. 77(1))",
+   "carriesOver": [
+    "EU-ANNEX13-025"
+   ],
+   "status": "agreed",
+   "owner": "Francesco",
+   "area": "lifecycle",
+   "notes": "Kept over StR-LIFE-098 (integration review pass-life), whose sources are merged here. DIN DKE SPEC 99100 relates these parameters to the battery model and does not ask for a value of the individual battery at each change of status; the Regulation does (Annex XIII point 4(a)). Art. 10(4) disapplies Art. 10(1) to (3) to a treated battery whose original battery was placed on the market or put into service before the dates of those paragraphs (StR-LIFE-115). The access tier is StR-PASS-252.",
+   "catenaXCompliance": {
+    "titan": "partial",
+    "neptune": "partial",
+    "basis": [
+     {
+      "text": "BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0), CX-Titan",
+      "path": "sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl",
+      "locator": "performance.rated.lifetime.expectedYears"
+     },
+     {
+      "text": "IDTA-02035-4 Technical Data 1.0.1 (urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1), CX-Neptune",
+      "path": "sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.1/gen/TechnicalDataBattery-schema.json",
+      "locator": "TechnicalPropertyAreas.Lifetime.ExpectedLifetimeInCalendarYears"
+     }
+    ],
+    "note": "BatteryPass 6.1.0 (the CX-Titan battery passport aspect model) performance.rated.lifetime.expectedYears (expected lifetime in calendar years) carries one value per passport, and the Industrial Digital Twin Association (IDTA) Technical Data IDTA-02035-4 Lifetime.ExpectedLifetimeInCalendarYears of CX-0160 1.1.0 (the CX-Neptune Battery Passport standard) states the update upon placement on the market and upon change of the battery status. Neither release keeps the value recorded at placing on the market beside the values recorded at each later change of status; with a new passport per status change the earlier value remains only in the predecessor passport, which BatteryPass links and CX-Neptune does not."
+   },
+   "history": [
+    {
+     "date": "2026-10-22",
+     "change": "elicited",
+     "reason": "SYS.1 elicitation, area lifecycle",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took the citations of StR-PASS-251",
+     "reason": "Both require the expected lifetime in calendar years of the individual battery in the dataset at placing on the market and at each change of status (Annex XIII point 4(a), Art. 10(1), Annex IV Part A); one test (place a battery, change its status, inspect the values) passes or fails both. StR-LIFE-098 is kept: it is more precise (it states that each earlier value is kept, and its acceptance covers both the repair on the same passport and the new passport of model B) and better sourced (it adds the DIN update clause where DIN has one and the project rule of the project guidelines of the battery passport application). The access tier of these values stays with StR-PASS-252. StR-PASS-251 carried EU-ART10 and EU-ANNEX13-025 identifiers: the EU-ART10 one stays claimed by the model-level passport-content requirement, EU-ANNEX13-025 moves to lifecycle.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-251",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "notes changed from undefined",
+     "reason": "Carries over the context note of the rejected duplicate StR-PASS-251.",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-22",
+     "change": "took citations of StR-PASS-232 (6.7.6.2 d))",
+     "reason": "integration review",
+     "approver": "",
+     "by": "integration review pass-life"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "project quotes moved to SyR-LIFE-096",
+     "reason": "Francesco's requirement engineering rule of 2026-10-23: a SYS.1 requirement quotes the external party's rule, never the team's wish, and the owner's system decisions are SYS.2 requirements. Regulation (EU) 2023/1542 Annex XIII point 4(a), Art. 10(1) and Annex IV Part A point 5 ask for the expected lifetime in calendar years of the individual battery at the placing on the market and at each change of status, and DIN DKE SPEC 99100 6.7.6.2 a) and d) repeat the content and the two update moments. The the project guidelines of the battery passport application quote only repeats the rule that performance and durability data are updated.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "quotes of Regulation (EU) 2023/1542 cited in its consolidated text of 13 August 2026 (each quote found there unchanged)",
+     "reason": "Francesco's request of 2026-10-26 that the elicitation level cites the correct regulations and versions: Regulation (EU) 2023/1542 in its consolidated text of 13 August 2026 (02023R1542-20260813)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "status proposed to agreed",
+     "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "catenaXCompliance (before: \"\"); catenaXCompliance (before: \"\")",
+     "reason": "Catena-X compliance review of 2026-10-26 (Francesco: \"the application must be compliant with Catena-X, but Catena-X must be compliant with DIN and EU regulations, if they are not flag them\"): The flag is partial in both releases because the expected years are carried without the value history across status changes.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}

@@ -1,0 +1,1809 @@
+{
+ "requirement": "Automotive SPICE 4.1 SWE.5.BP1 (specify the software integration verification measures) and BP2 (the verification measures for the software components): the component and integration measures of the software requirements.",
+ "measures": [
+  {
+   "id": "VM-SWE-BACKEND-037",
+   "title": "Erasure, restriction, hold and tenant erasure through the real chain",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app: a seeded user is erased, a restriction is set and lifted, a legal hold is set, and a tenant is erased after its retrieval period; the database and the document store double are scanned for the person's and the tenant's values.",
+   "passCriteria": "After the erasure no row or document resolves to the person except the items of the retention list; restricted data are refused to every route other than storage, the claims export and consented processing; the lifting is refused until the information is recorded; held data survive every erasure; after the tenant erasure no data of the tenant remain except the retention list's items, within the agreed period. Anything else fails.",
+   "entry": "The local substrate runs (the local database script up) with the schema applied and the api_app role created; the domain gdpr runs alone; the identity provider's edge is replaced as in the test helpers of the reference server; no production setting is present.",
+   "environment": "integration domain gdpr",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server && && the integration test run of the reference server -- --selectProjects int:gdpr --testPathPatterns \"erasureRoutes.integration.test.js\"",
+   "verifies": [
+    "SwR-DATARIGHTS-016"
+   ],
+   "regression": "on change of the erasure routes of the reference server, the erasure service of the reference server, the schema of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "backend-audit",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATARIGHTS-002",
+   "title": "Store adapters of the data rights element under api_app",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of each store adapter against the local substrate under the runtime role api_app: the SQL functions that locate, copy, rectify, anonymise and erase one person's rows and one tenant's rows over every table of the inventory, and their gate.",
+   "passCriteria": "Passes when, on a seeded database with two tenants and a test person present in every table of the inventory: each function finds, copies, corrects, anonymises or erases exactly that person's or that tenant's rows and no other; each refuses every subject except the data rights function; the restriction mark is stored and readable by the capability decision; the recipients query returns the recorded disclosures; the export of a tenant restores into an empty second schema with every row and relation; nothing of the other tenant changes.",
+   "entry": "The data rights element's SQL functions exist in the schema; the local substrate up with a second empty schema for the import.",
+   "environment": "integration domain gdpr",
+   "how": "To write: the integration test suite dataRightsStores of the reference server, listed under the gdpr domain of the test partition list of the reference server. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataRightsStores of the reference server",
+   "verifies": [
+    "SwR-DATARIGHTS-016"
+   ],
+   "regression": "on change of the data rights element, the schema of the reference server or the inventory",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-026",
+   "title": "Company export read path and company erasure path",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the two database paths: seed two companies with rows in every table of pg_class; call the export read path for company A under the export context and under every other context; call the company erasure path for A before the retrieval period without a recorded decision, with the decision, and after the period.",
+   "passCriteria": "The read path returns every row of A from every table and no row of B, and returns nothing under any other context; the erasure is refused before the period without the decision; afterwards no row of A remains in any table and every row of B is unchanged. VM-SYS-DATA-012 decides the round trip into an empty instance and VM-SYS-DATA-017 and VM-SYS-SEC-036 the erasure across every store.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain companies",
+   "how": "the integration test suite tenantDataPaths of the reference server (to write, companies domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite tenantDataPaths of the reference server",
+   "verifies": [
+    "SwR-RDB-051"
+   ],
+   "regression": "on change of the schema of the reference server, a database script of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-022",
+   "title": "Point 4 offer to the issuer gated by the contract record",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-166.",
+   "passCriteria": "Passes when: With a contract record between the owner of a seeded battery and the issuing company, the issuer's catalogue request finds one offer of the battery's point 4 information whose access policy names only the issuer's BPNL and whose usage policy carries cx.circular.dpp:1; a third company's catalogue request finds no such offer; after the contract record ends, the issuer's catalogue request finds no offer. Any other observation fails SwR-CXCLIENT-166.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-166. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-166\"",
+   "verifies": [
+    "SwR-CXCLIENT-166"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-166, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-023",
+   "title": "Automatic negotiation of the issuer's point 4 contract",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-167.",
+   "passCriteria": "Passes when: Recording the contract starts the sequence, which stores one agreement for the point 4 offer with no user action on either side; the test records no confirmation request; a counterparty that refuses the negotiation leaves no agreement and the stored result names the refusal reason. Any other observation fails SwR-CXCLIENT-167.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-167. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-167\"",
+   "verifies": [
+    "SwR-CXCLIENT-167"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-167, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-024",
+   "title": "Automatic transfer and storage of the issuer's point 4 information",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-168.",
+   "passCriteria": "Passes when: After the agreement, the transfer completes and the issuer's store holds the point 4 values with the battery identifier, the agreement identifier and the time of receipt, with no user action; a transfer requested after the contract record ended is refused and stores nothing. Any other observation fails SwR-CXCLIENT-168.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-168. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-168\"",
+   "verifies": [
+    "SwR-CXCLIENT-168"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-168, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-025",
+   "title": "Resale offer restricted to the named prospective purchaser",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-169.",
+   "passCriteria": "Passes when: A share request naming one prospective purchaser's BPNL publishes an offer whose access policy names only that BPNL; that company's connector receives the point 4 information through a transfer; a second company's catalogue request finds no offer; a share request with a malformed BPNL is answered 400 and publishes nothing. Any other observation fails SwR-CXCLIENT-169.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-169. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-169\"",
+   "verifies": [
+    "SwR-CXCLIENT-169"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-169, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-026",
+   "title": "Usage purposes of the restricted offers",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-170.",
+   "passCriteria": "Passes when: Every offer that the providing customer publishes with information of Annex XIII points 2(a) to 2(c) or 4 carries a usage purpose constraint naming only the activities of draft Art. 2(1); a consumer whose negotiation states another purpose concludes no agreement. Any other observation fails SwR-CXCLIENT-170.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-170. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-170\"",
+   "verifies": [
+    "SwR-CXCLIENT-170"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-170, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-028",
+   "title": "Sharing prohibition of the restricted offers",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-172.",
+   "passCriteria": "Passes when: Every offer that holds information of Annex XIII points 2(a) to 2(c) or 4 carries an ODRL prohibition of sharing and publication whose constraint names the exceptions of draft Art. 2(4)(a) to (e); an offer without the prohibition fails. Any other observation fails SwR-CXCLIENT-172.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-172. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-172\"",
+   "verifies": [
+    "SwR-CXCLIENT-172"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-172, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-029",
+   "title": "Unrestricted policy of the safety measures offer",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-173.",
+   "passCriteria": "Passes when: When the safety measures offer is published, its usage policy holds a use permission with no constraint and no prohibition; when the offer is not published, the case is recorded as not applicable. Any other observation fails SwR-CXCLIENT-173.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-173. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-173\"",
+   "verifies": [
+    "SwR-CXCLIENT-173"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-173, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-030",
+   "title": "Facility results received and stored per facility",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-174.",
+   "passCriteria": "Passes when: A first recycler customer receives through its connector the recycling efficiency and the recovery of materials of two other facilities, each stored with its facility, fraction and reporting period; a payload without a facility is refused and stores nothing. Any other observation fails SwR-CXCLIENT-174.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-174. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-174\"",
+   "verifies": [
+    "SwR-CXCLIENT-174"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-174, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-031",
+   "title": "Preparation-for-recycling data offered to the named first recycler",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-175.",
+   "passCriteria": "Passes when: The customer's offer of the section 5 points 1 and 2 data names only the first recycler's BPNL; the first recycler receives the data through a transfer; another company's catalogue request finds no offer. Any other observation fails SwR-CXCLIENT-175.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-175. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-175\"",
+   "verifies": [
+    "SwR-CXCLIENT-175"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-175, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-032",
+   "title": "NewPassportIssued to each original data provider under contract",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-176.",
+   "passCriteria": "Passes when: After a repurpose of a seeded battery whose original passport another company provides, that company's connector receives one CX-0151 message with the context of NewPassportIssued and the five content properties of Table 4.4; a reuse and a remanufacture send the same; a company that is no original data provider receives nothing; without a concluded contract nothing is sent. Any other observation fails SwR-CXCLIENT-176.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-176. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-176\"",
+   "verifies": [
+    "SwR-CXCLIENT-176"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-176, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-033",
+   "title": "Second-life point 4 offer to the original data provider",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-177.",
+   "passCriteria": "Passes when: With a contract record between the holder of a battery with a new passport and the data provider of its original passport, that data provider's catalogue finds one offer of the point 4 information whose access policy names only its BPNL; without the record, no offer is found. Any other observation fails SwR-CXCLIENT-177.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-177. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-177\"",
+   "verifies": [
+    "SwR-CXCLIENT-177"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-177, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-034",
+   "title": "PassportEnded to the three receivers of decision D16",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-178.",
+   "passCriteria": "Passes when: After the recycling of a seeded battery, the connectors of the twin's data provider, of the nameplate manufacturer and of the successor each receive one CX-0151 message with the context of PassportEnded naming the passport identifier, the recycling date and the recycler's BPNL; where the nameplate manufacturer is the data provider, that company receives one message; no other company receives it. Any other observation fails SwR-CXCLIENT-178.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-178. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-178\"",
+   "verifies": [
+    "SwR-CXCLIENT-178"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-178, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-035",
+   "title": "PassportEnded to predecessor data providers under contract",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-179.",
+   "passCriteria": "Passes when: For an ended passport with two predecessor links, the data provider with a concluded contract receives one PassportEnded message and the data provider without a contract receives none. Any other observation fails SwR-CXCLIENT-179.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-179. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-179\"",
+   "verifies": [
+    "SwR-CXCLIENT-179"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-179, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-033",
+   "title": "Authority's point 4 read gated by the purchaser's grant",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-123.",
+   "passCriteria": "Passes when: An authority subject named in a grant reads the point 4 information of the granted battery; the same subject reading another battery receives 403; an authority without a grant receives 403. Any other observation fails SwR-ACCESS-123.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-123. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-123\"",
+   "verifies": [
+    "SwR-ACCESS-123"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-123, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-034",
+   "title": "Operators' point 4 reads gated by the named share",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-124.",
+   "passCriteria": "Passes when: A recycler named in the purchaser's share reads the point 4 information; a second recycler not named receives 403 for the same battery, whether or not the battery is flagged for sale. Any other observation fails SwR-ACCESS-124.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-124. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-124\"",
+   "verifies": [
+    "SwR-ACCESS-124"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-124, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-035",
+   "title": "Wider sharing authorisation stored by the operator",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-125.",
+   "passCriteria": "Passes when: A company-admin subject of the responsible operator stores an authorisation naming two persons, which the read of the authorisations returns; a subject of another company receives 403 and stores nothing. Any other observation fails SwR-ACCESS-125.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-125. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-125\"",
+   "verifies": [
+    "SwR-ACCESS-125"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-125, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-036",
+   "title": "New passport's point 4 authorisation author check",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-126.",
+   "passCriteria": "Passes when: The second-life operator's subject stores an authorisation for the point 4 information of its new passport; the original issuer's subject receives 403 for the same request. Any other observation fails SwR-ACCESS-126.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-126. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-126\"",
+   "verifies": [
+    "SwR-ACCESS-126"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-126, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-037",
+   "title": "Purchaser taken from the open ownership interval",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-127.",
+   "passCriteria": "Passes when: After a sale of a seeded battery, the buyer's owner subject reads the point 4 information through the owner view; before the sale, the buyer receives no row. Any other observation fails SwR-ACCESS-127.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-127. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-127\"",
+   "verifies": [
+    "SwR-ACCESS-127"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access-datarights",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-127, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-038",
+   "title": "Model information authorisation author check",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-128.",
+   "passCriteria": "Passes when: The original issuer's subject stores an authorisation for the point 2(a) to 2(c) information of the new passport; the second-life operator's subject receives 403 for the same request. Any other observation fails SwR-ACCESS-128.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-128. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-128\"",
+   "verifies": [
+    "SwR-ACCESS-128"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-128, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-039",
+   "title": "Previous holder denied after the sale",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the access control through the middleware chain against the local substrate's database, one describe block named SwR-ACCESS-129.",
+   "passCriteria": "Passes when: Before a sale the seller's owner subject reads the point 4 information; after the sale the same subject receives no row. Any other observation fails SwR-ACCESS-129.",
+   "entry": "The local substrate runs with the seeded companies, owners and batteries; the commit under review is checked out.",
+   "environment": "integration domain access (local substrate)",
+   "how": "the integration test suite access.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-ACCESS-129. At the repository root: start the PostgreSQL database of the reference server; run the integration suite access.afterFirstPassport of the reference server -t \"SwR-ACCESS-129\"",
+   "verifies": [
+    "SwR-ACCESS-129"
+   ],
+   "regression": "on change of EL-ACCESS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "access",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-ACCESS-129, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-049",
+   "title": "Point 4 fields marked for the purchaser group",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-185.",
+   "passCriteria": "Passes when: The aggregated dataset of a seeded battery marks every point 4 field with the access group of the purchaser and the purchaser's agent; an aggregation whose mapping leaves a point 4 field unmarked fails with the field's path. Any other observation fails SwR-DATASET-185.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-185. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-185\"",
+   "verifies": [
+    "SwR-DATASET-185"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-185, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-050",
+   "title": "Detailed composition fields marked",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-186.",
+   "passCriteria": "Passes when: Every point 2(a) field of the aggregated dataset carries the access group of SyR-PASS-220; an unmarked field fails the aggregation with its path. Any other observation fails SwR-DATASET-186.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-186. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-186\"",
+   "verifies": [
+    "SwR-DATASET-186"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-186, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-051",
+   "title": "Dismantling information fields marked",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-187.",
+   "passCriteria": "Passes when: Every point 2(c) field of the aggregated dataset carries the access group of SyR-PASS-221; an unmarked field fails the aggregation with its path. Any other observation fails SwR-DATASET-187.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-187. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-187\"",
+   "verifies": [
+    "SwR-DATASET-187"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-187, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-052",
+   "title": "Part number and spare source fields marked",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-188.",
+   "passCriteria": "Passes when: Every point 2(b) field of the aggregated dataset carries the access group of SyR-PASS-222; an unmarked field fails the aggregation with its path. Any other observation fails SwR-DATASET-188.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-188. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-188\"",
+   "verifies": [
+    "SwR-DATASET-188"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-188, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-053",
+   "title": "Safety measure fields marked",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-189.",
+   "passCriteria": "Passes when: Every point 2(d) field of the aggregated dataset carries the access group of SyR-PASS-223; an unmarked field fails the aggregation with its path. Any other observation fails SwR-DATASET-189.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-189. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-189\"",
+   "verifies": [
+    "SwR-DATASET-189"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-189, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-054",
+   "title": "Passport writes only under the responsible operator's context",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-190.",
+   "passCriteria": "Passes when: A write under the responsible operator's company context succeeds; a write under the context of a company holding a recorded written authorisation succeeds; a write under any other company's context is refused with 403 and changes nothing. Any other observation fails SwR-DATASET-190.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-190. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-190\"",
+   "verifies": [
+    "SwR-DATASET-190"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-190, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-055",
+   "title": "Producer of the current passport recorded at the waste status",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-191.",
+   "passCriteria": "Passes when: For a seeded passport created by a second-life operator, the waste transition records the second-life operator as responsible operator and leaves the manufacturer of record unchanged; for a first passport, the original producer is recorded; the acting recycler's company appears in neither column. Any other observation fails SwR-DATASET-191.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-191. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-191\"",
+   "verifies": [
+    "SwR-DATASET-191"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-191, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-056",
+   "title": "No link written into an original row by the lineage step",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-192.",
+   "passCriteria": "Passes when: A repurpose by a second-life operator of a seeded battery leaves every column of the original passport row unchanged and writes the supersession in battery_passport_lineage only. Any other observation fails SwR-DATASET-192.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-192. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-192\"",
+   "verifies": [
+    "SwR-DATASET-192"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-192, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-057",
+   "title": "New passport's DPP Metadata identifier",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-193.",
+   "passCriteria": "Passes when: The DPP Metadata served for a new passport carries a digitalProductPassportId that differs from the identifier of every original passport, on the new twin; the DPP Metadata of the original passport is unchanged. Any other observation fails SwR-DATASET-193.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-193. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-193\"",
+   "verifies": [
+    "SwR-DATASET-193"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-193, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-058",
+   "title": "Remanufacturing donor accepted for the waste status",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-194.",
+   "passCriteria": "Passes when: After a remanufacturing of two seeded donors, a recycle request on a donor from the company that holds the donor battery sets 'waste' on the donor row; the same request from a third company is refused. Any other observation fails SwR-DATASET-194.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-194. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-194\"",
+   "verifies": [
+    "SwR-DATASET-194"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-194, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-059",
+   "title": "Direct re-use recorded as an ownership event",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-195.",
+   "passCriteria": "Passes when: A direct re-use of a seeded battery adds one ownership interval to the existing passport row and writes no batteries row and no battery_passport_lineage row. Any other observation fails SwR-DATASET-195.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-195. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-195\"",
+   "verifies": [
+    "SwR-DATASET-195"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-195, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-060",
+   "title": "Direct re-use keeps the responsible operator",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-196.",
+   "passCriteria": "Passes when: After a direct re-use of a seeded battery, the responsible operator and the manufacturer of record of the passport row equal their values before the act. Any other observation fails SwR-DATASET-196.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-196. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-196\"",
+   "verifies": [
+    "SwR-DATASET-196"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-196, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-061",
+   "title": "Forward link added on the original operator's request",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-197.",
+   "passCriteria": "Passes when: After a NewPassportIssued notification for a seeded original passport, the responsible operator's request adds one successors record with the five properties; a request naming no received notification is answered 404 and adds nothing. Any other observation fails SwR-DATASET-197.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-197. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-197\"",
+   "verifies": [
+    "SwR-DATASET-197"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-197, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-062",
+   "title": "Successors record served as its own submodel",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-198.",
+   "passCriteria": "Passes when: An original passport with a forward link carries one submodel with the semantic identifier of the successors model on its twin, which holds the successors record and no other information. Any other observation fails SwR-DATASET-198.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-198. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-198\"",
+   "verifies": [
+    "SwR-DATASET-198"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-198, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-063",
+   "title": "Direct re-use keeps the battery status",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-199.",
+   "passCriteria": "Passes when: After a direct re-use of a seeded battery in 'original', the passport row still holds 'original'. Any other observation fails SwR-DATASET-199.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-199. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-199\"",
+   "verifies": [
+    "SwR-DATASET-199"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-199, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-044",
+   "title": "PartInstance twin registered for each traced item kind",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the twin registration against the registry test double, one describe block named SwR-TWINS-153.",
+   "passCriteria": "Passes when: Creating a serialized part, a just-in-sequence part, a vehicle and a batch each registers one PartInstance twin with the specific asset IDs of CX-0127; a registry double that refuses the registration makes the creation fail and leaves no item. Any other observation fails SwR-TWINS-153.",
+   "entry": "The local substrate runs and the registry test double records every request; the commit under review is checked out.",
+   "environment": "integration domain twins (local substrate and the digital twin registry test double)",
+   "how": "the integration test suite twins.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-TWINS-153. At the repository root: start the PostgreSQL database of the reference server; run the integration suite twins.afterFirstPassport of the reference server -t \"SwR-TWINS-153\"",
+   "verifies": [
+    "SwR-TWINS-153"
+   ],
+   "regression": "on change of EL-TWINS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-TWINS-153, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-045",
+   "title": "New twin for a new passport, original twins untouched",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the twin registration against the registry test double, one describe block named SwR-TWINS-154.",
+   "passCriteria": "Passes when: A repurpose, a reuse and a remanufacture each register one new PartInstance twin with the keys of Table 2.1.1 of the proposal; the registry double records no request on the twin of any original battery. Any other observation fails SwR-TWINS-154.",
+   "entry": "The local substrate runs and the registry test double records every request; the commit under review is checked out.",
+   "environment": "integration domain twins (local substrate and the digital twin registry test double)",
+   "how": "the integration test suite twins.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-TWINS-154. At the repository root: start the PostgreSQL database of the reference server; run the integration suite twins.afterFirstPassport of the reference server -t \"SwR-TWINS-154\"",
+   "verifies": [
+    "SwR-TWINS-154"
+   ],
+   "regression": "on change of EL-TWINS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-TWINS-154, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-046",
+   "title": "As-built child PartType fallback",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the twin registration against the registry test double, one describe block named SwR-TWINS-155.",
+   "passCriteria": "Passes when: A part whose child has only a PartType twin maps to a SingleLevelBomAsBuilt submodel whose child item carries the PartType twin's catenaXId; the mapping of a child with a PartInstance twin carries the PartInstance catenaXId. Any other observation fails SwR-TWINS-155.",
+   "entry": "The local substrate runs and the registry test double records every request; the commit under review is checked out.",
+   "environment": "integration domain twins (local substrate and the digital twin registry test double)",
+   "how": "the integration test suite twins.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-TWINS-155. At the repository root: start the PostgreSQL database of the reference server; run the integration suite twins.afterFirstPassport of the reference server -t \"SwR-TWINS-155\"",
+   "verifies": [
+    "SwR-TWINS-155"
+   ],
+   "regression": "on change of EL-TWINS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-TWINS-155, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-047",
+   "title": "Usage parents from part instance edges only",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the twin registration against the registry test double, one describe block named SwR-TWINS-156.",
+   "passCriteria": "Passes when: The SingleLevelUsageAsBuilt submodel of a seeded child part lists its part instance parents and no PartType twin's catenaXId. Any other observation fails SwR-TWINS-156.",
+   "entry": "The local substrate runs and the registry test double records every request; the commit under review is checked out.",
+   "environment": "integration domain twins (local substrate and the digital twin registry test double)",
+   "how": "the integration test suite twins.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-TWINS-156. At the repository root: start the PostgreSQL database of the reference server; run the integration suite twins.afterFirstPassport of the reference server -t \"SwR-TWINS-156\"",
+   "verifies": [
+    "SwR-TWINS-156"
+   ],
+   "regression": "on change of EL-TWINS; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-TWINS-156, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-036",
+   "title": "BatteryRepaired to the passport's data provider",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-180.",
+   "passCriteria": "Passes when: After a repairer customer records the repair of a seeded battery, the connector of the twin's data provider receives one CX-0151 message with the context of BatteryRepaired and the three content properties of Table 4.4; no other company receives it. Any other observation fails SwR-CXCLIENT-180.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-180. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-180\"",
+   "verifies": [
+    "SwR-CXCLIENT-180"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-180, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-037",
+   "title": "BatteryBecameWaste to the data provider and the successor",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-181.",
+   "passCriteria": "Passes when: After a waste receiver customer records the waste status of a seeded battery naming a successor, the data provider's connector and the successor's connector each receive one CX-0151 message with the context of BatteryBecameWaste and the four content properties of Table 4.4; a request without a successor is refused with 400 and sends nothing. Any other observation fails SwR-CXCLIENT-181.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-181. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-181\"",
+   "verifies": [
+    "SwR-CXCLIENT-181"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-181, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-038",
+   "title": "Lifecycle record offer restricted to the named BPNLs",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-182.",
+   "passCriteria": "Passes when: The offer of a seeded passport's lifecycle record names in its access policy only the BPNLs of the purchaser, the agent, the responsible operator, the successor and a market surveillance authority; a used-battery operator's catalogue request finds no offer. Any other observation fails SwR-CXCLIENT-182.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-182. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-182\"",
+   "verifies": [
+    "SwR-CXCLIENT-182"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-182, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-039",
+   "title": "Record of a receiver without an asset or contract",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the connector client against the connector test double, one describe block named SwR-CXCLIENT-183.",
+   "passCriteria": "Passes when: For a receiver whose catalogue holds no notification asset, no message is sent and one record holds the BPNL, the operation, the passport identifier, the date and the cause 'no asset'; for a receiver that refuses the negotiation, the record names the refusal. Any other observation fails SwR-CXCLIENT-183.",
+   "entry": "The connector test double implements the catalogue, negotiation and transfer contract; the commit under review is checked out.",
+   "environment": "integration partition of the connector client (connector test double that the contract test runs against the Tractus-X simulation and production alike)",
+   "how": "the integration test suite cxclient.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-CXCLIENT-183. At the repository root: run the integration suite cxclient.afterFirstPassport of the reference server -t \"SwR-CXCLIENT-183\"",
+   "verifies": [
+    "SwR-CXCLIENT-183"
+   ],
+   "regression": "on change of EL-CXCLIENT; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-CXCLIENT-183, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-064",
+   "title": "Passport writes only by the data provider",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-200.",
+   "passCriteria": "Passes when: A write on a passport row whose twin the deployment's own company registered succeeds; a write on a row whose twin another company registered is refused with 403 and changes nothing. Any other observation fails SwR-DATASET-200.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-200. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-200\"",
+   "verifies": [
+    "SwR-DATASET-200"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-200, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-065",
+   "title": "End entry written without the successor's authorisation",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-201.",
+   "passCriteria": "Passes when: For a passport in 'waste' whose successor gave no written authorisation, a PassportEnded notification writes the end-of-passport entry; a change of the passport's status description under the same conditions is refused with 403. Any other observation fails SwR-DATASET-201.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-201. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-201\"",
+   "verifies": [
+    "SwR-DATASET-201"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-201, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-066",
+   "title": "Repair entry with its certificate reference",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-202.",
+   "passCriteria": "Passes when: An accepted BatteryRepaired notification adds one repair entry with the repair date and the certificate's catenaXId; a second notification adds a second entry; a notification without the certificate's catenaXId is refused with 400 and adds nothing. Any other observation fails SwR-DATASET-202.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-202. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-202\"",
+   "verifies": [
+    "SwR-DATASET-202"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-202, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-067",
+   "title": "Successor, role and date stored at the waste status",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-203.",
+   "passCriteria": "Passes when: A waste transition naming a producer responsibility organisation stores its BPNL, the role and the date in the lifecycle record; a waste transition without a successor is refused with 400 and leaves the status unchanged. Any other observation fails SwR-DATASET-203.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-203. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-203\"",
+   "verifies": [
+    "SwR-DATASET-203"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-203, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-068",
+   "title": "End-of-passport entry stored",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-204.",
+   "passCriteria": "Passes when: After a PassportEnded notification for a seeded passport, its lifecycle record holds one end-of-passport entry with the recycling date and the recycler's BPNL that the notification named. Any other observation fails SwR-DATASET-204.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-204. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-204\"",
+   "verifies": [
+    "SwR-DATASET-204"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-204, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-069",
+   "title": "Original status kept after NewPassportIssued",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-205.",
+   "passCriteria": "Passes when: A NewPassportIssued notification for a seeded original passport in 'original' leaves the row in 'original'. Any other observation fails SwR-DATASET-205.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-205. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-205\"",
+   "verifies": [
+    "SwR-DATASET-205"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-205, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-070",
+   "title": "Lineage step refused without the four values",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-206.",
+   "passCriteria": "Passes when: A repurpose request with the four values creates the new passport row holding them; the same request without the rated capacity, without the capacity fade, without the power fade or without the expected lifetime is each refused with 400 and creates no row. Any other observation fails SwR-DATASET-206.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-206. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-206\"",
+   "verifies": [
+    "SwR-DATASET-206"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-206, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-071",
+   "title": "Notification applied only through its step",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the passport dataset lifecycle against the local substrate's database, one describe block named SwR-DATASET-207.",
+   "passCriteria": "Passes when: Each of the four operations changes only the items of its step on a seeded passport; a notification that carries recovered materials or a status outside its step is refused with 422 and the passport row is unchanged. Any other observation fails SwR-DATASET-207.",
+   "entry": "The local substrate runs (start the PostgreSQL database of the reference server) with the seeded companies and batteries; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite dataset.afterFirstPassport of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-DATASET-207. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataset.afterFirstPassport of the reference server -t \"SwR-DATASET-207\"",
+   "verifies": [
+    "SwR-DATASET-207"
+   ],
+   "regression": "on change of EL-DATASET; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-DATASET-207, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BACKEND-052",
+   "title": "Answers of the lifecycle notification operations",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the backend API routes through the middleware chain, with the data-plane principal of a peer connector, one describe block named SwR-BACKEND-206.",
+   "passCriteria": "Passes when: An accepted notification is answered 200; a notification whose content does not validate is answered 400, an unknown passport 404 and a database failure 500, each body holding success false, error with message and code, and messages with one entry of messageType Error and its text; no failure is answered 200. Any other observation fails SwR-BACKEND-206.",
+   "entry": "The local substrate runs with the seeded passports; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite lifecycleNotificationRoutes of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-BACKEND-206. At the repository root: start the PostgreSQL database of the reference server; run the integration suite lifecycleNotificationRoutes of the reference server -t \"SwR-BACKEND-206\"",
+   "verifies": [
+    "SwR-BACKEND-206"
+   ],
+   "regression": "on change of EL-BACKEND; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-BACKEND-206, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BACKEND-053",
+   "title": "Four POST endpoints of the lifecycle notification API",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the backend API routes through the middleware chain, with the data-plane principal of a peer connector, one describe block named SwR-BACKEND-207.",
+   "passCriteria": "Passes when: A POST to each of the four operation paths with a valid MessageHeader and content is accepted; a GET to the same paths is answered 405 or 404; a request with a missing content property or a context of another operation is answered 400. Any other observation fails SwR-BACKEND-207.",
+   "entry": "The local substrate runs with the seeded passports; the commit under review is checked out.",
+   "environment": "integration domain lifecycle (local substrate)",
+   "how": "the integration test suite lifecycleNotificationRoutes of the reference server (to write; listed in the test partition list of the reference server), describe block SwR-BACKEND-207. At the repository root: start the PostgreSQL database of the reference server; run the integration suite lifecycleNotificationRoutes of the reference server -t \"SwR-BACKEND-207\"",
+   "verifies": [
+    "SwR-BACKEND-207"
+   ],
+   "regression": "on change of EL-BACKEND; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "backend",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "derived",
+     "reason": "after-first-passport work, step 7 (software measure of SwR-BACKEND-207, one measure per requirement)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-072",
+   "title": "Database trigger refuses a change of a passport's manufacturer",
+   "level": "SWE.5",
+   "method": "test",
+   "technique": "An integration test against the local substrate: under the role api_app, an UPDATE of manufacturer_id on a seeded passport row raises the trigger's exception; under the migrator role inside a migration, the same UPDATE succeeds.",
+   "passCriteria": "SwR-DATASET-208 holds. Fails when: the UPDATE under api_app succeeds or the migration UPDATE fails.",
+   "entry": "The local substrate holds a seeded passport row.",
+   "environment": "local substrate",
+   "how": "At the repository root: run the integration test of this measure (to be written); every case passes and none is skipped.",
+   "verifies": [
+    "SwR-DATASET-208"
+   ],
+   "releasePlan": "this-release",
+   "history": [
+    {
+     "date": "2026-11-11",
+     "change": "derived",
+     "reason": "after-first-passport work, Francesco's rule of 2026-11-11 on the permanent manufacturer identification (SYS.2 derivation)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ],
+ "retired": []
+}
