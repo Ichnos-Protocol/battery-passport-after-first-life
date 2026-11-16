@@ -1,0 +1,5 @@
+product: "Battery passport after the first life"
+leadingRepository: "https://github.com/Khorolev/battery-passport-after-first-life"
+repositories: []
+openApiSpecs:
+- "https://github.com/Khorolev/battery-passport-after-first-life/blob/main/docs/api/openAPI.yaml"
