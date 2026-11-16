@@ -5,6 +5,7 @@
 - Git
 - Node.js 24, installed on the machine or run in a container of the public image `node:24`
 - Java 21, installed on the machine or run in a container of the public image `eclipse-temurin:21`, for the validation of the models
+- PostgreSQL 17, installed on the machine or run in a container of the public image `postgres:17`, for the tests of the server
 
 ## Steps
 
@@ -65,6 +66,44 @@ node --test --test-reporter=tap test/modelExamples.test.mjs
 
 The summary of the test holds the line `# fail 0` when the three generated schemas and the three example payloads pass.
 
+## The test database and the tests of the server
+
+The tests of the server need a PostgreSQL 17 database of their own and two variables. No file of the repository holds
+a password: set both variables in the shell.
+
+- `TEST_DATABASE_URL` is the connection string of a superuser, or of a role with the attribute `BYPASSRLS`, on the
+  test database.
+- `TEST_APP_ROLE_PASSWORD` is the password that the tests set for the role `refserver_app`.
+
+Each test file creates the role `refserver_app` when the cluster holds no such role, creates one schema of its own,
+applies the three migration files and drops the schema at its end. The third migration file revokes the privilege
+`TEMPORARY` of the test database from the group PUBLIC, so use a database that serves no other application.
+
+Run every test of the server and the licence check of the locked packages in the folder `server/`:
+
+```bash
+cd server
+npm ci
+npm test
+node ../scripts/check-dependency-licenses.mjs
+```
+
+The summary of the tests holds the line `# fail 0`, and the licence check prints `0 packages outside the licence list`.
+
+## The database of a deployment
+
+A deployment of the reference server runs on a PostgreSQL 17 database of its own. Two commands of the folder
+`server/` prepare the database, and both read their variables from the environment:
+
+1. `npm run create-role` creates the login role `refserver_app` and sets its password. The command reads
+   `DATABASE_MIGRATION_URL`, the connection string of the role that owns the schema, and `APP_ROLE_PASSWORD`. An
+   administrator runs the command once per database cluster, before the first migration.
+2. `npm run migrate` applies the migration files of `server/src/db/migrations/` to the schema of the variable
+   `DATABASE_SCHEMA`. The command reads `DATABASE_MIGRATION_URL` and `DATABASE_SCHEMA`. A second run applies no file.
+
+The server itself connects only as the role `refserver_app`. The server is not written yet, so the repository holds
+no start command that works.
+
 ## The commands in a container
 
 A machine without Node.js 24 and without Java 21 runs each command in a container. Section 11.0 of
@@ -77,7 +116,11 @@ node24 npx --yes @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset 
 node24 bash -c "cd server && npm ci && node --test --test-reporter=tap test/contractSchemas.test.mjs"
 java21 bash scripts/validate-models.sh --generate
 node24 bash -c "cd server && node --test --test-reporter=tap test/modelExamples.test.mjs"
+node24 bash -c "cd server && npm ci && npm test && node ../scripts/check-dependency-licenses.mjs"
 ```
+
+Section 11.0 of the specification also states the two variables of the test database for a container of the image
+`postgres:17` that publishes its port on the machine.
 
 The reference server itself and the conformance test kit are not written yet. This file gains their installation
 steps together with their first commit.
