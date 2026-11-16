@@ -1296,8 +1296,19 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "answered: a donor battery may supply several remanufactured batteries",
+     "reason": "Francesco, 2026-11-16: \"Accept all\"",
+     "approver": "Francesco"
     }
-   ]
+   ],
+   "answer": {
+    "date": "2026-11-16",
+    "by": "Francesco",
+    "text": "\"Accept all\" (Francesco, 2026-11-16, requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"Four decisions before phases P1 to P3, and the tools\", point 3): one donor battery may supply several remanufactured batteries, so several new passports may name the same predecessor passport, and no rule limits their number."
+   }
   },
   {
    "id": "Q-045",

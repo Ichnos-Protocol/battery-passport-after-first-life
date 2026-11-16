@@ -199,6 +199,28 @@ The words order the work up to the end of phase P3 of the specification of the r
 repository to its origin on GitHub. Francesco continues the later phases with other models, and the results come back
 for review.
 
+## Four decisions before phases P1 to P3, and the tools
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you accept my recommendations
+on the four decisions and on the tools?", after the second independent review of the specification of the reference
+server (version 3):
+
+> Accept all
+
+The words accept five recommendations:
+
+1. The successor's written authorisation is stored in the passport record as a reference, a first day and an optional
+   last day; a later authorisation replaces the earlier one, and each change is written to the audit table.
+2. No aspect model serves the reference to the original battery model of a treated battery; a data consumer follows
+   the predecessor link of the new passport to the original passport, whose digital twin names the original model.
+3. One donor battery may supply several remanufactured batteries: several new passports may name the same predecessor
+   (decision Q-042, whether a donor battery may supply several remanufactured batteries).
+4. The public schemas accept every form of the Catena-X identifier and of the message identifier that the shared
+   Catena-X model admits; the reference server always sends the lower-case form that starts with urn:uuid: and stores
+   one form internally.
+5. Node.js 24 and Java 21 run in containers from public images, with no installation on the machine, and the model
+   validation tool is downloaded from the releases of its Eclipse project.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
