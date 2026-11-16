@@ -891,8 +891,8 @@
   },
   {
    "id": "SwR-DATASET-102",
-   "title": "New dataset fields set as the carry-over table states",
-   "statement": "The battery passport dataset aggregation shall set the fields of a new dataset as the carry-over table states: the battery model of the original battery, the battery category recorded for the new use even when it differs, no batch, and a date of putting into service of its own on or after the date of the transition, leaving every field of the original dataset unchanged.",
+   "title": "New dataset fields set at the issue of a new passport",
+   "statement": "The battery passport dataset aggregation shall set the fields of a new dataset as follows: the battery model of the original battery, the battery category recorded for the new use even when it differs, no batch, and a date of putting into service of its own on or after the date of the transition, leaving every field of the original dataset unchanged.",
    "kind": "data",
    "element": "EL-DATASET",
    "tracesTo": [
@@ -954,6 +954,12 @@
      "date": "2026-11-16",
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "statement reworded for the reference server (before: \"The battery passport dataset aggregation shall set the fields of a new dataset as the carry-over table states: the battery model of the original battery, the battery category recorded for the new use even when it differs, no batch, and a date of putting into service of its own on or after the date of the transition, leaving every field of the original dataset unchanged.\")",
+     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
      "approver": ""
     }
    ]
@@ -2085,7 +2091,7 @@
   {
    "id": "SwR-CXCLIENT-111",
    "title": "End of a recycled battery's passport made known to the provider",
-   "statement": "When the recycling of a battery is recorded, the connector client shall make the end of that battery's passport known to the passport service provider in the form agreed with Francesco.",
+   "statement": "When the recycling of a battery is recorded, the connector client shall make the end of that battery's passport known to the passport service provider with the PassportEnded notification of section 4.3 of the proposal CX-0160-4.",
    "kind": "interface",
    "element": "EL-CXCLIENT",
    "tracesTo": [
@@ -2146,13 +2152,19 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "statement reworded for the reference server (before: \"When the recycling of a battery is recorded, the connector client shall make the end of that battery's passport known to the passport service provider in the form agreed with Francesco.\")",
+     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
+     "approver": ""
     }
    ]
   },
   {
    "id": "SwR-CXCLIENT-114",
    "title": "Received passport inputs written only for the responsible operator",
-   "statement": "The connector client shall write data received for a battery's passport dataset into the customer's store only within an exchange started by a subject acting for the economic operator responsible for that passport or for an operator to which it gave a written authorisation recorded in the application.",
+   "statement": "The connector client shall write data received for a battery's passport dataset into the database of the reference server only within an exchange started by a subject acting for the economic operator responsible for that passport or for an operator to which it gave a written authorisation recorded in the application.",
    "kind": "constraint",
    "element": "EL-CXCLIENT",
    "tracesTo": [
@@ -2205,13 +2217,19 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "statement reworded for the reference server (before: \"The connector client shall write data received for a battery's passport dataset into the customer's store only within an exchange started by a subject acting for the economic operator responsible for that passport or for an operator to which it gave a written authorisation recorded in the application.\")",
+     "reason": "proposed rewording that removes a term of the battery passport application; it waits for the owner's approval",
+     "approver": ""
     }
    ]
   },
   {
    "id": "SwR-BGWORK-010",
-   "title": "Notifications sent unchanged as JSON POST through the connector",
-   "statement": "The background work shall send every outgoing notification (lifecycle, Digital Twin Event, Unique ID Push, certificate of analysis) exactly as the connector client built it, as a JSON document with HTTP POST and content type application/json, only through the connector client's data plane exchange with the receiver.",
+   "title": "Lifecycle notifications sent unchanged as JSON POST through the connector",
+   "statement": "The background work shall send every outgoing lifecycle notification (NewPassportIssued, BatteryRepaired, BatteryBecameWaste, PassportEnded) exactly as the connector client built it, as a JSON document with HTTP POST and content type application/json, only through the connector client's data plane exchange with the receiver.",
    "kind": "interface",
    "element": "EL-BGWORK",
    "tracesTo": [
@@ -2260,13 +2278,27 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "statement reworded for the reference server (before: \"The background work shall send every outgoing notification (lifecycle, Digital Twin Event, Unique ID Push, certificate of analysis) exactly as the connector client built it, as a JSON document with HTTP POST and content type application/json, only through the connector client's data plane exchange with the receiver.\")",
+     "reason": "Francesco, 2026-11-16: \"agreed\", on the recommendation to limit the requirement to the four lifecycle notifications",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The review of the carried software requirements",
+     "quote": "3. agreed"
     }
    ]
   },
   {
    "id": "SwR-BGWORK-020",
    "title": "End of a recycled battery's passport sent in time",
-   "statement": "The background work shall send the notice of the end of a recycled battery's passport to the passport service provider within the time agreed with Francesco after the recycling is recorded.",
+   "statement": "The background work shall send the notice of the end of a recycled battery's passport to the passport service provider with a delay of 5 seconds after the recycling is recorded.",
    "kind": "interface",
    "element": "EL-BGWORK",
    "tracesTo": [
@@ -2320,6 +2352,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "statement reworded for the reference server (before: \"The background work shall send the notice of the end of a recycled battery's passport to the passport service provider within the time agreed with Francesco after the recycling is recorded.\")",
+     "reason": "Francesco, 2026-11-16: \"for the reference implementation, send the notification with 5 seconds delay\"",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The review of the carried software requirements",
+     "quote": "for the reference implementation, send the notification with 5 seconds delay"
     }
    ]
   },
@@ -2784,94 +2830,6 @@
      "change": "status proposed to agreed",
      "reason": "\"Regarding the 4 blockers I do not have the resources to freeze those things, we assume they are correct and agreed\" (Francesco, 2026-10-26)",
      "approver": "Francesco"
-    },
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
-   "kind": "data",
-   "priority": "must",
-   "releasePlan": "this-release",
-   "status": "agreed",
-   "owner": "Francesco",
-   "notes": "",
-   "id": "SwR-DATASET-180",
-   "title": "BatteryPass 6.1.0 properties filled from the BatteryPass mapping table",
-   "statement": "The battery passport dataset aggregation shall fill each property of the aspect model BatteryPass 6.1.0 that a row of the BatteryPass mapping table names with the row's information item, in the row's format and unit and under the row's battery category condition, and give the property the row's access group.",
-   "element": "EL-DATASET",
-   "tracesTo": [
-    "SyR-PASS-011"
-   ],
-   "interfaces": [],
-   "rationale": "Decision Q-985 makes BatteryPass 6.1.0 the format of the dataset under CX-Titan (owner's rule SyR-CXD-185). Each content system requirement of the area PASS states its information item without a model field; the BatteryPass mapping table holds the property of BatteryPass 6.1.0 that carries each item, as the IDTA-02035 mapping tables hold it for the CX-0160 models planned after the CX-Neptune go-live.",
-   "implementation": {
-    "state": "missing",
-    "where": [],
-    "note": "The reference server of this repository is not built yet."
-   },
-   "verification": [
-    "VM-SWE-DATASET-047"
-   ],
-   "group": "dataset",
-   "history": [
-    {
-     "date": "2026-10-26",
-     "change": "derived",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): Decision Q-985 (\"the version in Titan\") needs one software requirement that maps every content item of the passport dataset to its BatteryPass 6.1.0 property, so that the content system requirements state the item and not a model field.",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-002, SyR-PASS-003, SyR-PASS-006, SyR-PASS-011, SyR-PASS-014, SyR-PASS-016, SyR-PASS-019, SyR-PASS-020, SyR-PASS-022, SyR-PASS-023, SyR-PASS-025, SyR-PASS-026, SyR-PASS-027, SyR-PASS-028, SyR-PASS-029, SyR-PASS-030, SyR-PASS-031, SyR-PASS-032, SyR-PASS-033, SyR-PASS-034, SyR-PASS-035, SyR-PASS-036, SyR-PASS-037, SyR-PASS-038, SyR-PASS-039, SyR-PASS-040, SyR-PASS-041, SyR-PASS-042, SyR-PASS-043, SyR-PASS-044, SyR-PASS-045, SyR-PASS-046, SyR-PASS-047, SyR-PASS-048, SyR-PASS-049, SyR-PASS-050, SyR-PASS-051, SyR-PASS-052, SyR-PASS-053, SyR-PASS-054, SyR-PASS-055, SyR-PASS-056, SyR-PASS-057, SyR-PASS-058, SyR-PASS-059, SyR-PASS-060, SyR-PASS-061, SyR-PASS-062, SyR-PASS-063, SyR-PASS-064, SyR-PASS-065, SyR-PASS-066, SyR-PASS-067, SyR-PASS-068, SyR-PASS-069, SyR-PASS-070, SyR-PASS-071, SyR-PASS-072, SyR-PASS-073, SyR-PASS-074, SyR-PASS-075, SyR-PASS-076",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) carries, for this release under decision Q-985 (which battery passport rules bind this release under CX-Titan), the share of EL-DATASET (battery passport dataset aggregation) in the content requirements of SyR-PASS-002 to SyR-PASS-076 (battery passport dataset content, group PASS-1), whose IDTA-02035 mapping requirements now trace to the CX-0160 system requirements.",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-077, SyR-PASS-078, SyR-PASS-079, SyR-PASS-080, SyR-PASS-081, SyR-PASS-082, SyR-PASS-083, SyR-PASS-084, SyR-PASS-085, SyR-PASS-086, SyR-PASS-087, SyR-PASS-088, SyR-PASS-089, SyR-PASS-090, SyR-PASS-091, SyR-PASS-092, SyR-PASS-093, SyR-PASS-094, SyR-PASS-095, SyR-PASS-096, SyR-PASS-097, SyR-PASS-098, SyR-PASS-099, SyR-PASS-100, SyR-PASS-101, SyR-PASS-102, SyR-PASS-103, SyR-PASS-104, SyR-PASS-105, SyR-PASS-106, SyR-PASS-107, SyR-PASS-108, SyR-PASS-109, SyR-PASS-110, SyR-PASS-111, SyR-PASS-112, SyR-PASS-113, SyR-PASS-114, SyR-PASS-115, SyR-PASS-116, SyR-PASS-117, SyR-PASS-118, SyR-PASS-119, SyR-PASS-120, SyR-PASS-121, SyR-PASS-122, SyR-PASS-123, SyR-PASS-124, SyR-PASS-125, SyR-PASS-126, SyR-PASS-127, SyR-PASS-128, SyR-PASS-129, SyR-PASS-130, SyR-PASS-131, SyR-PASS-132, SyR-PASS-133, SyR-PASS-134, SyR-PASS-135, SyR-PASS-136, SyR-PASS-137, SyR-PASS-138, SyR-PASS-139, SyR-PASS-140, SyR-PASS-141, SyR-PASS-142",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) refines the 66 content requirements SyR-PASS-077 to SyR-PASS-142 (battery passport dataset content, group PASS-2) for EL-DATASET (battery passport dataset aggregation), because under decision Q-985 their information items reach the passport service provider in BatteryPass 6.1.0 properties during this release.",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-143, SyR-PASS-144, SyR-PASS-145, SyR-PASS-146, SyR-PASS-147, SyR-PASS-148, SyR-PASS-149, SyR-PASS-150, SyR-PASS-151, SyR-PASS-152, SyR-PASS-153, SyR-PASS-154, SyR-PASS-155, SyR-PASS-156, SyR-PASS-157, SyR-PASS-158, SyR-PASS-159, SyR-PASS-160, SyR-PASS-161, SyR-PASS-162, SyR-PASS-163, SyR-PASS-164, SyR-PASS-165, SyR-PASS-166, SyR-PASS-167, SyR-PASS-168, SyR-PASS-169, SyR-PASS-170, SyR-PASS-171, SyR-PASS-172, SyR-PASS-173, SyR-PASS-174, SyR-PASS-175, SyR-PASS-176, SyR-PASS-177, SyR-PASS-178, SyR-PASS-179, SyR-PASS-180, SyR-PASS-181, SyR-PASS-182, SyR-PASS-183, SyR-PASS-184, SyR-PASS-185, SyR-PASS-186, SyR-PASS-187, SyR-PASS-188, SyR-PASS-189, SyR-PASS-190, SyR-PASS-191, SyR-PASS-192, SyR-PASS-193, SyR-PASS-194, SyR-PASS-195, SyR-PASS-196, SyR-PASS-197, SyR-PASS-198, SyR-PASS-199, SyR-PASS-200, SyR-PASS-201, SyR-PASS-202, SyR-PASS-203, SyR-PASS-204, SyR-PASS-205",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) refines the 63 content system requirements from SyR-PASS-143 (recommended dynamic data updated during use) to SyR-PASS-205 (negative events such as accidents, legitimate interest), which are allocated to EL-DATASET (battery passport dataset aggregation) and name no model field after decision Q-985 (BatteryPass 6.1.0 under CX-Titan).",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-211",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) gives each property its access group, so it holds the share of EL-DATASET (battery passport dataset aggregation) in the new marking requirement split from SyR-PASS-154 (state of charge as a histogram of time per interval).",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-212",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) gives each property its access group, so it holds the share of EL-DATASET (battery passport dataset aggregation) in the new marking requirement split from SyR-PASS-188 (C-rate given separately for charge and discharge).",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-213",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) gives each property its access group, so it holds the share of EL-DATASET (battery passport dataset aggregation) in the new marking requirement split from SyR-PASS-195 (temperature data as histograms of time per interval).",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "tracesTo: added SyR-PASS-214",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): SwR-DATASET-180 (BatteryPass 6.1.0 properties filled from the BatteryPass mapping table) gives each property its access group, so it holds the share of EL-DATASET (battery passport dataset aggregation) in the new marking requirement split from SyR-PASS-203 (deep discharge events also for EV and other industrial batteries).",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "implementation lines and note read again at 9f8c3c0; state unchanged",
-     "reason": "third verification run on 9f8c3c0 (analyst batch b03)",
-     "approver": ""
     },
     {
      "date": "2026-11-16",

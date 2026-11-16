@@ -10,16 +10,16 @@ repository is not built yet, so every software requirement has the implementatio
 
 ## Counts
 
-The registry holds 56 stakeholder requirements, 80 system requirements, 18 process requirements, 103 software
-requirements, 179 verification measures, 51 decisions, 38 sources and 16 stakeholders. A stakeholder requirement that
+The registry holds 56 stakeholder requirements, 80 system requirements, 18 process requirements, 102 software
+requirements, 178 verification measures, 51 decisions, 38 sources and 16 stakeholders. A stakeholder requirement that
 quotes several parties is held in the file of each party, so the files of the parties hold 65 copies of the 56
 stakeholder requirements.
 
 | File | Content | Records |
 |---|---|---|
-| `SWE.1-Software_Requirements_Analysis/software_requirements.json` | Software requirements | 103 |
+| `SWE.1-Software_Requirements_Analysis/software_requirements.json` | Software requirements | 102 |
 | `SWE.4-Software_Unit_Verification/unit_verification_measures.json` | Unit verification measures | 11 |
-| `SWE.5-Software_Component_Verification_and_Integration_Verification/component_and_integration_verification_measures.json` | Component and integration verification measures | 75 |
+| `SWE.5-Software_Component_Verification_and_Integration_Verification/component_and_integration_verification_measures.json` | Component and integration verification measures | 74 |
 | `SWE.6-Software_Verification/software_verification_measures.json` | Software verification measures | 3 |
 | `SYS.1-Requirements_Elicitation/Catena-X-Association_standards_and_governance/stakeholder_requirements.json` | Stakeholder requirements, party `Catena-X-Association_standards_and_governance` | 8 |
 | `SYS.1-Requirements_Elicitation/DIN_DKE-DIN_SPEC_99100_battery_passport_data_attributes/stakeholder_requirements.json` | Stakeholder requirements, party `DIN_DKE-DIN_SPEC_99100_battery_passport_data_attributes` | 13 |

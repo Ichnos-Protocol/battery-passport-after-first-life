@@ -203,56 +203,6 @@
    ]
   },
   {
-   "id": "VM-SWE-DATASET-047",
-   "title": "Battery_pass 6.1.0 payloads of the dataset validate against the schema",
-   "level": "SWE.4 (unit)",
-   "method": "test",
-   "technique": "Unit test of the dataset serialisation over the battery fixtures of the passport module.",
-   "passCriteria": "Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, and every row of the BatteryPass mapping table names a property of the stored BatteryPass 6.1.0 model and fills it with its information item for each battery fixture whose category the row admits. Any other result fails.",
-   "entry": "EL-DATASET built (DEV-01 closed).",
-   "environment": "unit partition",
-   "how": "the test suite passportDataset.batteryPass of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.batteryPass of the reference server",
-   "verifies": [
-    "SwR-DATASET-180"
-   ],
-   "regression": "every review",
-   "releasePlan": "this-release",
-   "existingEvidence": "",
-   "group": "dataset",
-   "history": [
-    {
-     "date": "2026-10-26",
-     "change": "derived",
-     "reason": "Francesco's answer to decision Q-985 of 2026-10-26 (\"the version in Titan\"): the unit measure of SwR-DATASET-177, SwR-DATASET-178 and SwR-DATASET-179",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "passCriteria (before: \"Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, and every 5.0.0 payload validates against the stored 5.0.0 schema. Any other result fails.\")",
-     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): VM-SWE-DATASET-047 (battery_pass payloads of the dataset validate in both versions) also verifies the BatteryPass mapping table of SwR-DATASET-180.",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "verifies: SwR-DATASET-179 (retired) removed",
-     "reason": "Francesco's decision Q-071 of 2026-10-26 (\"Q-071 no, otherwise we will need to add new deprecated features\"): the dataset aggregation maps no battery_pass 5.0.0 payload",
-     "approver": ""
-    },
-    {
-     "date": "2026-10-26",
-     "change": "title (before: \"Battery_pass payloads of the dataset validate in both versions\"); passCriteria (before: \"Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, every row of the BatteryPass mapping table names a property of the stored BatteryPass 6.1.0 model and fills it with its information item for each battery fixture whose category the row admits, and every 5.0.0 payload validates against the stored 5.0.0 schema. Any other result fails.\"); entry (before: \"EL-DATASET built (DEV-01 closed); the battery_pass 5.0.0 schema stored for its case.\")",
-     "reason": "Francesco's decision Q-071 of 2026-10-26: no battery_pass 5.0.0 payload is serialised",
-     "approver": ""
-    },
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
    "id": "VM-SWE-BACKEND-051",
    "title": "First recycler's report of every facility",
    "level": "SWE.4 (unit)",

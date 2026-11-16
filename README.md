@@ -27,7 +27,7 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | `models/` | The two proposed aspect models (Semantic Aspect Meta Model, SAMM) | Not yet written |
 | `server/` | The reference server (Node.js 24, Express, PostgreSQL) | Not yet written |
 | `tck/` | The conformance test kit, one test per conformance criterion | Not yet written |
-| `requirements/` | The requirements registry, from stakeholder requirements to verification measures | 541 records carried over, listed in `requirements/README.md` |
+| `requirements/` | The requirements registry, from stakeholder requirements to verification measures | 539 records, listed in `requirements/README.md` |
 | `sources/` | The source texts that their licenses allow to redistribute | 95 files, listed in `sources/SOURCES.json` |
 | `scripts/` | The checks of the repository | The license header check, the source register check and the requirement check |
 
