@@ -23,6 +23,10 @@ All notable changes to this repository are documented in this file. The format f
 - The workflow `.github/workflows/checks.yml`, which runs the registry check, the source register check, the license header check, the private reference check, the annex check and the specification check on every pull request and on every push to the branch `main`.
 - The package file `server/package.json` and the lock file `server/package-lock.json` of the reference server, and the test of the contract `server/test/contractSchemas.test.mjs`.
 - The file `.gitattributes`, which stores every text file with LF line endings.
+- Phase P2 (the models) of the implementation specification: the three proposed aspect models BatteryPassportLifecycle, BatteryPassportSuccessors and BatteryPassportAccessMap in `models/`, each in version 1.0.0 with the status draft, in the folder layout of the Tractus-X semantic model repository. The lifecycle model and the successors model import the shared models `io.catenax.shared.uuid` 2.1.0 and `io.catenax.shared.business_partner_number` 2.0.0.
+- The script `scripts/validate-models.sh`, which validates the three models with the SAMM command line tool 2.11.1 and, with the argument `--generate`, writes the JSON schema of each model to `docs/api/aspects/`, and the workflow `.github/workflows/samm.yml`, which runs the script and compares the generated schemas with the commit.
+- The three generated JSON schemas and the three example payloads of the models in `docs/api/aspects/`.
+- The module `server/src/validation/aspectSchemaCompiler.mjs`, the one compiler of the aspect schemas in the draft-04 dialect, and the test of the models `server/test/modelExamples.test.mjs`.
 
 ### Changed
 
@@ -31,6 +35,9 @@ All notable changes to this repository are documented in this file. The format f
 - Changed: the specification checker is a Node.js script, `scripts/spec-gate-check.mjs`. The Node.js script replaces `scripts/spec_gate_check.py` and takes the same options.
 - The private reference check `scripts/check-private-references.mjs` excepts the expression of the letter M and one digit inside the two lock files `server/package-lock.json` and `tck/package-lock.json`, which a base64 integrity value can hold.
 - The field `implementation` of the 31 software requirements that the reference server does not build names the reason and the owner's decision of 2026-11-16.
+- The workflow `.github/workflows/checks.yml` runs the annex check with the argument `--require P2`.
+- The test of the contract `server/test/contractSchemas.test.mjs` uses the invented Business Partner Numbers `BPNL00000000TCK1`, `BPNL00000000TCK2` and `BPNL00000000TCK4` of the test data of the implementation specification.
+- The list of proposals `docs/proposals.md` names the files of the three models, the validation command and the import of version 2.1.0 of the shared model `io.catenax.shared.uuid`.
 
 ## NOTICE
 

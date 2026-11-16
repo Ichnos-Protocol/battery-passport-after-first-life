@@ -1,0 +1,93 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema",
+  "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#BatteryPassportAccessMap",
+  "description" : "The access group of every field of the seven IDTA-02035 aspect models of the battery passport that a data provider serves, as Annex XIII of Regulation (EU) 2023/1542 sorts the information of the battery passport.",
+  "type" : "object",
+  "components" : {
+    "schemas" : {
+      "Text" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#Text",
+        "description" : "Describes a Property which contains plain text. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc."
+      },
+      "ValidFromCharacteristic" : {
+        "type" : "string",
+        "format" : "date",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#ValidFromCharacteristic",
+        "description" : "A calendar date without a time."
+      },
+      "TwinLevelEnumeration" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#TwinLevelEnumeration",
+        "description" : "The two levels of a digital twin: the part type and the part instance.",
+        "enum" : [ "PartType", "PartInstance" ]
+      },
+      "AccessGroupEnumeration" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#AccessGroupEnumeration",
+        "description" : "The four access groups of Annex XIII of Regulation (EU) 2023/1542: public (point 1), legitimateInterestModel (point 2), authorities (point 3) and legitimateInterestBattery (point 4).",
+        "enum" : [ "public", "legitimateInterestModel", "authorities", "legitimateInterestBattery" ]
+      },
+      "AccessMapEntry" : {
+        "description" : "The access group of one field of one aspect model on one level of the digital twin.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#AccessMapEntry",
+        "type" : "object",
+        "properties" : {
+          "aspect" : {
+            "description" : "The identifier (urn) of the aspect model that the entry covers.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#aspect",
+            "$ref" : "#/components/schemas/Text"
+          },
+          "twinLevel" : {
+            "description" : "The level of the digital twin on which the entry applies to the field.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#twinLevel",
+            "$ref" : "#/components/schemas/TwinLevelEnumeration"
+          },
+          "path" : {
+            "description" : "The path of the field as a JSONPath query (RFC 9535), relative to the root of the payload of the aspect model; a selector of RFC 9535 names the list elements where the entry covers only some elements of a list.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#path",
+            "$ref" : "#/components/schemas/Text"
+          },
+          "accessGroup" : {
+            "description" : "The access group of the field.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#accessGroup",
+            "$ref" : "#/components/schemas/AccessGroupEnumeration"
+          },
+          "legalBasis" : {
+            "description" : "The point and the letter of Annex XIII of Regulation (EU) 2023/1542 that list the field.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#legalBasis",
+            "$ref" : "#/components/schemas/Text"
+          }
+        },
+        "required" : [ "aspect", "twinLevel", "path", "accessGroup", "legalBasis" ]
+      },
+      "EntriesTrait" : {
+        "description" : "The list of the entries holds one entry or more.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#EntriesTrait",
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/AccessMapEntry"
+        },
+        "minItems" : 1
+      }
+    }
+  },
+  "properties" : {
+    "mapVersion" : {
+      "description" : "The version of the access map; a new version of Annex XIII or of the implementing act under Art. 77(9) leads to a new value.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#mapVersion",
+      "$ref" : "#/components/schemas/Text"
+    },
+    "validFrom" : {
+      "description" : "The date from which the access map applies.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#validFrom",
+      "$ref" : "#/components/schemas/ValidFromCharacteristic"
+    },
+    "entries" : {
+      "description" : "One entry per field of the seven IDTA-02035 aspect models that the data provider serves.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_access_map:1.0.0#entries",
+      "$ref" : "#/components/schemas/EntriesTrait"
+    }
+  },
+  "required" : [ "mapVersion", "validFrom", "entries" ]
+}

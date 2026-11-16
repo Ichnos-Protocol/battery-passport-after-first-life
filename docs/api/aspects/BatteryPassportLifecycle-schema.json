@@ -1,0 +1,146 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema",
+  "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#BatteryPassportLifecycle",
+  "description" : "The lifecycle record of a battery passport after the first passport: the predecessor links of a new passport, the successor that takes over the responsibility for the passport when the battery becomes waste, and the end of the passport after the recycling of the battery.",
+  "type" : "object",
+  "components" : {
+    "schemas" : {
+      "Text" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#Text",
+        "description" : "Describes a Property which contains plain text. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc."
+      },
+      "UuidV4Trait" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.shared.uuid:2.1.0#UuidV4Trait",
+        "description" : "The provided regular expression ensures that the UUID is composed of five groups of characters separated by hyphens, in the form 8-4-4-4-12 for a total of 36 characters (32 hexadecimal characters and 4 hyphens), optionally prefixed by \"urn:uuid:\" to make it an IRI.",
+        "pattern" : "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)"
+      },
+      "BpnlTrait" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.shared.business_partner_number:2.0.0#BpnlTrait",
+        "description" : "The provided regular expression ensures that the BPNL is composed of prefix 'BPNL', 10 digits and two alphanumeric letters.",
+        "pattern" : "^BPNL[a-zA-Z0-9]{12}$"
+      },
+      "OperationEnumeration" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#OperationEnumeration",
+        "description" : "The four operations after which a new passport is issued.",
+        "enum" : [ "preparationForReUse", "preparationForRepurposing", "repurposing", "remanufacturing" ]
+      },
+      "Timestamp" : {
+        "type" : "string",
+        "pattern" : "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?",
+        "x-samm-aspect-model-urn" : "urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#Timestamp",
+        "description" : "Describes a Property which contains the date and time with an optional timezone."
+      },
+      "PassportLink" : {
+        "description" : "The link from a new passport to one original passport.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#PassportLink",
+        "type" : "object",
+        "properties" : {
+          "passportIdentifier" : {
+            "description" : "The digitalProductPassportId of the original passport.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#passportIdentifier",
+            "$ref" : "#/components/schemas/Text"
+          },
+          "catenaXId" : {
+            "description" : "The catenaXId of the original twin.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#catenaXId",
+            "$ref" : "#/components/schemas/UuidV4Trait"
+          },
+          "dataProviderBpnl" : {
+            "description" : "The BPNL of the data provider of the original passport (the manufacturerId of the original twin).",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#dataProviderBpnl",
+            "$ref" : "#/components/schemas/BpnlTrait"
+          },
+          "operation" : {
+            "description" : "The operation that issued the new passport.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#operation",
+            "$ref" : "#/components/schemas/OperationEnumeration"
+          },
+          "operationDate" : {
+            "description" : "The date the new passport was issued.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#operationDate",
+            "$ref" : "#/components/schemas/Timestamp"
+          }
+        },
+        "required" : [ "passportIdentifier", "catenaXId", "dataProviderBpnl", "operation", "operationDate" ]
+      },
+      "PredecessorsTrait" : {
+        "description" : "The list of the predecessor links holds zero or more entries.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#PredecessorsTrait",
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/PassportLink"
+        },
+        "minItems" : 0
+      },
+      "SuccessorRoleEnumeration" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#SuccessorRoleEnumeration",
+        "description" : "The three roles of a successor: the producer, the producer responsibility organisation and the waste management operator.",
+        "enum" : [ "producer", "producerResponsibilityOrganisation", "wasteManagementOperator" ]
+      },
+      "WasteResponsibilityCharacteristic" : {
+        "description" : "The successor that takes over the responsibility for the passport when the battery becomes waste.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#WasteResponsibilityCharacteristic",
+        "type" : "object",
+        "properties" : {
+          "successorBpnl" : {
+            "description" : "The BPNL of the successor.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#successorBpnl",
+            "$ref" : "#/components/schemas/BpnlTrait"
+          },
+          "successorRole" : {
+            "description" : "The role of Art. 77(7), second subparagraph.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#successorRole",
+            "$ref" : "#/components/schemas/SuccessorRoleEnumeration"
+          },
+          "date" : {
+            "description" : "The date the battery became waste.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#date",
+            "$ref" : "#/components/schemas/Timestamp"
+          }
+        },
+        "required" : [ "successorBpnl", "successorRole", "date" ]
+      },
+      "EndOfPassportCharacteristic" : {
+        "description" : "The end of the passport after the recycling of the battery.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#EndOfPassportCharacteristic",
+        "type" : "object",
+        "properties" : {
+          "recyclingDate" : {
+            "description" : "The date of the recycling.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#recyclingDate",
+            "$ref" : "#/components/schemas/Timestamp"
+          },
+          "recyclerBpnl" : {
+            "description" : "The BPNL of the recycler.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#recyclerBpnl",
+            "$ref" : "#/components/schemas/BpnlTrait"
+          }
+        },
+        "required" : [ "recyclingDate", "recyclerBpnl" ]
+      }
+    }
+  },
+  "properties" : {
+    "predecessors" : {
+      "description" : "One entry per original passport; empty on a first passport.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#predecessors",
+      "$ref" : "#/components/schemas/PredecessorsTrait"
+    },
+    "wasteResponsibility" : {
+      "description" : "Present once the battery is waste.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#wasteResponsibility",
+      "$ref" : "#/components/schemas/WasteResponsibilityCharacteristic"
+    },
+    "endOfPassport" : {
+      "description" : "Present once the battery is recycled.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#endOfPassport",
+      "$ref" : "#/components/schemas/EndOfPassportCharacteristic"
+    }
+  },
+  "required" : [ "predecessors" ]
+}

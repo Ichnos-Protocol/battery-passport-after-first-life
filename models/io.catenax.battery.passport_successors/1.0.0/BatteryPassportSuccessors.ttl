@@ -1,0 +1,83 @@
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_successors:1.0.0#> .
+@prefix ext-uuid: <urn:samm:io.catenax.shared.uuid:2.1.0#> .
+@prefix ext-bpn: <urn:samm:io.catenax.shared.business_partner_number:2.0.0#> .
+
+:BatteryPassportSuccessors a samm:Aspect ;
+   samm:preferredName "Battery passport successors"@en ;
+   samm:description "The forward links of an original battery passport: one link per new passport that the original issuer added after the notification of a new passport."@en ;
+   samm:properties ( :successors ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:successors a samm:Property ;
+   samm:preferredName "Successors"@en ;
+   samm:description "One entry per new passport to which the original issuer added a forward link."@en ;
+   samm:characteristic :SuccessorsCharacteristic .
+
+:SuccessorsCharacteristic a samm-c:List ;
+   samm:preferredName "Successors characteristic"@en ;
+   samm:description "The list of the forward links of an original passport."@en ;
+   samm:dataType :SuccessorLink .
+
+:SuccessorLink a samm:Entity ;
+   samm:preferredName "Successor link"@en ;
+   samm:description "The link from an original passport to one new passport."@en ;
+   samm:properties ( :passportIdentifier :catenaXId :secondLifeOperatorBpnl :operation :operationDate ) .
+
+:passportIdentifier a samm:Property ;
+   samm:preferredName "Passport identifier"@en ;
+   samm:description "The digitalProductPassportId of the new passport."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:uuid:3c1f6c1e-5b7d-4f0a-9d2e-7a4b8c6d5e21" .
+
+:catenaXId a samm:Property ;
+   samm:preferredName "Catena-X identifier"@en ;
+   samm:description "The catenaXId of the new twin."@en ;
+   samm:characteristic ext-uuid:UuidV4Trait ;
+   samm:exampleValue "urn:uuid:b7e4d2a9-1c3f-4e5a-8b6d-0f9e8d7c6b5a" .
+
+:secondLifeOperatorBpnl a samm:Property ;
+   samm:preferredName "Second-life operator BPNL"@en ;
+   samm:description "The BPNL of the second-life operator."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000002" .
+
+:operation a samm:Property ;
+   samm:preferredName "Operation"@en ;
+   samm:description "The operation that issued the new passport."@en ;
+   samm:characteristic :OperationEnumeration ;
+   samm:exampleValue "remanufacturing" .
+
+:OperationEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Operation enumeration"@en ;
+   samm:description "The four operations after which a new passport is issued."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "preparationForReUse" "preparationForRepurposing" "repurposing" "remanufacturing" ) .
+
+:operationDate a samm:Property ;
+   samm:preferredName "Operation date"@en ;
+   samm:description "The date the new passport was issued."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2031-05-04T00:00:00Z"^^xsd:dateTime .

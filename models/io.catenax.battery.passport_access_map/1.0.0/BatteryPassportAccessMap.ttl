@@ -1,0 +1,115 @@
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_access_map:1.0.0#> .
+
+:BatteryPassportAccessMap a samm:Aspect ;
+   samm:preferredName "Battery passport access map"@en ;
+   samm:description "The access group of every field of the seven IDTA-02035 aspect models of the battery passport that a data provider serves, as Annex XIII of Regulation (EU) 2023/1542 sorts the information of the battery passport."@en ;
+   samm:properties ( :mapVersion :validFrom :entries ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:mapVersion a samm:Property ;
+   samm:preferredName "Map version"@en ;
+   samm:description "The version of the access map; a new version of Annex XIII or of the implementing act under Art. 77(9) leads to a new value."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "1.0.0" .
+
+:validFrom a samm:Property ;
+   samm:preferredName "Valid from"@en ;
+   samm:description "The date from which the access map applies."@en ;
+   samm:characteristic :ValidFromCharacteristic ;
+   samm:exampleValue "2027-02-18"^^xsd:date .
+
+:ValidFromCharacteristic a samm:Characteristic ;
+   samm:preferredName "Valid from characteristic"@en ;
+   samm:description "A calendar date without a time."@en ;
+   samm:dataType xsd:date .
+
+:entries a samm:Property ;
+   samm:preferredName "Entries"@en ;
+   samm:description "One entry per field of the seven IDTA-02035 aspect models that the data provider serves."@en ;
+   samm:characteristic :EntriesTrait .
+
+:EntriesTrait a samm-c:Trait ;
+   samm:preferredName "Entries trait"@en ;
+   samm:description "The list of the entries of the access map with its length constraint."@en ;
+   samm-c:baseCharacteristic :EntriesCharacteristic ;
+   samm-c:constraint :EntriesLengthConstraint .
+
+:EntriesCharacteristic a samm-c:List ;
+   samm:preferredName "Entries characteristic"@en ;
+   samm:description "The list of the entries of the access map."@en ;
+   samm:dataType :AccessMapEntry .
+
+:EntriesLengthConstraint a samm-c:LengthConstraint ;
+   samm:preferredName "Entries length constraint"@en ;
+   samm:description "The list of the entries holds one entry or more."@en ;
+   samm-c:minValue "1"^^xsd:nonNegativeInteger .
+
+:AccessMapEntry a samm:Entity ;
+   samm:preferredName "Access map entry"@en ;
+   samm:description "The access group of one field of one aspect model on one level of the digital twin."@en ;
+   samm:properties ( :aspect :twinLevel :path :accessGroup :legalBasis ) .
+
+:aspect a samm:Property ;
+   samm:preferredName "Aspect"@en ;
+   samm:description "The identifier (urn) of the aspect model that the entry covers."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate" .
+
+:twinLevel a samm:Property ;
+   samm:preferredName "Twin level"@en ;
+   samm:description "The level of the digital twin on which the entry applies to the field."@en ;
+   samm:characteristic :TwinLevelEnumeration ;
+   samm:exampleValue "PartInstance" .
+
+:TwinLevelEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Twin level enumeration"@en ;
+   samm:description "The two levels of a digital twin: the part type and the part instance."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "PartType" "PartInstance" ) .
+
+:path a samm:Property ;
+   samm:preferredName "Path"@en ;
+   samm:description "The path of the field as a JSONPath query (RFC 9535), relative to the root of the payload of the aspect model; a selector of RFC 9535 names the list elements where the entry covers only some elements of a list."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "$.LifeCycleStage" .
+
+:accessGroup a samm:Property ;
+   samm:preferredName "Access group"@en ;
+   samm:description "The access group of the field."@en ;
+   samm:characteristic :AccessGroupEnumeration ;
+   samm:exampleValue "legitimateInterestBattery" .
+
+:AccessGroupEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Access group enumeration"@en ;
+   samm:description "The four access groups of Annex XIII of Regulation (EU) 2023/1542: public (point 1), legitimateInterestModel (point 2), authorities (point 3) and legitimateInterestBattery (point 4)."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "public" "legitimateInterestModel" "authorities" "legitimateInterestBattery" ) .
+
+:legalBasis a samm:Property ;
+   samm:preferredName "Legal basis"@en ;
+   samm:description "The point and the letter of Annex XIII of Regulation (EU) 2023/1542 that list the field."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Annex XIII point 4(c)" .

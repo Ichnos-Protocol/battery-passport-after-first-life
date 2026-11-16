@@ -1,0 +1,27 @@
+{
+  "mapVersion": "1.0.0",
+  "validFrom": "2027-02-18",
+  "entries": [
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
+      "twinLevel": "PartInstance",
+      "path": "$.ManufacturerName",
+      "accessGroup": "public",
+      "legalBasis": "Annex XIII point 1(a)"
+    },
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
+      "twinLevel": "PartInstance",
+      "path": "$.LifeCycleStage",
+      "accessGroup": "legitimateInterestBattery",
+      "legalBasis": "Annex XIII point 4(c)"
+    },
+    {
+      "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition",
+      "twinLevel": "PartInstance",
+      "path": "$.NumberOfFullCycles",
+      "accessGroup": "legitimateInterestBattery",
+      "legalBasis": "Annex XIII point 4(d)"
+    }
+  ]
+}

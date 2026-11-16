@@ -2,7 +2,7 @@
 
 This folder holds the reference server of the lifecycle interfaces: Node.js 24, Express and PostgreSQL. The server is not written yet.
 
-The table states what the folder holds after phase P1 (the contract) of the implementation specification
+The table states what the folder holds after phases P1 (the contract) and P2 (the models) of the implementation specification
 `docs/architecture/implementation_plan.md`.
 
 | Path | Content |
@@ -10,12 +10,15 @@ The table states what the folder holds after phase P1 (the contract) of the impl
 | `package.json` | The package file of the reference server: ES modules, Node.js 24 or later, the scripts `test`, `migrate`, `create-role`, `sign-token` and `start`. The modules that the scripts `migrate`, `create-role`, `sign-token` and `start` run arrive in phases P3 to P5 |
 | `package-lock.json` | The lock file, which pins each package to one release |
 | `test/contractSchemas.test.mjs` | The test of the contract: the eight schema files of `docs/api/schemas/` and the file `docs/api/openAPI.yaml` |
+| `src/validation/aspectSchemaCompiler.mjs` | The one compiler of the aspect schemas in the draft-04 dialect of JSON Schema: the three schemas of `docs/api/aspects/` that the SAMM command line tool generates, and the stored schemas of `sources/IDTA/` |
+| `test/modelExamples.test.mjs` | The test of the models: the three generated schemas and the three example payloads of `docs/api/aspects/`, and the stored schemas of `sources/IDTA/` |
 
-Run the test of the contract in this folder:
+Run the two tests in this folder:
 
 ```bash
 npm ci
 node --test --test-reporter=tap test/contractSchemas.test.mjs
+node --test --test-reporter=tap test/modelExamples.test.mjs
 ```
 
 ## NOTICE

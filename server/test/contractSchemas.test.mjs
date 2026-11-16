@@ -62,10 +62,11 @@ const UUID_FORMS = [
   `urn:uuid:${LOWER_UUID}`,
   `urn:uuid:${LOWER_UUID.toUpperCase()}`,
 ];
-// Invented test data: no value names a real company.
-const SENDER_BPNL = "BPNL00000000SEND";
-const RECEIVER_BPNL = "BPNL00000000RECV";
-const THIRD_BPNL = "BPNL00000000THRD";
+// Invented test data of section 10.7 of the implementation specification: no value names a real company.
+// TCK2 is the second-life operator, TCK1 is the data provider of the original passports, TCK4 is a successor.
+const SENDER_BPNL = "BPNL00000000TCK2";
+const RECEIVER_BPNL = "BPNL00000000TCK1";
+const THIRD_BPNL = "BPNL00000000TCK4";
 
 // The four operations with the context of Table 4.3 and the content of Table 4.4 of the proposal CX-0160-4.
 const OPERATIONS = [
@@ -125,7 +126,7 @@ const OPERATIONS = [
     content: {
       passportIdentifier: "did:web:manufacturer.example:passport:original-0001",
       recyclingDate: "2027-03-01T09:30:00Z",
-      recyclerBpnl: SENDER_BPNL,
+      recyclerBpnl: "BPNL00000000TCK3",
       materialRecyclingCertificateCatenaXId: `urn:uuid:${LOWER_UUID}`,
     },
   },
@@ -330,8 +331,8 @@ for (const operation of OPERATIONS) {
     it(`PrR-CXD-019: a message of ${operation.name} with a Business Partner Number of 11 characters fails`, () => {
       // The Business Partner Number of a legal entity has the prefix BPNL and 12 further characters.
       // The test covers both readings of "11 characters": 11 characters after the prefix, and 11 characters in all.
-      const bpnlWithElevenFurtherCharacters = "BPNL00000000SEN";
-      const bpnlOfElevenCharacters = "BPNL0000SEN";
+      const bpnlWithElevenFurtherCharacters = "BPNL00000000TCK";
+      const bpnlOfElevenCharacters = "BPNL0000TCK";
       assert.equal(bpnlWithElevenFurtherCharacters.length, 15);
       assert.equal(bpnlOfElevenCharacters.length, 11);
       for (const value of [bpnlWithElevenFurtherCharacters, bpnlOfElevenCharacters]) {

@@ -1,0 +1,160 @@
+#######################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This work is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC-BY-4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/legalcode.
+#
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#> .
+@prefix ext-uuid: <urn:samm:io.catenax.shared.uuid:2.1.0#> .
+@prefix ext-bpn: <urn:samm:io.catenax.shared.business_partner_number:2.0.0#> .
+
+:BatteryPassportLifecycle a samm:Aspect ;
+   samm:preferredName "Battery passport lifecycle"@en ;
+   samm:description "The lifecycle record of a battery passport after the first passport: the predecessor links of a new passport, the successor that takes over the responsibility for the passport when the battery becomes waste, and the end of the passport after the recycling of the battery."@en ;
+   samm:properties ( :predecessors [ samm:property :wasteResponsibility ; samm:optional true ] [ samm:property :endOfPassport ; samm:optional true ] ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:predecessors a samm:Property ;
+   samm:preferredName "Predecessors"@en ;
+   samm:description "One entry per original passport; empty on a first passport."@en ;
+   samm:characteristic :PredecessorsTrait .
+
+:PredecessorsTrait a samm-c:Trait ;
+   samm:preferredName "Predecessors trait"@en ;
+   samm:description "The list of the predecessor links with its length constraint."@en ;
+   samm-c:baseCharacteristic :PredecessorsCharacteristic ;
+   samm-c:constraint :PredecessorsLengthConstraint .
+
+:PredecessorsCharacteristic a samm-c:List ;
+   samm:preferredName "Predecessors characteristic"@en ;
+   samm:description "The list of the predecessor links of a passport."@en ;
+   samm:dataType :PassportLink .
+
+:PredecessorsLengthConstraint a samm-c:LengthConstraint ;
+   samm:preferredName "Predecessors length constraint"@en ;
+   samm:description "The list of the predecessor links holds zero or more entries."@en ;
+   samm-c:minValue "0"^^xsd:nonNegativeInteger .
+
+:PassportLink a samm:Entity ;
+   samm:preferredName "Passport link"@en ;
+   samm:description "The link from a new passport to one original passport."@en ;
+   samm:properties ( :passportIdentifier :catenaXId :dataProviderBpnl :operation :operationDate ) .
+
+:passportIdentifier a samm:Property ;
+   samm:preferredName "Passport identifier"@en ;
+   samm:description "The digitalProductPassportId of the original passport."@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "urn:uuid:5f0c1c7e-6b1e-4a37-9a59-0b1d7c3e2a10" .
+
+:catenaXId a samm:Property ;
+   samm:preferredName "Catena-X identifier"@en ;
+   samm:description "The catenaXId of the original twin."@en ;
+   samm:characteristic ext-uuid:UuidV4Trait ;
+   samm:exampleValue "urn:uuid:9a2b8f61-3c5d-4e7a-8b1f-2d6c4a0e9f33" .
+
+:dataProviderBpnl a samm:Property ;
+   samm:preferredName "Data provider BPNL"@en ;
+   samm:description "The BPNL of the data provider of the original passport (the manufacturerId of the original twin)."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000001" .
+
+:operation a samm:Property ;
+   samm:preferredName "Operation"@en ;
+   samm:description "The operation that issued the new passport."@en ;
+   samm:characteristic :OperationEnumeration ;
+   samm:exampleValue "remanufacturing" .
+
+:OperationEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Operation enumeration"@en ;
+   samm:description "The four operations after which a new passport is issued."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "preparationForReUse" "preparationForRepurposing" "repurposing" "remanufacturing" ) .
+
+:operationDate a samm:Property ;
+   samm:preferredName "Operation date"@en ;
+   samm:description "The date the new passport was issued."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2031-05-04T00:00:00Z"^^xsd:dateTime .
+
+:wasteResponsibility a samm:Property ;
+   samm:preferredName "Waste responsibility"@en ;
+   samm:description "Present once the battery is waste."@en ;
+   samm:characteristic :WasteResponsibilityCharacteristic .
+
+:WasteResponsibilityCharacteristic a samm:Characteristic ;
+   samm:preferredName "Waste responsibility characteristic"@en ;
+   samm:description "The successor that takes over the responsibility for the passport when the battery becomes waste."@en ;
+   samm:dataType :WasteResponsibility .
+
+:WasteResponsibility a samm:Entity ;
+   samm:preferredName "Waste responsibility"@en ;
+   samm:description "The successor, the role of the successor and the date on which the battery became waste."@en ;
+   samm:properties ( :successorBpnl :successorRole :date ) .
+
+:successorBpnl a samm:Property ;
+   samm:preferredName "Successor BPNL"@en ;
+   samm:description "The BPNL of the successor."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000003" .
+
+:successorRole a samm:Property ;
+   samm:preferredName "Successor role"@en ;
+   samm:description "The role of Art. 77(7), second subparagraph."@en ;
+   samm:characteristic :SuccessorRoleEnumeration ;
+   samm:exampleValue "producerResponsibilityOrganisation" .
+
+:SuccessorRoleEnumeration a samm-c:Enumeration ;
+   samm:preferredName "Successor role enumeration"@en ;
+   samm:description "The three roles of a successor: the producer, the producer responsibility organisation and the waste management operator."@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "producer" "producerResponsibilityOrganisation" "wasteManagementOperator" ) .
+
+:date a samm:Property ;
+   samm:preferredName "Date"@en ;
+   samm:description "The date the battery became waste."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2039-02-11T00:00:00Z"^^xsd:dateTime .
+
+:endOfPassport a samm:Property ;
+   samm:preferredName "End of passport"@en ;
+   samm:description "Present once the battery is recycled."@en ;
+   samm:characteristic :EndOfPassportCharacteristic .
+
+:EndOfPassportCharacteristic a samm:Characteristic ;
+   samm:preferredName "End of passport characteristic"@en ;
+   samm:description "The end of the passport after the recycling of the battery."@en ;
+   samm:dataType :EndOfPassport .
+
+:EndOfPassport a samm:Entity ;
+   samm:preferredName "End of passport"@en ;
+   samm:description "The date of the recycling and the recycler."@en ;
+   samm:properties ( :recyclingDate :recyclerBpnl ) .
+
+:recyclingDate a samm:Property ;
+   samm:preferredName "Recycling date"@en ;
+   samm:description "The date of the recycling."@en ;
+   samm:characteristic samm-c:Timestamp ;
+   samm:exampleValue "2040-06-30T00:00:00Z"^^xsd:dateTime .
+
+:recyclerBpnl a samm:Property ;
+   samm:preferredName "Recycler BPNL"@en ;
+   samm:description "The BPNL of the recycler."@en ;
+   samm:characteristic ext-bpn:BpnlTrait ;
+   samm:exampleValue "BPNL000000000004" .

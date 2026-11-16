@@ -63,7 +63,7 @@ jobs:
         run: node scripts/check-private-references.mjs
       # The argument names the last delivered phase.
       - name: Run the annex check
-        run: node scripts/check-annexes.mjs --require P1
+        run: node scripts/check-annexes.mjs --require P2
       - name: Run the specification check
         run: >-
           node scripts/spec-gate-check.mjs docs/architecture/implementation_plan.md

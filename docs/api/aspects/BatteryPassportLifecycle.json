@@ -1,0 +1,16 @@
+{
+  "predecessors": [
+    {
+      "passportIdentifier": "urn:uuid:5f0c1c7e-6b1e-4a37-9a59-0b1d7c3e2a10",
+      "catenaXId": "urn:uuid:9a2b8f61-3c5d-4e7a-8b1f-2d6c4a0e9f33",
+      "dataProviderBpnl": "BPNL000000000001",
+      "operation": "remanufacturing",
+      "operationDate": "2031-05-04T00:00:00Z"
+    }
+  ],
+  "wasteResponsibility": {
+    "successorBpnl": "BPNL000000000003",
+    "successorRole": "producerResponsibilityOrganisation",
+    "date": "2039-02-11T00:00:00Z"
+  }
+}

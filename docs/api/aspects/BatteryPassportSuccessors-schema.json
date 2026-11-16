@@ -1,0 +1,88 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema",
+  "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#BatteryPassportSuccessors",
+  "description" : "The forward links of an original battery passport: one link per new passport that the original issuer added after the notification of a new passport.",
+  "type" : "object",
+  "components" : {
+    "schemas" : {
+      "Text" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#Text",
+        "description" : "Describes a Property which contains plain text. This is intended exclusively for human readable strings, not for identifiers, measurement values, etc."
+      },
+      "UuidV4Trait" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.shared.uuid:2.1.0#UuidV4Trait",
+        "description" : "The provided regular expression ensures that the UUID is composed of five groups of characters separated by hyphens, in the form 8-4-4-4-12 for a total of 36 characters (32 hexadecimal characters and 4 hyphens), optionally prefixed by \"urn:uuid:\" to make it an IRI.",
+        "pattern" : "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)"
+      },
+      "BpnlTrait" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.shared.business_partner_number:2.0.0#BpnlTrait",
+        "description" : "The provided regular expression ensures that the BPNL is composed of prefix 'BPNL', 10 digits and two alphanumeric letters.",
+        "pattern" : "^BPNL[a-zA-Z0-9]{12}$"
+      },
+      "OperationEnumeration" : {
+        "type" : "string",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#OperationEnumeration",
+        "description" : "The four operations after which a new passport is issued.",
+        "enum" : [ "preparationForReUse", "preparationForRepurposing", "repurposing", "remanufacturing" ]
+      },
+      "Timestamp" : {
+        "type" : "string",
+        "pattern" : "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?",
+        "x-samm-aspect-model-urn" : "urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#Timestamp",
+        "description" : "Describes a Property which contains the date and time with an optional timezone."
+      },
+      "SuccessorLink" : {
+        "description" : "The link from an original passport to one new passport.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#SuccessorLink",
+        "type" : "object",
+        "properties" : {
+          "passportIdentifier" : {
+            "description" : "The digitalProductPassportId of the new passport.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#passportIdentifier",
+            "$ref" : "#/components/schemas/Text"
+          },
+          "catenaXId" : {
+            "description" : "The catenaXId of the new twin.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#catenaXId",
+            "$ref" : "#/components/schemas/UuidV4Trait"
+          },
+          "secondLifeOperatorBpnl" : {
+            "description" : "The BPNL of the second-life operator.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#secondLifeOperatorBpnl",
+            "$ref" : "#/components/schemas/BpnlTrait"
+          },
+          "operation" : {
+            "description" : "The operation that issued the new passport.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#operation",
+            "$ref" : "#/components/schemas/OperationEnumeration"
+          },
+          "operationDate" : {
+            "description" : "The date the new passport was issued.",
+            "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#operationDate",
+            "$ref" : "#/components/schemas/Timestamp"
+          }
+        },
+        "required" : [ "passportIdentifier", "catenaXId", "secondLifeOperatorBpnl", "operation", "operationDate" ]
+      },
+      "SuccessorsCharacteristic" : {
+        "description" : "The list of the forward links of an original passport.",
+        "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#SuccessorsCharacteristic",
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/SuccessorLink"
+        }
+      }
+    }
+  },
+  "properties" : {
+    "successors" : {
+      "description" : "One entry per new passport to which the original issuer added a forward link.",
+      "x-samm-aspect-model-urn" : "urn:samm:io.catenax.battery.passport_successors:1.0.0#successors",
+      "$ref" : "#/components/schemas/SuccessorsCharacteristic"
+    }
+  },
+  "required" : [ "successors" ]
+}

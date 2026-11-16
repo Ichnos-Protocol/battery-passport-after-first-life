@@ -22,20 +22,20 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | Folder | Content | State |
 |---|---|---|
 | `docs/proposal/` | The text of the proposal CX-0160-4 | Draft 0.7 of 2026-11-16 |
-| `docs/api/` | The OpenAPI specification `openAPI.yaml` of the lifecycle notification API (OpenAPI 3.1.0, four POST operations) and the eight JSON schemas of `docs/api/schemas/` | Written in phase P1 of the implementation specification |
+| `docs/api/` | The OpenAPI specification `openAPI.yaml` of the lifecycle notification API (OpenAPI 3.1.0, four POST operations), the eight JSON schemas of `docs/api/schemas/`, and the generated JSON schema and the example payload of each proposed aspect model in `docs/api/aspects/` | Written in phases P1 and P2 of the implementation specification |
 | `docs/` | The methodology, the citation catalogue with 287 quotes, the list of the items that no standard covers, and the lessons from a first implementation | Written, listed in `docs/README.md` |
-| `docs/architecture/` | The implementation specification of the standalone reference server, `implementation_plan.md` | Version 7 of 2026-11-16; approved by the owner on 2026-11-16; phase P1 (the contract) is delivered; phases P2 and P3 are in execution |
+| `docs/architecture/` | The implementation specification of the standalone reference server, `implementation_plan.md` | Version 7 of 2026-11-16; approved by the owner on 2026-11-16; phases P1 (the contract) and P2 (the models) are delivered; phase P3 is in execution |
 | `docs/` | Architecture, administration guide, adoption view, development view, operations view | Not yet written |
-| `models/` | The three proposed aspect models (Semantic Aspect Meta Model, SAMM) | Not yet written |
-| `server/` | The reference server (Node.js 24, Express, PostgreSQL) | The package file, the lock file and the test of the contract `server/test/contractSchemas.test.mjs` are written; the server is not yet written |
+| `models/` | The three proposed aspect models BatteryPassportLifecycle, BatteryPassportSuccessors and BatteryPassportAccessMap (Semantic Aspect Meta Model, SAMM), each in version 1.0.0 with the status draft | Written in phase P2 of the implementation specification; each model passes the validation of the SAMM command line tool 2.11.1 |
+| `server/` | The reference server (Node.js 24, Express, PostgreSQL) | The package file, the lock file, the test of the contract `server/test/contractSchemas.test.mjs`, the compiler of the aspect schemas `server/src/validation/aspectSchemaCompiler.mjs` and the test of the models `server/test/modelExamples.test.mjs` are written; the server is not yet written |
 | `tck/` | The conformance test kit, one test per conformance criterion | Not yet written |
 | `requirements/` | The requirements registry, from stakeholder requirements to verification measures | 539 records, listed in `requirements/README.md` |
 | `sources/` | The source texts that their licenses allow to redistribute | 97 files, listed in `sources/SOURCES.json` |
-| `scripts/` | The checks of the repository | The license header check, the source register check, the requirement check, the private reference check, the annex check and the specification check |
+| `scripts/` | The checks of the repository | The license header check, the source register check, the requirement check, the private reference check, the annex check, the specification check and the model validation script `validate-models.sh` |
 
 ## Installation and usage
 
-`INSTALL.md` describes the installation, the lint of the OpenAPI file and the test of the contract. The checks of the repository need Node.js 24.
+`INSTALL.md` describes the installation, the lint of the OpenAPI file, the test of the contract, the validation of the models and the test of the models. The checks of the repository need Node.js 24.
 
 Run the checks at the repository root:
 
@@ -44,7 +44,7 @@ node scripts/check-license-headers.mjs
 node scripts/check-sources.mjs
 node scripts/requirements-check.mjs
 node scripts/check-private-references.mjs
-node scripts/check-annexes.mjs --require P1
+node scripts/check-annexes.mjs --require P2
 ```
 
 The specification check needs Node.js only. Run the specification check at the repository root:
