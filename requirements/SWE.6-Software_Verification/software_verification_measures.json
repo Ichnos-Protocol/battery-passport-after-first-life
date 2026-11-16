@@ -1,0 +1,91 @@
+{
+ "requirement": "Automotive SPICE 4.1 SWE.6.BP1 (specify the verification measures for the software verification): the measures of the software requirements on the integrated software.",
+ "measures": [
+  {
+   "id": "VM-SWE-DATASET-032",
+   "title": "Dataset submodels and marking served at the data-plane interface",
+   "level": "SWE.6 (software)",
+   "method": "test",
+   "technique": "Software test at IF-CONNECTOR-BACKEND: HTTP requests against the application of the reference server with the data-plane credential and the agreement identifier the stack delivers, as the provider's data plane calls it, against a seeded local substrate; fault injection of an invalid payload and of a request outside the agreement. The system measures VM-SYS-PASS-001 to VM-SYS-PASS-011 and VM-SYS-CXD-019 test the same content at the provider's interface in the Tractus-X simulation; this measure tests the element at its own interface.",
+   "passCriteria": "Passes when: for each test battery the eight payloads and the access marking are served as JSON, each valid against its bundled schema; the additional content and the lifecycle carrier are served in their decided models; a request whose agreement does not name that battery's submodel offer is refused; an invalid composed payload is refused with an error and a log entry; an unsupported operation answers 501; a recycled battery's dataset is not served as current; an entitled reader reaches the original passports from a new dataset and the superseding one from an original. Any other answer fails the requirement concerned.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; SyR-CXN-015 met (the stack delivers the agreement identifier); Q-200, Q-201 and Q-202 answered for their cases; the local substrate is up.",
+   "environment": "integration domain passport-dataset (local substrate, runtime role api_app)",
+   "how": "the integration test suite passportDataset.dataPlane of the reference server (to write; listed in the test partition list of the reference server under a passport-dataset domain, to add). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite passportDataset.dataPlane.integration of the reference server",
+   "verifies": [
+    "SwR-DATASET-065",
+    "SwR-DATASET-089",
+    "SwR-DATASET-126"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-033",
+   "title": "Hand-off to the designated provider through the operator's interface",
+   "level": "SWE.6 (software)",
+   "method": "test",
+   "technique": "Software test at IF-FRONTEND-BACKEND and IF-CXCLIENT-CONNECTOR: the operator designates a provider and requests the hand-off through the routes of the composition root of the reference server (supertest, real middleware chain), with a test double of the connector client's management API recording the offers and the notifications. The system measures VM-SYS-OPS-029, VM-SYS-OPS-032, VM-SYS-CXD-026 and VM-SYS-LIFE-010 decide the same at the provider's interface.",
+   "passCriteria": "Passes when: an incomplete dataset or one failing an agreed check is refused with the missing elements or failed checks named; a complete, verified dataset is offered only to the designated provider's BPNL, as the aspect submodels that the stack serves, pulled through the customer's own connector after a contract negotiation, with an integrity value recorded; a change of designation moves the offers to the new provider; a new passport's change of status is delivered under its new identifier; after a recycling the end of the passport is made known in the agreed form. Any other outcome fails.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-061, Q-960 and Q-961 answered; the local substrate is up.",
+   "environment": "integration domain passport-dataset (local substrate, runtime role api_app)",
+   "how": "the integration test suite passportDataset.handoff of the reference server (to write; listed in the test partition list of the reference server under a passport-dataset domain, to add). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite passportDataset.handoff.integration of the reference server",
+   "verifies": [
+    "SwR-CXCLIENT-111"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria: \"in the agreed interface, serialisation and packaging, with an integrity value recorded\" replaced",
+     "reason": "Decision Q-061 (the provider, interface and format of the dataset handover), answered on 2026-10-26: one hand-off for every provider: the provider pulls the dataset through the customer's own connector as the aspect submodels that the stack serves, so no serialisation or packaging is agreed per provider.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-026",
+   "title": "Aspects pulled through the connector in the Tractus-X simulation",
+   "level": "SWE.6 (software)",
+   "method": "test",
+   "technique": "Software test at the element's interface in the Tractus-X simulation: two stand-in consumers with their own BPNLs (one acting as passport service provider with usage purpose cx.circular.dpp:1, one as an Industry Core partner with cx.core.industrycore:1) negotiate the offers, look the twins up in the registry, read each submodel descriptor and pull <href>/$value through the data plane, for every aspect and every Industry Core version the element serves, and an Item Relationship Service run over the relationship aspects.",
+   "passCriteria": "Passes when every pull answers 200 with a payload that validates against the schema of the semantic ID on its descriptor; both consumers receive the same payload for the same aspect; the CX-Titan and CX-Neptune Industry Core versions are each attached, published and retrieved; the Item Relationship Service resolves the bill-of-material tree from the relationship aspects; no aspect is reachable without an agreement.",
+   "entry": "The Tractus-X simulation of the stack runs (the demo deployment files compose files, start the PostgreSQL database of the reference server) with the economic operator's backend provisioned (npm run valuechain:provision).",
+   "environment": "Tractus-X simulation",
+   "how": "scripts/valuechain/live/passport.submodels.mjs (to write; runs on purpose only, as resolve.chain.mjs). Git Bash at the repository root: node --test scripts/valuechain/live/passport.submodels.mjs",
+   "verifies": [
+    "SwR-SUBMODELS-036"
+   ],
+   "regression": "every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  }
+ ]
+}

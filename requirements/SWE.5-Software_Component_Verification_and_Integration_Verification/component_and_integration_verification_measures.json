@@ -2,19 +2,266 @@
  "requirement": "Automotive SPICE 4.1 SWE.5.BP1 (specify the software integration verification measures) and BP2 (the verification measures for the software components): the component and integration measures of the software requirements.",
  "measures": [
   {
-   "id": "VM-SWE-BACKEND-037",
-   "title": "Erasure, restriction, hold and tenant erasure through the real chain",
+   "id": "VM-SWE-DATASET-014",
+   "title": "Unique identifiers distinct, persistent and new per new passport",
    "level": "SWE.5 (component and integration)",
    "method": "test",
-   "technique": "Integration test under api_app: a seeded user is erased, a restriction is set and lifted, a legal hold is set, and a tenant is erased after its retrieval period; the database and the document store double are scanned for the person's and the tenant's values.",
-   "passCriteria": "After the erasure no row or document resolves to the person except the items of the retention list; restricted data are refused to every route other than storage, the claims export and consented processing; the lifting is refused until the information is recorded; held data survive every erasure; after the tenant erasure no data of the tenant remain except the retention list's items, within the agreed period. Anything else fails.",
-   "entry": "The local substrate runs (the local database script up) with the schema applied and the api_app role created; the domain gdpr runs alone; the identity provider's edge is replaced as in the test helpers of the reference server; no production setting is present.",
-   "environment": "integration domain gdpr",
-   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server && && the integration test run of the reference server -- --selectProjects int:gdpr --testPathPatterns \"erasureRoutes.integration.test.js\"",
+   "technique": "Integration test under api_app: two batteries of one model, an attempt to reuse an identifier, an attempt to change an identifier, and a treated battery placed on the market again.",
+   "passCriteria": "Passes when: a second battery with an identifier already held in the deployment is refused; every delivered dataset of one passport carries the same identifier and a change is refused; a new passport's identifier equal to an original's is refused and a different one accepted. Any other outcome fails.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-969 answered for the new passport case; the local substrate is up.",
+   "environment": "integration domain passport-dataset (local substrate, runtime role api_app)",
+   "how": "the integration test suite passportDataset.identifiers of the reference server (to write; listed in the test partition list of the reference server under a passport-dataset domain, to add). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite passportDataset.identifiers.integration of the reference server",
    "verifies": [
-    "SwR-DATARIGHTS-016"
+    "SwR-DATASET-100"
    ],
-   "regression": "on change of the erasure routes of the reference server, the erasure service of the reference server, the schema of the reference server",
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-016",
+   "title": "Write and read decisions on dataset information through the real chain",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test through the Express application of the composition root of the reference server (supertest), the real middleware chain (authenticate, applyRlsContext, requireCapability, validateEntity) and no mocked guard, with subjects from the test helpers of the reference server, under api_app. The system measures VM-SYS-PASS-014, VM-SYS-PASS-018 and VM-SYS-LIFE-041 decide the same rules at the system boundary.",
+   "passCriteria": "Passes when: a change of a dataset's information is applied for the responsible operator and for an operator with an authorisation in force at the request date, and refused (nothing applied) for an operator whose authorisation has ended, for another company and for a request without sign-in; an authorisation is recorded with its start and end dates and kept after the end; only the battery's recycler can record recovered masses in kg of the five metals and record a recycling efficiency; recovered materials are returned to the recycler, the manufacturer and an authority and refused to every other subject, a request without sign-in included, and appear in no public or legitimate-interest field; the invoice or contract reference is readable by the two companies of the recorded delivery and by authorities only. Any other outcome fails the requirement concerned.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; its routes are in the authorization matrix catalogue of the reference server; Q-971 and Q-702 answered for the recycler and repairer cases; the local substrate is up.",
+   "environment": "integration domain passport-dataset (local substrate, runtime role api_app)",
+   "how": "the integration test suite passportDataset.access of the reference server (to write; listed in the test partition list of the reference server under a passport-dataset domain, to add). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite passportDataset.access.integration of the reference server",
+   "verifies": [
+    "SwR-DATASET-071",
+    "SwR-DATASET-119",
+    "SwR-DATASET-120",
+    "SwR-DATASET-122"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-021",
+   "title": "Lifecycle operations persisted on the dataset through the real chain",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test through the Express application (supertest), the real middleware chain and no mocked guard, under api_app: one case per operation of Art. 77(7), a change to waste, a recycling and a repair, reading the stored records back. The system measures VM-SYS-LIFE-001 to VM-SYS-LIFE-021 decide the same rules at the system boundary; this measure checks the element's own records.",
+   "passCriteria": "Passes when: a first placing stores the status 'original'; each operation stores a new dataset distinct from the original with the status its operation assigns, a resolving link and its operation, the carry-over fields of the carry-over table, the state of health evaluation record of a prepared waste battery, keeps the original marked superseded, names exactly one responsible operator, the new one for a new dataset, and keeps the history of responsible operators with dates; a change to waste keeps the dataset and its identifier and records the successor; a disposal or energy recovery is stored with its non-compliance mark and the status left at 'waste'; after a recycling the dataset is no longer current and every change is refused; a waste dataset refuses dynamic data except the recycler's recovered materials; the original and later purposes are stored with their dates; a repair keeps the dataset, identifier and twin, sets 're-used' with 'repaired' and adds one repair history entry with date and treatment; a remanufacturing stores the evaluation record of each cell and module; the status-change performance records and the DIN recommended values are stored at placing and at each change. Any other observation fails the requirement concerned.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; its routes are in the authorization matrix catalogue of the reference server; Q-034 answered with the perimeter 'application'; Q-202 answered; the local substrate is up.",
+   "environment": "integration domain passport-dataset (local substrate, runtime role api_app)",
+   "how": "the integration test suite passportDataset.lifecycle of the reference server (to write; listed in the test partition list of the reference server under a passport-dataset domain, to add). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite passportDataset.lifecycle.integration of the reference server",
+   "verifies": [
+    "SwR-DATASET-085",
+    "SwR-DATASET-086",
+    "SwR-DATASET-089",
+    "SwR-DATASET-092",
+    "SwR-DATASET-093",
+    "SwR-DATASET-094",
+    "SwR-DATASET-095",
+    "SwR-DATASET-098",
+    "SwR-DATASET-102",
+    "SwR-DATASET-116"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-016",
+   "title": "Instance submodel route answers through the real middleware chain",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test through the production chain (authenticateAny, applyRlsContext, requireCapability, row-level security under api_app; only the identity provider and the connector and registry network calls mocked): positive reads per aspect, negative reads for a missing value, an unknown type, another company's part and no credential.",
+   "passCriteria": "Passes when GET /api/parts/:id/submodel/:type answers 200 with the payload built from the seeded rows for serialPart, batch, singleLevelBomAsBuilt, singleLevelUsageAsBuilt, singleLevelBomAsMaintained and measuredParameters; 422 with { success: false, error: MISSING_FIELD, field } for a missing value; 404 for an unknown part and for another company's part; 401 without a credential; and when no row changes during any read.",
+   "entry": "SCHEMA_TEST_DATABASE_URL and RLS_TEST_DATABASE_URL point at the local substrate (start the PostgreSQL database of the reference server); describeDb skips otherwise with its reason.",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite partsRoutes.parts of the reference server (existing; to extend with the schema refusal of SwR-SUBMODELS-099 and the 4.0.0 versions after the go-live). Git Bash at the repository root: the integration test run of the reference server -- --selectProjects int:batteries --testPathPatterns test/partsRoutes.parts",
+   "verifies": [
+    "SwR-SUBMODELS-052"
+   ],
+   "regression": "on change of the parts routes of the reference server, the part service of the reference server, the submodel mapper module of the reference server, the service error handler middleware of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-019",
+   "title": "Passport aspects served on the passport-bearing pack through the chain",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test through the production chain under api_app with a seeded passport-bearing pack of each battery category, its battery model's part type, an original and a new passport, and a non-passport-bearing part; positive and negative reads of every passport idShort on both routes.",
+   "passCriteria": "Passes when, on the passport-bearing pack's PartInstance, each of the seven IDTA idShorts, the DPP Metadata, the access marking and the additional models answer 200 with a payload that validates against its bundled schema; on the battery model's PartType the Handover Documentation, Technical Data, Material Composition and Circularity answer 200 likewise; the same idShorts answer 404 on a part or type that bears no passport; a passport aspect is never answered by any other route; another company's pack answers 404; and no row changes during any read.",
+   "entry": "The seven IDTA schemas and the models of Q-081, Q-200, Q-201 and Q-202 are bundled; EL-DATASET composes the dataset rows; as VM-SWE-SUBMODELS-016 otherwise.",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite partsRoutes.passport of the reference server (to write, listed under the domain batteries of the test partition list of the reference server). Git Bash at the repository root: the integration test run of the reference server -- --selectProjects int:batteries --testPathPatterns test/partsRoutes.passport",
+   "verifies": [
+    "SwR-SUBMODELS-036"
+   ],
+   "regression": "on change of the parts routes of the reference server, the part types routes of the reference server, the part service of the reference server, the part type service of the reference server, the submodel mapper module of the reference server, a module of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-020",
+   "title": "Submodel endpoints follow the value profile SSP-003 of CX-0002",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Interface integration test through the production chain as the service:dataplane principal and as a company operator: the descriptor href with the path suffix /$value, the optional operations /submodel, /description, /submodel-elements/.../invoke and the parameter Extent=WithoutBLOBValue, every HTTP method other than GET, a row changed between two reads.",
+   "passCriteria": "Passes when GET <href>/$value answers 200 with the value-only JSON payload and Content-Type application/json; every operation or parameter the endpoint does not support, and every method other than GET, answers 501 Not Implemented; the path carries no AAS version other than a major-version segment such as /v3/; a value changed in the rows between two reads appears in the second read; and no request changes a row.",
+   "entry": "As VM-SWE-SUBMODELS-016; Q-119 has stored the AAS Part 2 profile text that the test cites.",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite submodelInterface of the reference server (to write, listed under the domain batteries). Git Bash at the repository root: the integration test run of the reference server -- --selectProjects int:batteries --testPathPatterns test/submodelInterface",
+   "verifies": [
+    "SwR-SUBMODELS-052"
+   ],
+   "regression": "on change of the parts routes of the reference server, the part types routes of the reference server, the composition root of the reference server, a module of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-034",
+   "title": "Status, descriptions and admission of lifecycle operations",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the PartInstance lifecycle record through the real chain under api_app: each operation from each status, with and without the required descriptions, equivalence classes from the statements.",
+   "passCriteria": "SwR-DATASET-079: a first placing records 'original'; SwR-DATASET-080: a link on a first placing is refused; SwR-DATASET-082 and SwR-DATASET-083: a treated status without each description is refused; SwR-DATASET-081: 'repaired' as a status is refused, beside 're-used' accepted; SwR-DATASET-085: waste keeps the identifier and creates no PartInstance; SwR-DATASET-087: each operation is accepted exactly from the statuses of the table; SwR-DATASET-088: disposal of waste carries the Art. 70(1) mark and leaves 'waste'; SwR-DATASET-089: after recycling the PartInstance is ended and refuses changes; SwR-DATASET-090: a dynamic write to a waste battery is refused, recovered materials accepted; SwR-DATASET-091: each operation is accepted only for the purposes the statement admits.",
+   "entry": "The lifecycle record of the battery PartInstance exists in the data layer; Q-034 is answered (if the Regulation does not bind the dataset, these cases are recorded as not applicable).",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite partLifecycle of the reference server (to write; listed under the domain batteries). start the PostgreSQL database of the reference server, then the integration test run of the reference server -- --selectProjects int:batteries",
+   "verifies": [
+    "SwR-DATASET-085",
+    "SwR-DATASET-087",
+    "SwR-DATASET-089",
+    "SwR-DATASET-091"
+   ],
+   "regression": "on change of the lifecycle functions of EL-TWINS",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"SwR-TWINS-098: a first placing records 'original'; SwR-TWINS-099: a link on a first placing is refused; SwR-TWINS-100 and SwR-TWINS-101: a treated status without each description is refused; SwR-TWINS-102: 'repaired' as a status is refused, beside 're-used' accepted; SwR-TWINS-104: waste keeps the identifier and creates no PartInstance; SwR-TWINS-105: each operation is accepted exactly from the statuses of the table; SwR-TWINS-106: disposal of waste carries the Art. 70(1) mark and leaves 'waste'; SwR-TWINS-107: after recycling the PartInstance is ended and refuses changes; SwR-TWINS-108: a dynamic write to a waste battery is refused, recovered materials accepted; SwR-TWINS-109: each operation is accepted only for the purposes the statement admits.\")",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): The pass criteria of VM-SWE-TWINS-034 (status, descriptions and admission of lifecycle operations) name SwR-DATASET-091 (operations admitted by comparing current and original purpose) instead of the retired SwR-TWINS-109 (operations admitted by the original and the recorded purpose).",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-TWINS-035",
+   "title": "New PartInstance, its links and what it takes over",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of each of the four treatments placed on the market again, with one and with several original batteries.",
+   "passCriteria": "SwR-DATASET-084: the new status follows the table; SwR-TWINS-110: a new PartInstance and twin distinct from every original exist; SwR-TWINS-111: one resolving link per original battery; SwR-DATASET-096: re-use and repurposing with zero or two links are refused; SwR-DATASET-097: a link whose operation contradicts the status is refused; SwR-DATASET-098: the original is kept and marked superseded; SwR-DATASET-100: an identifier equal to an original's is refused; SwR-DATASET-102, SwR-DATASET-102, SwR-DATASET-102, SwR-DATASET-102: the new PartInstance carries the original's model, accepts another category, has no batch and a service date on or after the transition, the original unchanged; SwR-DATASET-103 and SwR-DATASET-104: creation without the required document references or with the original's declaration is refused; SwR-TWINS-130: the evaluation record's reference is held with its access mark.",
+   "entry": "As for the lifecycle status test; Q-021, Q-023, Q-026, Q-041, Q-042, Q-969 and Q-970 are answered or their cases are recorded as not run.",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite partLineage of the reference server (to write; listed under the domain batteries). start the PostgreSQL database of the reference server, then the integration test run of the reference server -- --selectProjects int:batteries",
+   "verifies": [
+    "SwR-TWINS-110",
+    "SwR-TWINS-111",
+    "SwR-DATASET-096",
+    "SwR-DATASET-098",
+    "SwR-DATASET-100",
+    "SwR-DATASET-102"
+   ],
+   "regression": "on change of the lifecycle functions of EL-TWINS",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "twins-pcf",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria: the names of retired identifiers replaced by their successors",
+     "reason": "method.md section 8: no requirement and no measure refers to a retired identifier (finding of the SPICE level audit of 2026-10-26)",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BACKEND-040",
+   "title": "Catena-X receiving routes against their specifications",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app through the data-plane mount: the notification endpoints with accepted, refused and unprocessable notifications and with each HTTP method; where a Unique ID Push or certificate of analysis receiving API exists, every operation of its specification with requests validated against the stored OpenAPI 2.0.0 and CX-0165 2.1.5; the backend's criteria of the scope record (PrR-CXC-004) at its routes.",
+   "passCriteria": "Notification endpoints answer only POST, 200 when the notification is applied and 4xx or 5xx otherwise; every receiving API that exists answers every operation of its specification with valid requests and responses; every criterion of the scope record at the backend's routes passes. Anything else fails.",
+   "entry": "The local substrate runs (the local database script up) with the schema applied and the api_app role created; the domain exchange runs alone; the identity provider's edge is replaced as in the test helpers of the reference server; no production setting is present.",
+   "environment": "integration domain exchange",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server && && the integration test run of the reference server -- --selectProjects int:exchange --testPathPatterns \"notifications.integration.test.js\"",
+   "verifies": [
+    "SwR-BACKEND-147",
+    "SwR-BACKEND-148"
+   ],
+   "regression": "on change of the batteries routes of the reference server, the composition root of the reference server, the parts routes of the reference server",
    "releasePlan": "this-release",
    "existingEvidence": "None: the reference server of this repository is not built yet.",
    "group": "backend-audit",
@@ -28,21 +275,49 @@
    ]
   },
   {
-   "id": "VM-SWE-DATARIGHTS-002",
-   "title": "Store adapters of the data rights element under api_app",
+   "id": "VM-SWE-AUDIT-011",
+   "title": "Passport dataset, authorisation and disposal records",
    "level": "SWE.5 (component and integration)",
    "method": "test",
-   "technique": "Integration test of each store adapter against the local substrate under the runtime role api_app: the SQL functions that locate, copy, rectify, anonymise and erase one person's rows and one tenant's rows over every table of the inventory, and their gate.",
-   "passCriteria": "Passes when, on a seeded database with two tenants and a test person present in every table of the inventory: each function finds, copies, corrects, anonymises or erases exactly that person's or that tenant's rows and no other; each refuses every subject except the data rights function; the restriction mark is stored and readable by the capability decision; the recipients query returns the recorded disclosures; the export of a tenant restores into an empty second schema with every row and relation; nothing of the other tenant changes.",
-   "entry": "The data rights element's SQL functions exist in the schema; the local substrate up with a second empty schema for the import.",
-   "environment": "integration domain gdpr",
-   "how": "To write: the integration test suite dataRightsStores of the reference server, listed under the gdpr domain of the test partition list of the reference server. At the repository root: start the PostgreSQL database of the reference server; run the integration suite dataRightsStores of the reference server",
+   "technique": "Integration test under api_app: writes to a passport dataset by its responsible operator, by an authorised operator and by an unauthorised one; a written authorisation recorded and ended; a change of responsible operator; a disposal of a waste battery.",
+   "passCriteria": "Each write decision is recorded with requester, dataset and the responsibility or authorisation relied on; the ended authorisation and its dates stay recorded; every responsible operator is kept with its date; the disposal is recorded as a non-compliance citing Art. 70(1). Anything else fails.",
+   "entry": "The local substrate runs (the local database script up) with the schema applied and the api_app role created; the domain lifecycle runs alone; the identity provider's edge is replaced as in the test helpers of the reference server; no production setting is present.",
+   "environment": "integration domain lifecycle",
+   "how": "At the repository root, on the commit under review: start the PostgreSQL database of the reference server && && the integration test run of the reference server -- --selectProjects int:lifecycle --testPathPatterns \"lifecycleAudit.integration.test.js\" (lifecycleAudit.integration.test.js is to write, in a module of the reference server, listed under the domain lifecycle of the test partition list of the reference server)",
    "verifies": [
-    "SwR-DATARIGHTS-016"
+    "SwR-AUDIT-045"
    ],
-   "regression": "on change of the data rights element, the schema of the reference server or the inventory",
+   "regression": "on change of the batteries routes of the reference server, the lifecycle executor of the reference server, the audit service of the reference server",
    "releasePlan": "this-release",
-   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "existingEvidence": "",
+   "group": "backend-audit",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-ACCESS-022",
+   "title": "Access decisions on the passport dataset and its records",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test through the real chain under api_app with subjects of the responsible economic operator, an authorised operator inside and outside its dates, the recycler, the remanufacturer and the two parties of a sale of a battery, another operator, an authority and an unauthenticated caller; requirements-based cases per record and negative cases per subject.",
+   "passCriteria": "Passes when: only the responsible and the authorised operator write the dataset, the authorisation applying only between its dates and its record staying after the end; each field's read follows the access-group table, and a change of the table changes the decision without a change of the payload; the recovered materials are read only by the recording recycler, the manufacturer and authorities, and recorded with the recycling efficiency only by the battery's recycler; the link between passports is served at its agreed tier and withheld below it; the remanufacturing export only to its remanufacturer; the invoice reference only to the two parties and authorities; the turnover exemption written by its operator and read by authorities; every field outside the subject's permissions is neither returned nor changed; every refusal answers 403 or 404. At d5080b5 it cannot run: no dataset exists (DEV-01).",
+   "entry": "The passport dataset module of follow-up FS3 exists; Q-029, Q-034, Q-702 and Q-971 are answered for the cases that depend on them.",
+   "environment": "integration domain security",
+   "how": "To write: the integration test suite passportDatasetAccess of the reference server, listed under the security domain. At the repository root: start the PostgreSQL database of the reference server; run the integration suite passportDatasetAccess of the reference server",
+   "verifies": [
+    "SwR-ACCESS-088",
+    "SwR-ACCESS-091",
+    "SwR-ACCESS-092"
+   ],
+   "regression": "on change of the dataset module, the authorization policy catalogue of the reference server or the access-group table",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
    "group": "access-datarights",
    "history": [
     {
@@ -54,22 +329,259 @@
    ]
   },
   {
-   "id": "VM-SWE-RDB-026",
-   "title": "Company export read path and company erasure path",
+   "id": "VM-SWE-CXCLIENT-009",
+   "title": "Remote and received parts routes through the middleware chain",
    "level": "SWE.5 (component and integration)",
    "method": "test",
-   "technique": "Integration test of the two database paths: seed two companies with rows in every table of pg_class; call the export read path for company A under the export context and under every other context; call the company erasure path for A before the retrieval period without a recorded decision, with the decision, and after the period.",
-   "passCriteria": "The read path returns every row of A from every table and no row of B, and returns nothing under any other context; the erasure is refused before the period without the decision; afterwards no row of A remains in any table and every row of B is unchanged. VM-SYS-DATA-012 decides the round trip into an empty instance and VM-SYS-DATA-017 and VM-SYS-SEC-036 the erasure across every store.",
-   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
-   "environment": "integration domain companies",
-   "how": "the integration test suite tenantDataPaths of the reference server (to write, companies domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite tenantDataPaths of the reference server",
+   "technique": "Integration test through the app of the composition root of the reference server as claims-v2 subjects under api_app: discovery, remote fetch and received-parts import, with the connector double; subjects acting for the responsible economic operator, for an authorised operator, and for neither.",
+   "passCriteria": "Discovery answers only supply.read holders, fetch and import only supply.resolve holders; a remote fetch negotiates only on a request carrying the user's purpose confirmation and never on a GET; the import writes received data only for a subject acting for the responsible economic operator or for an operator with a recorded written authorisation, and refuses the others with 403; a failed company resolution refuses the request instead of continuing without a company; errors follow the response format.",
+   "entry": "start the PostgreSQL database of the reference server; Q-971 answered for the authorised operators.",
+   "environment": "integration domain batteries",
+   "how": "the integration test suite partsRoutes.remote of the reference server and the integration test suite partTypesRoutes.received of the reference server (to write). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite partsRoutes.remote|partTypesRoutes.received of the reference server",
    "verifies": [
-    "SwR-RDB-051"
+    "SwR-CXCLIENT-114"
+   ],
+   "regression": "on change of the parts routes of the reference server, the part types routes of the reference server or the import service of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-011",
+   "title": "Notification content, transport and receiving assets",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test: every notification kind is built and validated with Ajv (the draft-04 setup of the aspect validators module of the reference server) against Catena-X standard CX-0151 Industry Core: Basics (CX-Neptune), the Digital Twin Event API 3.0.0 (assets/example-digital-twin-event-api.yaml) and the Unique ID Push OpenAPI 2.0.0 (Catena-X standard CX-0126 (CX-Neptune)); the sending is captured at the data plane double, with answers 200, 404, 500 and a failed transfer.",
+   "passCriteria": "Every notification validates against its schema with a MessageHeaderAspect 3.0.0 header and a context in the form <domain>-<subdomain>-<object>:<major version>; messageIds of a run of 100 new notifications are pairwise distinct and a resend keeps its messageId; each is sent with POST and application/json through a negotiated transfer only; the creation of passport submodels yields a CreateSubmodel event naming the Digital Nameplate 1.0.x semantic ID; Connect to Parent travels only as a Unique ID Push connect-to-parent request; the CoA receiving asset id is taken from the receiver's catalogue by dct:type and version and the pushed payload is the value-only certificateOfAnalysis content; a 200 counts as delivered and a 4xx or 5xx is returned as a failed delivery with its status; only the battery's parties receive a lifecycle notification; a notification of new passport data is built when new data of a battery are available, and no notification about part type data is built that no stored standard requires or recommends; the Unique ID Push receiving asset exists only while its route answers.",
+   "entry": "start the PostgreSQL database of the reference server; the notification process decided; Q-057 for the CoA cases.",
+   "environment": "integration domain exchange",
+   "how": "the integration test suite notifications of the reference server (existing; the CX-0151, Digital Twin Event, Unique ID Push and CoA cases to write). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite notifications of the reference server",
+   "verifies": [
+    "SwR-CXCLIENT-059"
+   ],
+   "regression": "on change of the connector client of the reference server or the batteries routes of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CXCLIENT-015",
+   "title": "Passport dataset offers and their hand-off",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Component test against a recording double of the own management API and data plane (node-fetch replaced as the test suite connectorOnly of the reference server does; external infrastructure only, the agent guidelines of the battery passport application 'Test like production'): the passport dataset of a test battery is published, provider P1 and then P2 are designated, the battery is recycled, a second battery is placed on the market again under a new passport.",
+   "passCriteria": "The dataset assets are typed cx-taxo:BatteryPass with a cx-common:version; their usage policy holds cx.circular.dpp:1; the access policy admits only P1's BPNL and, after the change, only P2's; the data addresses are reachable only through the data plane; the delivery uses the interface and packaging agreed for each provider and the named interoperability specification's transfer aspects; at recycling the contract definitions are withdrawn and the end of the passport is sent in the agreed form; the change of status is offered under the new passport's identifier.",
+   "entry": "EL-DATASET built (DEV-01); Q-061, Q-960, Q-961, Q-034, Q-969 and Q-123 answered.",
+   "environment": "unit partition",
+   "how": "the test suite edcService of the reference server (the passport dataset cases, to write). At the repository root, on the commit under review: run the unit suite edcService of the reference server",
+   "verifies": [
+    "SwR-CXCLIENT-110",
+    "SwR-CXCLIENT-111"
+   ],
+   "regression": "on change of the passport dataset offer or the connector client of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BGWORK-005",
+   "title": "Notification dispatch and its triggers",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test: lifecycle transitions, the creation of passport submodels and a Connect to Parent event enqueue notifications; the worker dispatches them against the data plane double, which answers 200, 404, 500 or fails the transfer.",
+   "passCriteria": "Each notification leaves exactly as the connector client built it, with POST and application/json, through a negotiated transfer only; a failed delivery is resent with the same messageId and content until delivered or the last attempt; the creation of passport submodels enqueues the Digital Nameplate CreateSubmodel event; Connect to Parent leaves only as a Unique ID Push request; no notification about part type data leaves that a stored standard does not require or recommend; no dispatch happens inside the request.",
+   "entry": "start the PostgreSQL database of the reference server; the notification process decided.",
+   "environment": "integration domain exchange",
+   "how": "the integration test suite notifications of the reference server (existing; the dispatch and trigger cases to write). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite notifications of the reference server",
+   "verifies": [
+    "SwR-BGWORK-010"
+   ],
+   "regression": "on change of the worker module, the connector client of the reference server or the batteries routes of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-BGWORK-006",
+   "title": "Time-bound propagation jobs with a fixed clock",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test with fixed dates and the connector, registry and provider doubles: a battery is produced, a value is changed, dynamic data arrive from the BMS double, a battery is recycled, data from use arrive for a subscribed user, a bulk load runs twice with twins registered in between.",
+   "passCriteria": "The twins and their offers are registered within the agreed time after production; the changed value is in the offered dataset within the agreed time; every mandatory (and recommended) Product Condition field is updated at the agreed interval with its LastUpdate; the end of the recycled passport is sent within the agreed time; the subscribed user receives the new data on receipt, not at a scheduled run; the second bulk load asks only for twins created since the first and every search of both runs carries digitalTwinType PartInstance.",
+   "entry": "Q-093, Q-091, Q-092, Q-035, Q-961 and Q-008 answered; start the PostgreSQL database of the reference server.",
+   "environment": "integration domain exchange",
+   "how": "the integration test suite backgroundWorker of the reference server (the timing cases, to write). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite backgroundWorker of the reference server",
+   "verifies": [
+    "SwR-BGWORK-020"
+   ],
+   "regression": "on change of the worker module or of the jobs",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "cxclient-services",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-003",
+   "title": "Column reads of base tables and tier projections",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app: as an owner, a holder of marketplace.buy on a for-sale battery, a recycler that did not record the recovered materials, the recording recycler, the model's company and an authority, read recovered_materials, current_owner_id and the manufacturer's contact columns through the base tables, the role views and battery_passport_full.",
+   "passCriteria": "Each subject obtains each column only through the projection the column access rules grant its tier; recovered materials reach the recording recycler, the manufacturer and the authority only; a base-table read of a column outside the tier is refused or returns no value. Any other disclosure fails.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain security",
+   "how": "the integration test suite columnPrivileges of the reference server (to write, security domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite columnPrivileges of the reference server",
+   "verifies": [
+    "SwR-RDB-008"
    ],
    "regression": "on change of the schema of the reference server, a database script of the reference server",
    "releasePlan": "this-release",
    "existingEvidence": "None: the reference server of this repository is not built yet.",
    "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-005",
+   "title": "Dataset writes by responsible and authorised operators only",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app: seed a passport with a responsible operator and a recorded written authorisation for a second company; write a field of the dataset record as the responsible operator, the authorised operator before, during and after the authorisation's period, the battery's owner and a third company.",
+   "passCriteria": "Only the responsible operator and the authorised operator within the period change the record; every other write is refused and leaves it unchanged.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain security",
+   "how": "the integration test suite datasetWriteAuthorisation of the reference server (to write, security domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite datasetWriteAuthorisation of the reference server",
+   "verifies": [
+    "SwR-RDB-007"
+   ],
+   "regression": "on change of the schema of the reference server, a database script of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-006",
+   "title": "Recovered materials accepted from the recycler in kg",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app of the recovered materials store: write recovered masses as the battery's recycler, as another recycler, as the model's company, as the owner and through battery_notify_lifecycle_transition; write a sixth metal, a value in g and a value in %.",
+   "passCriteria": "Only the recycler's write of cobalt, copper, lead, lithium and nickel in kg is stored, with the recycler recorded; every other write, metal and unit is refused and stores nothing. Each case asserts the unit.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain lifecycle",
+   "how": "the integration test suite recoveredMaterialsStore of the reference server (to write, lifecycle domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite recoveredMaterialsStore of the reference server",
+   "verifies": [
+    "SwR-RDB-009"
+   ],
+   "regression": "on change of the schema of the reference server, a database script of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-035",
+   "title": "Responsible operator timeline, waste successor and manufacturer",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test under api_app: create a passport with a responsible operator; mint a new passport after a treatment; change a battery to waste with and without a successor recorded in the same transaction, and through battery_notify_lifecycle_transition; write a passport record with an empty manufacturer.",
+   "passCriteria": "Each passport has exactly one open responsible-operator interval and its dated history; the new passport opens its own with the treating operator and the original's is unchanged; a change to waste without one of the three successors is refused on every path; a write leaving the manufacturer empty is refused and the new passport's manufacturer differs from the original's when the operator differs.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain lifecycle",
+   "how": "the integration test suite responsibleOperatorTimeline of the reference server (to write, lifecycle domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite responsibleOperatorTimeline of the reference server",
+   "verifies": [
+    "SwR-RDB-073",
+    "SwR-RDB-074",
+    "SwR-RDB-075"
+   ],
+   "regression": "on change of the schema of the reference server, a database script of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-CONNECTOR-003",
+   "title": "Data plane forwarding and header handling with a recording backend double",
+   "level": "SWE.5 (component and integration)",
+   "method": "test",
+   "technique": "Integration test of the provider data plane with its neighbours replaced by a recording HTTP double for the customer's backend and for the registry: assets are created with each combination of the data address flags (proxyMethod, proxyPath, proxyQueryParams, proxyBody) and two agreements are concluded; a consumer pulls under each, sending GET, POST and PUT requests with paths, query strings, bodies and content types, and with caller-set Edc-Bpn, X-Forwarded-For and Forwarded headers, while the double answers with status codes 200, 202, 400, 404, 422 and 500 and records every request it receives.",
+   "passCriteria": "Passes when, for each requirement it verifies: SwR-CONNECTOR-041: every request that the recording double receives for a pull under agreement A carries the identifier of A, and every one under agreement B the identifier of B; SwR-CONNECTOR-061: for each combination of forwarding flags, the recording double receives the method, path, query string, body and content type exactly as the flags allow, and for each status code 200, 202, 400, 404, 422 and 500 the consumer receives the double's status code, content type and body unchanged; SwR-CONNECTOR-062: every request that the recording double receives carries the tenant's own credential, and no request carries another tenant's; SwR-CONNECTOR-063: every forwarded request carries Edc-Bpn equal to the consumer's verified BPNL, and a consumer request that carries its own Edc-Bpn, X-Forwarded-For or Forwarded header reaches the double with the data plane's values only; SwR-CONNECTOR-064: GET /lookup/shells with assetIds and createdAfter, POST /lookup/shells with a body and GET /shell-descriptors/{id} reach the registry double with method, path, query and body unchanged. Any other result fails the requirement concerned; each requirement passes or fails on its own criterion.",
+   "entry": "The Tractus-X simulation (EL-SIMULATION, roadmap R2-4) runs the stack definition of the commit for at least two test tenants, each with its own connector, registry and wallet and the credentials of the simulated issuer, beside an Eclipse Tractus-X reference connector; it does not exist in the battery passport application on 2026-10-22 (MODE-DEVTEST), so the measure cannot run before it does. A requirement whose open decisions (dependsOn) are not answered is recorded as not run, with the reason. A recording double reachable from the data plane stands in for the backend and the registry.",
+   "environment": "Tractus-X simulation",
+   "how": "conformance/connector/dataPlaneForwarding.sim.test.mjs (to write with the conformance suite of roadmap R3-1; proposed place, since TESTING.md section 2 assigns none to that suite, see the findings), one test per requirement named after its identifier, run with node --test against the running simulation.",
+   "verifies": [
+    "SwR-CONNECTOR-061"
+   ],
+   "regression": "on change of the demo deployment files (the stack definition and its values) or of the pinned Eclipse Tractus-X release, or of the data addresses that the connector client of the reference server, submodelMapper.mjs and pcfService.mjs create",
+   "releasePlan": "this-release",
+   "existingEvidence": "None: the reference server of this repository is not built yet.",
+   "group": "connector",
    "history": [
     {
      "date": "2026-11-16",

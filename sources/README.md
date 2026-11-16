@@ -4,7 +4,7 @@ This folder holds the third-party source texts that their licenses allow to redi
 and the proposal quote these texts. Each text keeps its own license and its own copyright notice. The licenses of this
 repository (`LICENSE`, `LICENSE_non-code`) do not apply to the content of this folder.
 
-The register `SOURCES.json` lists each of the 92 stored files with its path, its SHA-256 value, its size, its origin
+The register `SOURCES.json` lists each of the 95 stored files with its path, its SHA-256 value, its size, its origin
 and its license. The script `scripts/check-sources.mjs` compares every stored file with the register.
 
 ## Stored texts
@@ -13,7 +13,7 @@ and its license. The script `scripts/check-sources.mjs` compares every stored fi
 |---|---|---|---|---|
 | `EU/` | European Union legislation | 20 | Reuse authorised under Commission Decision 2011/833/EU, provided the source is acknowledged | EUR-Lex and the Publications Office of the European Union |
 | `Tractus-X/semantic-models/` | Eclipse Tractus-X semantic models | 31 | CC-BY-4.0 | `eclipse-tractusx/sldt-semantic-models`, commit `e3d6c3e76813a7ffc2f4fd84ed353a463f3982ff` |
-| `Tractus-X/kits-26.09/` | Eclipse Tractus-X KITs, release 26.09 | 9 | CC-BY-4.0 for documentation, Apache-2.0 for the OpenAPI file | `eclipse-tractusx/eclipse-tractusx.github.io`, commit `dc71de65307cefeacdadc6722e8ffc44016dd38a` |
+| `Tractus-X/kits-26.09/` | Eclipse Tractus-X KITs, release 26.09 | 12 | CC-BY-4.0 for documentation, Apache-2.0 for the OpenAPI file | `eclipse-tractusx/eclipse-tractusx.github.io`, commit `dc71de65307cefeacdadc6722e8ffc44016dd38a` |
 | `IDTA/` | Aspect models of the Industrial Digital Twin Association (IDTA) | 31 | CC-BY-4.0 | `admin-shell-io/smt-semantic-models`, commit `9c047bddc51b9f4f1a0d1b5381c81979f15a7f5c` |
 | `BatteryPass-Ready/` | Battery Passport Data Attribute Longlist, version 2.0, of the BatteryPass-Ready consortium | 1 | CC-BY-4.0 | BatteryPass-Ready consortium |
 

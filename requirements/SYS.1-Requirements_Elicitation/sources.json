@@ -2,79 +2,6 @@
  "requirement": "Automotive SPICE 4.1 SYS.1.BP1 (identify stakeholders and obtain their expectations and requests); requirements/method.md sections 4 and 7.",
  "sources": [
   {
-   "id": "SRC-ADR-0004",
-   "title": "ADR 0004: connector topology, a per-customer stack run by Ichnos",
-   "version": "Accepted 2026-09-27",
-   "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-   "storage": "stored",
-   "role": "project-rule",
-   "applicability": "applies",
-   "applicabilityReason": "privacy-data-dpp: ADR 0004 makes Ichnos the operator of one stack per customer, which makes Ichnos a provider of a data processing service for the stack (Data Act Chapter VI) and the holder of the customers' keys and wallets. | security: ADR 0004 defines the stack part of the item and its security properties: one isolated stack per customer, built from released and unmodified Tractus-X components, with no self-assigned BPNL and no self-issued trust in production, and Ichnos's custody of every customer's keys and wallet. | catenax-certification: Francesco's decision that Ichnos runs one stack per customer, assessed as an Enablement Service Provider capability, with production BPNLs from onboarding and certification on the latest release. | catenax-network: Francesco's decision: the application uses the customer's stack on the customer's behalf, each stack is isolated with its own DID and credentials, and in production no BPNL is self-assigned and no trust is self-issued. ADR 0004 binds the application, the stack and Ichnos as operator. | operations-quality-owner: Francesco's accepted decision on how Ichnos runs the stack of each customer; ADR 0004 binds Ichnos as operator and the stack.",
-   "applicabilityEvidence": [
-    {
-     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-     "locator": "Status",
-     "quote": "Accepted (2026-09-27, Francesco)."
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-     "locator": "section 2, decision 1",
-     "quote": "Ichnos runs one stack per customer company (connector, twin registry, wallet), and the application uses it on the customer's behalf (option C)."
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-     "locator": "section 2, decision 2",
-     "quote": "In production the stack is an Enablement Service Provider capability. Ichnos is assessed"
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-     "locator": "2 Decision, item 1",
-     "quote": "Ichnos runs one stack per customer company (connector, twin registry, wallet), and the application uses it on the customer's behalf (option C)"
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
-     "locator": "1 Context",
-     "quote": "Every exchange with another company passes through the connector"
-    }
-   ],
-   "areaDecisions": [
-    {
-     "area": "privacy-data-dpp",
-     "applicability": "applies",
-     "reason": "ADR 0004 makes Ichnos the operator of one stack per customer, which makes Ichnos a provider of a data processing service for the stack (Data Act Chapter VI) and the holder of the customers' keys and wallets."
-    },
-    {
-     "area": "security",
-     "applicability": "applies",
-     "reason": "ADR 0004 defines the stack part of the item and its security properties: one isolated stack per customer, built from released and unmodified Tractus-X components, with no self-assigned BPNL and no self-issued trust in production, and Ichnos's custody of every customer's keys and wallet."
-    },
-    {
-     "area": "catenax-certification",
-     "applicability": "applies",
-     "reason": "Francesco's decision that Ichnos runs one stack per customer, assessed as an Enablement Service Provider capability, with production BPNLs from onboarding and certification on the latest release."
-    },
-    {
-     "area": "catenax-network",
-     "applicability": "applies",
-     "reason": "Francesco's decision: the application uses the customer's stack on the customer's behalf, each stack is isolated with its own DID and credentials, and in production no BPNL is self-assigned and no trust is self-issued. ADR 0004 binds the application, the stack and Ichnos as operator."
-    },
-    {
-     "area": "operations-quality-owner",
-     "applicability": "applies",
-     "reason": "Francesco's accepted decision on how Ichnos runs the stack of each customer; ADR 0004 binds Ichnos as operator and the stack."
-    }
-   ],
-   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
    "id": "SRC-CLAUDE-MD",
    "title": "Project guidelines of the battery passport application",
    "version": "working tree of 2026-10-22",
@@ -659,7 +586,7 @@
    "storage": "stored",
    "role": "law",
    "applicability": "applies-in-part",
-   "applicabilityReason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to Spherity or another provider, and the application does not communicate with the EU database.",
+   "applicabilityReason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to a Digital Product Passport Service Provider provider, and the application does not communicate with the EU database.",
    "applicabilityEvidence": [
     {
      "path": "sources/EU/Regulation EU 2024-1781 ESPR/Regulation EU 2024-1781 ESPR.md",
@@ -691,7 +618,7 @@
     {
      "area": "privacy-data-dpp",
      "applicability": "applies-in-part",
-     "reason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to Spherity or another provider, and the application does not communicate with the EU database."
+     "reason": "The ESPR's digital product passport rules (Chapter III, Art. 9 to 12, 14 and 15) bind a product group only through a delegated act adopted under its Art. 4; the battery passport is set by Regulation (EU) 2023/1542 Art. 77 instead, and no ESPR delegated act for batteries is stored in the repository. Two provisions reach batteries directly: the registry stores the unique identifiers of batteries (Art. 13(1)), and Art. 78 adds Art. 77(10) to Regulation (EU) 2023/1542, which obliges the economic operator to upload the battery's unique identifier to that registry. Regulation (EU) 2023/1542 Art. 78(a) requires the battery passport to be interoperable with the passports required under eco-design law, which ties the dataset to the ESPR's passports. Ichnos is not a digital product passport service provider in the sense of Art. 2(32): the vision gives that role to a Digital Product Passport Service Provider provider, and the application does not communicate with the EU database."
     }
    ],
    "party": "EU-European_Union_legislation",
@@ -778,59 +705,6 @@
    ]
   },
   {
-   "id": "SRC-GDPR",
-   "title": "Regulation (EU) 2016/679 (General Data Protection Regulation)",
-   "version": "OJ L 119, 4.5.2016; checked on EUR-Lex on 2026-10-26: no amending act, and the corrigendum of 23.5.2018 (OJ L 127, p. 2) corrects recital 71 and Articles 37, 41 to 43, 57, 64, 65, 69 and 70, none of which the registry quotes",
-   "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
-   "storage": "stored",
-   "role": "law",
-   "applicability": "applies",
-   "applicabilityReason": "The application and the stack process personal data wholly by automated means: the identity and activity records of the users of customer companies, the contact details of companies and plants, and, in the passport and marketplace demos, the accounts of private battery owners. The customers are controllers established in the Union and Ichnos processes the data on their behalf as a processor, so the processing falls under Art. 3(1) through the customers, and Art. 28 binds Ichnos through the processing contract. Chapter V governs every transfer to Ichnos in Singapore and to sub-processors outside the Union. Whether Art. 3(2) also binds Ichnos directly, whether Ichnos is a controller for some processing, and whether it needs a representative under Art. 27 are counsel's questions (roadmap R8-3), recorded in the questions.",
-   "applicabilityEvidence": [
-    {
-     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
-     "locator": "Art. 2(1)",
-     "quote": "This Regulation applies to the processing of personal data wholly or partly by automated means"
-    },
-    {
-     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
-     "locator": "Art. 3(1)",
-     "quote": "This Regulation applies to the processing of personal data in the context of the activities of an establishment of a controller or a processor in the Union, regardless of whether the processing takes place in the Union or not."
-    },
-    {
-     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
-     "locator": "Art. 4(8)",
-     "quote": "means a natural or legal person, public authority, agency or other body which processes personal data on behalf of the controller"
-    },
-    {
-     "path": "sources/EU/Regulation EU 2016-679 GDPR/Regulation EU 2016-679 GDPR.md",
-     "locator": "Art. 28(3)",
-     "quote": "Processing by a processor shall be governed by a contract or other legal act under Union or Member State law"
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "R8-3",
-     "quote": "Counsel's opinion on Ichnos's GDPR position as a Singapore company: processor terms, transfers, and whether it needs an EU representative (GDPR Art. 27)."
-    }
-   ],
-   "areaDecisions": [
-    {
-     "area": "privacy-data-dpp",
-     "applicability": "applies",
-     "reason": "The application and the stack process personal data wholly by automated means: the identity and activity records of the users of customer companies, the contact details of companies and plants, and, in the passport and marketplace demos, the accounts of private battery owners. The customers are controllers established in the Union and Ichnos processes the data on their behalf as a processor, so the processing falls under Art. 3(1) through the customers, and Art. 28 binds Ichnos through the processing contract. Chapter V governs every transfer to Ichnos in Singapore and to sub-processors outside the Union. Whether Art. 3(2) also binds Ichnos directly, whether Ichnos is a controller for some processing, and whether it needs a representative under Art. 27 are counsel's questions (roadmap R8-3), recorded in the questions."
-    }
-   ],
-   "party": "EU-European_Union_legislation",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
    "id": "SRC-LINEAGE-DESIGN",
    "title": "Passport lineage and ownership: target schema design (model B)",
    "version": "as stored on 2026-10-22",
@@ -859,133 +733,6 @@
     }
    ],
    "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
-   "id": "SRC-ROADMAP",
-   "title": "Production readiness roadmap of the battery passport application",
-   "version": "Version 13, 2026-09-28",
-   "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-   "storage": "stored",
-   "role": "project-rule",
-   "applicability": "applies-in-part",
-   "applicabilityReason": "privacy-data-dpp: Francesco's plan to certification; the roadmap steps R1-5, R1-6, R8-2 and R8-3 fix the production identity, the hosting regions, the contract set and the open GDPR questions. | security: The production readiness roadmap states the TISAX need, the scope of the ISMS (people, devices, stacks, repositories, AI agents and suppliers) and the hardening and assessment steps that the security requirements feed. | catenax-certification: Francesco's plan to certification and listing. Section 2 of the production readiness roadmap records what Cofinity-X and Catena-X require; by the roadmap's own rule a row marked research decides nothing until a stored text confirms it. Rows that no stored text confirms give requirements with the note 'unconfirmed: needs the stored source'. | operations-quality-owner: Francesco's plan to certification and production. The steps and findings of the production readiness roadmap that state a need of the operator or the customer bind Ichnos and the application; the order, the owners and the external facts of the roadmap (prices, dates of other parties) are planning, not requirements.",
-   "applicabilityEvidence": [
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "R8",
-     "quote": "Owner: F, with an audit provider ENX approves, and"
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "section 2",
-     "quote": "Every Catena-X provider, the Business Application Provider included, needs TISAX Level 2"
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "section 2, preamble",
-     "quote": "Read on 2026-09-27. \"Fetched\" means the page itself was read in that session. \"Research\" means a research summary with its source: confirm it before it decides anything."
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "Section 0",
-     "quote": "This is a roadmap, not a specification."
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "Section 0",
-     "quote": "Every finding has exactly one owning step (§9)."
-    }
-   ],
-   "areaDecisions": [
-    {
-     "area": "privacy-data-dpp",
-     "applicability": "applies",
-     "reason": "Francesco's plan to certification; the roadmap steps R1-5, R1-6, R8-2 and R8-3 fix the production identity, the hosting regions, the contract set and the open GDPR questions."
-    },
-    {
-     "area": "security",
-     "applicability": "applies",
-     "reason": "The production readiness roadmap states the TISAX need, the scope of the ISMS (people, devices, stacks, repositories, AI agents and suppliers) and the hardening and assessment steps that the security requirements feed."
-    },
-    {
-     "area": "catenax-certification",
-     "applicability": "applies",
-     "reason": "Francesco's plan to certification and listing. Section 2 of the production readiness roadmap records what Cofinity-X and Catena-X require; by the roadmap's own rule a row marked research decides nothing until a stored text confirms it. Rows that no stored text confirms give requirements with the note 'unconfirmed: needs the stored source'."
-    },
-    {
-     "area": "operations-quality-owner",
-     "applicability": "applies-in-part",
-     "reason": "Francesco's plan to certification and production. The steps and findings of the production readiness roadmap that state a need of the operator or the customer bind Ichnos and the application; the order, the owners and the external facts of the roadmap (prices, dates of other parties) are planning, not requirements."
-    }
-   ],
-   "note": "This repository stores an extract with the passages that its requirements quote. The document itself is not published.",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
-   "id": "SRC-VDA-ISA-2027",
-   "title": "VDA Information Security Assessment (ISA), the TISAX catalogue",
-   "version": "2027.1 (2026-09-30)",
-   "storage": "cited-not-stored",
-   "role": "harmonised-or-industry-standard",
-   "applicability": "applies",
-   "applicabilityReason": "The same reason as ISA 6.0.3: TISAX Level 2 is mandatory for Catena-X providers, and ISA2027 is the catalogue of an assessment ordered from 1 January 2027, which the order of the roadmap's steps (R8 after R2 to R7) makes the likely case. The Information Security tab of ISA2027 binds Ichnos as operator at a target maturity level of 3 for every control; the 'should' requirements of ISA2027 must be met unless a deviation is plausibly justified; the requirements of ISA2027 for high protection needs apply if the assessed scope has high protection needs (assessment objective 'Info high', Q-SEC-04). Prototype Protection does not apply. Data Protection depends on Q-SEC-04 and maps to the GDPR processor requirements of the area PRIV.",
-   "applicabilityEvidence": [
-    {
-     "document": "Catena-X Conformity Assessment Framework, roles and certification objects (CX-Neptune)",
-     "locator": "Certification objects, Provider, Compliance Period",
-     "quote": "has up to three months after the issuing date of the Catena-X certificate to achieve TISAX (Level 2) or the replacing certifications listed above"
-    },
-    {
-     "document": "VDA Information Security Assessment (ISA) 2027.1",
-     "locator": "Definitions, tab Information Security",
-     "quote": "Requirements always refer to the own company with respect to its organization, processes and infrastructure."
-    },
-    {
-     "document": "VDA Information Security Assessment (ISA) 2027.1",
-     "locator": "Definitions, tab Maturity levels",
-     "quote": "the target maturity level for all control questions is consistently 3 (Established)"
-    },
-    {
-     "document": "VDA Information Security Assessment (ISA) 2027.1",
-     "locator": "Definitions, tab Data Protection",
-     "quote": "edited additionally in case of processing within the meaning of Art. 28 of the EU General Data Protection Regulation"
-    },
-    {
-     "document": "VDA Information Security Assessment (ISA) 2027.1",
-     "locator": "Definitions, tab Prototype Protection",
-     "quote": "Prototype protection protects physical prototypes which are classified as requiring protection."
-    },
-    {
-     "path": "requirements/Owner_documents-extracts/Production_readiness_roadmap-extract.md",
-     "locator": "section 3.4",
-     "quote": "Catena-X requires TISAX Level 2 of every provider"
-    }
-   ],
-   "areaDecisions": [
-    {
-     "area": "security",
-     "applicability": "applies",
-     "reason": "The same reason as ISA 6.0.3: TISAX Level 2 is mandatory for Catena-X providers, and ISA2027 is the catalogue of an assessment ordered from 1 January 2027, which the order of the roadmap's steps (R8 after R2 to R7) makes the likely case. The Information Security tab of ISA2027 binds Ichnos as operator at a target maturity level of 3 for every control; the 'should' requirements of ISA2027 must be met unless a deviation is plausibly justified; the requirements of ISA2027 for high protection needs apply if the assessed scope has high protection needs (assessment objective 'Info high', Q-SEC-04). Prototype Protection does not apply. Data Protection depends on Q-SEC-04 and maps to the GDPR processor requirements of the area PRIV."
-    }
-   ],
-   "party": "VDA_ENX-Automotive_SPICE_TISAX_and_ISA",
-   "locator": "VDA ISA 2027.1 (2026-09-30), published by the German Association of the Automotive Industry (VDA) and the ENX Association",
-   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09.",
    "history": [
     {
      "date": "2026-11-16",
@@ -1436,21 +1183,20 @@
    "id": "SRC-TX-KIT-CIRCULARITY",
    "title": "Tractus-X Circularity KIT, release 26.09 (adoption view, documentation, development and operation views)",
    "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
-   "storage": "cited-not-stored",
+   "path": "sources/Tractus-X/kits-26.09/circularity-kit/adoption-view.md",
+   "storage": "stored",
    "role": "best-practice",
    "applicability": "undecided",
    "applicabilityReason": "A KIT is adoption guidance, not a standard; the Circularity KIT describes the exchange of the circular-economy certificates. Decision Q-1005 decides whether the after-first-passport exchange uses them.",
    "question": "Q-1005",
    "applicabilityEvidence": [
     {
-     "document": "Tractus-X KITs, release 26.09, circularity-kit/adoption-view.md",
+     "path": "sources/Tractus-X/kits-26.09/circularity-kit/adoption-view.md",
      "locator": "Adoption View, introduction",
      "quote": "The Circularity KIT shall empower stakeholders to transition towards a circular economy"
     }
    ],
    "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
-   "locator": "Tractus-X KITs, release 26.09, file circularity-kit/adoption-view.md, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
-   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
    "history": [
     {
      "date": "2026-11-05",
@@ -1503,21 +1249,20 @@
    "id": "SRC-TX-KIT-INDUSTRY-CORE",
    "title": "Tractus-X Industry Core KIT, release 26.09 (adoption, architecture, development and operation views, notifications and the notification schema)",
    "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
-   "storage": "cited-not-stored",
+   "path": "sources/Tractus-X/kits-26.09/industry-core-kit/software-development-view/notifications.mdx",
+   "storage": "stored",
    "role": "best-practice",
    "applicability": "undecided",
    "applicabilityReason": "A KIT is adoption guidance, not a standard; the Industry Core KIT describes the message-based notifications between Catena-X partners that CX-0151 standardises. Decision Q-1006 decides whether the recycling result reaches the producers by such a notification.",
    "question": "Q-1006",
    "applicabilityEvidence": [
     {
-     "document": "Tractus-X KITs, release 26.09, industry-core-kit/software-development-view/notifications.mdx",
+     "path": "sources/Tractus-X/kits-26.09/industry-core-kit/software-development-view/notifications.mdx",
      "locator": "Notifications, introduction",
      "quote": "Industry Core covers the foundation for message-based data sharing using notifications."
     }
    ],
    "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
-   "locator": "Tractus-X KITs, release 26.09, file industry-core-kit/software-development-view/notifications.mdx, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
-   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
    "history": [
     {
      "date": "2026-11-05",
@@ -1537,21 +1282,20 @@
    "id": "SRC-TX-KIT-TRACEABILITY",
    "title": "Tractus-X Traceability KIT, release 26.09 (adoption, architecture, development and operation views, notification OpenAPI 1.2.1 and 2.0.0)",
    "version": "Version 26.09, eclipse-tractusx.github.io at dc71de6 (2026-11-05)",
-   "storage": "cited-not-stored",
+   "path": "sources/Tractus-X/kits-26.09/traceability-kit/adoption-view.mdx",
+   "storage": "stored",
    "role": "best-practice",
    "applicability": "undecided",
    "applicabilityReason": "A KIT is adoption guidance, not a standard; the Traceability KIT holds the notification API (OpenAPI) that Catena-X applications implement for quality alerts, the closest published reference for a lifecycle notification. Decision Q-1006 decides its reuse.",
    "question": "Q-1006",
    "applicabilityEvidence": [
     {
-     "document": "Tractus-X KITs, release 26.09, traceability-kit/adoption-view.mdx",
+     "path": "sources/Tractus-X/kits-26.09/traceability-kit/adoption-view.mdx",
      "locator": "Adoption View, introduction",
      "quote": "The aim of the Traceability KIT is to enable app- and data-providers to trace parts and materials across the entire value chain without compromising data sovereignty."
     }
    ],
    "party": "Eclipse_Foundation-Dataspace_protocols_and_Tractus-X",
-   "locator": "Tractus-X KITs, release 26.09, file traceability-kit/adoption-view.mdx, in the repository eclipse-tractusx/eclipse-tractusx.github.io at commit dc71de65307cefeacdadc6722e8ffc44016dd38a",
-   "note": "The quotes were verified against the text in the private register of the battery passport application on 2026-11-09. The text is licensed under CC-BY-4.0 and is not copied into sources/ yet.",
    "history": [
     {
      "date": "2026-11-05",

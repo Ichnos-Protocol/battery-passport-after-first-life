@@ -2,23 +2,248 @@
  "requirement": "Automotive SPICE 4.1 SWE.4.BP1 (specify the software unit verification measures): the unit measures of the software requirements.",
  "measures": [
   {
-   "id": "VM-SWE-DATARIGHTS-001",
-   "title": "Data rights functions over test doubles of every store",
+   "id": "VM-SWE-DATASET-015",
+   "title": "Access marking: one group per field, catalogue change, special groups",
    "level": "SWE.4 (unit)",
    "method": "test",
-   "technique": "Jest unit tests of the data rights element with each store reached through a test double of its adapter contract (database, document store, identity provider, audit records, host logs, message service) and an injected clock; requirements-based cases per function and negative cases per refusal.",
-   "passCriteria": "Passes when: the locator reports, per store, presence and categories for a seeded person and nothing for an unknown one; the copy holds every located item as JSON or CSV; the recipient list equals the recorded disclosures and the sub-processors and holds no other; a rectification is written to every store holding the item and no other copy remains; an erasure leaves no item that identifies the person except those of the keep-list, each with its obligation; the restriction mark is held with its date and returned to the decision; the lifting is refused without the recorded notice; the portable export validates against its published schema and holds only the data the person provided; the direct transmission sends the same content to the named endpoint; a request from another channel stays held until the confirmation is recorded; the notice is sent with the first communication or at the latest one month after the data were recorded; the retention run removes or anonymises exactly the records older than their category's period; a tenant export imported into an empty double reproduces every entity, relation and document; the tenant erasure is refused before the retrieval period has expired without the customer's decision and afterwards leaves only the keep-list items. At d5080b5 nothing can run: the element does not exist.",
-   "entry": "The data rights element exists with its store adapter contracts; the agreed values (retention periods Q-095 and Q-114, keep-list Q-033) set for the cases that use them.",
+   "technique": "Unit test that composes the datasets of one battery per category, compares the set of field paths of every payload with the set of paths of the marking, changes one entry of the access catalogue and composes again. The system measure VM-SYS-PASS-009 checks the delivered marking at the provider's interface; this measure checks the element's composition of it.",
+   "passCriteria": "Passes when: every field path of every payload, by twin level and list element, has exactly one marking entry and each entry is one of the four groups of Art. 77(2); after a catalogue change only that entry differs and every payload is byte-identical; the point 2 fields are also marked for notified bodies and market surveillance authorities (once Q-017 is answered for this reading); the detailed composition fields are also marked for sorters, dismantlers and recyclers; every Technical Data field on the PartInstance twin holding a value recorded at placing or at a status change is marked legitimate interest while the same field on the PartType twin keeps its row's group; the link to the original passports carries the tier of Q-029; the state of health evaluation record is marked for end-users and third parties acting on their behalf. Any other observation fails the requirement concerned.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-200 answered (form of the marking); Q-017 and Q-029 answered for their cases; the fields without a stated group have one (finding).",
    "environment": "unit partition",
-   "how": "To write: the test suite dataRightsService of the reference server. At the repository root: run the unit suite dataRightsService of the reference server",
+   "how": "the test suite passportDataset.accessMarking of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.accessMarking of the reference server",
    "verifies": [
-    "SwR-DATARIGHTS-016"
+    "SwR-DATASET-065"
    ],
-   "regression": "on change of the data rights element or of a store adapter",
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
    "releasePlan": "this-release",
    "existingEvidence": "",
-   "group": "access-datarights",
+   "group": "dataset",
    "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-018",
+   "title": "Lifecycle status, admission and purpose rules",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Requirements-based unit test of the lifecycle rule module: one case per row of the operation status table, the operation admission table and the purpose rule, plus negative cases.",
+   "passCriteria": "Passes when: a first placing gets 'original'; each operation sets the status its table row assigns; 'repaired' as a status is refused and 're-used' with the description 'repaired' accepted; a treated status without a treatment description, or without a changes description, is refused; preparation for re-use and for repurposing are admitted only from 'waste', repurposing only from another status, and from 'waste' no compliant operation other than the three; a disposal or energy recovery is marked non-compliant with Art. 70(1) and the status stays 'waste'; becoming waste sets 'waste' on the existing dataset and requires one of the three successors; the purpose comparison admits (preparation for) repurposing only with a different purpose and remanufacturing or preparation for re-use only with the same; an operation meeting the remanufacturing definition is refused as a repair; a repair sets 're-used' with 'repaired'; a repair of a waste battery becomes a preparation for re-use. Each case passes or fails on its own.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-034 answered with the perimeter 'application' (else the requirements move to the demo); Q-021, Q-022 and Q-703 answered for their cases.",
+   "environment": "unit partition",
+   "how": "the test suite passportDataset.lifecycleRules of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.lifecycleRules of the reference server",
+   "verifies": [
+    "SwR-DATASET-085",
+    "SwR-DATASET-086",
+    "SwR-DATASET-087",
+    "SwR-DATASET-091"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-020",
+   "title": "New dataset composition rules: links, carry-over, documents, operators",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the new-dataset composition per operation, with one, two and three original batteries, and of the status-change performance records.",
+   "passCriteria": "Passes when: a first dataset with a link is refused; a re-use or repurposing dataset with zero links is refused and one with one or with two links accepted; a remanufactured dataset holds one link per original battery; each link names the operation and a link whose operation contradicts the new status is refused; the carry-over table holds (model taken over, category of the new use, no batch, own date of putting into service on or after the transition, original fields unchanged); a repurposed or remanufactured dataset without its required document kinds is refused; the original declaration of conformity is refused for a new dataset; the new dataset names the operator placing it again as responsible operator and as manufacturer; the status-change performance records, and the DIN recommended values, keep the record at placing beside every later one, each in the table's unit (resistance in ohm). Each case passes or fails on its own.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-034, Q-023, Q-026, Q-970 and Q-202 answered for their cases.",
+   "environment": "unit partition",
+   "how": "the test suite passportDataset.newPassport of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.newPassport of the reference server",
+   "verifies": [
+    "SwR-DATASET-095",
+    "SwR-DATASET-096",
+    "SwR-DATASET-102",
+    "SwR-DATASET-116",
+    "SwR-DATASET-118"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"Passes when: a first dataset with a link is refused; a re-use or repurposing dataset with zero or two links is refused and one with one link accepted; a remanufactured dataset holds one link per original battery; each link names the operation and a link whose operation contradicts the new status is refused; the carry-over table holds (model taken over, category of the new use, no batch, own date of putting into service on or after the transition, original fields unchanged); a repurposed or remanufactured dataset without its required document kinds is refused; the original declaration of conformity is refused for a new dataset; the new dataset names the operator placing it again as responsible operator and as manufacturer; the status-change performance records, and the DIN recommended values, keep the record at placing beside every later one, each in the table's unit (resistance in ohm). Each case passes or fails on its own.\")",
+     "reason": "Decision Q-023 (whether a new passport may link to several original passports), answered on 2026-10-26, applied with Francesco's \"apply the next round\": VM-SWE-DATASET-020 accepts one or two links for a re-use or repurposing dataset, because SwR-DATASET-096 changes to one or more links under decision Q-023.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-022",
+   "title": "Derived performance, recycled content and energy formulas with units",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of each computation with the worked values of its source and its units asserted.",
+   "passCriteria": "Passes when: capacity fade of 45 Ah against 50 Ah is 10 %; power fade of 90 kW against 100 kW is 10 %; round trip efficiency fade of 85 % against 95 % is 10,53 %; internal resistance increase of 24 mohm against 20 mohm is 20 %; four partial cycles of 25 % count as one full cycle; the evolution of self-discharge follows the agreed formula; the recycled share of cobalt, lithium and nickel divides by the metal in the active materials and that of lead by the lead of the whole battery, both masses in kg; a footprint increase of 10,0 % is an update and 10,1 % requires a new model; the recycling efficiency is output mass over input mass in kg; the delegated-act methods (recycled content, recovery and efficiency rates) reproduce the worked examples of the stored acts. Each case passes or fails on its own; a case whose act or formula is not stored or agreed is recorded as not run.",
+   "entry": "EL-DATASET built (DEV-01 closed): the dataset module that follow-up FS3 names exists with its catalogues; Q-116 (the acts stored), Q-039 and the formula of SyR-LIFE-104 agreed, for their cases.",
+   "environment": "unit partition",
+   "how": "the test suite passportDataset.formulas of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.formulas of the reference server",
+   "verifies": [
+    "SwR-DATASET-122"
+   ],
+   "regression": "on change of the dataset module, its catalogues, a module of the reference server or sources/IDTA/; and every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"Passes when: capacity fade of 45 Ah against 50 Ah is 10 %; power fade of 90 kW against 100 kW is 10 %; round trip efficiency fade of 85 % against 95 % is 10,53 %; internal resistance increase of 24 mohm against 20 mohm is 20 %; four partial cycles of 25 % count as one full cycle; the evolution of self-discharge follows the agreed formula; the recycled share of cobalt, lithium and nickel divides by the metal in the active materials and that of lead by the lead of the whole battery, both masses in kg; the off-the-shelf industrial total energy is the initial useable capacity in kWh times the expected full equivalent cycles; a footprint increase of 10,0 % is an update and 10,1 % requires a new model; the recycling efficiency is output mass over input mass in kg; the delegated-act methods (electric vehicle lifetime energy, recycled content, recovery and efficiency rates) reproduce the worked examples of the stored acts. Each case passes or fails on its own; a case whose act or formula is not stored or agreed is recorded as not run.\"); verifies (before: [\"SwR-DATASET-041\",\"SwR-DATASET-042\",\"SwR-DATASET-043\",\"SwR-DATASET-045\",\"SwR-DATASET-046\",\"SwR-DATASET-048\",\"SwR-DATASET-054\",\"SwR-DATASET-055\",\"SwR-DATASET-056\",\"SwR-DATASET-057\",\"SwR-DATASET-058\",\"SwR-DATASET-059\",\"SwR-DATASET-122\",\"SwR-DATASET-124\"])",
+     "reason": "Decision Q-039 (whether the application calculates the carbon footprint per functional unit), answered on 2026-10-26, applied with Francesco's \"apply the next round\": SwR-DATASET-041 and SwR-DATASET-042 (the total lifetime energy calculations of the battery passport dataset aggregation) retire with decision Q-039, so VM-SWE-DATASET-022 (derived performance, recycled content and energy formulas with units) no longer verifies them and drops their two total energy cases.",
+     "approver": "Francesco"
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-004",
+   "title": "Access marking assigns every served field exactly one group",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Exhaustive unit test over the served field paths: the access marking built for a fixture battery is compared with the field-to-group table derived from the traced system requirements, per twin level and list element; negative cases for an unmarked and a doubly marked path.",
+   "passCriteria": "Passes when every field path that the element serves for a passport-bearing battery (the seven aspects and the additional models) appears in the marking exactly once, with one of the four groups of Art. 77(2) (general public; legitimate interest and Commission; notified bodies, market surveillance authorities and Commission; legitimate interest), the group equals the one its system requirement names, an instance-level Technical Data value of the individual battery carries the legitimate-interest group, and the marking validates against its own schema. An unmarked, doubly marked or differently marked path fails.",
+   "entry": "Q-200 has decided the form of the marking and its model and schema are bundled; the mappers of the seven aspects exist.",
+   "environment": "unit partition",
+   "how": "a module of the reference server (to write). Git Bash at the repository root: run the unit suite test/samm/accessMarking of the reference server",
+   "verifies": [
+    "SwR-SUBMODELS-036"
+   ],
+   "regression": "on change of the submodel mapper module of the reference server, the aspect ids module of the reference server, the aspect validators module of the reference server, the part service of the reference server, the part type service of the reference server, a module of the reference server, requirements/SYS.2-System_Requirements_Analysis/system_requirements.json",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-SUBMODELS-042",
+   "title": "Static submodel server answers as the backend's endpoints do",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of handleRequest with in-memory request and response objects.",
+   "passCriteria": "Passes when the static server answers GET <href>/$value with 200, the value-only payload and Content-Type application/json; a wrong or missing key with 401; an unsupported method or operation with 501; an unknown twin or idShort with 404.",
+   "entry": "None beyond the root dependencies (npm ci).",
+   "environment": "unit partition",
+   "how": "scripts/valuechain/test/staticSubmodels.test.mjs (to write). Git Bash at the repository root: npm run valuechain:test",
+   "verifies": [
+    "SwR-SUBMODELS-052"
+   ],
+   "regression": "on change of scripts/valuechain/static-submodels.mjs",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "submodels",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-RDB-032",
+   "title": "Recovery targets, comparison and recycling efficiency",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the recovery and efficiency functions, run against PostgreSQL with the seeded rows and fixture rows: read the Part C target rows; record recoveries at and below each target for recyclings on either side of each deadline; record input and output masses of a recycling; read the Part B target rows and compare efficiencies at and below each target.",
+   "passCriteria": "Each Part C row cites Annex XII Part C and its point with its deadline date; a recovery below the applicable target is flagged with the row named and one at it passes; the efficiency equals output mass over input mass in %; each Part B row cites Part B and an efficiency below its target is flagged. Each case asserts its units.",
+   "entry": "The local substrate is up at the commit under review: a PostgreSQL 17 container with the owner role and api_app (NOBYPASSRLS), the canonical schema applied by a database script of the reference server with its grants; rows are seeded on the owner pool and the code under test runs on the api_app pool.",
+   "environment": "integration domain compliance",
+   "how": "the integration test suite recoveryTargets of the reference server (to write, compliance domain). At the repository root, on the commit under review: start the PostgreSQL database of the reference server; run the integration suite recoveryTargets of the reference server",
+   "verifies": [
+    "SwR-RDB-068"
+   ],
+   "regression": "on change of the schema of the reference server, a database script of the reference server",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "rdb",
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "VM-SWE-DATASET-047",
+   "title": "Battery_pass 6.1.0 payloads of the dataset validate against the schema",
+   "level": "SWE.4 (unit)",
+   "method": "test",
+   "technique": "Unit test of the dataset serialisation over the battery fixtures of the passport module.",
+   "passCriteria": "Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, and every row of the BatteryPass mapping table names a property of the stored BatteryPass 6.1.0 model and fills it with its information item for each battery fixture whose category the row admits. Any other result fails.",
+   "entry": "EL-DATASET built (DEV-01 closed).",
+   "environment": "unit partition",
+   "how": "the test suite passportDataset.batteryPass of the reference server (to write; backend unit partition, opens no database). At the repository root, on the commit under review: run the unit suite passportDataset.batteryPass of the reference server",
+   "verifies": [
+    "SwR-DATASET-180"
+   ],
+   "regression": "every review",
+   "releasePlan": "this-release",
+   "existingEvidence": "",
+   "group": "dataset",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "derived",
+     "reason": "Francesco's answer to decision Q-985 of 2026-10-26 (\"the version in Titan\"): the unit measure of SwR-DATASET-177, SwR-DATASET-178 and SwR-DATASET-179",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "passCriteria (before: \"Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, and every 5.0.0 payload validates against the stored 5.0.0 schema. Any other result fails.\")",
+     "reason": "SPICE level audit of 2026-10-26 (Francesco: \"Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels\"): VM-SWE-DATASET-047 (battery_pass payloads of the dataset validate in both versions) also verifies the BatteryPass mapping table of SwR-DATASET-180.",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verifies: SwR-DATASET-179 (retired) removed",
+     "reason": "Francesco's decision Q-071 of 2026-10-26 (\"Q-071 no, otherwise we will need to add new deprecated features\"): the dataset aggregation maps no battery_pass 5.0.0 payload",
+     "approver": ""
+    },
+    {
+     "date": "2026-10-26",
+     "change": "title (before: \"Battery_pass payloads of the dataset validate in both versions\"); passCriteria (before: \"Passes when every serialised 6.1.0 payload validates against sources/Tractus-X/semantic-models/io.catenax.battery.battery_pass/6.1.0/BatteryPass.ttl and carries specVersion urn:io.catenax.battery.battery_pass:6.1.0, every row of the BatteryPass mapping table names a property of the stored BatteryPass 6.1.0 model and fills it with its information item for each battery fixture whose category the row admits, and every 5.0.0 payload validates against the stored 5.0.0 schema. Any other result fails.\"); entry (before: \"EL-DATASET built (DEV-01 closed); the battery_pass 5.0.0 schema stored for its case.\")",
+     "reason": "Francesco's decision Q-071 of 2026-10-26: no battery_pass 5.0.0 payload is serialised",
+     "approver": ""
+    },
     {
      "date": "2026-11-16",
      "change": "carried over from the private registry of the battery passport application",

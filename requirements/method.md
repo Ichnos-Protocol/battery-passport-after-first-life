@@ -64,8 +64,7 @@ The stakeholder requirements sit in one subfolder of `SYS.1-Requirements_Elicita
 `party` of `sources.json` names each party. A requirement that quotes several parties is held, identical, in the folder
 of each party, and the requirement check finds every copy.
 
-A folder exists only when it holds a record. No software verification measure of level SWE.6 is carried, so the folder
-`SWE.6-Software_Verification` does not exist yet.
+A folder exists only when it holds a record.
 
 Two folders sit beside the process folders. `Owner_instructions-Francesco_verbatim/` holds extracts of the owner's
 instructions, word for word, so that a decision or a requirement can quote them. `Owner_documents-extracts/` holds the
@@ -198,9 +197,6 @@ The first command prints the count of each level, each problem and the count of 
 command ends with status 1 while a problem remains. The second command prints the traceability matrix. The matrix is
 generated and never stored. The check reports 0 problems before every commit that touches `requirements/`.
 
-The check does not apply one rule while an element has the status `proposed`: the rule that a software requirement of
-each allocated element refines every system requirement. Section 12 states the reason.
-
 ## 9. Verification measures and reviews
 
 Each verification measure states its technique, its pass criteria, its entry conditions, the environment that it needs
@@ -246,8 +242,7 @@ changed the following.
   follow-up (`FSn`) or an element that this registry does not hold.
 - The architecture holds only the elements and the interfaces that the carried requirements name. Each element and
   each interface has the status `proposed`: the allocation of the carried requirements waits for the owner's approval.
-  For that reason the check leaves out a proposed element in the rule on the refinement of an allocated system
-  requirement by a software requirement.
+- The records on the hosted multi-customer service of the battery passport application are not carried.
 - The milestone rules of the check were removed, because this registry holds no milestone.
 
 ## NOTICE

@@ -475,10 +475,8 @@ export function traceProblems(reg) {
   }
   // Once the software level exists, every system requirement allocated to an element that is not external is refined
   // by a software requirement of that element (SWE.1.BP5); an external element's share is met at its interface.
-  // Changed rule: an element whose status is "proposed" is left out, because the allocation of the carried requirements
-  // to it waits for the owner's approval and the software requirements of the reference server are not all derived.
   if (reg.softwareRequirements && reg.architecture) {
-    const external = new Set((reg.architecture.elements ?? []).filter((e) => e.deployment === "external" || e.status === "proposed").map((e) => e.id));
+    const external = new Set((reg.architecture.elements ?? []).filter((e) => e.deployment === "external").map((e) => e.id));
     const refinedBy = new Set((reg.softwareRequirements ?? []).flatMap((s) => (s.tracesTo ?? []).map((t) => `${t}@${s.element}`)));
     for (const r of reg.systemRequirements ?? []) for (const e of r.allocatedTo ?? []) if (!external.has(e) && !refinedBy.has(`${r.id}@${e}`)) problems.push(`${r.id}: allocated to ${e}, which no software requirement of ${e} refines`);
   }

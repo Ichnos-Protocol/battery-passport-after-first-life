@@ -54,7 +54,7 @@
   {
    "id": "STK-08",
    "name": "Digital product passport service provider",
-   "description": "The provider (Spherity or another) that receives the complete, verified dataset and publishes the passport for the economic operator. Bound by Art. 78.",
+   "description": "The provider (a Digital Product Passport Service Provider) that receives the complete, verified dataset and publishes the passport for the economic operator. Bound by Art. 78.",
    "expectations": "Receive a complete dataset in the agreed format, through the agreed interface, with its provenance.",
    "basis": "the vision of the end state of the battery passport application section 0; Regulation (EU) 2023/1542 Art. 78"
   },

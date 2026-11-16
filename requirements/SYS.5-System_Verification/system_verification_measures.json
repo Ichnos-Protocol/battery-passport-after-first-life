@@ -397,32 +397,6 @@
    ]
   },
   {
-   "id": "VM-SYS-DATA-017",
-   "title": "End of a customer's service: return export and complete erasure",
-   "method": "test",
-   "technique": "An integration test with an injected clock: a test tenant's service ends; the return export runs where chosen; erasure is requested before the retrieval period has expired without the customer's decision, then after it; the test searches the database, the document store, the user accounts, the captured host logs and a backup after its rotation.",
-   "passCriteria": "The early erasure without the customer's decision is refused; after the erasure no record of the tenant and no personal data of its persons remain in any store, except the items the agreed legal-obligation list keeps.",
-   "entry": "Q-972, Q-964 and Q-033 answered.",
-   "environment": "local substrate",
-   "how": "At the repository root: start the PostgreSQL database of the reference server; run the integration suite tenantErasure of the reference server (suite to be written). Then restore the rotated backup into a scratch database and search it.",
-   "verifies": [
-    "SyR-DATA-021",
-    "SyR-PRIV-025"
-   ],
-   "regression": "on change of any store of the application or of the backup rotation",
-   "releasePlan": "this-release",
-   "existingEvidence": "None: the reference server of this repository is not built yet.",
-   "area": "privacy-data-dpp",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
    "id": "VM-SYS-SEC-029",
    "title": "Battery passport dataset delivery and integrity test",
    "method": "test",
@@ -435,31 +409,6 @@
     "SyR-PASS-005"
    ],
    "regression": "on change of EL-DATASET or EL-CXCLIENT",
-   "releasePlan": "this-release",
-   "existingEvidence": "",
-   "area": "security",
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
-   "id": "VM-SYS-SEC-036",
-   "title": "Removal of an ended customer from the application",
-   "method": "test",
-   "technique": "A test subscription is ended and its retrieval period allowed to pass; the application's database, document store, deployment environment and secret store are inspected for the tenant.",
-   "passCriteria": "Pass when every requirement this measure verifies shows the observable result its statement names, in particular: no data, key, secret or credential of the tenant remains, its credentials are revoked, and a removal record names the date, within the agreed period.",
-   "entry": "Q-105 and Q-972 answered; automatic setup and removal implemented (DEV-48).",
-   "environment": "preview deployment",
-   "how": "End the test subscription; after the retrieval period, query every table for the tenant's company id and list the secret store paths and environment entries for its key.",
-   "verifies": [
-    "SyR-SEC-019"
-   ],
-   "regression": "on change of EL-PROVISIONER",
    "releasePlan": "this-release",
    "existingEvidence": "",
    "area": "security",

@@ -191,39 +191,6 @@
    ]
   },
   {
-   "id": "Q-972",
-   "name": "which customer data survive removal at the subscription end",
-   "topic": "conflict between requirements",
-   "question": "Conflict CA-1, end of a subscription. Which of a customer's data must survive the removal at the end of its subscription? (a) If Ichnos stores the customer's battery passport data as an operator authorised under Art. 78(c) of Regulation (EU) 2023/1542 (passport-content question Q-15), does Art. 78(e) ('the battery passport shall remain available after the economic operator ... ceases to exist or ceases its activity in the Union') oblige Ichnos to keep them after the subscription ends, against the full erasure of Data Act Art. 25(2)(h), or does only the passport service provider hold the passport, so that the application's copy may go? (b) Do the security logs of the application and the stack stay for the retention period of StR-SEC-106 (\"Security logs kept for the agreed retention period\") as a legal-obligation exception to StR-PRIV-034 (\"Return or deletion of a customer's personal data at service end\") and StR-SEC-101 (\"Customer data, keys and credentials removed when a subscription ends\"), and does that hold only if NIS2 applies (Q-SEC-01)? (c) Is the export of the data exchange contracts (StR-CXC-070, \"Stack stores every concluded data exchange contract\", StR-DATA-029, \"Export of all exportable data and digital assets of the stack\") offered before removal in every case, also when the customer ends the subscription without switching?",
-   "why": "StR-SEC-101 (\"Customer data, keys and credentials removed when a subscription ends\") removes everything, StR-DATA-026 (\"Full erasure of a customer's data in the application\") and StR-DATA-027 (\"Full erasure of a customer's stack\") require full erasure, StR-PRIV-034 (\"Return or deletion of a customer's personal data at service end\") keeps copies only where Union or Member State law requires their storage, and Art. 78(e) requires the passport to stay available after the operator ceases. No stored text says whether the application's copy is the passport's storage. The order (retrieval first, then removal) is settled in this review by Data Act Art. 25(2)(g) and (h).",
-   "blocks": [
-    "StR-SEC-101",
-    "StR-DATA-026",
-    "StR-PRIV-034"
-   ],
-   "raisedBy": "cross-areas",
-   "alsoAsked": [
-    {
-     "note": "Conflict CA-1 also covers the 10-year retention of the declaration of conformity and the technical documentation (StR-OPS-963) and of the due diligence documentation (StR-OPS-964) that the application holds: they can outlast the subscription whose end removes the customer's data. One answer with Q-964.",
-     "raisedBy": "system integration review sys-ops"
-    }
-   ],
-   "derivation": {
-    "date": "2026-10-26",
-    "outcome": "open",
-    "missing": "Part (a) follows from the vision: Art. 78 binds the Digital Product Passport Service Provider, not this application, so Art. 78(e) does not oblige Ichnos to keep the application's copy of the passport data after the subscription ends. Part (b) depends on Q-001 (whether the NIS2 directive applies to Ichnos directly), which stays open, and on the period of StR-SEC-106 (security logs kept for a predefined period), a figure no source gives. No stored text of Francesco decides part (c), the export of the data exchange contracts when a customer ends its subscription without switching, or the 10-year retention of StR-OPS-963 (declaration of conformity and technical documentation kept 10 years) and StR-OPS-964 (due diligence documentation kept 10 years) after the subscription ends.",
-    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
-   },
-   "history": [
-    {
-     "date": "2026-11-16",
-     "change": "carried over from the private registry of the battery passport application",
-     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
-     "approver": ""
-    }
-   ]
-  },
-  {
    "id": "Q-961",
    "name": "how the passport service provider learns a passport ended",
    "topic": "product scope",
@@ -261,26 +228,72 @@
    ]
   },
   {
-   "id": "Q-964",
-   "name": "whether the application archives conformity, technical and due diligence documents",
-   "topic": "product scope",
-   "question": "Is the application the customer's archive of record for the EU declaration of conformity, the technical documentation and the due diligence documentation, which the Regulation keeps for 10 years (Annex VIII, Art. 38(4), Art. 41(7), Art. 48(3))? If so, how does the period meet the erasure at the end of a customer's service (StR-DATA-026, \"Full erasure of a customer's data in the application\", StR-PRIV-034, \"Return or deletion of a customer's personal data at service end\"): a mandatory export first, or a retained copy?",
-   "why": "StR-OPS-963 (\"Declaration of conformity and technical documentation kept 10 years\") and StR-OPS-964 (\"Due diligence documentation kept 10 years\") apply only to documents the application holds, and the 10 years can outlast a subscription.",
-   "blocks": [],
-   "askedBy": [
-    "completeness"
+   "id": "Q-016",
+   "name": "the DIN reading when a clause and its table disagree",
+   "topic": "regulatory interpretation",
+   "question": "Where a clause of DIN DKE SPEC 99100 and its attribute table disagree, which reading should the dataset follow: for the expected lifetime in calendar years (6.7.6.2 c) public, Table 14 legitimate interest), the ratio of power to energy (6.7.3.6 d) public, Table 11 legitimate interest), the addresses of the sources of spare parts (Table 7 mandatory, 6.6.1.4 d) 'should') and the eight separate pre-consumer and post-consumer recycled shares (Table 8 mandatory, 6.6.2.2 e) 'should')?",
+   "why": "The requirements follow the clause text and flag the tables. The tier decides who may read the value, the obligation decides the priority. For the recycled shares, Art. 8(1) requires the combined share per metal and the project guidelines of the battery passport application says the shares are declared separately, so 'must' is proposed for the separate shares. The two passport-content questions ask the same thing about different attributes.",
+   "options": [
+    "Follow the clause text in every case.",
+    "Follow the table in every case.",
+    "Decide per attribute."
    ],
-   "raisedBy": "completeness",
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[3] passport-content Q-04 (about StR-PASS-313)",
+    "questions.json[11] passport-content Q-12 (about StR-PASS-203)"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco states which reading prevails when a clause of DIN DKE SPEC 99100 and its attribute table disagree. the project guidelines of the battery passport application and ADR 0002 keep the rated expected lifetime public, and the project guidelines of the battery passport application declares the pre-consumer and post-consumer recycled shares separately, but no text of Francesco decides the tier of the ratio of power to energy or the obligation of the addresses of the sources of spare parts, and the rule that DIN prevails over the Regulation covers identifier names only.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-017",
+   "name": "notified body and surveillance authority access to detailed composition",
+   "topic": "regulatory interpretation",
+   "question": "Should the dataset mark the information of Annex XIII point 2 as accessible also to notified bodies and market surveillance authorities, as Art. 77(2)(b) states, although the heading of Annex XIII point 2 names only persons with a legitimate interest and the Commission?",
+   "why": "The Regulation is inconsistent between the article and the annex, and DIN Tables 6 and 7 follow the annex. StR-PASS-014 (\"Annex XIII point 2 items also for notified bodies and authorities\") follows the article; StR-PASS-151 (\"Detailed composition: legitimate-interest and Commission access\") and StR-PASS-159 (\"Dismantling information: legitimate-interest and Commission access\") mark point 2 items for persons with a legitimate interest and the Commission and note the article.",
+   "options": [
+    "Follow Art. 77(2)(b): point 2 also for notified bodies and market surveillance authorities.",
+    "Follow the heading of Annex XIII point 2: only persons with a legitimate interest and the Commission."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[4] passport-content Q-05 (about StR-PASS-014), first part"
+   ],
+   "raisedBy": "questions",
    "alsoAsked": [
     {
-     "note": "SyR-OPS-056 and SyR-OPS-057 (the declaration of conformity, the technical documentation and the due diligence documentation that the application holds, kept for 10 years) depend on this answer and contradict the removal at the end of a subscription (StR-SEC-101, StR-DATA-026, StR-PRIV-034) until it and Q-972 are answered. No element of the application perimeter holds these documents today (see the note added to Q-062).",
-     "raisedBy": "system integration review sys-ops"
+     "note": "Finding on SyR-PASS-012: the conflict between StR-PASS-014 (Art. 77(2)(b)) and the point 2 requirements (Annex XIII point 2 heading) is kept as two system requirements; whichever reading is chosen, SyR-PASS-012 or the point 2 markings are withdrawn or reworded.",
+     "raisedBy": "system integration review sys-data"
     }
    ],
    "derivation": {
     "date": "2026-10-26",
     "outcome": "open",
-    "missing": "No stored text of Francesco says whether the application is the customer's archive of record for the EU declaration of conformity, the technical documentation and the due diligence documentation, or how the 10-year period meets the erasure at the end of a customer's service (a mandatory export first, or a retained copy). The choice is a commercial and legal decision of Francesco.",
+    "missing": "No stored text of Francesco resolves the inconsistency between Art. 77(2)(b) of Regulation (EU) 2023/1542 (points 2 and 3 of Annex XIII for notified bodies, market surveillance authorities and the Commission) and the heading of Annex XIII point 2 (persons with a legitimate interest and the Commission only). The vision describes the passport screens 'with the access tiers of Art. 77(2)' without addressing the annex heading, the security guide prefers DIN SPEC 99100 when DIN and the Regulation disagree, and DIN Tables 6 and 7 follow the annex heading; invariant 2 cannot choose, because the stored text supports both readings.",
     "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
    },
    "history": [
@@ -349,6 +362,82 @@
       "quote": "the Commission shall adopt implementing acts specifying which persons are to be considered persons with a legitimate interest"
      }
     ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "one derivation quote of the private registry is not carried, because the quote names records of the private repository",
+     "reason": "carry-over to the public registry",
+     "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-019",
+   "name": "the extent of the public material composition",
+   "topic": "regulatory interpretation",
+   "question": "Should the public dataset carry a material composition beyond the chemistry, the hazardous substances and the critical raw materials that Annex XIII point 1(b) names after 'including', or do those three items make up the public composition, as DIN implements it?",
+   "why": "The word 'including' leaves the extent open, and DIN has no general public composition attribute (StR-PASS-127, \"Material composition of the battery model\").",
+   "options": [
+    "The three named items are the public composition.",
+    "A broader public composition is added (to be specified)."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[10] passport-content Q-11 (about StR-PASS-127)"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco reads the word 'including' of Annex XIII point 1(b) of Regulation (EU) 2023/1542. the project guidelines of the battery passport application's cluster map lists the fields of the materials cluster (chemistry, hazardous materials, critical raw materials) without stating that they exhaust the public material composition, and the rule that DIN prevails over the Regulation covers identifier names only. The extent of the public composition is Francesco's reading.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-020",
+   "name": "whether expected lifetime information is battery passport content",
+   "topic": "regulatory interpretation",
+   "question": "Is the expected lifetime information of Annex VII Part B (dates, energy throughput, harmful events, full cycles, and the date of manufacture of the individual battery) battery passport content through Annex XIII point 4(b), which names 'information on the state of health of the battery pursuant to Article 14'?",
+   "why": "Art. 14 covers both the state of health (Annex VII Part A) and the expected lifetime (Annex VII Part B), while point 4(b) names only the state of health. DIN makes the Part B parameters mandatory passport attributes and the date of manufacture of the individual battery only 'should' (6.1.3.2 f)). The legal basis of five requirements rests on the reading.",
+   "options": [
+    "Yes: Part B is passport content through point 4(b).",
+    "No: the Part B requirements rest on DIN alone."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[15] passport-content Q-16 (about StR-PASS-053)"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco reads Annex XIII point 4(b) of Regulation (EU) 2023/1542 ('information on the state of health of the battery pursuant to Article 14') as covering or excluding the expected lifetime parameters of Annex VII Part B. The vision makes DIN DKE SPEC 99100 a text of the passport demo, so the Part B requirements stand on DIN either way, but the legal basis of the five requirements is Francesco's reading.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
    },
    "history": [
     {
@@ -611,6 +700,82 @@
    ]
   },
   {
+   "id": "Q-024",
+   "name": "whether the averaged model carbon intensity leaves the dataset",
+   "topic": "regulatory interpretation",
+   "question": "Should the model-level carbon intensity that the backend computes (the average of the per-plant values weighted by battery count) leave the dataset, or stay only as an internal statistic that is never shown as a carbon footprint?",
+   "why": "Art. 7(1) requires one declaration per battery model per manufacturing plant, and Annex II point 5 forbids sampling across plants; a value that is not the footprint of any plant could be read as a declared value (StR-LIFE-064, \"No carbon footprint value combined from several plants\").",
+   "options": [
+    "Remove the average from the dataset entirely.",
+    "Keep it only as an internal statistic, never shown as a carbon footprint."
+   ],
+   "recommendation": {
+    "text": "In part. The stored text settles that the carbon footprint is declared per battery model per manufacturing plant and that data of different plants are not sampled together, so the average must not be delivered or shown as a carbon footprint. Whether to keep it as an internal statistic is Francesco's choice.",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 7(1), first subparagraph",
+      "quote": "a carbon footprint declaration shall be drawn up for each battery model per manufacturing plant"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex II, point 5",
+      "quote": "sampling of data collected from different plants producing the same battery model shall not be allowed"
+     }
+    ]
+   },
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[17] lifecycle Q-LIFE-02 (about StR-LIFE-064)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The model-level average of the plant carbon intensities is removed from the dataset and from the code. The carbon footprint and its performance class are declared per battery model per manufacturing plant and data of different plants are not sampled together, so no requirement asks for the average, and the YAGNI principle deletes code whose requirement is gone.",
+    "option": 1,
+    "derivedFrom": [
+     {
+      "document": "the rulebook document \"YAGNI principle\" of the battery passport application, not published",
+      "locator": "1. Build only what a present requirement asks for",
+      "quote": "Build only what a present requirement asks for, and delete code whose requirement is gone."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 2, invariant 2",
+      "quote": "A citation that the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 7(1), first subparagraph",
+      "quote": "a carbon footprint declaration shall be drawn up for each battery model per manufacturing plant"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 7(2), first subparagraph",
+      "quote": "declaring the carbon footprint performance class to which the relevant battery model per manufacturing plant corresponds"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex II, point 5",
+      "quote": "sampling of data collected from different plants producing the same battery model shall not be allowed"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
    "id": "Q-025",
    "name": "access to the record of a recycled battery's ended passport",
    "topic": "regulatory interpretation",
@@ -759,32 +924,28 @@
    ]
   },
   {
-   "id": "Q-033",
-   "name": "the personal data kept after erasure for legal obligations",
+   "id": "Q-030",
+   "name": "the access tier for a battery's repair history",
    "topic": "regulatory interpretation",
-   "question": "Which personal data must be kept after an erasure request because a legal obligation requires them (for example the audit records of changes to regulated battery data, or the security logs under NIS2), and under which obligation?",
-   "why": "GDPR Art. 17(3)(b) allows keeping only what a legal obligation needs, and the list must be explicit to be verifiable (StR-PRIV-012, \"Data required by a legal obligation kept through an erasure\"). The periods are set by the retention questions.",
+   "question": "Which access tier reads the repair history of a battery?",
+   "why": "DIN 6.1.3.7 d) makes the status legitimate-interest only and says nothing about the repair history, which can reveal the battery's defects (StR-LIFE-045, \"Repair history included in the passport\"). Who records a repair is a separate question [Q-045 (\"the role that records a repair\")].",
    "options": [],
    "recommendation": null,
-   "blocks": [],
+   "blocks": [
+    "StR-LIFE-045"
+   ],
    "relatedRequirements": [],
    "askedBy": [
-    "privacy-data-dpp"
+    "lifecycle"
    ],
    "mergedFrom": [
-    "questions.json[45] privacy-data-dpp Q-PRIV-09 (about StR-PRIV-012)"
+    "questions.json[31] lifecycle Q-LIFE-16 (about StR-LIFE-045), first part"
    ],
    "raisedBy": "questions",
-   "alsoAsked": [
-    {
-     "note": "Finding 96: an application user's identifier is on the created_by_firebase_uid column of every table and on auth_event_log, which StR-OPS-057 requires (every audit record names who performed the action). The erasure of SyR-PRIV-010 is consistent with that audit trail only if the list of Q-033 keeps the pseudonymous identifier on those records under a named legal obligation and the erasure removes everything that resolves it (SyR-PRIV-022); otherwise one of the two must give way. Q-033 should state this case explicitly.",
-     "raisedBy": "system integration review sys-trust"
-    }
-   ],
    "derivation": {
     "date": "2026-10-26",
     "outcome": "open",
-    "missing": "No stored text of Francesco lists the personal data kept through an erasure with a stored legal obligation for each item. The security guide keeps the former owner's pseudonymous identifier in the ownership history under GDPR Art. 17(3)(b) and cites a chain-of-custody obligation of Art. 73(2) of Regulation (EU) 2023/1542, but the stored Art. 73(2) makes the state of health evaluation available to end-users, so the citation is a defect under the principle that behaviour is cited data, verified against the stored texts. No text of Francesco names the obligation that would keep the application users' identifier on the created_by_firebase_uid columns and on auth_event_log (finding 96).",
+    "missing": "No stored text of Francesco or of DIN DKE SPEC 99100 sets the access tier of the repair history. DIN 6.1.3.7 d) makes the information on the battery status legitimate-interest data, while DIN 6.1.3.7 f) and the vision place the repair history beside the status and not inside the status; the tier of the repair history itself needs Francesco's decision.",
     "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
    },
    "history": [
@@ -882,6 +1043,161 @@
     "by": "Francesco",
     "text": "\"Q-034: I do not understand the question, since we started with the eu battery regulation as elicitation layer and then used the DIN spec, delegated acts and Catena-X as well, so what do you mean?? just follow the requirements trace\" (Francesco, 2026-10-26). A requirement elicited from Regulation (EU) 2023/1542, from DIN DKE SPEC 99100, from a delegated act or from a Catena-X text binds where its trace leads: its system and software requirements, with their perimeter and allocation, decide whether the data layer, its delivered dataset or the passport demo meets it. No requirement changes its perimeter on this question.",
     "derivedAnswer": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Some requirements move and the rest stay. The vision makes the Catena-X standards the source of the data layer and Regulation (EU) 2023/1542 the source of the passport demo, so every requirement whose binding source is the Regulation's Annex XIII content, its lifecycle rules or its regulatory values takes the perimeter 'demo-passport', and the delivered dataset meets the Catena-X texts instead (the BatteryPass 6.1.0 aspect model under CX-Titan, decision Q-985). Invariant 5 keeps the requirements on the identity split in the perimeter 'application', because the dataspace keeps the same split: a new dataset with a new identifier linked to the predecessor dataset or datasets after preparation for re-use, preparation for repurposing, repurposing or remanufacturing, the same twin and dataset after a repair, and the end of the passport after recycling."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-035",
+   "name": "whether the DIN additions bind the delivered dataset",
+   "topic": "product scope",
+   "question": "Do the DIN DKE SPEC 99100 additions (its 'shall' and 'should' clauses, and its 'must' clauses with no basis in the Regulation, such as the GTIN of the manufacturer identifier) bind the dataset that the application delivers to the passport service provider, or only the passport demo, as vision section 1 lists DIN for the demo?",
+   "why": "160 requirements of the passport-content area rest on DIN alone and depend on the answer; 377 requirements cite DIN in all. the project guidelines of the battery passport application calls DIN the audit standard and its Core Principles still say the MVP schema is DIN-native, while the vision makes the Catena-X standards the source of truth of the data layer (see the question on that principle [Q-141, \"retiring the deferred Catena-X mapping principle\"]).",
+   "options": [
+    "The DIN additions bind the application dataset.",
+    "The DIN additions bind only the passport demo."
+   ],
+   "recommendation": null,
+   "blocks": [
+    "StR-LIFE-089"
+   ],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[1] passport-content Q-02 (about SRC-DIN-DKE-SPEC-99100)",
+    "sources.json SRC-DIN-DKE-SPEC-99100 (question of passport-content; lifecycle and privacy-data-dpp decided 'applies')"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on SyR-PASS-003: CX-0160 base section 3 ('Application of the Data Models') states that attributes flagged optional 'can be treated as optional, unless they are required by DIN DKE SPEC 99100', which makes DIN's mandatory attributes mandatory in the data layer's own standard. The answer should weigh this stored text. The system requirements added here already list Q-035 in dependsOn.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "\"Q-034: I do not understand the question, since we started with the eu battery regulation as elicitation layer and then used the DIN spec, delegated acts and Catena-X as well, so what do you mean?? just follow the requirements trace\" (Francesco, 2026-10-26). The same answer as Q-034 covers the DIN DKE SPEC 99100 additions, which Francesco names among the elicitation sources: each DIN requirement binds where its trace leads, and no requirement changes its perimeter on this question.",
+    "derivedAnswer": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Under CX-Titan, which binds this release (decision Q-984), the DIN DKE SPEC 99100 additions bind only the passport demo, because the vision lists DIN DKE SPEC 99100 among the texts of the passport demo and the data layer follows the Catena-X standards, of which no CX-Titan text makes DIN binding. After the CX-Neptune go-live, the attributes that DIN DKE SPEC 99100 requires bind the delivered dataset through CX-0160 (Battery Passport) base section 3, so each such requirement rests on the CX-0160 quote with the flag neptune-new and the release plan after-neptune-go-live, while the 'should' clauses of DIN DKE SPEC 99100 stay with the demo. DIN clause 6.1.3.7 e), which invariant 5 cites for the identity split, binds the dataset with the identity group of decision Q-034."
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-037",
+   "name": "the Member States and languages of contact and waste information",
+   "topic": "product scope",
+   "question": "For which Member States, and so in which languages, must the dataset hold the manufacturer's contact details (Art. 38(7)) and the waste prevention and management information (Art. 74(1)), and does it hold one version of the Art. 74(1) information per Member State where the battery is supplied?",
+   "why": "Both articles leave the language to each Member State, and the Art. 74(1) information is provided by the producer or its producer responsibility organisation for each Member State where the battery is supplied. The two passport-content questions ask about the same per-Member-State content.",
+   "options": [],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[9] passport-content Q-10 (about StR-PASS-045)",
+    "questions.json[12] passport-content Q-13 (about StR-PASS-215), first part"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco names the Member States where the customers supply batteries, the languages of the manufacturer's contact details (Art. 38(7)) and of the waste prevention and management information (Art. 74(1)), or whether the dataset holds one version of the Art. 74(1) information per Member State. The Member States and languages are a market choice of Francesco.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-038",
+   "name": "whether producers supply the waste prevention information as stakeholders",
+   "topic": "product scope",
+   "question": "Is the producer, or its producer responsibility organisation, a stakeholder that supplies the Art. 74(1) information to the dataset, as the passport-content area proposes?",
+   "why": "The requirements of Annex XIII point 1(s) depend on who provides the content; the area added a proposed stakeholder for it (proposed_stakeholders.json).",
+   "options": [
+    "Yes: the stakeholder is added.",
+    "No: the economic operator supplies the content."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[12] passport-content Q-13 (about StR-PASS-215), second part"
+   ],
+   "raisedBy": "questions",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco names who supplies the information on the prevention and management of waste batteries of Art. 74(1) to the battery passport dataset, and no text of his makes producers or producer responsibility organisations stakeholders of the registry. The value-chain positions of the vision's section 3.4 name no producer responsibility organisation, and the vision presents those positions as the ones the design set names today, not as a closed list. The choice between a new stakeholder and the economic operator as supplier is Francesco's.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-039",
+   "name": "whether the application calculates the carbon footprint per functional unit",
+   "topic": "product scope",
+   "question": "Does the application calculate the carbon footprint per functional unit itself (from the CO2 equivalent emitted and the total energy over the service life, following the draft delegated act for electric vehicle batteries and the JRC rules for industrial batteries until the acts are adopted), or does it only hold and check the value per functional unit that the economic operator declares?",
+   "why": "The answer decides the applicability of the two draft delegated act texts and of the JRC industrial rules, all undecided, and whether StR-LIFE-074 (\"Total energy of an electric vehicle battery over its service life\") to StR-LIFE-077 (\"Total energy of an off-the-shelf industrial battery\") apply. Today the code converts an absolute value by dividing it by the nominal energy content, which is not the total energy over the service life that Art. 7(1)(d) and Annex II point 3 name (StR-LIFE-065, \"Carbon footprint per kWh of total energy over service life\"). The Catena-X PCF calculation is a separate question [Q-040 (\"whether the application calculates product carbon footprints beyond exchange\")].",
+   "options": [
+    "Calculate it.",
+    "Only hold and check the declared value."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[16] lifecycle Q-LIFE-01 (about SRC-CFB-DA-EV-ANNEX-DRAFT)",
+    "sources.json SRC-CFB-DA-EV-ANNEX-DRAFT, SRC-CFB-DA-EV-MAIN-DRAFT and SRC-JRC-CFB-IND-2025 (undecided)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on StR-LIFE-074 to 077: these rest on a draft delegated act and a non-binding JRC report, and the formula of section 2.1 of the draft is not legible in the stored text, so VM-SYS-LIFE-032 runs only once this is answered 'calculate' and the adopted act is stored (Q-116). SyR-PASS-058 now also carries StR-LIFE-065 (merge of SyR-LIFE-064) and depends on this answer.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "\"Q-039 and Q-040: Ichnos provides data exchange to an LCA company such as Minviro, and they attach the PCF aspect to the model\" (Francesco, 2026-10-26). The application calculates no carbon footprint, the carbon footprint per functional unit included: an LCA company such as Minviro calculates it from the data that the application exchanges with it, and attaches the PCF aspect to the battery model; the application holds and checks the declared value.",
+    "option": 2,
+    "derivedAnswer": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The application calculates no carbon footprint, the carbon footprint per functional unit included. The application holds and checks the carbon footprint per kWh of total lifetime energy that the economic operator declares, and an external life cycle assessment (LCA) provider calculates that value."
    },
    "history": [
     {
@@ -1089,28 +1405,530 @@
    ]
   },
   {
-   "id": "Q-105",
-   "name": "the removal period for customer data after a subscription ends",
-   "topic": "operations figures",
-   "question": "Within what period after a subscription ends must the customer's data, keys, secrets and credentials be removed from the application and the stack?",
-   "why": "No source sets it; the contract's exit clause (roadmap R8-2) and the Data Act's switching rules (privacy area) bound it (StR-SEC-101, \"Customer data, keys and credentials removed when a subscription ends\").",
-   "options": [],
-   "recommendation": null,
-   "blocks": [
-    "StR-SEC-101"
+   "id": "Q-061",
+   "name": "the provider, interface and format of the dataset handover",
+   "topic": "product scope",
+   "question": "Which passport service provider (a Digital Product Passport Service Provider first?), which interface (protocol, endpoint, authentication) and which format (CX-0160 aspects as JSON, an AAS package, another) shall the hand-off of the verified dataset use, and is it a push by the application or a pull by the provider through the connector?",
+   "why": "The vision names the hand-off but no stored source states its interface or format, and Art. 78 binds the provider, not the application (StR-OPS-077, \"Hand-off through the agreed interface and format\").",
+   "options": [
+    "Format: CX-0160 aspects as JSON.",
+    "Format: an AAS package.",
+    "Push by the application.",
+    "Pull by the provider through the connector."
    ],
+   "recommendation": null,
+   "blocks": [],
    "relatedRequirements": [],
    "askedBy": [
-    "security"
+    "operations-quality-owner"
    ],
    "mergedFrom": [
-    "questions.json[70] security Q-SEC-15 (about StR-SEC-101)"
+    "questions.json[124] operations-quality-owner (about StR-OPS-077)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "question": "Conflict CA-3, interface to the passport service provider. Does the dataset reach the passport service provider through the customer's connector over the Dataspace Protocol, as StR-CXN-125 requires for every exchange with another company and as CX-0160-3 5.3.1 foresees for a 'DPP Service provider with Catena-X certified business application for DPP data management', or through another interface agreed with the provider (StR-OPS-077)? If another, decision D33 of the auth spec needs a written exception for the passport service provider.",
+     "why": "Two project documents disagree: the auth spec decision D33 ('No company-to-company communication outside the connector', StR-CXN-125) and the stakeholder expectation of STK-08 ('through the agreed interface', StR-OPS-077). CX-0160-3 describes the data reception 'via the Catena-X ecosystem' but leaves the EU-facing side to the JTC24 standards, which are not stored.",
+     "raisedBy": "cross-areas",
+     "id": null
+    },
+    {
+     "question": "Is the hand-off of the dataset to the passport service provider the complete exchange of CX-0160-3 (the provider, as a Catena-X participant with a certified application, reads the eight models of the battery instance twin through the customer's connector), or another interface and format agreed with each provider? StR-OPS-077's rationale says that no stored source names the interface, while CX-0160-3 1.0.0 is the stored standard titled 'Complete exchange of DPPs to service providers' and its 5.3.2 states that the battery passport data must be transferred from the economic operator backend system to the end-point representing the EU DPP system facing DPP management system.",
+     "why": "The two requirements describe the same hand-off from two sources: OPS leaves interface and format to an agreement, CXD fixes them to CX-0160-3. If CX-0160-3 is the interface, StR-OPS-077's statement and rationale must cite it and its question on the interface narrows to the providers outside Catena-X.",
+     "raisedBy": "completeness",
+     "id": null
+    },
+    {
+     "note": "Architecture impact of conflict CA-3: IF-DPPSP-CONNECTOR is designed as a pull by the passport service provider through the economic operator's connector (CX-0160 section 5.1.2). If the agreed interface is a push outside the connector, it needs an interface of its own in architecture.json and a written exception to auth spec decision D33 (StR-CXN-125). SyR-OPS-049 and SyR-OPS-050 stay interface-neutral until this is answered.",
+     "raisedBy": "system integration review sys-ops"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The verified dataset reaches the passport service provider through the customer's own connector: the provider, as a Catena-X data consumer, negotiates a contract over the Dataspace Protocol and pulls the dataset through a transfer process (option 4). The dataset travels as the aspect submodels that the stack serves: BatteryPass 6.1.0 under CX-Titan (decision Q-985, which battery passport rules bind this release under CX-Titan), and the CX-0160 aspects after the CX-Neptune go-live. The provider is the one that the economic operator designates, and Francesco's texts fix no single provider.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Architecture_decision_record_0004-Connector_topology-extract.md",
+      "locator": "Section 1 (context)",
+      "quote": "Every exchange with another company passes through the connector (auth spec D33)."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 0 (what the application is), third bullet",
+      "quote": "A data consumer finds the offer in the provider's catalogue, negotiates the contract and its policy over the Dataspace Protocol, receives a contract agreement and pulls the data through a transfer process"
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 0 (what the application is), first bullet",
+      "quote": "complete, verified dataset goes to a Digital Product Passport Service Provider (DPPSP)"
+     },
+     {
+      "document": "a document of the battery passport application, not published",
+      "locator": "Q-985 (which battery passport rules bind this release under CX-Titan), answer",
+      "quote": "The battery passport dataset follows the aspect model BatteryPass 6.1.0 (urn:samm:io.catenax.battery.battery_pass:6.1.0)"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-081",
+   "name": "whether digital product passport metadata is a submodel",
+   "topic": "Catena-X certification",
+   "question": "Is the DPP Metadata (IDTA-02099-1), which CX-0160-3 3.1.2 adds 'as semantic ID for the corresponding Battery Instance Twin', a submodel with that semantic ID or a semantic ID of the shell?",
+   "why": "The specification artifact links of the DPP Metadata in CX-0160-3 3.1.2 point to the nameplate files, so the data provider cannot implement or test StR-CXD-049 (\"DPP Metadata semantic ID added to the battery instance twin\") as written.",
+   "options": [
+    "A submodel with that semantic ID.",
+    "A semantic ID of the shell."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "catenax-data"
+   ],
+   "mergedFrom": [
+    "questions.json[100] catenax-data Q-CXD-DPP-METADATA (about StR-CXD-049)"
    ],
    "raisedBy": "questions",
    "derivation": {
     "date": "2026-10-26",
     "outcome": "open",
-    "missing": "No stored text of Francesco sets the period within which a customer's data, keys, secrets and credentials are removed after the subscription ends. ADR 0004 states only that a customer's stack is provisioned when the subscription starts. The period is the value agreed with Francesco.",
+    "missing": "No stored text of Francesco says whether the DPP Metadata (IDTA-02099-1) of CX-0160-3 is a submodel or a semantic ID of the shell, and the stored artifact links of CX-0160-3 point to the nameplate files. The meaning belongs to the authors of CX-0160 or to the IDTA (Industrial Digital Twin Association).",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-116",
+   "name": "which announced battery regulation acts are adopted for storage",
+   "topic": "texts to store",
+   "question": "Which of the implementing and delegated acts that Regulation (EU) 2023/1542 announces, and which acts amending it, have been adopted, so that each can be stored in the source register: the Art. 77(9) act on persons with a legitimate interest (due by 18 August 2026), the carbon footprint acts of Art. 7(1) to (3) (methodology and declaration format, performance classes, maximum threshold), the recycled content methodology of Art. 8(1), the minimum performance and durability values of Art. 10(5), the recycling efficiency methodology of Art. 71(4) and the labelling act of Art. 13(10)?",
+   "why": "A rule whose text is not stored waits until it is (invariant 2). Waiting now: StR-PASS-015 (\"Legitimate-interest persons set from the Art. 77(9) act\") and StR-PASS-152 (\"Detailed composition also for sorters, dismantlers and recyclers\"), and every legitimate-interest access (Art. 77(9)); StR-PASS-094 (\"Carbon footprint per functional unit per model and plant\"), StR-LIFE-069 (\"Carbon footprint performance class per model per plant\"), StR-LIFE-070 (\"Life cycle carbon footprint checked against the maximum threshold\") and StR-LIFE-071 (\"Carbon footprint required from the date of the battery category\") (Art. 7); StR-LIFE-086 (\"Recycled content required from the date of the battery category\") and StR-LIFE-088 (\"Recycled content calculated by the methodology of the delegated act\") (Art. 8(1)); StR-LIFE-113 (\"Industrial battery values checked against the minimum values\") and StR-LIFE-114 (\"LMT battery values checked against the minimum values\") (Art. 10(5)); StR-LIFE-127 (\"Recovery and efficiency rates calculated by the delegated methodology\") (Art. 71(4)). The acts can change the definition and unit of several attributes (for example the functional unit per category, DIN 6.3.2 NOTE 2), and an amending act could have changed any date that the requirements cite. The question on Data Act Chapter III follows the Art. 77(9) act [Q-010 (\"whether legitimate interest access falls under Data Act fair terms\")]. Three questions of two areas asked this.",
+   "options": [],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content",
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[0] passport-content Q-01 (about StR-PASS-015)",
+    "questions.json[13] passport-content Q-14 (about StR-PASS-094)",
+    "questions.json[32] lifecycle Q-LIFE-17 (about SRC-EU-2023-1542)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Findings on StR-LIFE-074 to 077 and StR-LIFE-117 to 121: the carbon footprint act of Art. 7(1) and the recovery calculation act of Art. 71(4) must be stored in a legible copy before VM-SYS-LIFE-032, VM-SYS-LIFE-036 and VM-SYS-LIFE-042 can run.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text records whether the Commission has adopted the implementing act of Art. 77(9) (persons with a legitimate interest), the carbon footprint acts of Art. 7(1) to (3), the recycled content methodology of Art. 8(1), the minimum performance and durability values of Art. 10(5), the recycling efficiency methodology of Art. 71(4) and the labelling act of Art. 13(10). The adoption is a fact to check on EUR-Lex, which method.md section 7 asks each EU source to record with its date; the adoption is not an intent that Francesco can express, and this batch made no network call. The amending acts are already answered: the stored consolidated text of 13 August 2026 holds Regulation (EU) 2024/1781, Regulation (EU) 2025/1561 and Regulation (EU) 2026/1738. Once the check is recorded, the principle that behaviour is cited data, verified against the stored texts decides the rest: each adopted act is stored in the source register, and each blocked requirement waits until its act is stored; ADR 0002 already keeps the legitimate-interest membership configurable until the Art. 77(9) act exists.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-117",
+   "name": "whether to buy the paid identifier and date standards",
+   "topic": "texts to store",
+   "question": "Should the paid standards that the requirements reference be bought and stored (ISO/IEC 15459-1 to -6, which Art. 77(3) names and which are not on PAID_STANDARDS_NOT_YET_BOUGHT.md; ISO 8601-1 and -2; DIN EN 2), or, for the identifiers, an equivalent scheme such as GS1 or IEC 61406 be chosen and stored instead?",
+   "why": "Requirements resting on them carry 'citation pending' until the texts are stored: the unique, operator and manufacturer identifiers (StR-PASS-018, \"Unique identifier complies with ISO/IEC 15459 parts 1 to 6\", 029, 030, 038, and StR-PASS-039, \"Manufacturer identifier follows the GTIN scheme of ISO/IEC 15459-6\", which cites ISO/IEC 15459-6 without a note), the date format (StR-PASS-054, \"Dates expressed in ISO 8601 year and month\") and the extinguishing agent's area of application (StR-PASS-081, \"Extinguishing agent related to its area of application\"). Art. 77(3) admits the ISO/IEC 15459 standards 'or their equivalent'.",
+   "options": [
+    "Buy and store ISO/IEC 15459-1 to -6.",
+    "Choose an equivalent scheme (for example GS1 or IEC 61406) and store it.",
+    "Buy and store ISO 8601-1 and -2 and DIN EN 2."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[7] passport-content Q-08 (about SRC-ISO-IEC-15459), paid standards",
+    "sources.json SRC-ISO-IEC-15459 (question)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on SyR-CXD-008: a valid BPNS or BPNL can be tested only against the regular expression of CX-0010 2.2, because its check characters follow ISO/IEC 7064:2003 (MOD 1271-36), which is not stored; the measures do not compute them and say so. ISO/IEC 7064:2003 is a further paid standard for this question's list. DEV-17 shows a demo BPN of 18 characters that already fails the expression.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco decides to buy ISO/IEC 15459-1 to -6, ISO 8601-1 and -2, DIN EN 2 or ISO/IEC 7064:2003 (the check characters of the BPNS and BPNL), or to choose an equivalent identification scheme such as GS1 or IEC 61406 in place of ISO/IEC 15459; the purchase is a commercial choice. The regulatory quick reference of the agent guidelines of the battery passport application describes the DIN identifier cluster of the passport demo as a GS1-compliant serial number, manufacturer GLN and model GTIN, but makes no choice between buying ISO/IEC 15459 and storing a GS1 or IEC 61406 text, and the data layer names the manufacturer by its BPNL (SyR-CXD-009, Digital Nameplate ManufacturerIdentifier holds a valid BPNL). Francesco decides the purchase or the equivalent scheme.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-118",
+   "name": "whether to store the referenced free legal texts",
+   "topic": "texts to store",
+   "question": "Should the free legal texts that the requirements reference be stored in the source register: Regulation (EC) No 1272/2008 (CLP, also named by Art. 3(1)(52)), Regulation (EC) No 1907/2006 (REACH), UN GTR No 22, the Commission's list of critical raw materials, and Recommendation 2003/361/EC on the definition of micro, small and medium-sized enterprises?",
+   "why": "Requirements on hazardous substances, on critical raw materials and on the UN GTR No 22 parameters are citation pending until then, and the question on NIS2 applicability [Q-001 (\"whether the NIS2 directive applies to Ichnos directly\")] must be answered against the Recommendation's text (source SRC-REC-2003-361, \"Commission Recommendation 2003/361/EC (definition of micro, small and medium-sized enterprises)\", undecided). Two areas need these texts.",
+   "options": [
+    "Store all of them.",
+    "Store the ones named."
+   ],
+   "recommendation": null,
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content",
+    "security"
+   ],
+   "mergedFrom": [
+    "questions.json[7] passport-content Q-08 (about SRC-ISO-IEC-15459), free legal texts",
+    "sources.json SRC-REC-2003-361 (undecided)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): Ichnos stores all five free legal texts in the source register: Regulation (EC) No 1272/2008 (CLP), Regulation (EC) No 1907/2006 (REACH), UN GTR No 22, the Commission's list of critical raw materials and Commission Recommendation 2003/361/EC (definition of micro, small and medium-sized enterprises). The agreed requirements cite these texts, the principle that behaviour is cited data, verified against the stored texts lets a rule whose text is not stored wait only until the text is stored, and a free text needs no purchase, so Francesco's rule that the elicitation level cites the correct regulations selects the storage of every one of them.",
+    "option": 1,
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariant 2",
+      "quote": "A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariant 2",
+      "quote": "Never guess a citation; never claim one can't be verified."
+     },
+     {
+      "path": "requirements/Owner_instructions-Francesco_verbatim/2026-10-26_battery_passport_fallback_and_neptune_priority.md",
+      "locator": "Francesco, 2026-10-26, message on Q-985 to Q-987",
+      "quote": "Make sure that all requirements are correctly derived according to the SPICE process and belong to the right levels, the elicitation level cites the correct regulations, standards, versions and release"
+     },
+     {
+      "path": "requirements/Owner_instructions-Francesco_verbatim/2026-10-26_assumed_agreement_derived_decisions_and_run_4.md",
+      "locator": "Francesco, 2026-10-26, answer on the four blockers",
+      "quote": "we assume they are correct and agreed"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-124",
+   "name": "whether stored texts overrule project documents on access tiers",
+   "topic": "project documents to correct",
+   "question": "Do you confirm that the stored texts prevail over ADR 0002, the column access matrix, the project guidelines of the battery passport application and the DIN access-rights analysis on seven access-tier points, and that their owners correct them: (a) the internal battery cell and pack resistance is public; (b) the hazardous substances and the critical raw materials present are public, not only a flag or a class; (c) the date of manufacture and (d) the manufacturer's postal address are public; (e) the responsible sourcing information of the due diligence report is public; (f) the detailed composition serves repairers, remanufacturers, second-life operators and recyclers, not the recycler alone; (g) the certified usable battery energy is legitimate-interest information, so the matrix may not make the energy content public on the strength of DIN 6.7.2.5?",
+   "why": "Invariant 2: a citation that the stored text does not support is a defect. The passport-content requirements already follow the stored texts (StR-PASS-305, \"Initial internal resistance of pack and cell: public access\", 133, 135, 052, 046, 116, 151, 254). Only the internal resistance increase and the ohmic resistance of the individual battery (DIN 6.7.5.3 e), Annex VII Part A point 5) stay legitimate-interest data.",
+   "options": [],
+   "recommendation": {
+    "text": "Yes. Each point is settled by the stored text quoted below, and the project documents are corrected to it.",
+    "evidence": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 2",
+      "quote": "A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 1(o)",
+      "quote": "(o) internal battery cell and pack resistance;"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 1(b)",
+      "quote": "hazardous substances present in the battery, other than mercury, cadmium or lead, and critical raw materials present in the battery"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 1(a)",
+      "quote": "(a) the information specified in Part A of Annex VI;"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex VI Part A point 4",
+      "quote": "the date of manufacture (month and year)"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 38(7)",
+      "quote": "their name, registered trade name or registered trade mark, their postal address, indicating a single contact point"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 1(d)",
+      "quote": "information on responsible sourcing as indicated in the report on battery due diligence policy referred to in Article 52(3)"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 77(2), third subparagraph, point (a)",
+      "quote": "allow repairers, remanufacturers, second-life operators and recyclers to conduct their respective economic activities in accordance with this Regulation"
+     },
+     {
+      "document": "DIN DKE SPEC 99100:2025-02",
+      "locator": "6.7.2.5 c)",
+      "quote": "The information on certified usable battery energy should be accessible to persons with a legitimate interest."
+     }
+    ]
+   },
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "passport-content"
+   ],
+   "mergedFrom": [
+    "questions.json[5] passport-content Q-06 (about SRC-COLUMN-ACCESS-MATRIX), points (a) to (g)"
+   ],
+   "raisedBy": "questions",
+   "alsoAsked": [
+    {
+     "note": "Finding on SyR-PASS-023: point (d) of this question decides the manufacturer's postal address; the test suite visibilityService of the reference server (lines 43 to 49) pins the contrary, asserting manufacturer_address hidden from the public role of the passport demo, and the column access matrix withholds it, while Art. 38(7) through Annex VI Part A point 1 and Annex XIII point 1(a) make it public (deviation recorded on SyR-PASS-208). The same test asserts anode, cathode and electrolyte hidden from the public, which agrees with Annex XIII point 2(a). The test changes with the correction.",
+     "raisedBy": "system integration review sys-data"
+    }
+   ],
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The stored texts prevail over ADR 0002, the column access matrix, the project guidelines of the battery passport application and the DIN access-rights analysis on all seven points, as Francesco already decided for the internal resistance in Q-979: the internal battery cell and pack resistance, the hazardous substances and critical raw materials present, the date of manufacture, the manufacturer's postal address and the responsible sourcing information are public, the detailed composition serves repairers, remanufacturers, second-life operators and recyclers, and DIN 6.7.2.5 c) gives the certified usable battery energy to persons with a legitimate interest, so the matrix may not cite DIN 6.7.2.5 to make the energy content public. The owners of the four documents correct them to the stored texts.",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 2",
+      "quote": "A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "path": "requirements/Owner_documents-extracts/Vision_of_the_end_state-extract.md",
+      "locator": "Section 1, sources of truth for behaviour",
+      "quote": "The passport demo, outside it, follows the regulation."
+     },
+     {
+      "document": "a document of the battery passport application, not published",
+      "locator": "Q-979, answer",
+      "quote": "Yes. The initial internal resistance of the battery model is public under Annex XIII point 1(o)."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 1, introduction",
+      "quote": "A battery passport shall include the following information relating to the battery model, which shall be accessible to the public:"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 1(o)",
+      "quote": "internal battery cell and pack resistance;"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 1(b)",
+      "quote": "hazardous substances present in the battery, other than mercury, cadmium or lead, and critical raw materials present in the battery"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 1(a)",
+      "quote": "the information specified in Part A of Annex VI;"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex VI, Part A, point 4",
+      "quote": "the date of manufacture (month and year)"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Art. 38(7), cited by Annex VI, Part A, point 1",
+      "quote": "their name, registered trade name or registered trade mark, their postal address, indicating a single contact point"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 1(d)",
+      "quote": "information on responsible sourcing as indicated in the report on battery due diligence policy referred to in Article 52(3)"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Art. 77(2), third subparagraph, point (a)",
+      "quote": "allow repairers, remanufacturers, second-life operators and recyclers to conduct their respective economic activities in accordance with this Regulation"
+     },
+     {
+      "document": "DIN DKE SPEC 99100:2025-02",
+      "locator": "6.7.2.5 c)",
+      "quote": "The information on certified usable battery energy should be accessible to persons with a legitimate interest."
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-130",
+   "name": "an erratum for the DIN access rights analysis",
+   "topic": "project documents to correct",
+   "question": "Should the DIN access-rights analysis (the analysis \"Battery Passport Access Rights to DIN 99100 Data Fields\") receive an erratum for its lifecycle status 'sorted', which is not one of the five statuses of Annex XIII point 4(c), and for citing Art. 73(2) for the immutability of the passport history?",
+   "why": "The analysis is a project document kept beside the regulations, and its errors would pass into the access-rights requirements of the passport-content area. Art. 73(2) concerns the state of health information for end-users.",
+   "options": [],
+   "recommendation": {
+    "text": "Yes; the stored text settles both points.",
+    "evidence": [
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Annex XIII point 4(c)",
+      "quote": "information on the status of the battery, defined as 'original', 'repurposed', 're-used', 'remanufactured' or 'waste'"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542 consolidated 2026-08-13.xhtml",
+      "locator": "Art. 73(2)",
+      "quote": "The information referred to in paragraph 1, point (a), shall be made available to end-users and third parties acting on their behalf"
+     }
+    ]
+   },
+   "blocks": [],
+   "relatedRequirements": [],
+   "askedBy": [
+    "lifecycle"
+   ],
+   "mergedFrom": [
+    "questions.json[35] lifecycle Q-LIFE-20 (about StR-LIFE-001)"
+   ],
+   "raisedBy": "questions",
+   "answer": {
+    "date": "2026-10-26",
+    "by": "Francesco",
+    "text": "Derived from Francesco's expressed intent (\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26)): The DIN access-rights analysis (the analysis \"Battery Passport Access Rights to DIN 99100 Data Fields\") receives a second erratum, a separate dated file beside it like the erratum of 2026-06-22, which corrects the lifecycle status 'sorted' (not one of the five statuses of Annex XIII point 4(c)) and the citation of Art. 73(2) for the immutability of the passport history (Art. 73(2) concerns the state of health information for end-users).",
+    "derivedFrom": [
+     {
+      "path": "requirements/Owner_documents-extracts/Project_guidelines-extract.md",
+      "locator": "Convergence invariants, invariant 2",
+      "quote": "A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is."
+     },
+     {
+      "document": "a document of the battery passport application, not published",
+      "locator": "Section 11, decision D36 (every folder has a rule)",
+      "quote": "Every folder has a rule, and a README where it has rules of its own."
+     },
+     {
+      "document": "a document of the battery passport application, not published",
+      "locator": "Rules",
+      "quote": "A stored text is never edited; a correction is a separate file that names the text and the date, as the erratum does."
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Annex XIII point 4(c)",
+      "quote": "information on the status of the battery, defined as 'original', 'repurposed', 're-used', 'remanufactured' or 'waste'"
+     },
+     {
+      "path": "sources/EU/Regulation EU 2023-1542/Regulation EU 2023-1542.md",
+      "locator": "Art. 73(2)",
+      "quote": "The information referred to in paragraph 1, point (a), shall be made available to end-users and third parties acting on their behalf"
+     }
+    ]
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-200",
+   "name": "how the dataset delivers each field's access group",
+   "topic": "product scope",
+   "question": "In which form shall the application deliver the access group of each field of the battery passport dataset, given that no field of the seven IDTA-02035 aspect models carries one: an additional aspect model of the application on the battery's twins (CX-0160 base 1.2) that names the access group for each twin level, field path and list element; one submodel per access group, each offered with its own access policy; or no marking, the passport service provider applying the access groups itself?",
+   "why": "CX-0160 1.1.0 puts 'full regulatory-compliance e.g. for providing public information without access-restrictions' out of scope (base 1.1, CX-0160-3 1.1) and gives the intermediary that publishes the passport 'role-based access control on restricted data' (CX-0160-3 5.2); its base 1.2 (non-normative) lets data owners 'add complementary information via additional aspect models'. The access groups mix inside one aspect (the Digital Nameplate holds public identification beside the legitimate-interest LifeCycleStage and DateOfPuttingIntoService), inside one list element (a Material Composition BatteryMaterials entry carries the public critical raw material beside the restricted mass and location), inside one field (Circularity SafetyMeasures.SafetyInstructions references both the public safety instructions for waste batteries of Art. 74(1)(d), SyR-PASS-137, \"Safety instructions to handle waste batteries, public\", and the restricted safety measures of Annex XIII point 2(d), SyR-PASS-115, \"Safety measures for the battery model, restricted\") and across twin levels (a Technical Data value is public as a model value under Annex XIII point 1 and legitimate interest as the individual battery's value under point 4(a), SyR-PASS-149, \"Individual battery performance values marked legitimate interest\"). A connector access policy works per data offer, and the finest data asset of CX-0160 base 4.1 is one submodel, so one offer per access group separates the groups only by splitting the payloads of the seven models. Today only the passport demo holds tiers (EL-PASSPORTDEMO, the column access matrix of the battery passport application), and decisions.json holds no question on the form. The passport demo screens take each field's tier from the same marking (SyR-PASS-207, \"Passport screens show each field only to its access group\"); the owner-rules and operations requirements on tier-driven visibility (SyR-DEV-074, \"Passport field visibility decided by its access tier\", SyR-QUAL-009, \"Passport demo components render for every role without error\") must use the same source. Every passport-content measure that checks 'the access marking gives' a group is recorded as not run until this is answered.",
+   "options": [
+    "An additional aspect model of the application, on the instance and the type twin, that lists the access group of every field by twin level, field path and list element, offered with the seven aspects under the usage purpose cx.circular.dpp:1.",
+    "One submodel per access group, each data offer with its own access policy, so that the connector enforces the groups.",
+    "No marking: the passport service provider applies the access groups of Annex XIII, and the requirements that mark fields are reworded to state the group the provider must apply."
+   ],
+   "blocks": [
+    "SyR-PASS-011"
+   ],
+   "raisedBy": "system integration review sys-data",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco sets the form in which the dataset delivers the access group of each field. a development milestone of the battery passport application (connector correctness and policy configuration) has a submodel service check 'that a valid contract covers the requested submodel at the requested access tier' and requires that 'The public data tier is served separately from the contracted tiers', which is the connector enforcement of option 2 for the exchanges with partners. The vision makes the passport service provider publish the passport ('binds that provider, not this application', of Art. 78), which is the reading of option 3 for the hand-off. No text says how a provider that receives the complete dataset learns the group of each field when the groups mix inside one aspect, one list element or one field, and no text resolves the difference between the two readings.",
+    "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
+   },
+   "history": [
+    {
+     "date": "2026-11-16",
+     "change": "carried over from the private registry of the battery passport application",
+     "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
+     "approver": ""
+    }
+   ]
+  },
+  {
+   "id": "Q-202",
+   "name": "the carrier for lifecycle data the aspect models lack",
+   "topic": "product scope",
+   "question": "Which carrier shall deliver to the passport service provider the lifecycle data that the seven IDTA-02035 aspects cannot hold: the link from a new passport to the original passport or passports with the operation that created it (Art. 77(7)), the mark that a passport is superseded, the description of the treatments applied and of the changes versus 'original' and descriptive terms such as 'repaired' (DIN 3.13), the repair history (DIN 6.1.3.7 f)), the history of responsible economic operators, the original placing date that decides the exemption of Art. 10(4), and the performance and durability values recorded at placing and at each change of status, each kept beside the later ones (Annex XIII point 4(a))?",
+   "why": "The seven aspects bundled in a module of the reference server carry the battery status (Digital Nameplate LifeCycleStage) and one operator identifier, and Technical Data holds one value per element, so a passport that keeps its identity through a repair (model A) cannot deliver both the value at placing and the value after the repair. The twin plan carried the link as BatteryPass 6.1.0 metadata.predecessor (a file of the battery passport application, row 28 and its diagram), which is not among the models CX-0160 references. CX-0160 base 1.2 (non-normative) lets data owners 'add complementary information via additional aspect models'; the application already defines io.ichnos aspects such as PassportProvenance and SingleLevelBomAsMaintained (whose standing is Q-082, \"whether the as maintained bill of material aspect is forbidden\" and Q-058, \"whether to propose the as maintained bill of material aspect\"). Whether these requirements bind the application at all is Q-034 (\"whether the battery regulation requirements bind the delivered dataset\"); the access groups of the link and of the repair history are Q-029 (\"the access tier for links to original passports\") and Q-030 (\"the access tier for a battery's repair history\"), those of the treatment descriptions Q-703 (\"the access tier for treatment descriptions and descriptive status terms\").",
+   "options": [
+    "An additional aspect model of the application on the battery's PartInstance twin, offered with the passport aspects under cx.circular.dpp:1.",
+    "The twin structure where it fits (the link as a relation of the new twin to the original twins, the repair as SingleLevelBomAsMaintained), and an additional aspect model for the rest.",
+    "None: the requirements that need a carrier move to the passport demo (Q-034, \"whether the battery regulation requirements bind the delivered dataset\") or wait for a CX-0160 version that carries the data, which Ichnos proposes to the DPP Expert Group."
+   ],
+   "blocks": [
+    "SyR-LIFE-019",
+    "SyR-LIFE-020",
+    "SyR-LIFE-024"
+   ],
+   "raisedBy": "system integration review sys-data",
+   "derivation": {
+    "date": "2026-10-26",
+    "outcome": "open",
+    "missing": "No stored text of Francesco names one carrier for every lifecycle item that the aspect models lack. The vision decides two items: 'a remanufacture creates a new twin and a new passport whose metadata.predecessor names the original passport', which under CX-Titan is a property of the BatteryPass 6.1.0 aspect (decision Q-985), and 'A repair records a change of composition on the same twin' through SingleLevelBomAsMaintained. No text names the carrier of the mark that a passport is superseded, of the treatment descriptions and the descriptive term 'repaired', of the repair history entries, of the history of responsible economic operators, of the original placing date, or of the performance and durability values recorded at placing and at each change of status.",
     "reason": "\"the open decisions must be derived by the intent expressed by me\" (Francesco, 2026-10-26): no stored text of Francesco decides it"
    },
    "history": [

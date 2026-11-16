@@ -34,11 +34,25 @@ Extract of the vision of the end state of the battery passport application ("EU 
 
 > It lets a company discover the connectors of the dataspace, read their data offers and usage policies, and negotiate contracts, separate from the marketplace
 
-> The complete, verified dataset goes to a Digital Product Passport Service Provider (DPPSP), Spherity or another, which publishes the passport.
+> The complete, verified dataset goes to a Digital Product Passport Service Provider (DPPSP)
 
-> Spherity or another, which publishes the passport
+[the passage continues in the owner's document]
+
+> which publishes the passport
+
+[the passage continues in the owner's document]
 
 > It does not communicate with the EU database.
+
+## Section 0 (what the application is), first bullet
+
+> complete, verified dataset goes to a Digital Product Passport Service Provider (DPPSP)
+
+[the passage continues in the owner's document]
+
+## Section 0 (what the application is), third bullet
+
+> A data consumer finds the offer in the provider's catalogue, negotiates the contract and its policy over the Dataspace Protocol, receives a contract agreement and pulls the data through a transfer process
 
 ## Section 0.1
 
@@ -47,6 +61,10 @@ Extract of the vision of the end state of the battery passport application ("EU 
 ## Section 1, anchors
 
 > Repurposing serves a different purpose; re-use serves the same purpose
+
+## Section 1, sources of truth for behaviour
+
+> The passport demo, outside it, follows the regulation.
 
 ## Section 2, invariant 2
 

@@ -38,6 +38,10 @@ Extract of the project guidelines of the battery passport application (working t
 
 > Behaviour is cited data, verified against the texts in the repository.
 
+> A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is.
+
+> Never guess a citation; never claim one can't be verified.
+
 ## Convergence invariant 2 (behaviour is cited data, verified against the texts in the repository)
 
 > A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is.
@@ -49,6 +53,8 @@ Extract of the project guidelines of the battery passport application (working t
 ## Convergence invariants, invariant 2
 
 > Behaviour is cited data, verified against the texts in the repository.
+
+> A citation the stored text does not support is a defect, and a rule whose text is not stored waits until it is.
 
 > Every rule has one source of truth that carries its citation: a Catena-X standard for the data layer
 

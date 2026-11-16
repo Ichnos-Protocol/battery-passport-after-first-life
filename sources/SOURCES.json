@@ -1013,6 +1013,39 @@
    "license": "Reuse authorised (Commission Decision 2011/833/EU)",
    "notice": "© European Union, https://eur-lex.europa.eu, 1998-2026. Reuse is authorised under Commission Decision 2011/833/EU, provided the source is acknowledged. Only the Official Journal of the European Union is authentic.",
    "form": "Markdown conversion of the Official Journal PDF, made with a PDF conversion tool."
+  },
+  {
+   "path": "Tractus-X/kits-26.09/circularity-kit/adoption-view.md",
+   "sha256": "df6fe5390f703a3e48ebcddbeb22aab746ffc0c6656848cdd0d51ddb1eba5468",
+   "bytes": 75860,
+   "family": "Eclipse Tractus-X KITs, release 26.09",
+   "title": "KIT documentation of eclipse-tractusx/eclipse-tractusx.github.io, path docs-kits_versioned_docs/version-26.09/kits/circularity-kit/adoption-view.md",
+   "origin": "https://github.com/eclipse-tractusx/eclipse-tractusx.github.io/blob/dc71de65307cefeacdadc6722e8ffc44016dd38a/docs-kits_versioned_docs/version-26.09/kits/circularity-kit/adoption-view.md",
+   "license": "CC-BY-4.0",
+   "notice": "Copyright of the contributors to the Eclipse Foundation; the NOTICE section of each documentation file names its copyright holders. The upstream repository licenses code under Apache-2.0 and non-code under CC-BY-4.0.",
+   "form": "Byte copy of the upstream file at the pinned commit"
+  },
+  {
+   "path": "Tractus-X/kits-26.09/industry-core-kit/software-development-view/notifications.mdx",
+   "sha256": "dae6167b44d117b5bb3cf64cc09f865fd34608aba3ba509ba2c04781127d0e20",
+   "bytes": 10616,
+   "family": "Eclipse Tractus-X KITs, release 26.09",
+   "title": "KIT documentation of eclipse-tractusx/eclipse-tractusx.github.io, path docs-kits_versioned_docs/version-26.09/kits/industry-core-kit/software-development-view/notifications.mdx",
+   "origin": "https://github.com/eclipse-tractusx/eclipse-tractusx.github.io/blob/dc71de65307cefeacdadc6722e8ffc44016dd38a/docs-kits_versioned_docs/version-26.09/kits/industry-core-kit/software-development-view/notifications.mdx",
+   "license": "CC-BY-4.0",
+   "notice": "Copyright of the contributors to the Eclipse Foundation; the NOTICE section of each documentation file names its copyright holders. The upstream repository licenses code under Apache-2.0 and non-code under CC-BY-4.0.",
+   "form": "Byte copy of the upstream file at the pinned commit"
+  },
+  {
+   "path": "Tractus-X/kits-26.09/traceability-kit/adoption-view.mdx",
+   "sha256": "fd516f31cda38b293f81d0c9adcc4ccbea41e58d11a57f60052708b669125f77",
+   "bytes": 16252,
+   "family": "Eclipse Tractus-X KITs, release 26.09",
+   "title": "KIT documentation of eclipse-tractusx/eclipse-tractusx.github.io, path docs-kits_versioned_docs/version-26.09/kits/traceability-kit/adoption-view.mdx",
+   "origin": "https://github.com/eclipse-tractusx/eclipse-tractusx.github.io/blob/dc71de65307cefeacdadc6722e8ffc44016dd38a/docs-kits_versioned_docs/version-26.09/kits/traceability-kit/adoption-view.mdx",
+   "license": "CC-BY-4.0",
+   "notice": "Copyright of the contributors to the Eclipse Foundation; the NOTICE section of each documentation file names its copyright holders. The upstream repository licenses code under Apache-2.0 and non-code under CC-BY-4.0.",
+   "form": "Byte copy of the upstream file at the pinned commit"
   }
  ]
 }
