@@ -21,7 +21,7 @@
 // Lists every file that lacks the license header of its kind (TRG 7.02) or,
 // for a Markdown file, the NOTICE section (TRG 7.07).
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 // Legal texts and files of a format without comments.
 const EXEMPT = new Set([
@@ -52,6 +52,8 @@ function lacksNotice(path, text) {
 const files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], { encoding: "utf8" })
   .split("\n")
   .filter(Boolean)
+  // A file deleted in the working tree and not yet staged is still listed by git.
+  .filter((path) => existsSync(path))
   .filter((path) => !EXEMPT.has(path) && !EXEMPT_PREFIXES.some((prefix) => path.startsWith(prefix)));
 
 const missing = files.filter((path) => lacksNotice(path, readFileSync(path, "utf8")));

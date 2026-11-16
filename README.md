@@ -46,10 +46,10 @@ node scripts/requirements-check.mjs
 node scripts/check-private-references.mjs
 ```
 
-The specification check needs Python 3. Run the check at the repository root:
+The specification check needs Node.js only. Run the specification check at the repository root:
 
 ```bash
-python scripts/spec_gate_check.py docs/architecture/implementation_plan.md --src . --screens-heading "Interfaces" --id-column "Endpoint id" --testid-prefix "EP-"
+node scripts/spec-gate-check.mjs docs/architecture/implementation_plan.md --src . --screens-heading "Interfaces" --id-column "Endpoint id" --testid-prefix "EP-"
 ```
 
 ## License

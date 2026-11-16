@@ -23,6 +23,7 @@ All notable changes to this repository are documented in this file. The format f
 
 - The process requirements PrR-CXD-026 (Three proposed models in the sldt-semantic-models layout) and PrR-CXD-028 (One conformance test per criterion CX-0160-4-CAC-001 to 016) and their verification measures name the three proposed aspect models and the sixteen conformance criteria.
 - The citation catalogue holds 287 quotes. The numbers 265 and 266 are not used.
+- Changed: the specification checker is a Node.js script, `scripts/spec-gate-check.mjs`. The Node.js script replaces `scripts/spec_gate_check.py` and takes the same options.
 - The private reference check `scripts/check-private-references.mjs` excepts the expression of the letter M and one digit inside the two lock files `server/package-lock.json` and `tck/package-lock.json`, which a base64 integrity value can hold.
 - The field `implementation` of the 31 software requirements that the reference server does not build names the reason and the owner's decision of 2026-11-16.
 

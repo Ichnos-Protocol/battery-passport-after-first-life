@@ -22,7 +22,7 @@
 // that names a private repository, a private path, a person, a host or a
 // service of a private deployment, a contract matter, or an e-mail address.
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 // The names and paths that no file of this repository may hold.
 const PRIVATE_REFERENCE = new RegExp(
@@ -111,6 +111,8 @@ function hitsOfLine(path, line) {
 const files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], { encoding: "utf8" })
   .split("\n")
   .filter(Boolean)
+  // A file deleted in the working tree and not yet staged is still listed by git.
+  .filter((path) => existsSync(path))
   .filter((path) => path !== OWN_FILE && !EXEMPT_PREFIXES.some((prefix) => path.startsWith(prefix)));
 
 let count = 0;
