@@ -672,8 +672,8 @@
   },
   {
    "id": "PrR-CXD-026",
-   "title": "Two proposed models in the sldt-semantic-models layout",
-   "statement": "The reference implementation repository battery-passport-after-first-life shall hold the models BatteryPassportLifecycle and BatteryPassportSuccessors of the CX-0160-4 amendment proposal in the layout of the Tractus-X sldt-semantic-models repository: models/<namespace>/<version>/<Aspect>.ttl with a metadata.json of status draft beside each model, a RELEASE_NOTES.md per namespace, and the generated files in gen/.",
+   "title": "Three proposed models in the sldt-semantic-models layout",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold the three proposed aspect models BatteryPassportLifecycle, BatteryPassportSuccessors and BatteryPassportAccessMap of the CX-0160-4 amendment proposal in the layout of the Tractus-X sldt-semantic-models repository: models/<namespace>/<version>/<Aspect>.ttl with a metadata.json of status draft beside each model, a RELEASE_NOTES.md per namespace, and the generated files in gen/.",
    "kind": "process",
    "perimeter": "application",
    "tracesTo": [],
@@ -717,6 +717,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the three proposed aspect models of draft 0.6 of the proposal (title before: \"Two proposed models in the sldt-semantic-models layout\"; statement before: \"The reference implementation repository battery-passport-after-first-life shall hold the models BatteryPassportLifecycle and BatteryPassportSuccessors of the CX-0160-4 amendment proposal in the layout of the Tractus-X sldt-semantic-models repository: models/<namespace>/<version>/<Aspect>.ttl with a metadata.json of status draft beside each model, a RELEASE_NOTES.md per namespace, and the generated files in gen/.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept, start stage 5\", on the recommendation to reword for the three proposed models and the sixteen criteria of draft 0.6 of the proposal",
+     "approver": "Francesco"
     }
    ]
   },
@@ -774,8 +780,8 @@
   },
   {
    "id": "PrR-CXD-028",
-   "title": "One conformance test per criterion CX-0160-4-CAC-001 to 015",
-   "statement": "The reference implementation repository battery-passport-after-first-life shall hold in tck/ one conformance test for each criterion CX-0160-4-CAC-001 to CX-0160-4-CAC-015 of Annex A of the CX-0160-4 amendment proposal.",
+   "title": "One conformance test per criterion CX-0160-4-CAC-001 to 016",
+   "statement": "The reference implementation repository battery-passport-after-first-life shall hold in tck/ one conformance test for each of the sixteen conformance criteria CX-0160-4-CAC-001 to CX-0160-4-CAC-016 of Annex A of the CX-0160-4 amendment proposal.",
    "kind": "process",
    "perimeter": "application",
    "tracesTo": [],
@@ -819,6 +825,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the sixteen conformance criteria of draft 0.6 of the proposal (title before: \"One conformance test per criterion CX-0160-4-CAC-001 to 015\"; statement before: \"The reference implementation repository battery-passport-after-first-life shall hold in tck/ one conformance test for each criterion CX-0160-4-CAC-001 to CX-0160-4-CAC-015 of Annex A of the CX-0160-4 amendment proposal.\")",
+     "reason": "Francesco, 2026-11-16: \"Accept, start stage 5\", on the recommendation to reword for the three proposed models and the sixteen criteria of draft 0.6 of the proposal",
+     "approver": "Francesco"
     }
    ]
   },

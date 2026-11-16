@@ -114,6 +114,23 @@ provider), SwR-CXCLIENT-114 (received passport inputs written only for the respo
 (new dataset fields set at the issue of a new passport), approve stage 3 (the public requirements registry) and start
 stage 4 (the documents of the public repository).
 
+## The six points of stage 4
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you accept my
+recommendations on the six points, so stage 5 can start?":
+
+> Accept, start stage 5
+
+The words accept six recommendations: (1) the process requirements PrR-CXD-026 (proposed models in the layout of the
+Tractus-X semantic model repository) and PrR-CXD-028 (one conformance test per criterion) are reworded for the three
+proposed models and the sixteen criteria of draft 0.6 of the proposal; (2) the two citations of the owner's erratum to
+the access rights analysis leave the public citation catalogue; (3) the legal basis of the battery status is Annex XIII
+point 4(c); (4) the list selector of the access map's path follows JSONPath (RFC 9535), decided with the model file;
+(5) three inconsistencies of the proposal are corrected in a draft 0.7 (the version named in Annex A, the number of
+operations in decision D5 of Annex C, and the normative references of section 6.1); (6) the check for private
+references keeps its exception for the conduct address of the Eclipse Foundation. The words also start stage 5, the
+specification of the standalone reference server.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).

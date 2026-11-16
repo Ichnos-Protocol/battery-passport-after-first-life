@@ -21,16 +21,17 @@ The repository is in its setup. The table states what each folder holds on 2026-
 
 | Folder | Content | State |
 |---|---|---|
-| `docs/proposal/` | The text of the proposal CX-0160-4 | Draft 0.6 of 2026-11-16 |
+| `docs/proposal/` | The text of the proposal CX-0160-4 | Draft 0.7 of 2026-11-16 |
 | `docs/api/` | The OpenAPI specification and the JSON schemas of the lifecycle notifications | Not yet written |
-| `docs/` | The methodology, the citation catalogue with 289 quotes, the list of the items that no standard covers, and the lessons from a first implementation | Written, listed in `docs/README.md` |
+| `docs/` | The methodology, the citation catalogue with 287 quotes, the list of the items that no standard covers, and the lessons from a first implementation | Written, listed in `docs/README.md` |
+| `docs/architecture/` | The implementation specification of the standalone reference server, `implementation_plan.md` | Version 1 of 2026-11-16; three open decisions of the owner |
 | `docs/` | Architecture, administration guide, adoption view, development view, operations view | Not yet written |
 | `models/` | The three proposed aspect models (Semantic Aspect Meta Model, SAMM) | Not yet written |
 | `server/` | The reference server (Node.js 24, Express, PostgreSQL) | Not yet written |
 | `tck/` | The conformance test kit, one test per conformance criterion | Not yet written |
 | `requirements/` | The requirements registry, from stakeholder requirements to verification measures | 539 records, listed in `requirements/README.md` |
 | `sources/` | The source texts that their licenses allow to redistribute | 95 files, listed in `sources/SOURCES.json` |
-| `scripts/` | The checks of the repository | The license header check, the source register check, the requirement check and the private reference check |
+| `scripts/` | The checks of the repository | The license header check, the source register check, the requirement check, the private reference check and the specification check |
 
 ## Installation and usage
 
@@ -43,6 +44,12 @@ node scripts/check-license-headers.mjs
 node scripts/check-sources.mjs
 node scripts/requirements-check.mjs
 node scripts/check-private-references.mjs
+```
+
+The specification check needs Python 3. Run the check at the repository root:
+
+```bash
+python scripts/spec_gate_check.py docs/architecture/implementation_plan.md --src . --screens-heading "Interfaces" --id-column "Endpoint id" --testid-prefix "EP-"
 ```
 
 ## License

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | Draft proposal for the Catena-X Digital Product Passport (DPP) Expert Group; not adopted, not normative |
-| Version | 0.6 (drafts 0.1 to 0.3 were revised after three independent reviews; draft 0.5 added the points for discussion of Annex D; draft 0.6 adds the proposed access map model of section 3.4, the rules of section 2.2 items 8 to 12, the criterion CX-0160-4-CAC-016 and Annex B point 19, and changes Annex B point 11) |
+| Version | 0.7 (drafts 0.1 to 0.3 were revised after three independent reviews; draft 0.5 added the points for discussion of Annex D; draft 0.6 added the proposed access map model of section 3.4, the rules of section 2.2 items 8 to 12, the criterion CX-0160-4-CAC-016 and Annex B point 19, and changed Annex B point 11; draft 0.7 states that `AccessMapEntry.path` is a JSONPath query (RFC 9535) in section 3.4.2, adds RFC 9535 and the seven IDTA-02035 parts to the normative references of section 6.1, names the current draft in Annex A and names the four operations in decision D5 of Annex C) |
 | Date | 2026-11-16 |
 | Author | Francesco Maltoni, Ichnos Protocol, ordinary member of the Catena-X Association and member of the Catena-X Digital Product Passport Expert Group |
 | Document | proposed use case document CX-0160-4 of CX-0160 Battery Passport Data Management, beside CX-0160-1, CX-0160-2 (announced) and CX-0160-3, with one proposed change of the base document in its section 4.2 (section 4.2 of this document) |
@@ -341,7 +341,7 @@ The successors model carries a `samm-c:List` `successors` of the entity `Success
 | `entries` | `samm-c:List` of `AccessMapEntry` with `samm-c:LengthConstraint` minValue 1 | yes | one entry per field of the seven IDTA-02035 aspect models that the data provider serves (section 2.2 item 9) |
 | `AccessMapEntry.aspect` | `samm-c:Text` | yes | the identifier (urn) of the aspect model that the entry covers |
 | `AccessMapEntry.twinLevel` | `samm-c:Enumeration`: `PartType`, `PartInstance` | yes | the level of the digital twin on which the entry applies to the field |
-| `AccessMapEntry.path` | `samm-c:Text` | yes | the path of the field in the payload of the aspect model, with a selector for list elements where the entry covers only some elements of a list |
+| `AccessMapEntry.path` | `samm-c:Text` | yes | the path of the field as a JSONPath query (RFC 9535), relative to the root of the payload of the aspect model; a selector of RFC 9535 names the list elements where the entry covers only some elements of a list |
 | `AccessMapEntry.accessGroup` | `samm-c:Enumeration`: `public`, `legitimateInterestModel`, `authorities`, `legitimateInterestBattery` | yes | the access group of the field, as Table 3.4 states |
 | `AccessMapEntry.legalBasis` | `samm-c:Text` | yes | the point and the letter of Annex XIII of Regulation (EU) 2023/1542 that list the field |
 
@@ -364,21 +364,21 @@ Example payload with three entries (non-normative):
     {
       "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
       "twinLevel": "PartInstance",
-      "path": "ManufacturerName",
+      "path": "$.ManufacturerName",
       "accessGroup": "public",
       "legalBasis": "Annex XIII point 1(a)"
     },
     {
       "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate",
       "twinLevel": "PartInstance",
-      "path": "LifeCycleStage",
+      "path": "$.LifeCycleStage",
       "accessGroup": "legitimateInterestBattery",
       "legalBasis": "Annex XIII point 4(c)"
     },
     {
       "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition",
       "twinLevel": "PartInstance",
-      "path": "NumberOfFullCycles",
+      "path": "$.NumberOfFullCycles",
       "accessGroup": "legitimateInterestBattery",
       "legalBasis": "Annex XIII point 4(d)"
     }
@@ -466,7 +466,8 @@ The processes repeat the obligations of sections 2 to 4 in their order of execut
 
 - CX-0002 Digital Twins in Catena-X; CX-0003 SAMM Aspect Meta Model; CX-0018 Dataspace Connectivity; CX-0126 Industry Core: PartType; CX-0127 Industry Core: Part Instance; CX-0151 Industry Core: Basics 1.1.0; CX-0152 Policy Constraints for Data Exchange; CX-0160 Battery Passport Data Management 1.1.0 (base and CX-0160-3); CX-0167 BPN-DID Resolution Service; in the versions of the CX-Neptune release.
 - CX-0131 Circularity Core 1.1.1.
-- IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0; IDTA-02035-4 Technical Data for Battery Passport 1.0.0; IDTA-02099-1 DPP Metadata 1.0.0.
+- IDTA-02035-1 Digital Nameplate for Battery Passport 1.0.0; IDTA-02035-2 Handover Documentation for Battery Passport 1.0.0; IDTA-02035-3 Carbon Footprint for Battery Passport 1.0.0; IDTA-02035-4 Technical Data for Battery Passport 1.0.0; IDTA-02035-5 Product Condition for Battery Passport 1.0.0; IDTA-02035-6 Material Composition for Battery Passport 1.0.0; IDTA-02035-7 Circularity for Battery Passport 1.0.0; IDTA-02099-1 DPP Metadata 1.0.0.
+- RFC 9535 JSONPath: Query Expressions for JSON.
 
 ### 6.2 NON-NORMATIVE REFERENCES
 
@@ -485,7 +486,7 @@ A reference implementation is in preparation by the author.
 
 ## Annex A: Conformity Assessment Criteria
 
-> General information: cxId CX-0160-4 (proposed); name Battery Passport after the First Passport; capability Battery Passport Data Management; version 0.3 (draft); release CX-Neptune.
+> General information: cxId CX-0160-4 (proposed); name Battery Passport after the First Passport; capability Battery Passport Data Management; version 0.7 (draft); release CX-Neptune.
 
 Every criterion has the assessment method Inspection unless the criterion names another, and is not automatable unless the criterion says so.
 
@@ -563,7 +564,7 @@ Art. 77(7), second subparagraph, transfers the responsibility for the passport t
 
 **D4.** The recycling result goes to the producer and the responsible operator of the ended passport, and to the original issuers of the predecessor passports under contract. The proposal rejects a notice passed from operator to operator along the predecessor links, which fails when an operator in between leaves the dataspace, and subscriptions copied to each new passport, which need a forward link on every passport.
 
-**D5.** The lifecycle notifications form a second notification API under CX-0151 with three operations. The proposal rejects new event types in the Digital Twin Event API, whose events concern submodels, not passports.
+**D5.** The lifecycle notifications form a second notification API under CX-0151 with the four operations of Table 4.3: NewPassportIssued, BatteryRepaired, BatteryBecameWaste and PassportEnded. The proposal rejects new event types in the Digital Twin Event API, whose events concern submodels, not passports.
 
 **D6.** The product condition submodel is offered to the purchaser and its agent, and the purchaser shares further under draft Art. 2(4). The proposal rejects the access of every used-battery operator, because draft Art. 1(4) names only the purchaser and its agent.
 
