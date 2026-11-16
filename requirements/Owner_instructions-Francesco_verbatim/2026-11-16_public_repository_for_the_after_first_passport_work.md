@@ -161,6 +161,24 @@ The words also accept that five registry corrections are brought with their old 
 stored text stay configuration values marked as not verified, and that the two shared Catena-X models needed for the
 validation of the proposed models are copied into the source texts of the public repository.
 
+## The ten registry texts and two further points
+
+Francesco's words, verbatim, in his message of 2026-11-16 that answered the question "Do you approve the ten registry
+texts and my two recommendations?" (version 2 of the specification of the reference server):
+
+> Approve all
+
+The words approve ten registry texts of the public registry: the rewording of the software requirement on the waste
+successor (the waste step records the successor that the notification names); the rewording of the software requirement
+on the database trigger that refuses a change of a passport's manufacturer (the table passports, the column
+manufacturer_bpnl, every database role); the rewording of three software requirements that named an ownership service
+(direct re-use, the purchaser for the access to individual battery information, the previous holder's access); three
+measures that count three proposed models and sixteen conformance tests; the description of the architecture element
+background work; and the status "agreed" of the allocation of the requirements to the ten elements and twelve
+interfaces. The words also accept two recommendations: the next draft of the proposal names version 2.1.0 of the shared
+UUID model, and the system requirement on the producer that takes over a waste battery's passport is reworded, with
+both statements shown to Francesco before the change.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).

@@ -4028,8 +4028,8 @@
   },
   {
    "id": "SwR-DATASET-191",
-   "title": "Waste step records the current passport's producer, not the actor",
-   "statement": "The terminal transition of the passport dataset lifecycle shall record as the responsible operator of a passport that reaches 'waste' and passes to its producer the manufacturer recorded on that passport row, without writing the acting company into the manufacturer of record.",
+   "title": "Waste step records the named successor, never the actor as manufacturer",
+   "statement": "The terminal transition of the passport dataset lifecycle shall record as the responsible operator of a passport that reaches 'waste' the successor that the BatteryBecameWaste notification names, with the role that the notification names, without writing the successor or the acting company into the manufacturer of record.",
    "kind": "functional",
    "element": "EL-DATASET",
    "tracesTo": [
@@ -4082,6 +4082,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the reference server (before: {\"title\":\"Waste step records the current passport's producer, not the actor\",\"statement\":\"The terminal transition of the passport dataset lifecycle shall record as the responsible operator of a passport that reaches 'waste' and passes to its producer the manufacturer recorded on that passport row, without writing the acting company into the manufacturer of record.\"})",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The ten registry texts and two further points",
+     "quote": "Approve all"
     }
    ]
   },
@@ -4269,8 +4283,8 @@
   },
   {
    "id": "SwR-DATASET-195",
-   "title": "Direct re-use recorded as an ownership event, never as a lineage step",
-   "statement": "The passport dataset lifecycle shall record a direct re-use of a battery that is not waste through the ownership event of the ownership service of the reference server on the existing passport row, writing no new passport row and no lineage edge.",
+   "title": "Direct re-use recorded as a change of purchaser, never as a lineage step",
+   "statement": "The passport dataset lifecycle shall record a direct re-use of a battery that is not waste as a change of purchaser in the access records of the existing passport, writing no new passport row and no lineage link.",
    "kind": "constraint",
    "element": "EL-DATASET",
    "tracesTo": [
@@ -4322,6 +4336,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the reference server (before: {\"title\":\"Direct re-use recorded as an ownership event, never as a lineage step\",\"statement\":\"The passport dataset lifecycle shall record a direct re-use of a battery that is not waste through the ownership event of the ownership service of the reference server on the existing passport row, writing no new passport row and no lineage edge.\"})",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The ten registry texts and two further points",
+     "quote": "Approve all"
     }
    ]
   },
@@ -4385,8 +4413,8 @@
   },
   {
    "id": "SwR-ACCESS-127",
-   "title": "Purchaser for point 4 access taken from the open ownership interval",
-   "statement": "The access control shall take the purchaser of a battery for the point 4 access decisions from the open interval of the ownership timeline that the sale event of the ownership service of the reference server opens.",
+   "title": "Purchaser for point 4 access taken from the open access record",
+   "statement": "The access control shall take the purchaser of a battery for the point 4 access decisions from the open access record with the role purchaser that the change of purchaser opens.",
    "kind": "data",
    "element": "EL-ACCESS",
    "tracesTo": [
@@ -4439,6 +4467,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the reference server (before: {\"title\":\"Purchaser for point 4 access taken from the open ownership interval\",\"statement\":\"The access control shall take the purchaser of a battery for the point 4 access decisions from the open interval of the ownership timeline that the sale event of the ownership service of the reference server opens.\"})",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The ten registry texts and two further points",
+     "quote": "Approve all"
     }
    ]
   },
@@ -5174,8 +5216,8 @@
   },
   {
    "id": "SwR-ACCESS-129",
-   "title": "Previous holder's point 4 access ends with the closed ownership interval",
-   "statement": "The access control shall deny the previous holder of a battery the point 4 information once the sale event of the ownership service of the reference server closes that holder's ownership interval.",
+   "title": "Previous holder's point 4 access ends with the closed access record",
+   "statement": "The access control shall deny the previous holder of a battery the point 4 information once the change of purchaser closes that holder's access record.",
    "kind": "functional",
    "element": "EL-ACCESS",
    "tracesTo": [
@@ -5221,6 +5263,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the reference server (before: {\"title\":\"Previous holder's point 4 access ends with the closed ownership interval\",\"statement\":\"The access control shall deny the previous holder of a battery the point 4 information once the sale event of the ownership service of the reference server closes that holder's ownership interval.\"})",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The ten registry texts and two further points",
+     "quote": "Approve all"
     }
    ]
   },
@@ -6061,7 +6117,7 @@
   {
    "id": "SwR-DATASET-208",
    "title": "Database trigger refuses a change of a passport's manufacturer",
-   "statement": "The relational database shall refuse, through a BEFORE UPDATE trigger on batteries, every UPDATE that changes manufacturer_id or the stored manufacturer identification of a passport row, for every role except the migrator role during a migration.",
+   "statement": "The relational database shall refuse, through a BEFORE UPDATE trigger on the table passports, every UPDATE that changes manufacturer_bpnl of a passport row, for every database role.",
    "kind": "constraint",
    "element": "EL-DATASET",
    "tracesTo": [
@@ -6100,6 +6156,20 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "title and statement reworded for the reference server (before: {\"title\":\"Database trigger refuses a change of a passport's manufacturer\",\"statement\":\"The relational database shall refuse, through a BEFORE UPDATE trigger on batteries, every UPDATE that changes manufacturer_id or the stored manufacturer identification of a passport row, for every role except the migrator role during a migration.\"})",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
+    }
+   ],
+   "sources": [
+    {
+     "source": "SRC-OWNER-INSTRUCTIONS",
+     "path": "requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md",
+     "locator": "The ten registry texts and two further points",
+     "quote": "Approve all"
     }
    ]
   }

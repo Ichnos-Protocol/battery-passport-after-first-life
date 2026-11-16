@@ -16,8 +16,8 @@
     "IF-CONNECTOR-BACKEND",
     "IF-BACKEND-RDB"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-ACCESS",
@@ -29,8 +29,8 @@
     "IF-BACKEND-RDB",
     "IF-CONNECTOR-BACKEND"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-TWINS",
@@ -42,8 +42,8 @@
     "IF-BACKEND-RDB",
     "IF-FRONTEND-BACKEND"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-SUBMODELS",
@@ -54,8 +54,8 @@
     "IF-CONNECTOR-BACKEND",
     "IF-FRONTEND-BACKEND"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-CXCLIENT",
@@ -66,8 +66,8 @@
     "IF-CXCLIENT-CONNECTOR",
     "IF-CXCLIENT-CONNECTOR-PULL"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-DATASET",
@@ -78,8 +78,8 @@
     "IF-DPPSP-CONNECTOR",
     "IF-CONNECTOR-BACKEND"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-RDB",
@@ -89,8 +89,8 @@
    "interfaces": [
     "IF-BACKEND-RDB"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-AUDIT",
@@ -101,20 +101,20 @@
     "IF-ACCESS-AUDIT",
     "IF-BACKEND-RDB"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-BGWORK",
    "name": "Background work",
-   "description": "The work that must not block a request, with its retries. The reference server of this repository has no such element; the record stays because carried requirements name it.",
+   "description": "The work that must not block a request: the outbox worker of the reference server, which sends each lifecycle notification after its not-before time and runs each pull of individual battery information.",
    "deployment": "per-customer",
    "interfaces": [
     "IF-CXCLIENT-CONNECTOR",
     "IF-TWINS-DTR"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "EL-CONNECTOR",
@@ -131,8 +131,8 @@
     "IF-PARTNER-PCF",
     "IF-DPPSP-CONNECTOR"
    ],
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   }
  ],
  "interfaces": [
@@ -142,8 +142,8 @@
    "to": "EL-BACKEND",
    "description": "REST with JSON bodies over HTTPS between a user interface and the HTTP API of the reference server.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-BACKEND-RDB",
@@ -151,8 +151,8 @@
    "to": "EL-RDB",
    "description": "PostgreSQL wire protocol between the HTTP API of the reference server and its database.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-ACCESS-AUDIT",
@@ -160,8 +160,8 @@
    "to": "EL-AUDIT",
    "description": "In-process recording of each access decision in the audit trail.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CXCLIENT-CONNECTOR",
@@ -169,8 +169,8 @@
    "to": "EL-CONNECTOR",
    "description": "Management API of the company's own connector: assets, policies, contract definitions, catalogue requests, contract negotiations and transfer processes.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CXCLIENT-CONNECTOR-PULL",
@@ -178,8 +178,8 @@
    "to": "EL-CONNECTOR",
    "description": "HTTP request to the data plane endpoint of a transfer, which pulls the provider's data or delivers a notification.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-TWINS-DTR",
@@ -187,8 +187,8 @@
    "to": "EL-DTR",
    "description": "Asset Administration Shell API of the Digital Twin Registry: registration, change and retirement of shell descriptors.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CONNECTOR-BACKEND",
@@ -196,8 +196,8 @@
    "to": "EL-BACKEND",
    "description": "HTTP from the provider's data plane to the HTTP API of the reference server, which serves the aspect payloads and receives the notifications.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CONNECTOR-DTR",
@@ -205,8 +205,8 @@
    "to": "EL-DTR",
    "description": "HTTP from the provider's data plane to the company's own Digital Twin Registry, which serves the lookups and the descriptor reads of the partners.",
    "external": false,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CONNECTOR-PARTNER",
@@ -214,8 +214,8 @@
    "to": "EL-PARTNER",
    "description": "Dataspace Protocol between the control planes of two companies: catalogue, contract negotiation and transfer process.",
    "external": true,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-CONNECTOR-PARTNER-DATA",
@@ -223,8 +223,8 @@
    "to": "EL-PARTNER",
    "description": "HTTP between the data planes of two companies after a transfer has started.",
    "external": true,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-PARTNER-PCF",
@@ -232,8 +232,8 @@
    "to": "EL-PCF",
    "description": "The exchange of the product carbon footprint with a partner through the connector.",
    "external": true,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   },
   {
    "id": "IF-DPPSP-CONNECTOR",
@@ -241,8 +241,8 @@
    "to": "EL-CONNECTOR",
    "description": "The digital product passport service provider, as a data consumer, negotiates the offers of the economic operator's connector and pulls the battery passport dataset.",
    "external": true,
-   "status": "proposed",
-   "note": "The allocation of the carried requirements to this element is proposed and waits for the owner's approval."
+   "status": "agreed",
+   "note": "The owner agreed the allocation of the carried requirements on 2026-11-16 (\"Approve all\", requirements/Owner_instructions-Francesco_verbatim/2026-11-16_public_repository_for_the_after_first_passport_work.md, section \"The ten registry texts and two further points\")."
   }
  ],
  "outside": [

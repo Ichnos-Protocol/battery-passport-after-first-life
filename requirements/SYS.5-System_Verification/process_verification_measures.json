@@ -450,7 +450,7 @@
    "title": "Inspection of the list of proposed items",
    "method": "inspection",
    "technique": "Inspection of the reference implementation repository at the commit under review against PrR-CXD-025.",
-   "passCriteria": "Passes when: docs/proposals.md lists the two proposed models, the proposed taxonomy name, the four proposed notification contexts and the proposed usage purposes, each with its section of the proposal; an item of the folder that no stored standard covers and that the list omits fails.",
+   "passCriteria": "Passes when: docs/proposals.md lists the three proposed models, the proposed taxonomy name, the four proposed notification contexts and the proposed usage purposes, each with its section of the proposal; an item of the folder that no stored standard covers and that the list omits fails.",
    "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
    "environment": "repository only",
    "how": "At the repository root: read battery-passport-after-first-life/docs/proposals.md beside the openAPI.yaml and the models.",
@@ -479,6 +479,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "pass criteria: three proposed models and sixteen conformance tests (before: \"Passes when: docs/proposals.md lists the two proposed models, the proposed taxonomy name, the four proposed notification contexts and the proposed usage purposes, each with its section of the proposal; an item of the folder that no stored standard covers and that the list omits fails.\")",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
     }
    ]
   },
@@ -530,7 +536,7 @@
    "title": "Validation of the proposed models with SAMM CLI 2.11.1",
    "method": "test",
    "technique": "Run of the tool that PrR-CXD-027 names on the reference implementation repository at the commit under review.",
-   "passCriteria": "Passes when: java -jar samm-cli-2.11.1.jar aspect <model>.ttl validate reports no error for BatteryPassportLifecycle.ttl and for BatteryPassportSuccessors.ttl; any error fails.",
+   "passCriteria": "Passes when: java -jar samm-cli-2.11.1.jar aspect <model>.ttl validate reports no error for BatteryPassportLifecycle.ttl, for BatteryPassportSuccessors.ttl and for BatteryPassportAccessMap.ttl; any error fails.",
    "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
    "environment": "Java 21 and the SAMM command line tool 2.11.1",
    "how": "At the repository root, with Java 21: for m in $(find battery-passport-after-first-life/models -name '*.ttl' -not -path '*/gen/*'); do java -jar samm-cli-2.11.1.jar aspect \"$m\" validate; done",
@@ -559,6 +565,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "pass criteria: three proposed models and sixteen conformance tests (before: \"Passes when: java -jar samm-cli-2.11.1.jar aspect <model>.ttl validate reports no error for BatteryPassportLifecycle.ttl and for BatteryPassportSuccessors.ttl; any error fails.\")",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
     }
    ]
   },
@@ -610,7 +622,7 @@
    "title": "Run of the conformance tests against both bindings",
    "method": "test",
    "technique": "Run of the tool that PrR-CXD-029 names on the reference implementation repository at the commit under review.",
-   "passCriteria": "Passes when: The run of tck/ against the in-process binding and the run against the Tractus-X connector binding execute the same fifteen tests and both pass; a test that runs against one binding only, or a failure in either run, fails.",
+   "passCriteria": "Passes when: The run of tck/ against the in-process binding and the run against the Tractus-X connector binding execute the same sixteen tests and both pass; a test that runs against one binding only, or a failure in either run, fails.",
    "entry": "The reference implementation repository exists at the commit under review; before it exists, the measure is recorded as not run.",
    "environment": "in-process binding and a production-bound stack",
    "how": "At the repository root: run the tck/ suite twice, once with the in-process binding and once with the Tractus-X connector binding, as INSTALL.md of the repository states.",
@@ -639,6 +651,12 @@
      "change": "carried over from the private registry of the battery passport application",
      "reason": "decision Q-1014 (where the reference implementation of the after-first-passport work is built)",
      "approver": ""
+    },
+    {
+     "date": "2026-11-16",
+     "change": "pass criteria: three proposed models and sixteen conformance tests (before: \"Passes when: The run of tck/ against the in-process binding and the run against the Tractus-X connector binding execute the same fifteen tests and both pass; a test that runs against one binding only, or a failure in either run, fails.\")",
+     "reason": "Francesco, 2026-11-16: \"Approve all\", on the ten registry texts of the reference server specification",
+     "approver": "Francesco"
     }
    ]
   },
