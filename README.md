@@ -28,8 +28,8 @@ The repository is in its setup. The table states what each folder holds on 2026-
 | `server/` | The reference server (Node.js 24, Express, PostgreSQL) | Not yet written |
 | `tck/` | The conformance test kit, one test per conformance criterion | Not yet written |
 | `requirements/` | The requirements registry, from stakeholder requirements to verification measures | Not yet carried over |
-| `sources/` | The source texts that their licenses allow to redistribute | Not yet carried over |
-| `scripts/` | The checks of the repository | The license header check |
+| `sources/` | The source texts that their licenses allow to redistribute | 90 files, listed in `sources/SOURCES.json` |
+| `scripts/` | The checks of the repository | The license header check and the source register check |
 
 ## Installation and usage
 

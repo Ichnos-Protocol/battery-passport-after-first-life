@@ -1,6 +1,6 @@
 # Repository checks
 
-This folder holds the checks of the repository. The script `check-license-headers.mjs` lists every file without the license header of its kind or without a NOTICE section.
+This folder holds the checks of the repository. The script `check-license-headers.mjs` lists every file without the license header of its kind or without a NOTICE section. The script `check-sources.mjs` compares every file under `sources/` with the register `sources/SOURCES.json`.
 
 ## NOTICE
 

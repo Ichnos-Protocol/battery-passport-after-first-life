@@ -10,6 +10,7 @@ All notable changes to this repository are documented in this file. The format f
 
 - The repository skeleton and the legal files of TRG 7.01 of the Tractus-X Release Guidelines.
 - The license header check `scripts/check-license-headers.mjs`.
+- The redistributable source texts in `sources/`, their register `sources/SOURCES.json` and the check `scripts/check-sources.mjs`.
 
 ## NOTICE
 
