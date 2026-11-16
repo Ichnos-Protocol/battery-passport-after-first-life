@@ -14,7 +14,7 @@ All notable changes to this repository are documented in this file. The format f
 - The proposal CX-0160-4 (Battery Passport after the First Passport), draft 0.7 of 2026-11-16, in `docs/proposal/`. Draft 0.6 adds the proposed aspect model BatteryPassportAccessMap, the rules of section 2.2 items 8 to 12, the conformity assessment criterion CX-0160-4-CAC-016 and Annex B point 19, and changes Annex B point 11. Draft 0.7 states that `AccessMapEntry.path` is a JSONPath query (RFC 9535), adds RFC 9535 and the seven IDTA-02035 parts to the normative references of section 6.1, names the current draft in Annex A and names the four operations in decision D5 of Annex C.
 - The methodology `docs/methodology.md`, the citation catalogue `docs/citation-catalogue.md`, the list of proposals `docs/proposals.md` and the lessons `docs/lessons-from-a-first-implementation.md`.
 - The private reference check `scripts/check-private-references.mjs`.
-- The implementation specification of the standalone reference server, `docs/architecture/implementation_plan.md`, version 2 of 2026-11-16, with the five decisions of the owner of 2026-11-16.
+- The implementation specification of the standalone reference server, `docs/architecture/implementation_plan.md`, version 3 of 2026-11-16, with the five decisions of the owner of 2026-11-16 and with the 64 findings of the independent review of version 2 closed. Version 3 states every table, trigger, policy and grant of the three database migrations.
 - The shared aspect models `io.catenax.shared.uuid` 2.1.0 and `io.catenax.shared.business_partner_number` 2.0.0 in `sources/Tractus-X/semantic-models/`, which the three proposed aspect models import.
 - The specification check `scripts/spec_gate_check.py`.
 
