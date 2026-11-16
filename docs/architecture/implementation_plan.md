@@ -3,15 +3,16 @@
 | | |
 |---|---|
 | Status | Draft for the owner's approval; phases P1 to P3 are ready for execution after that approval |
-| Version | 5 |
+| Version | 6 |
 | Changes from version 1 | Version 2 recorded the five decisions of the owner of 2026-11-16 (§12.1), moved the sharing of individual battery information with the original issuer into scope, made the audit trail a table and stored the two shared models in `sources/` |
 | Changes from version 2 | Version 3 closes the 64 findings of the independent review of version 2 (§18). The substrate is the registry after the ten registry texts that the owner approved on 2026-11-16. The database section states every table, column, constraint, index, trigger, policy and grant of the three migration files (§9.4). The server connects as a role without ownership. The data provider records the end of a passport from every status. The receiver resolution, the repair certificate check and the retry of a failed transport are built. Every decision has a title. The line limit of the earlier versions no longer applies |
 | Changes from version 3 | Version 4 closes the 36 findings of the second independent review (§18) and records the owner's four decisions and the owner's decision on the tools of 2026-11-16 (§12.1). The public schemas accept every form of an identifier that the stored shared model admits, and the server normalises. Every change of the successor's authorisation is written to the audit table. Every tool of phases P1 to P3 runs in a container, and every done-when command has one form. The database section gains the grant on the migration table, one clock in UTC, the row locks, the type parsers and one further trigger. §5.7 lists the 32 measures that name a role of another design. A tag marks every sentence that rests on a decision that waits for the owner |
 | Changes from version 4 | Version 5 closes the 19 findings of the third independent review, whose reviewer built phases P1 to P3 from version 4 (§18). Three annexes print every file of phases P1 to P3 that the implementer would otherwise compose, and the annexes are normative (§20, §21, §22). The author ran the three migration files on PostgreSQL 17, validated the three model files with the SAMM command line tool and compiled the schema files. The lineage rule of the database uses a column that the insertion sets and the executor clears. The database ties the waste date and the recycling date to the responsibility intervals and freezes the intervals of an ended passport. One schema file defines the envelope of a notification and fixes the context of each operation. The repository gains the file `.gitattributes`. The specification checker is the Node.js script `scripts/spec-gate-check.mjs` since 2026-11-16 |
+| Changes from version 5 | Version 6 closes the 15 findings of the fourth independent review, whose reviewer executed the 27 annex files of version 5 and attacked the database under a login as the role `refserver_app` (§18). Every function of the database has a fixed search path, and the application role holds no privilege to create a temporary table (decision D60, A fixed search path for every function, and no temporary table for the application role). The rule after the waste status holds in the database for the records of a passport and not only for the passport itself (decision D61, The rule after the waste status covers the records of the passport). A responsibility interval is inserted open and at the end of the timeline (decision D62, A responsibility interval is inserted open and at the end of the timeline). A passport references a battery model of its own manufacturer, and three further tables have a policy (decision D63, References across the bound of a company). The generated schemas and the example payloads of the three models are files of `docs/api/aspects/`, and one module builds the compiler of the draft-04 aspect schemas (decision D64, The generated schemas outside `models/`, and one compiler of the draft-04 schemas). The database holds 14 functions, 27 triggers and 12 policies. The author ran the three migration files, the lifecycle scenarios, the refusals and the three attacks of the reviewer on PostgreSQL 17 under a login as `refserver_app` |
 | Date | 2026-11-16 |
 | Owner | the owner of this repository, the author of the proposal CX-0160-4 (Battery Passport after the First Passport) |
 | Implementer | an implementation agent, which executes this specification literally |
-| Substrate | this repository, branch `main`, at the commit 4ccd705, which holds version 4 of this specification |
+| Substrate | this repository, branch `main`, at the commit e2b1118, which holds version 5 of this specification |
 | Proposal | draft 0.7 of 2026-11-16, `docs/proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` |
 | Verified | 2026-11-16, against the working tree of this repository and the registry of `requirements/` |
 
@@ -417,11 +418,14 @@ The action `new` marks a file that does not exist at the substrate. The action `
 | `server/package.json`, `server/package-lock.json` | new | P1 | `"type": "module"`, `"engines": { "node": ">=24" }`, the scripts of §14.1 and the packages of §9.8 |
 | `server/test/contractSchemas.test.mjs` | new | P1 | §14.2 |
 | `.github/workflows/checks.yml`, `.github/workflows/spectral.yml` | new | P1 | §9.7 |
-| `models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl`, `models/io.catenax.battery.passport_lifecycle/1.0.0/metadata.json`, `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle-schema.json`, `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle.json`, `models/io.catenax.battery.passport_lifecycle/RELEASE_NOTES.md` | new | P2 | §10.6 |
-| `models/io.catenax.battery.passport_successors/1.0.0/BatteryPassportSuccessors.ttl`, `models/io.catenax.battery.passport_successors/1.0.0/metadata.json`, `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors-schema.json`, `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors.json`, `models/io.catenax.battery.passport_successors/RELEASE_NOTES.md` | new | P2 | §10.6 |
-| `models/io.catenax.battery.passport_access_map/1.0.0/BatteryPassportAccessMap.ttl`, `models/io.catenax.battery.passport_access_map/1.0.0/metadata.json`, `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap-schema.json`, `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap.json`, `models/io.catenax.battery.passport_access_map/RELEASE_NOTES.md` | new | P2 | §10.6 |
+| `models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl`, `models/io.catenax.battery.passport_lifecycle/1.0.0/metadata.json`, `models/io.catenax.battery.passport_lifecycle/RELEASE_NOTES.md` | new | P2 | §10.6, §21 |
+| `models/io.catenax.battery.passport_successors/1.0.0/BatteryPassportSuccessors.ttl`, `models/io.catenax.battery.passport_successors/1.0.0/metadata.json`, `models/io.catenax.battery.passport_successors/RELEASE_NOTES.md` | new | P2 | §10.6, §21 |
+| `models/io.catenax.battery.passport_access_map/1.0.0/BatteryPassportAccessMap.ttl`, `models/io.catenax.battery.passport_access_map/1.0.0/metadata.json`, `models/io.catenax.battery.passport_access_map/RELEASE_NOTES.md` | new | P2 | §10.6, §21 |
 | `scripts/validate-models.sh` | new | P2 | assembles the models root and runs the SAMM command line tool (§11.2); §21 |
 | `server/test/modelExamples.test.mjs` | new | P2 | §14.2 |
+| `docs/api/aspects/BatteryPassportLifecycle-schema.json`, `docs/api/aspects/BatteryPassportSuccessors-schema.json`, `docs/api/aspects/BatteryPassportAccessMap-schema.json` | new | P2 | the JSON schemas that the SAMM command line tool generates from the three models (decision D64, The generated schemas outside `models/`, and one compiler of the draft-04 schemas); §10.6 |
+| `docs/api/aspects/BatteryPassportLifecycle.json`, `docs/api/aspects/BatteryPassportSuccessors.json`, `docs/api/aspects/BatteryPassportAccessMap.json` | new | P2 | one example payload per model (D64); §21 |
+| `server/src/validation/aspectSchemaCompiler.mjs` | new | P2 | the one compiler of the draft-04 aspect schemas (D64); §10.6, §21 |
 | `.github/workflows/samm.yml` | new | P2 | §9.7 |
 | `models/README.md`, `docs/proposals.md` | modify | P2 | the three models and the validation command; the import of version 2.1.0 of the shared uuid model |
 | `server/src/db/migrate.mjs`, `server/src/db/migrateCli.mjs`, `server/src/db/createAppRole.mjs`, `server/src/db/createAppRoleCli.mjs`, `server/src/db/pool.mjs`, `server/src/db/transaction.mjs`, `server/src/db/health.mjs` | new | P3 | §9.2.8 |
@@ -523,7 +527,7 @@ The rules that every function of the table applies:
 
 - **The single-writer rule** (decision D6, One deployment, one company, one writer). Every function reads the passport through the caller's transaction, whose policies show only the passports of the own company (§9.4.3). A passport that the transaction does not show refuses `ERR-LC-PASSPORT-NOT-FOUND`. A new passport is inserted with `manufacturer_bpnl = ownBpnl`.
 - **The rule after the end.** Every write on a passport whose `recycling_date` is set refuses `ERR-LC-PASSPORT-ENDED`. The executor applies this rule before the rule after the waste status. The access records of an ended passport stay writable.
-- **The rule after the waste status** (D18). A write on a passport whose status is `waste` refuses `ERR-LC-SUCCESSOR-AUTHORISATION-MISSING` unless the successor's authorisation is in force on the current UTC date of `clock`: `successor_authorisation_valid_from` is not after the date, and `successor_authorisation_valid_to` is null or not before the date. The end of the passport, the record of the authorisation itself, the access record of the successor and the access records of `changePurchaser` are exempt.
+- **The rule after the waste status** (D18). A write on a passport whose status is `waste` refuses `ERR-LC-SUCCESSOR-AUTHORISATION-MISSING` unless the successor's authorisation is in force on the current UTC date of `clock`: `successor_authorisation_valid_from` is not after the date, and `successor_authorisation_valid_to` is null or not before the date. The end of the passport, the record of the authorisation itself, the access record of the successor and the access records of `changePurchaser` are exempt. The database holds the same rule for the row of `passports` and for the records of five tables (§9.4.2, D61 (The rule after the waste status covers the records of the passport)), so a later change of the executor cannot remove the rule.
 - **The audit.** Each function adds one entry to `auditEntries` per write decision on a passport: the decision `granted` with what the decision relied on, or the decision `refused` with the refusal id, each with the action of the table of §9.2.7.
 - `server/src/dataset/passportRepository.mjs` holds every SQL statement on the tables `passports`, `battery_models`, `passport_purposes`, `passport_lineage_links`, `passport_successor_links`, `passport_repair_entries`, `passport_responsibility_intervals` and `passport_aspect_payloads`. `server/src/dataset/companyRepository.mjs` holds the SQL on `companies`.
 - `server/src/dataset/lifecycleRecordReader.mjs` exports `readLifecyclePayload({ client, passportId })` and `readSuccessorsPayload({ client, passportId })`, which build the payloads of sections 3.2 and 3.3 of the proposal from the tables and write nothing. `readLifecyclePayload` always returns the property `predecessors`, as an empty list for a passport without a lineage link.
@@ -552,7 +556,7 @@ The rules that every function of the table applies:
 | `dpp-metadata`, `serial-part`, `single-level-bom-as-built` | an open access record exists |
 
   A served aspect is served whole. One access record covers the whole aspect, also when the aspect holds fields of several restricted access groups.
-- `putAccessMap({ client, subject, modelId, map })` of `server/src/submodels/accessMapService.mjs` stores a new version of the access map of a battery model. The function refuses `ERR-LC-MODEL-NOT-FOUND` for an unknown model, validates `map` against `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap-schema.json`, refuses `ERR-LC-PATH-NOT-SUPPORTED` for a path outside the subset of D27 (A subset of JSONPath), refuses `ERR-LC-ACCESS-MAP-VERSION-EXISTS` for a `mapVersion` that the model already holds, and refuses `ERR-LC-ACCESS-MAP-INCOMPLETE` when the map does not cover a stored payload of one of the seven IDTA-02035 aspect keys of a passport of the model.
+- `putAccessMap({ client, subject, modelId, map })` of `server/src/submodels/accessMapService.mjs` stores a new version of the access map of a battery model. The function refuses `ERR-LC-MODEL-NOT-FOUND` for an unknown model, validates `map` against `docs/api/aspects/BatteryPassportAccessMap-schema.json` with the compiler of `createAspectSchemaCompiler` (§10.6), refuses `ERR-LC-PATH-NOT-SUPPORTED` for a path outside the subset of D27 (A subset of JSONPath), refuses `ERR-LC-ACCESS-MAP-VERSION-EXISTS` for a `mapVersion` that the model already holds, and refuses `ERR-LC-ACCESS-MAP-INCOMPLETE` when the map does not cover a stored payload of one of the seven IDTA-02035 aspect keys of a passport of the model.
 - **The coverage rule.** A map covers a payload when every leaf of the payload (a value that is neither an object nor a list) is matched by one entry or more of the map whose `aspect` is the semantic identifier of the aspect key and whose `twinLevel` is `PartInstance`, and all entries that match one leaf carry one access group. `putAccessMap` and `putAspectPayload` apply the same function `coverageProblems(map, aspectKey, payload)` of `accessMapService.mjs`, which returns one message per uncovered leaf and per leaf with two groups. `putAspectPayload` applies the rule to the payload with the governed elements written over it, against the current access map and against every stored version of the model whose `valid_from` is after the current date; a battery model without a stored version admits every payload, and the read rule of the table then asks a partner for an access record.
 - `readAccessMap({ client, modelId, today })` returns, as the payload of section 3.4 of the proposal, the access map version whose `valid_from` is the latest date that is not after `today`, the current date of `clock`; among versions with one `valid_from` the version with the highest `id` wins. The function returns `null` when no version qualifies, and `EP-ACCESS-MAP` then answers `ERR-LC-SUBMODEL-NOT-FOUND`.
 - `compilePath(path)` and `matchLeaves(compiledPath, payload)` of `server/src/submodels/jsonPathSubset.mjs` implement the subset of D27.
@@ -609,9 +613,9 @@ The audit entry of `recordSuccessorAuthorisation` has the action `successor-auth
 
 #### 9.2.8 The database access (EL-RDB (the relational database))
 
-- **The two database roles** (decision D24, Two database roles and row-level security). The role of the migrations owns the schema and its tables, and its connection string is `DATABASE_MIGRATION_URL`. The server connects only as the role `refserver_app`, a login role without ownership, whose connection string is `DATABASE_URL`. No module of the server reads `DATABASE_MIGRATION_URL`. A role of the migrations that is neither a superuser nor a role with the attribute `BYPASSRLS` reads and writes no record of the nine tables with a policy, because `FORCE ROW LEVEL SECURITY` applies the policies to the owner and no policy names the owner; the three migration files hold no statement that reads or writes a record of those tables, so the migrations run under every owner role.
+- **The two database roles** (decision D24, Two database roles and row-level security). The role of the migrations owns the schema and its tables, and its connection string is `DATABASE_MIGRATION_URL`. The server connects only as the role `refserver_app`, a login role without ownership, whose connection string is `DATABASE_URL`. No module of the server reads `DATABASE_MIGRATION_URL`. A role of the migrations that is neither a superuser nor a role with the attribute `BYPASSRLS` reads and writes no record of the twelve tables with a policy, because `FORCE ROW LEVEL SECURITY` applies the policies to the owner and no policy names the owner; the three migration files hold no statement that reads or writes a record of those tables, so the migrations run under an owner role without either attribute. The owner role also owns the database, or an administrator has revoked the privilege `TEMPORARY` of the database from PUBLIC before the first migration (decision D60, A fixed search path for every function, and no temporary table for the application role).
 - `createAppRole(adminClient, { password })` of `server/src/db/createAppRole.mjs` runs one transaction: `BEGIN`; `SELECT pg_advisory_xact_lock(hashtext('refserver_app'))`; when `pg_roles` holds no role `refserver_app`, `CREATE ROLE refserver_app LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS`, where the SQLSTATE `42710` (the role exists, created by a caller in another database of the cluster) counts as success after a `ROLLBACK` and a new transaction; `ALTER ROLE refserver_app PASSWORD <literal>`; `COMMIT`. The function builds the password literal with `adminClient.escapeLiteral`. `server/src/db/createAppRoleCli.mjs` is the command `npm run create-role`, which reads `DATABASE_MIGRATION_URL` and `APP_ROLE_PASSWORD` from the environment. An administrator runs the command once per database cluster, before the first migration.
-- `migrate(adminClient, { schema })` of `server/src/db/migrate.mjs` validates `schema` against `^[a-z_][a-z0-9_]{0,62}$`, runs `CREATE SCHEMA IF NOT EXISTS <schema>`, sets `search_path` to the schema for the session, creates the table `schema_migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())` when the table is absent, and applies each file of `server/src/db/migrations/` in the order of the file names, each in one transaction that also inserts the file name into `schema_migrations`. A file whose name the table holds is not applied again, so a second run applies no file. The function stops with an error when the role `refserver_app` does not exist. `server/src/db/migrateCli.mjs` is the command `npm run migrate`, which reads `DATABASE_MIGRATION_URL` and `DATABASE_SCHEMA`. A phase never changes a migration file that an earlier phase delivered: a later change of the database is a new file whose name starts with the next number.
+- `migrate(adminClient, { schema })` of `server/src/db/migrate.mjs` validates `schema` against `^[a-z_][a-z0-9_]{0,62}$`, runs `CREATE SCHEMA IF NOT EXISTS <schema>`, sets `search_path` to the schema for the session, creates the table `schema_migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())` when the table is absent, and applies each file of `server/src/db/migrations/` in the order of the file names, each in one transaction that also inserts the file name into `schema_migrations`. A file whose name the table holds is not applied again, so a second run applies no file. The function stops with an error when the role `refserver_app` does not exist. `server/src/db/migrateCli.mjs` is the command `npm run migrate`, which reads `DATABASE_MIGRATION_URL` and `DATABASE_SCHEMA`. A phase never changes a migration file that an earlier phase delivered: a later change of the database is a new file whose name starts with the next number. The function runs under a role that owns the database or is a superuser, or after an administrator has run the revocation, because `003_policies.sql` revokes the privilege `TEMPORARY` of the database from PUBLIC when the role `refserver_app` holds the privilege, and stops with `ERR-DB-ROLE-PRIVILEGE` when the role still holds the privilege afterwards (D60).
 - `createPool({ connectionString, schema, size })` of `server/src/db/pool.mjs` returns a `pg` pool with `max` equal to `size`, with the connection option `options: "-c search_path=<schema> -c timezone=UTC"`, and with its own type parsers in the option `types`: the type `date` (OID 1082) is returned as the text `YYYY-MM-DD`; the type `numeric` (OID 1700) is returned as a JavaScript number; the type `bigint` (OID 20) is returned as a JavaScript number; the types `timestamptz` and `uuid` keep the parsers of `pg` (a `Date` and a text). The module validates `schema` against the pattern of `migrate`. Every identity `id` of §9.4.1 is a JSON number in a response, and every date of a column of the type `date` is a JSON string of the form `YYYY-MM-DD`.
 - `withTransaction(pool, { actingBpnl, today }, work)` of `server/src/db/transaction.mjs` takes a client, runs `BEGIN`, `SELECT set_config('app.acting_bpnl', $1, true)` and `SELECT set_config('app.today', $2, true)`, awaits `work(client)`, and runs `COMMIT`, or `ROLLBACK` when `work` rejects, and releases the client. Every caller of the server passes `config.ownBpnl` as `actingBpnl`, for an operator request, for a partner request and for the worker alike, because one deployment acts for one company (D6), and passes the current UTC date of `clock` in the form `YYYY-MM-DD` as `today` (D53).
 - `checkHealth(pool)` of `server/src/db/health.mjs` runs `SELECT 1` and resolves to `true` or `false`.
@@ -675,7 +679,7 @@ The base path of every endpoint is `/api`. The parameter `:passportId` is `passp
 
 ### 9.4 Database
 
-One deployment serves one company, and one database schema holds the passports of which that company is the data provider. The schema holds 17 tables (decision D42, A database of 17 tables) and the table `schema_migrations` of `migrate`. The three migration files hold exactly the objects of §9.4.1, §9.4.2 and §9.4.3, and the implementer writes no further table, column, index, trigger, policy or grant. No statement of the three files names a schema, because `migrate` sets the search path. §22 prints the three files in full, and the implementer copies them (decision D58, Normative annexes).
+One deployment serves one company, and one database schema holds the passports of which that company is the data provider. The schema holds 17 tables (decision D42, A database of 17 tables) and the table `schema_migrations` of `migrate`. The three migration files hold exactly the objects of §9.4.1, §9.4.2 and §9.4.3, and the implementer writes no further table, column, index, trigger, policy or grant. No statement of the three files names a schema, because `migrate` sets the search path; the last statement of `002_triggers.sql` reads the name of the schema at the run and fixes the search path of every function (D60). §22 prints the three files in full, and the implementer copies them (decision D58, Normative annexes). PostgreSQL 17 needs no extension for the three files.
 
 #### 9.4.1 The file `001_schema.sql`
 
@@ -684,8 +688,8 @@ The file first creates two domains with named constraints: `bpnl AS text CONSTRA
 | Group | Table | Columns in the order of the definition, then the table constraints and the indexes |
 |---|---|---|
 | companies | `companies` | `bpnl bpnl` PK `companies_pkey`; `legal_name text NOT NULL` with CHECK `companies_legal_name_check` (`length(legal_name) BETWEEN 1 AND 300`); `legal_name_language text NOT NULL DEFAULT 'en'`; `address jsonb NOT NULL`; `operator_identifier text` |
-| passports | `battery_models` | `id uuid` PK `battery_models_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartType twin); `manufacturer_bpnl bpnl NOT NULL` FK `battery_models_manufacturer_fkey` to `companies(bpnl)`; `manufacturer_part_id text NOT NULL` with CHECK `battery_models_part_id_check` (`length(manufacturer_part_id) BETWEEN 1 AND 200`); `original_model_catena_x_id uuid`; `original_model_manufacturer_bpnl bpnl`; CHECK `battery_models_original_check` (`(original_model_catena_x_id IS NULL) = (original_model_manufacturer_bpnl IS NULL)`); UNIQUE `battery_models_manufacturer_part_key (manufacturer_bpnl, manufacturer_part_id)` |
-| passports | `passports` | `id uuid` PK `passports_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartInstance twin); `passport_identifier text NOT NULL DEFAULT ('urn:uuid:' \|\| gen_random_uuid()::text)` with UNIQUE `passports_passport_identifier_key`; `battery_identifier text NOT NULL` with CHECK `passports_battery_identifier_check` (`length(battery_identifier) BETWEEN 1 AND 200`); `manufacturer_bpnl bpnl NOT NULL` FK `passports_manufacturer_fkey` to `companies(bpnl)`; `battery_model_id uuid NOT NULL` FK `passports_battery_model_fkey` to `battery_models(id)`; `lifecycle_status text NOT NULL` with CHECK `passports_lifecycle_status_check` (`lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')`); `battery_category text NOT NULL` with CHECK `passports_battery_category_check` (`battery_category IN ('lmt','ev','industrial','stationary')`); `facility_bpns bpns NOT NULL`; `date_of_manufacture date NOT NULL`; `date_into_service date`; `rated_capacity_ah numeric(10,2)` with CHECK `passports_rated_capacity_check` (`rated_capacity_ah > 0`); `capacity_fade_percent numeric(5,2)` with CHECK `passports_capacity_fade_check` (`capacity_fade_percent BETWEEN 0 AND 100`); `power_fade_percent numeric(5,2)` with CHECK `passports_power_fade_check` (`power_fade_percent BETWEEN 0 AND 100`); `expected_lifetime_years numeric(4,1)` with CHECK `passports_expected_lifetime_check` (`expected_lifetime_years > 0`); `waste_successor_bpnl bpnl`; `waste_successor_role text` with CHECK `passports_waste_successor_role_check` (`waste_successor_role IN ('producer','producerResponsibilityOrganisation','wasteManagementOperator')`); `waste_date timestamptz`; `successor_authorisation_ref text` with CHECK `passports_authorisation_ref_check` (`length(successor_authorisation_ref) BETWEEN 1 AND 500`); `successor_authorisation_valid_from date`; `successor_authorisation_valid_to date`; `recycling_date timestamptz`; `recycler_bpnl bpnl`; `material_recycling_certificate_catena_x_id uuid`; `lineage_open boolean NOT NULL DEFAULT false` (true only between the insertion of a new passport and the closing statement of the same transaction; D54); CHECK `passports_waste_successor_check` (`(lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)`); CHECK `passports_authorisation_check` (`(successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')`); CHECK `passports_end_check` (`(recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)`); CHECK `passports_end_after_waste_check` (`recycling_date IS NULL OR waste_date IS NULL OR recycling_date >= waste_date`); index `passports_battery_identifier_idx (battery_identifier)`; index `passports_battery_model_idx (battery_model_id)` |
+| passports | `battery_models` | `id uuid` PK `battery_models_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartType twin); `manufacturer_bpnl bpnl NOT NULL` FK `battery_models_manufacturer_fkey` to `companies(bpnl)`; `manufacturer_part_id text NOT NULL` with CHECK `battery_models_part_id_check` (`length(manufacturer_part_id) BETWEEN 1 AND 200`); `original_model_catena_x_id uuid`; `original_model_manufacturer_bpnl bpnl`; CHECK `battery_models_original_check` (`(original_model_catena_x_id IS NULL) = (original_model_manufacturer_bpnl IS NULL)`); UNIQUE `battery_models_manufacturer_part_key (manufacturer_bpnl, manufacturer_part_id)`; UNIQUE `battery_models_id_manufacturer_key (id, manufacturer_bpnl)`, which the foreign key of `passports` references (decision D63, References across the bound of a company) |
+| passports | `passports` | `id uuid` PK `passports_pkey` `DEFAULT gen_random_uuid()` (the `catenaXId` of the PartInstance twin); `passport_identifier text NOT NULL DEFAULT ('urn:uuid:' \|\| gen_random_uuid()::text)` with UNIQUE `passports_passport_identifier_key`; `battery_identifier text NOT NULL` with CHECK `passports_battery_identifier_check` (`length(battery_identifier) BETWEEN 1 AND 200`); `manufacturer_bpnl bpnl NOT NULL` FK `passports_manufacturer_fkey` to `companies(bpnl)`; `battery_model_id uuid NOT NULL`; FK `passports_battery_model_fkey` of the two columns `(battery_model_id, manufacturer_bpnl)` to `battery_models(id, manufacturer_bpnl)`, so that a passport references a battery model of its own manufacturer (D63); `lifecycle_status text NOT NULL` with CHECK `passports_lifecycle_status_check` (`lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')`); `battery_category text NOT NULL` with CHECK `passports_battery_category_check` (`battery_category IN ('lmt','ev','industrial','stationary')`); `facility_bpns bpns NOT NULL`; `date_of_manufacture date NOT NULL`; `date_into_service date`; `rated_capacity_ah numeric(10,2)` with CHECK `passports_rated_capacity_check` (`rated_capacity_ah > 0`); `capacity_fade_percent numeric(5,2)` with CHECK `passports_capacity_fade_check` (`capacity_fade_percent BETWEEN 0 AND 100`); `power_fade_percent numeric(5,2)` with CHECK `passports_power_fade_check` (`power_fade_percent BETWEEN 0 AND 100`); `expected_lifetime_years numeric(4,1)` with CHECK `passports_expected_lifetime_check` (`expected_lifetime_years > 0`); `waste_successor_bpnl bpnl`; `waste_successor_role text` with CHECK `passports_waste_successor_role_check` (`waste_successor_role IN ('producer','producerResponsibilityOrganisation','wasteManagementOperator')`); `waste_date timestamptz`; `successor_authorisation_ref text` with CHECK `passports_authorisation_ref_check` (`length(successor_authorisation_ref) BETWEEN 1 AND 500`); `successor_authorisation_valid_from date`; `successor_authorisation_valid_to date`; `recycling_date timestamptz`; `recycler_bpnl bpnl`; `material_recycling_certificate_catena_x_id uuid`; `lineage_open boolean NOT NULL DEFAULT false` (true only between the insertion of a new passport and the closing statement of the same transaction; D54); CHECK `passports_waste_successor_check` (`(lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)`); CHECK `passports_authorisation_check` (`(successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')`); CHECK `passports_end_check` (`(recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)`); CHECK `passports_end_after_waste_check` (`recycling_date IS NULL OR waste_date IS NULL OR recycling_date >= waste_date`); index `passports_battery_identifier_idx (battery_identifier)`; index `passports_battery_model_idx (battery_model_id)` |
 | passports | `passport_purposes` | `id bigint GENERATED ALWAYS AS IDENTITY` PK `passport_purposes_pkey`; `passport_id uuid NOT NULL` FK `passport_purposes_passport_fkey` to `passports(id)`; `purpose text NOT NULL` with CHECK `passport_purposes_purpose_check` (`length(purpose) BETWEEN 1 AND 2000`); `is_original boolean NOT NULL`; `recorded_at timestamptz NOT NULL`; unique index `passport_purposes_original_key (passport_id) WHERE is_original`; index `passport_purposes_passport_idx (passport_id)` |
 | passports | `passport_aspect_payloads` | `passport_id uuid NOT NULL` FK `passport_aspect_payloads_passport_fkey` to `passports(id)`; `aspect_key text NOT NULL` with CHECK `passport_aspect_payloads_key_check` (`aspect_key IN ('digital-nameplate','handover-documentation','carbon-footprint','technical-data','product-condition','material-composition','circularity','dpp-metadata','serial-part','single-level-bom-as-built')`); `payload jsonb NOT NULL`; `updated_at timestamptz NOT NULL DEFAULT now()`; PK `passport_aspect_payloads_pkey (passport_id, aspect_key)` |
 | notifications sent and received | `notifications_received` | `message_id text` PK `notifications_received_pkey`; `operation text NOT NULL` with CHECK `notifications_received_operation_check` (`operation IN ('NewPassportIssued','BatteryRepaired','BatteryBecameWaste','PassportEnded')`); `sender_bpnl bpnl NOT NULL`; `passport_identifier text NOT NULL`; `message jsonb NOT NULL`; `outcome text NOT NULL` with CHECK `notifications_received_outcome_check` (`outcome IN ('applied','recorded')`); `received_at timestamptz NOT NULL`; index `notifications_received_passport_idx (passport_identifier, operation)` |
@@ -701,28 +705,34 @@ The file first creates two domains with named constraints: `bpnl AS text CONSTRA
 | issuer contracts | `issuer_contracts` | `id uuid` PK `issuer_contracts_pkey` `DEFAULT gen_random_uuid()`; `side text NOT NULL` with CHECK `issuer_contracts_side_check` (`side IN ('provider','issuer')`); `passport_identifier text NOT NULL`; `battery_identifier text`; `passport_id uuid` FK `issuer_contracts_passport_fkey` to `passports(id)`; `issuer_bpnl bpnl NOT NULL`; `provider_bpnl bpnl NOT NULL`; `product_condition jsonb`; `pull_state text` with CHECK `issuer_contracts_pull_state_check` (`pull_state IN ('pending','received','no_asset','contract_refused','provider_refused','receiver_unresolved','transport_failed')`); `pull_cause text`; `valid_from timestamptz NOT NULL`; `valid_to timestamptz`; CHECK `issuer_contracts_side_columns_check` (`(side = 'issuer') = (pull_state IS NOT NULL) AND (side = 'provider' OR (passport_id IS NULL AND product_condition IS NULL AND battery_identifier IS NOT NULL)) AND (side = 'issuer' OR ((passport_id IS NULL) <> (product_condition IS NULL)))`); unique index `issuer_contracts_open_key (side, passport_identifier, issuer_bpnl, provider_bpnl) WHERE valid_to IS NULL` |
 | received battery information | `received_battery_information` | `id bigint GENERATED ALWAYS AS IDENTITY` PK `received_battery_information_pkey`; `contract_id uuid NOT NULL` FK `received_battery_information_contract_fkey` to `issuer_contracts(id)`; `passport_identifier text NOT NULL`; `battery_identifier text NOT NULL`; `agreement_id text NOT NULL`; `payload jsonb NOT NULL`; `received_at timestamptz NOT NULL` |
 
-The grain of the four performance values `rated_capacity_ah` (Ah), `capacity_fade_percent` (%), `power_fade_percent` (%) and `expected_lifetime_years` (calendar years) is one value per passport. The four values are set on every passport that has a lineage link, because DIN DKE SPEC 99100 clauses 6.7.2.2 e), 6.7.2.4, 6.7.3.4 and 6.7.6.2 d) require the update at a new placing on the market (section 2.1.1 item 6 of the proposal), and the four values are never taken from another passport (decision D15, The own values of a new passport). The columns `id` of `passports` and of `battery_models`, and every column whose name ends with `_catena_x_id`, hold the 36 characters of the UUID in lower case; §9.2.1 states the conversion to and from the served form (D50).
+The grain of the four performance values `rated_capacity_ah` (Ah), `capacity_fade_percent` (%), `power_fade_percent` (%) and `expected_lifetime_years` (calendar years) is one value per passport. The four values and the date of putting into service are set on every passport that has a lineage link: the deferred check of the insertion requires the five values, and the trigger `trg_passport_identity` refuses an update that removes one of the five values from a passport with a lineage link. The rule exists because DIN DKE SPEC 99100 clauses 6.7.2.2 e), 6.7.2.4, 6.7.3.4 and 6.7.6.2 d) require the update at a new placing on the market (section 2.1.1 item 6 of the proposal), and the four values are never taken from another passport (decision D15, The own values of a new passport). The columns `id` of `passports` and of `battery_models`, and every column whose name ends with `_catena_x_id`, hold the 36 characters of the UUID in lower case; §9.2.1 states the conversion to and from the served form (D50).
 
 #### 9.4.2 The file `002_triggers.sql`
 
-The file creates twelve functions in the language `plpgsql`, each `SECURITY INVOKER`, and twenty-two triggers; §22 prints the file. Every refusal of a function is the statement `RAISE EXCEPTION '<refusal id>: <sentence>' USING ERRCODE = 'P0001'`, the error class "PL/pgSQL error" with the code `raise_exception`, and the sentence of each refusal is the sentence of §22. Every trigger is `FOR EACH ROW`. A constraint trigger is `CREATE CONSTRAINT TRIGGER ... AFTER ... DEFERRABLE INITIALLY DEFERRED FOR EACH ROW` and runs at the commit. A function of a BEFORE trigger returns `NEW`, or `OLD` for a deletion that the function admits, and a function of a constraint trigger returns `NULL`. A function that serves two tables reads the passport id by `TG_TABLE_NAME` or by `TG_OP`, as §22 shows. A function that compares "every column other than" a list compares `to_jsonb(NEW)` and `to_jsonb(OLD)` after the removal of the listed keys.
+The file creates fourteen functions in the language `plpgsql`, each `SECURITY INVOKER`, and twenty-seven triggers; §22 prints the file. Thirteen functions are trigger functions, and the function `app_today()` is a helper that two trigger functions call. Every refusal of a rule is the statement `RAISE EXCEPTION '<refusal id>: <sentence>' USING ERRCODE = 'P0001'`, the error class "PL/pgSQL error" with the code `raise_exception`, and the sentence of each refusal is the sentence of §22. The one other error code of the file is `22007` of `app_today()`. Every trigger is `FOR EACH ROW`. A constraint trigger is `CREATE CONSTRAINT TRIGGER ... AFTER ... DEFERRABLE INITIALLY DEFERRED FOR EACH ROW` and runs at the commit. A function of a BEFORE trigger returns `NEW`, or `OLD` for a deletion that the function admits, and a function of a constraint trigger returns `NULL`. A function that serves two tables reads the passport id by `TG_TABLE_NAME` or by `TG_OP`, as §22 shows. A function that compares "every column other than" a list compares `to_jsonb(NEW)` and `to_jsonb(OLD)` after the removal of the listed keys.
+
+**The fixed search path (D60).** The last statement of the file is one `DO` block that runs, for every function of the schema of the migration, `ALTER FUNCTION <function> SET search_path = <schema>, pg_temp`, where `<schema>` is the value of `current_schema()` at the run. Inside a function PostgreSQL therefore resolves the names `passports`, `passport_lineage_links` and `passport_responsibility_intervals` in the schema of the migration first and in the temporary schema of the session last, so a temporary table of a session never replaces a table inside a function. The catalogue column `pg_proc.proconfig` of each of the fourteen functions holds the one value `search_path=<schema>, pg_temp`.
 
 | Function | Triggers (name: table, event) | Rule | Refusal id |
 |---|---|---|---|
+| `app_today()` | none; `check_passport_after_waste()` and `check_child_after_waste()` call the function | returns the date of the transaction setting `app.today`. An absent setting and an empty setting, which a pooled connection holds after an earlier transaction, return null. A setting that does not match the regular expression `^[0-9]{4}-[0-9]{2}-[0-9]{2}$`, and a setting that matches and names no calendar date, raise the SQLSTATE `22007`; the words `today`, `tomorrow`, `yesterday`, `epoch` and `infinity`, which a cast to `date` admits, are therefore refused. The function converts the text with `to_date(<text>, 'YYYY-MM-DD')` and never reads `current_date` | `ERR-DB-TODAY` with the SQLSTATE `22007` |
 | `set_passport_insert_defaults()` | `trg_passport_insert`: `passports`, BEFORE INSERT | sets `lineage_open` to true for a passport inserted with the status `re-used`, `repurposed` or `remanufactured`, and to false for every other status; the value of the statement is ignored (D54) | none |
-| `refuse_passport_identity_change()` | `trg_passport_identity`: `passports`, BEFORE UPDATE | raises when `id`, `passport_identifier`, `battery_identifier`, `manufacturer_bpnl` or `battery_model_id` is distinct from the old value; the function holds no exemption for a role (decision D16, The permanent manufacturer). The function also raises when `lineage_open` changes from false to true | `ERR-DB-IDENTITY-PERMANENT`; `ERR-DB-LINEAGE` for the lineage |
+| `refuse_passport_identity_change()` | `trg_passport_identity`: `passports`, BEFORE UPDATE | raises when `id`, `passport_identifier`, `battery_identifier`, `manufacturer_bpnl` or `battery_model_id` is distinct from the old value; the function holds no exemption for a role (decision D16, The permanent manufacturer). The function raises when `lineage_open` changes from false to true. The function raises when the new value of `date_into_service`, `rated_capacity_ah`, `capacity_fade_percent`, `power_fade_percent` or `expected_lifetime_years` is null and the passport has a lineage link; a first passport keeps the freedom to hold no value | `ERR-DB-IDENTITY-PERMANENT`; `ERR-DB-LINEAGE` for the lineage and for the five values |
 | `refuse_battery_model_change()` | `trg_battery_model_identity`: `battery_models`, BEFORE UPDATE OR DELETE | raises on every update and every deletion of a battery model | `ERR-DB-IDENTITY-PERMANENT` |
 | `check_passport_status_change()` | `trg_passport_status_change`: `passports`, BEFORE UPDATE OF `lifecycle_status` | when the new status is distinct from the old status: admits the new status `waste` from every other status, and the new status `re-used` from `original`, `repurposed` and `remanufactured`; raises for every other change | `ERR-DB-STATUS-CHANGE` |
 | `refuse_change_of_ended_passport()` | `trg_passport_ended`: `passports`, BEFORE UPDATE OR DELETE | raises when `OLD.recycling_date` is not null; raises on every deletion of a passport | `ERR-DB-PASSPORT-ENDED` |
-| `check_passport_after_waste()` | `trg_passport_after_waste`: `passports`, BEFORE UPDATE | returns without a refusal when `OLD.recycling_date` is not null or when `OLD.lifecycle_status` is not `waste`. Otherwise the function reads the date `NULLIF(current_setting('app.today', true), '')::date` and never reads `current_date`. An authorisation is in force when the date is not null, `OLD.successor_authorisation_valid_from` is not null and not after the date, and `OLD.successor_authorisation_valid_to` is null or not before the date. An absent setting and an empty setting, which a pooled connection holds after an earlier transaction, give the date null, so no authorisation is in force; a setting that is no date raises the SQLSTATE `22007`. Without an authorisation in force the function raises when a column other than `successor_authorisation_ref`, `successor_authorisation_valid_from`, `successor_authorisation_valid_to`, `recycling_date`, `recycler_bpnl` and `material_recycling_certificate_catena_x_id` is distinct from its old value | `ERR-DB-SUCCESSOR-AUTHORISATION` |
+| `check_passport_after_waste()` | `trg_passport_after_waste`: `passports`, BEFORE UPDATE | returns without a refusal, and without a read of the setting `app.today`, when `OLD.recycling_date` is not null or when `OLD.lifecycle_status` is not `waste`. Otherwise the function reads the date of `app_today()`. An authorisation is in force when the date is not null, `OLD.successor_authorisation_valid_from` is not null and not after the date, and `OLD.successor_authorisation_valid_to` is null or not before the date. Without an authorisation in force the function raises when a column other than `successor_authorisation_ref`, `successor_authorisation_valid_from`, `successor_authorisation_valid_to`, `recycling_date`, `recycler_bpnl` and `material_recycling_certificate_catena_x_id` is distinct from its old value | `ERR-DB-SUCCESSOR-AUTHORISATION`; `ERR-DB-TODAY` from `app_today()` |
+| `check_child_after_waste()` | five triggers BEFORE INSERT OR UPDATE OR DELETE: `trg_passport_aspect_payloads_after_waste`, `trg_passport_purposes_after_waste`, `trg_passport_repair_entries_after_waste`, `trg_passport_successor_links_after_waste`, `trg_passport_lineage_links_after_waste`, each on the table of its name | reads the passport of the row with `SELECT ... FOR SHARE`. The function returns without a refusal, and without a read of the setting `app.today`, when the read gives no row, when the passport has ended or when the status of the passport is not `waste`. Otherwise the function reads the date of `app_today()` and raises unless an authorisation of the successor is in force on that date, by the rule of `check_passport_after_waste()` (D61) | `ERR-DB-SUCCESSOR-AUTHORISATION`; `ERR-DB-TODAY` from `app_today()` |
 | `check_passport_lineage()` | `trg_passport_lineage`: `passports`, constraint trigger AFTER INSERT | at the commit, with the values of the inserted row and the state of the tables at the commit: raises for a passport inserted with the status `waste`; raises for a passport inserted with the status `original` that has a lineage link; raises for a passport inserted with the status `re-used`, `repurposed` or `remanufactured` that has no lineage link, or whose `date_into_service` or one of whose four performance values is null; raises when `lineage_open` of the passport is still true | `ERR-DB-LINEAGE` |
 | `check_responsibility()` | `trg_passport_responsibility`: `passports`, constraint trigger AFTER INSERT OR UPDATE; `trg_interval_responsibility`: `passport_responsibility_intervals`, constraint trigger AFTER INSERT OR UPDATE | at the commit, for the passport of the row: raises unless exactly one interval has `valid_to` null; for a passport in the status `waste`, raises unless that open interval has `responsible_bpnl` equal to `waste_successor_bpnl`, `role` equal to `waste_successor_role` and `valid_from` equal to `waste_date`, and an earlier interval of the passport has `valid_to` equal to `waste_date`; raises when `recycling_date` is before `valid_from` of the open interval (D17 (The named waste successor), D55 (The dates of the waste status and of the end are rules of the database)) | `ERR-DB-RESPONSIBILITY` for the count; `ERR-DB-WASTE-SUCCESSOR` for the waste rule; `ERR-DB-END-DATE` for the recycling date |
 | `refuse_change()` | six triggers BEFORE UPDATE OR DELETE: `trg_passport_lineage_links_append_only`, `trg_passport_repair_entries_append_only`, `trg_passport_successor_links_append_only`, `trg_notifications_received_append_only`, `trg_passport_write_decisions_append_only`, `trg_received_battery_information_append_only`, each on the table of its name | raises on every update and every deletion | `ERR-DB-APPEND-ONLY` |
-| `check_interval_change()` | `trg_interval_change`: `passport_responsibility_intervals`, BEFORE UPDATE OR DELETE | raises on every deletion; raises on an update that changes a column other than `valid_to`, or that changes a `valid_to` that is not null | `ERR-DB-APPEND-ONLY` |
+| `check_interval_change()` | `trg_interval_change`: `passport_responsibility_intervals`, BEFORE INSERT OR UPDATE OR DELETE | on an insertion: reads the passport with `SELECT ... FOR SHARE` and raises for an ended passport; raises when `valid_to` of the new interval is not null, when the passport has an open interval, or when an interval of the passport ends after `valid_from` of the new interval, so that an interval is inserted open and at the end of the timeline, and the intervals of one passport never overlap (decision D62, A responsibility interval is inserted open and at the end of the timeline). On a deletion: raises. On an update: raises when the update changes a column other than `valid_to`, or changes a `valid_to` that is not null | `ERR-DB-PASSPORT-ENDED` for an ended passport; `ERR-DB-RESPONSIBILITY` for the insertion; `ERR-DB-APPEND-ONLY` for the deletion and the update |
 | `refuse_child_of_ended_passport()` | four triggers BEFORE INSERT OR UPDATE OR DELETE: `trg_passport_aspect_payloads_ended`, `trg_passport_successor_links_ended`, `trg_passport_repair_entries_ended`, `trg_passport_purposes_ended`, each on the table of its name; and `trg_passport_responsibility_intervals_ended`: `passport_responsibility_intervals`, BEFORE INSERT OR UPDATE | reads the passport of the row (`passport_id` of the new row, or of the old row for a deletion) with `SELECT recycling_date ... FOR SHARE`, so that the function waits for a concurrent transaction that ends the passport, and raises when `recycling_date` is not null. The responsibility intervals of an ended passport are frozen in this way (D55) | `ERR-DB-PASSPORT-ENDED` |
 | `check_lineage_link_insert()` | `trg_passport_lineage_links_insert`: `passport_lineage_links`, BEFORE INSERT | reads `lineage_open` of the passport of the new link with `SELECT ... FOR UPDATE` and raises unless the value is true. A passport that does not exist, and a passport that the policies hide from the role, give no row and the same refusal (D54) | `ERR-DB-LINEAGE` |
 
-Two triggers on one table and one event fire in the order of their names. On an update of `passports` the order is `trg_passport_after_waste`, `trg_passport_ended`, `trg_passport_identity`, `trg_passport_status_change`. `trg_passport_after_waste` returns for an ended passport, so a change of an ended passport is always refused with `ERR-DB-PASSPORT-ENDED`. On `passport_responsibility_intervals` the order of an update is `trg_interval_change`, then `trg_passport_responsibility_intervals_ended`. A BEFORE trigger fires before the check of a foreign key and before the `WITH CHECK` expression of a policy; an insert of a lineage link for a passport that does not exist, or for a passport of another company, is therefore refused with `ERR-DB-LINEAGE`, and the foreign key `passport_lineage_links_passport_fkey` and the policy `passport_lineage_links_own` are never the first refusal of an insert. The record of the end of a passport is one UPDATE that sets the three end columns on a passport whose stored `recycling_date` is null, so `trg_passport_ended` admits the statement.
+**The tables that the rule after the waste status covers (D61).** The database refuses, without an authorisation of the successor in force, every change of the row of `passports` outside the six exempt columns, and every insertion, update and deletion of a record of `passport_aspect_payloads`, `passport_purposes`, `passport_repair_entries`, `passport_successor_links` and `passport_lineage_links` of a waste passport that has not ended. The following writes on a waste passport stay admitted without an authorisation: the record of the authorisation and the end of the passport, which are the six exempt columns; the records of `passport_access_records`, because the access record of the successor and the access records of a change of purchaser are exempt in the executor (§9.2.2); the records of `passport_responsibility_intervals`, which the waste step itself writes and which `check_interval_change()` and `check_responsibility()` bound; and the records of the tables that hold no passport data: `notifications_received`, `notifications_sent`, `passport_write_decisions`, `issuer_contracts` and `received_battery_information`. The waste step itself is admitted, because the two functions read the status of the passport before the step: the step updates a passport whose old status is not `waste` and writes no record of the five tables.
+
+Two triggers on one table and one event fire in the order of their names. On an update of `passports` the order is `trg_passport_after_waste`, `trg_passport_ended`, `trg_passport_identity`, `trg_passport_status_change`. `trg_passport_after_waste` returns for an ended passport, so a change of an ended passport is always refused with `ERR-DB-PASSPORT-ENDED`, also when the setting `app.today` holds a text that is no date. On each of the five tables of `check_child_after_waste()` the trigger with the suffix `_after_waste` fires first and returns for an ended passport, so a record of an ended passport is refused with `ERR-DB-PASSPORT-ENDED` by the trigger with the suffix `_ended`, and a record of a waste passport without an authorisation is refused with `ERR-DB-SUCCESSOR-AUTHORISATION` before the trigger with the suffix `_append_only` fires. On `passport_responsibility_intervals` the order is `trg_interval_change`, then `trg_passport_responsibility_intervals_ended`. A BEFORE trigger fires before the check of a foreign key and before the `WITH CHECK` expression of a policy; an insert of a lineage link for a passport that does not exist, or for a passport of another company, is therefore refused with `ERR-DB-LINEAGE`, and the foreign key `passport_lineage_links_passport_fkey` and the policy `passport_lineage_links_own` are never the first refusal of an insert. The record of the end of a passport is one UPDATE that sets the three end columns on a passport whose stored `recycling_date` is null, so `trg_passport_ended` admits the statement.
 
 
 #### 9.4.3 The file `003_policies.sql`
@@ -730,22 +740,29 @@ Two triggers on one table and one event fire in the order of their names. On an 
 The file raises an exception when `pg_roles` holds no role `refserver_app`, and then runs these statements.
 
 1. `GRANT USAGE ON SCHEMA <current_schema()> TO refserver_app`, written as a `DO` block that reads `current_schema()` and runs the statement with `format('%I', ...)`.
-2. The grants of the table below, each as `GRANT <privileges> ON <table> TO refserver_app`. The file grants `DELETE` on no table. The file also runs `GRANT SELECT ON schema_migrations TO refserver_app`, so that the start of the server reads the applied migration names; the role can insert no name. A table with a `GENERATED ALWAYS AS IDENTITY` column needs no grant on a sequence.
+2. The privilege check of the same `DO` block (D60). The server creates no temporary table. Every role holds the privilege `TEMPORARY` of a database through PUBLIC, so the block runs `REVOKE TEMPORARY ON DATABASE <current_database()> FROM PUBLIC` when `has_database_privilege('refserver_app', current_database(), 'TEMPORARY')` is true, and raises `ERR-DB-ROLE-PRIVILEGE` when the function is still true afterwards. The block raises `ERR-DB-ROLE-PRIVILEGE` when the role holds the privilege `CREATE` of the schema of the migration or of the schema `public`; PostgreSQL 17 grants neither privilege to a new role, so the block revokes nothing there. The revocation changes the database for every role that is no superuser and no owner of the database, so the database of the reference server serves the reference server only.
+3. The grants of the table below, each as `GRANT <privileges> ON <table> TO refserver_app`. The file grants `DELETE` on no table. The file also runs `GRANT SELECT ON schema_migrations TO refserver_app`, so that the start of the server reads the applied migration names; the role can insert no name. A table with a `GENERATED ALWAYS AS IDENTITY` column needs no grant on a sequence.
 
 | Privileges | Tables |
 |---|---|
 | `SELECT, INSERT, UPDATE` | `companies`, `passports`, `passport_aspect_payloads`, `passport_responsibility_intervals`, `notifications_sent`, `passport_access_records`, `issuer_contracts` |
 | `SELECT, INSERT` | `battery_models`, `passport_purposes`, `passport_lineage_links`, `passport_successor_links`, `passport_repair_entries`, `notifications_received`, `access_map_versions`, `access_map_entries`, `passport_write_decisions`, `received_battery_information` |
 
-3. `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY` and `ALTER TABLE <table> FORCE ROW LEVEL SECURITY` on nine tables, and one policy per table, nine policies in total. Each policy is `CREATE POLICY <name> ON <table> FOR ALL TO refserver_app USING (<expression>) WITH CHECK (<expression>)` with the same expression in both clauses.
+4. `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY` and `ALTER TABLE <table> FORCE ROW LEVEL SECURITY` on twelve tables, and one policy per table, twelve policies in total. Each policy is `CREATE POLICY <name> ON <table> FOR ALL TO refserver_app USING (<expression>) WITH CHECK (<expression>)`. Eleven policies hold the same expression in both clauses, and the policy of `issuer_contracts` holds `USING (true)`.
 
 | Policy | Table | Expression |
 |---|---|---|
 | `battery_models_own` | `battery_models` | `manufacturer_bpnl = current_setting('app.acting_bpnl', true)` |
 | `passports_own` | `passports` | `manufacturer_bpnl = current_setting('app.acting_bpnl', true)` |
 | `passport_purposes_own`, `passport_aspect_payloads_own`, `passport_lineage_links_own`, `passport_successor_links_own`, `passport_repair_entries_own`, `passport_responsibility_intervals_own`, `passport_access_records_own` | the seven tables `passport_purposes`, `passport_aspect_payloads`, `passport_lineage_links`, `passport_successor_links`, `passport_repair_entries`, `passport_responsibility_intervals` and `passport_access_records` | `EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true))` |
+| `access_map_versions_own` | `access_map_versions` | `EXISTS (SELECT 1 FROM battery_models m WHERE m.id = battery_model_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true))` |
+| `access_map_entries_own` | `access_map_entries` | `EXISTS (SELECT 1 FROM access_map_versions v JOIN battery_models m ON m.id = v.battery_model_id WHERE v.id = map_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true))` |
+| `issuer_contracts_own_passport` | `issuer_contracts` | `USING (true)`; `WITH CHECK (passport_id IS NULL OR EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))` |
 
-A transaction without the setting `app.acting_bpnl` therefore reads and writes no battery model and no passport. A row that fails the `WITH CHECK` expression raises the SQLSTATE `42501`. The other eight tables have no policy, because their records belong to the deployment and not to one passport; `issuer_contracts` and `passport_write_decisions` hold a column `passport_id` and have no policy for the same reason.
+A transaction without the setting `app.acting_bpnl` therefore reads and writes no battery model, no passport and no access map. A row that fails the `WITH CHECK` expression raises the SQLSTATE `42501`. The expression of `access_map_entries_own` reads the stored version, so the executor inserts the version of an access map in one statement and the entries in a later statement of the same transaction. The other five tables (`companies`, `notifications_received`, `notifications_sent`, `passport_write_decisions` and `received_battery_information`) have no policy, because their records belong to the deployment and not to one passport.
+
+**What the policies hide and what the policies do not hide (D63).** The policies hide the rows of another company. Three references that crossed the bound of a company in version 5 are refused: a passport references a battery model of its own manufacturer, because the foreign key `passports_battery_model_fkey` holds the two columns `(battery_model_id, manufacturer_bpnl)` and references the unique constraint `battery_models_id_manufacturer_key`; an access map version and an access map entry reference a battery model of the acting company; and an issuer contract references a passport of the acting company or no passport. A reference to a row of another company and a reference to a row that does not exist give the same refusal in each of the three cases (`23503` on `passports_battery_model_fkey`, and `42501` for the two policies), so the refusal does not tell the two cases apart. One existence signal remains: an insertion of a passport whose `id` or `passport_identifier` equals the value of a passport of another company fails with `23505` on `passports_pkey` or `passports_passport_identifier_key`, because both values are unique in the schema. The signal confirms only an identifier that the caller already holds, and a caller cannot list identifiers through the signal, because the identifiers hold a random UUID. The policies are a second barrier against a defect of the server and no separation of tenants; D24 states the bound.
+
 
 ### 9.5 Strings
 
@@ -815,7 +832,8 @@ A validation refusal adds one entry to `messages` per validator error, with the 
 | `P0001` with `ERR-DB-STATUS-CHANGE` or `ERR-DB-END-DATE`, and `23514` on `passports_end_after_waste_check` or `passport_responsibility_intervals_period_check` | `ERR-LC-STATUS-NOT-ADMITTED` | `ERR-RX-STEP-REFUSED` |
 | `P0001` with `ERR-DB-PASSPORT-ENDED` | `ERR-LC-PASSPORT-ENDED` | `ERR-RX-STEP-REFUSED` |
 | `P0001` with `ERR-DB-SUCCESSOR-AUTHORISATION` | `ERR-LC-SUCCESSOR-AUTHORISATION-MISSING` | `ERR-RX-STEP-REFUSED` |
-| `P0001` with `ERR-DB-WASTE-SUCCESSOR`, `ERR-DB-LINEAGE`, `ERR-DB-RESPONSIBILITY` or `ERR-DB-APPEND-ONLY` | `ERR-LC-INTERNAL`, because the executor writes the required records in the same transaction and the refusal shows a defect of the server | `ERR-RX-INTERNAL` |
+| `23503` on `passports_battery_model_fkey` | `ERR-LC-MODEL-NOT-FOUND` | `ERR-RX-INTERNAL` |
+| `P0001` with `ERR-DB-WASTE-SUCCESSOR`, `ERR-DB-LINEAGE`, `ERR-DB-RESPONSIBILITY` or `ERR-DB-APPEND-ONLY`, and `22007` with `ERR-DB-TODAY` | `ERR-LC-INTERNAL`, because the executor writes the required records in the same transaction and the refusal shows a defect of the server | `ERR-RX-INTERNAL` |
 | `23505` on `passports_passport_identifier_key` or `battery_models_manufacturer_part_key` | `ERR-LC-IDENTIFIER-EXISTS` | `ERR-RX-INTERNAL` |
 | `23505` on `access_map_versions_model_version_key` | `ERR-LC-ACCESS-MAP-VERSION-EXISTS` | `ERR-RX-INTERNAL` |
 | `23505` on `issuer_contracts_open_key` | `ERR-LC-CONTRACT-EXISTS` | `ERR-RX-INTERNAL` |
@@ -860,7 +878,7 @@ A validation refusal adds one entry to `messages` per validator error, with the 
 | `BPN_DID_RESOLUTION_URL` | when `BINDING=connector` | none | the address of the BPN-DID Resolution Service; the request form of the service is not verified against a stored text |
 | `LOG_LEVEL` | no | `info` | `error`, `warn`, `info` or `debug` |
 
-The two commands of the database administration read three further variables, which `loadConfig` does not read: `DATABASE_MIGRATION_URL` (the connection string of the role that owns the schema), `DATABASE_SCHEMA` and `APP_ROLE_PASSWORD` (the password that `npm run create-role` sets for `refserver_app`).
+The two commands of the database administration read three further variables, which `loadConfig` does not read: `DATABASE_MIGRATION_URL` (the connection string of the role that owns the schema; D60 states when the role also owns the database), `DATABASE_SCHEMA` and `APP_ROLE_PASSWORD` (the password that `npm run create-role` sets for `refserver_app`).
 
 ### 9.7 Workflows
 
@@ -870,7 +888,7 @@ Every workflow runs on `pull_request` and on `push` to `main`, on `ubuntu-latest
 |---|---|
 | `.github/workflows/checks.yml` | the installation of the package `poppler-utils` of Ubuntu, so that the registry check reads the stored PDF file; `node scripts/requirements-check.mjs`, whose last line starts with `0 problems, 0 quotes skipped`; `node scripts/check-sources.mjs`; `node scripts/check-license-headers.mjs`; `node scripts/check-private-references.mjs`; `node scripts/check-annexes.mjs --require P<n>` with the number of the last delivered phase; `node scripts/spec-gate-check.mjs` with the arguments of §18 |
 | `.github/workflows/spectral.yml` | `npx @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset .spectral.yaml --fail-severity error`, on a change of `docs/api/` or of `.spectral.yaml` |
-| `.github/workflows/samm.yml` | Java 21; the download of the SAMM command line tool 2.11.1 to `tools/samm-cli-2.11.1.jar` with the command of §11.2; `bash scripts/validate-models.sh --generate`; `git diff --exit-code -- models`, which fails when a generated schema of the commit differs from the output of the tool |
+| `.github/workflows/samm.yml` | Java 21; the download of the SAMM command line tool 2.11.1 to `tools/samm-cli-2.11.1.jar` with the command of §11.2; `bash scripts/validate-models.sh --generate`; `git diff --exit-code -- docs/api/aspects`, which fails when a generated schema of the commit differs from the output of the tool |
 | `.github/workflows/tests.yml` | the Ubuntu form of §11: the actions that install Node.js 24; a service container of the image `postgres:17` with a password that the workflow generates at its start and with the port 5432 published on `localhost`; the variables `TEST_DATABASE_URL` (`postgres://postgres:<the generated password>@localhost:5432/postgres`) and `TEST_APP_ROLE_PASSWORD` (a second generated value); `npm ci`, `node ../scripts/check-dependency-licenses.mjs` and `npm test` in `server/`; from phase P6 also `npm ci` and `npm test` in `tck/` with `TCK_BINDING=in-process` |
 | `.github/workflows/codeql.yml` | CodeQL analysis of the language `javascript-typescript`, also on a weekly schedule |
 | `.github/workflows/trufflehog.yml` | TruffleHog scan of the pushed commits with the option that reports only verified secrets |
@@ -909,7 +927,7 @@ The implementer pins each npm package to the latest release of its stated major 
 - **The header.** `docs/api/schemas/MessageHeader.schema.json` defines the header with the properties of the table below and with `additionalProperties: false`. The property `context` is an enumeration of the four contexts of Table 4.3 of the proposal, as section 4.3 item 4 of the proposal requires and as the stored file `sources/Tractus-X/kits-26.09/traceability-kit/openapi/notifications_2-0-0.yaml` constrains the context of its API `[live]`. The stored Industry Core KIT text shows the first seven properties in its example `[live]`, and the stored Traceability file holds the header schema of version 2.0.0 of the model with the property `relatedMessageId` `[live]`. The file of the aspect model `urn:samm:io.catenax.shared.message_header:3.0.0#MessageHeaderAspect` is not stored, so the patterns of the table are the patterns of this specification and are not verified against the model file.
 - **The content.** Each of the four operation schema files defines the content of its operation and not the whole message. The content holds the properties of Table 4.4 of the proposal. Every property is required except `materialRecyclingCertificateCatenaXId`. Every content schema sets `additionalProperties: false`. A passport identifier is a string of one character or more without an upper limit, because Table 4.4 of the proposal and the stored DPP Metadata schema state no limit.
 - **The dialect.** Each of the eight schema files declares `"$schema": "https://json-schema.org/draft/2020-12/schema"`, an `$id` equal to its file name, a `title` and a `description`, and every property carries a `description` (decision D21, One definition of the message).
-- **The date and time.** A property that holds a date and time has the format `date-time` of RFC 3339, which Table 4.4 of the proposal names. The reference server asserts the format: the validator of §9.2 is created with the formats of `ajv-formats`, so a value without a time zone and a text that is no date are refused, although the 2020-12 dialect alone treats `format` as an annotation.
+- **The date and time.** A property that holds a date and time has the format `date-time` of RFC 3339, which Table 4.4 of the proposal names. The reference server asserts the format: the validator of §9.2 is created with the formats of `ajv-formats`, so a value without a time zone and a text that is no date are refused, although the 2020-12 dialect alone treats `format` as an annotation. Each such property also carries the pattern `^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]`, because the format of `ajv-formats` 3.0.1 admits a space between the date and the time, and the grammar of RFC 3339 section 5.6 requires the letter T.
 - **The identifiers.** A property that holds a `catenaXId`, the property `messageId` and the property `relatedMessageId` have the pattern `UUID_PATTERN` of §9.2.1, which is the pattern of the stored shared model (decision D50, Every admitted form of an identifier accepted, one form sent). The reference server normalises a received identifier and always sends and serves the lower-case form with the prefix. A property that holds a Business Partner Number of a legal entity (BPNL) has the pattern `^BPNL[a-zA-Z0-9]{12}$`.
 
 
@@ -1035,7 +1053,7 @@ Every submodel offer carries the `dct:type` of CX-0160 (Battery Passport) 1.1.0 
 |---|---|---|---|---|---|
 | `lifecycle` | `batteryPassportLifecycle` | `urn:samm:io.catenax.battery.passport_lifecycle:1.0.0#BatteryPassportLifecycle` | PartInstance | `readLifecyclePayload` | none: the payload is built |
 | `successors` | `batteryPassportSuccessors` | `urn:samm:io.catenax.battery.passport_successors:1.0.0#BatteryPassportSuccessors` | PartInstance | `readSuccessorsPayload` | none: the payload is built |
-| `access-map` | `batteryPassportAccessMap` | `urn:samm:io.catenax.battery.passport_access_map:1.0.0#BatteryPassportAccessMap` | PartType | `readAccessMap` | `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap-schema.json`, a planned file of §7 |
+| `access-map` | `batteryPassportAccessMap` | `urn:samm:io.catenax.battery.passport_access_map:1.0.0#BatteryPassportAccessMap` | PartType | `readAccessMap` | `docs/api/aspects/BatteryPassportAccessMap-schema.json`, a planned file of §7 |
 | `digital-nameplate` | `batteryNameplate` | `urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate` | PartInstance | stored | `sources/IDTA/io.admin-shell.idta.batterypass.digital_nameplate/1.0.0/gen/NameplateBattery-schema.json` |
 | `technical-data` | `technicalData` | `urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#TechnicalData` | PartInstance | stored | `sources/IDTA/io.admin-shell.idta.batterypass.technical_data/1.0.0/gen/TechnicalDataBattery-schema.json` |
 | `product-condition` | `productCondition` | `urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition` | PartInstance | stored | `sources/IDTA/io.admin-shell.idta.batterypass.product_condition/1.0.0/gen/ProductConditionBattery-schema.json` |
@@ -1046,13 +1064,14 @@ Every submodel offer carries the `dct:type` of CX-0160 (Battery Passport) 1.1.0 
 
 The ten stored keys of `passport_aspect_payloads.aspect_key` are the ten keys whose payload source is "stored". The stored schemas of `sources/IDTA/` and the schemas that the SAMM command line tool generates declare the draft-04 dialect `[live]`, so `server/src/validation/schemaValidator.mjs` compiles them with `ajv-draft-04` and compiles the schemas of `docs/api/schemas/` and of `server/schemas/` with the 2020-12 class of `ajv` (D21).
 
-§21 prints the three Turtle files, the three `metadata.json` files, the three `RELEASE_NOTES.md` files, the three example payloads and the script `scripts/validate-models.sh` in full, and the implementer copies them (decision D58, Normative annexes). The three models hold exactly the properties, the entities, the characteristics and the enumeration values of sections 3.2.2, 3.3 and 3.4.2 of the proposal, and these rules describe the files of §21:
+§21 prints the three Turtle files, the three `metadata.json` files, the three `RELEASE_NOTES.md` files, the three example payloads, the module `server/src/validation/aspectSchemaCompiler.mjs` and the script `scripts/validate-models.sh` in full, and the implementer copies them (decision D58, Normative annexes). The three models hold exactly the properties, the entities, the characteristics and the enumeration values of sections 3.2.2, 3.3 and 3.4.2 of the proposal, and these rules describe the files of §21:
 
 - Each file declares the prefixes of the SAMM meta model 2.1.0 and its own namespace, and the lifecycle model and the successors model import `urn:samm:io.catenax.shared.uuid:2.1.0#` and `urn:samm:io.catenax.shared.business_partner_number:2.0.0#`, the two shared models that `sources/Tractus-X/semantic-models/` stores `[live]` (decision D32, The stored shared models).
 - The aspect, each property, each entity, each characteristic, each enumeration, each trait and each constraint carries a `samm:preferredName` and a `samm:description` in English. The description of a property is the text of the column "Meaning" of the proposal. Each property with a scalar value carries a `samm:exampleValue`, as the stored models do. Each enumeration has the data type `xsd:string`. Each aspect holds the two empty lists `samm:operations ( )` and `samm:events ( )`.
 - The name of a property in a payload is the name of the property, so no property carries `samm:payloadName`. A property that the proposal marks as not mandatory is declared with `samm:optional true`. The successors model declares its own enumeration of the four operations, because one Catena-X aspect model imports only shared models.
 - Each `metadata.json` holds the one line `{ "status" : "draft" }`, the form of the stored files `[live]`. Each `RELEASE_NOTES.md` follows the form of the stored release notes (the heading "Changelog", the heading of the version with its date, the heading "Added") and ends with the NOTICE section.
-- Each folder `gen` holds two files: `<Aspect>-schema.json`, the unchanged output of `java -jar tools/samm-cli-2.11.1.jar aspect <file> to schema`, which the script writes, and `<Aspect>.json`, the example payload of §21, which the implementer copies. The stored models of `sources/IDTA/` hold only the schema file in their `gen` folders `[live]`. The tool has no verified sub-command for a sample payload, so the example payload is written by hand: the example of section 3.2.2 of the proposal for the lifecycle model, the example of section 3.4.2 for the access map model, and own values for the successors model, for which the proposal holds no example.
+- **The folder layout (decision D64, The generated schemas outside `models/`, and one compiler of the draft-04 schemas).** Each namespace folder of `models/` holds exactly the files of a stored namespace of `sources/Tractus-X/semantic-models/` `[live]`: `RELEASE_NOTES.md` and, in the version folder, `<Aspect>.ttl` and `metadata.json`. No folder of `models/` holds a folder `gen`, because no stored Tractus-X namespace holds one. The generated schema and the example payload of each model are files of `docs/api/aspects/`: `<Aspect>-schema.json`, the unchanged output of `java -jar tools/samm-cli-2.11.1.jar aspect <file> to schema`, which the script writes, and `<Aspect>.json`, the example payload of §21, which the implementer copies. The tool has no verified sub-command for a sample payload, so the example payload is written by hand: the example of section 3.2.2 of the proposal for the lifecycle model, the example of section 3.4.2 for the access map model, and own values for the successors model, for which the proposal holds no example. A contribution to the Tractus-X semantic model repository takes the folders of `models/` unchanged and leaves out `docs/api/aspects/`.
+- **The compiler of the draft-04 aspect schemas (D64).** `server/src/validation/aspectSchemaCompiler.mjs` exports `createAspectSchemaCompiler()` and the constant `SAMM_SCHEMA_KEYWORDS`. The function returns a new instance of the class of `ajv-draft-04` with the options `{ strict: true, allErrors: true }`, with the formats of `ajv-formats`, and with the two keywords `x-samm-aspect-model-urn` and `components` added by `addKeyword`. The schemas that the SAMM command line tool generates and the stored schemas of `sources/IDTA/` hold both keywords, and the default compiler in strict mode refuses the first keyword (observed on 2026-11-16 with `ajv` 8.20.0 and `ajv-draft-04` 1.0.0). Strict mode stays on, so every other unknown keyword and every unknown format fails the compilation, and the format `date` of the access map is asserted. Every module and every test that compiles a draft-04 schema calls the function: `server/test/modelExamples.test.mjs` in phase P2, and `server/src/validation/schemaValidator.mjs`, `server/src/submodels/submodelService.mjs` and `server/src/submodels/accessMapService.mjs` from phase P4 on. No other module creates a draft-04 compiler.
 
 
 `readSubmodel` writes the governed elements over a stored payload at the paths of the table, which the stored schemas of §6 hold `[live]`. A stored payload never supplies the value of a governed path. A governed value that is null removes the element from the served payload; the two governed values that can be null, `operator_identifier` and `date_into_service`, belong to elements that the stored nameplate schema does not require `[live]`.
@@ -1125,22 +1144,24 @@ java21() { "$@"; }
   3. `node24 bash -c "cd server && npm ci && node --test --test-reporter=tap test/contractSchemas.test.mjs"` prints the line `# fail 0`.
   4. `node24 node scripts/check-annexes.mjs --require P1` prints a last line that ends with `0 differ, 0 missing`.
   5. The four checks.
-- **The Spectral result.** The author did not run the linter. When the linter reports an error on the file of §20, the implementer stops and reports the rule and the line, because a change of the file is a change of an annex.
+- **The Spectral result.** Observed on 2026-11-16 in a container of the image `node:24`, on a copy of the files of §20: the command of item 1 prints "No results with a severity of 'error' found!" and exits 0. When the linter of a later release reports an error on the file of §20, the implementer stops and reports the rule and the line, because a change of the file is a change of an annex.
 
 ### 11.2 Phase P2: the models
 
 - **The tool.** The implementer downloads the SAMM command line tool once into `tools/`, which git ignores: `node24 bash -c "mkdir -p tools && curl -fsSL -o tools/samm-cli-2.11.1.jar https://github.com/eclipse-esmf/esmf-sdk/releases/download/v2.11.1/samm-cli-2.11.1.jar"`. Observed on 2026-11-16: the address answers with the status 200, and the file has 110,342,711 bytes and the SHA-256 value `fab66a72e1969ff2e4d9db5d1c0eeb55936f89e2159045576301ea46c49ffc0f`. The script of §21 checks the SHA-256 value before each run and prints `CHECKSUM tools/samm-cli-2.11.1.jar` for another file.
 - **The observed behaviour of the tool.** Observed on 2026-11-16 on the image `eclipse-temurin:21`: `java -jar tools/samm-cli-2.11.1.jar aspect <file.ttl> validate` prints the line "Input model is valid" and exits 0 for a valid model. The command group `aspect <file.ttl> to` has the sub-commands html, java, json, jsonld, openapi, asyncapi, png, schema, svg, aas and sql; `aspect <file.ttl> to schema` prints the JSON schema of the model to the standard output; the tool has no sub-command `json-schema`, and the sub-command `to json` is described by the tool as the generation of an OpenAPI specification. The tool accepts no option `--models-root`.
-- **The resolution of the imported models.** The tool resolves an imported model from the folder layout `<root>/<namespace>/<version>/<File>.ttl` around the input file. The script therefore assembles the temporary models root `tools/models-root` with five namespace folders: copies of the two shared namespaces `io.catenax.shared.uuid` and `io.catenax.shared.business_partner_number` of `sources/Tractus-X/semantic-models/`, and copies of the three proposed namespaces of `models/` without their `gen` folders, and validates each proposed model at its path inside that root. The author observed this resolution on 2026-11-16 with the three files of §21 on a scratch copy. The rule is to be confirmed by the first run of phase P2 in the repository. The fallback, which the implementer applies without a stop when the tool reports an import that the tool cannot resolve: the implementer runs each validation with the working directory `tools/models-root` and the relative path `<namespace>/1.0.0/<Aspect>.ttl`, records the changed command in the completion record, and reports the change at the end of the phase.
-- **Steps.** The implementer copies the thirteen files of §21 into their paths, runs `java21 bash scripts/validate-models.sh --generate`, which creates each `gen` folder and writes the three generated schemas, writes `server/test/modelExamples.test.mjs`, and extends `models/README.md` and `docs/proposals.md`.
+- **The resolution of the imported models.** The tool resolves an imported model from the folder layout `<root>/<namespace>/<version>/<File>.ttl` around the input file. The script therefore assembles the temporary models root `tools/models-root` with five namespace folders: copies of the two shared namespaces `io.catenax.shared.uuid` and `io.catenax.shared.business_partner_number` of `sources/Tractus-X/semantic-models/`, and copies of the three proposed namespaces of `models/`, and validates each proposed model at its path inside that root. The author and the fourth reviewer each observed this resolution on 2026-11-16 with the three files of §21 on a scratch copy. The rule is to be confirmed by the first run of phase P2 in the repository. The fallback, which the implementer applies without a stop when the tool reports an import that the tool cannot resolve: the implementer runs each validation with the working directory `tools/models-root` and the relative path `<namespace>/1.0.0/<Aspect>.ttl`, records the changed command in the completion record, and reports the change at the end of the phase.
+- **Steps.** The implementer copies the fourteen files of §21 into their paths, runs `git add -N models docs/api/aspects scripts/validate-models.sh`, which records the intent to add the new files without their content, so that `git diff` shows a later change of a file, runs `java21 bash scripts/validate-models.sh --generate`, which creates the folder `docs/api/aspects` when the folder is absent and writes the three generated schemas, writes `server/test/modelExamples.test.mjs`, and extends `models/README.md` and `docs/proposals.md`.
 - **Done when.** Each of these commands exits 0 and prints the stated text:
   1. `java21 bash scripts/validate-models.sh --generate` prints three lines that start with `VALID` and three lines that start with `GENERATED`.
-  2. A second run of the same command leaves `git status --porcelain models` unchanged, and, once the owner has committed the models, `git diff --exit-code -- models` exits 0 after the run.
+  2. `sha256sum docs/api/aspects/*-schema.json > tools/first-run.sha256`, then a second run of the command of item 1, then `sha256sum --check --quiet tools/first-run.sha256` exits 0, so the two runs wrote the same three files. Once the owner has committed the files, `git diff --exit-code -- docs/api/aspects` exits 0 after a run.
   3. `find models -name "*.ttl" | wc -l` prints 3.
   4. `node24 bash -c "cd server && node --test --test-reporter=tap test/modelExamples.test.mjs"` prints the line `# fail 0`.
-  5. `git status --porcelain tools` prints nothing.
-  6. `node24 node scripts/check-annexes.mjs --require P2` prints a last line that ends with `0 differ, 0 missing`.
-  7. The four checks.
+  5. `git check-ignore -q tools/samm-cli-2.11.1.jar tools/models-root tools/first-run.sha256` exits 0, so git ignores the tool, the temporary models root and the file of item 2.
+  6. `git ls-files --eol scripts/validate-models.sh` prints a line that holds `w/lf`, so the script has LF line endings in the working tree. The file `.gitattributes` of phase P1 sets LF for every shell script at a checkout, and a copy of the script with CRLF line endings fails in the Linux container with the message `$'\r': command not found`.
+  7. `find models -type d -name gen | wc -l` prints 0.
+  8. `node24 node scripts/check-annexes.mjs --require P2` prints a last line that ends with `0 differ, 0 missing`.
+  9. The four checks.
 
 
 ### 11.3 Phase P3: the database
@@ -1153,7 +1174,7 @@ java21() { "$@"; }
   3. `node24 bash -c "cd server && node ../scripts/check-dependency-licenses.mjs"` prints `0 packages outside the licence list`.
   4. `node24 node scripts/check-annexes.mjs --require P3` prints a last line that ends with `0 differ, 0 missing`.
   5. The four checks.
-- **Inspection aids.** Three commands help a reader and prove nothing alone, because each counts lines, comments included: `grep -c "CREATE TABLE" server/src/db/migrations/001_schema.sql` prints 17; `grep -c "CREATE TRIGGER\|CREATE CONSTRAINT TRIGGER" server/src/db/migrations/002_triggers.sql` prints 22; `grep -c "CREATE POLICY" server/src/db/migrations/003_policies.sql` prints 9. The proof of the tables, the triggers, the policies and the absent `DELETE` privilege is the test file of item 2.
+- **Inspection aids.** Three commands help a reader and prove nothing alone, because each counts lines, comments included: `grep -c "CREATE TABLE" server/src/db/migrations/001_schema.sql` prints 17; `grep -c "CREATE TRIGGER\|CREATE CONSTRAINT TRIGGER" server/src/db/migrations/002_triggers.sql` prints 27; `grep -c "CREATE POLICY" server/src/db/migrations/003_policies.sql` prints 12. The proof of the tables, the triggers, the policies and the absent `DELETE` privilege is the test file of item 2.
 - **After the phase.** The owner orders the push of the repository.
 
 
@@ -1229,7 +1250,7 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D17. The named waste successor.** The data provider records the successor that the BatteryBecameWaste notification names, with the role that the notification names, as section 2.1.5 item 4 of the proposal and the reworded SwR-DATASET-191 (Waste step records the named successor, never the actor as manufacturer) state (point 5 of the owner's decision of 2026-11-16, §12.1). The database refuses the status `waste` without a named successor (SwR-RDB-074, Change to waste refused without a named successor): the constraint `passports_waste_successor_check` requires the three successor columns, and the deferred function `check_responsibility` requires at the commit the successor's open responsibility interval, which starts at the waste date (decision D55, The dates of the waste status and of the end are rules of the database). No step writes the successor or the acting company into `manufacturer_bpnl` (D16). The owner rejected the rule of version 1, which refused a successor with the role `producer` that is not the manufacturer of record, because an importer can be the producer of a battery (Annex B point 13 of the proposal). The system requirement SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) is therefore not met for a named producer that is not the producer of the current passport, and §5.7 holds the rewording that the owner reads before the registry changes.
 
-**D18. The successor's authorisation with its period.** After the waste status the data provider changes the passport only while a written authorisation of the successor is in force. The passport stores the authorisation in three columns: a reference, a first day and an optional last day. The data provider records the authorisation through `EP-SUCCESSOR-AUTHORISATION`; a later authorisation replaces the earlier one, and each change is written to the audit table with the replaced and the recorded values (§9.2.7), so the replaced authorisation stays on record. The owner decided the design on 2026-11-16 (point 1 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The executor and the trigger `trg_passport_after_waste` read the period against the UTC date of the request (decision D53, One clock in UTC). The end of the passport is exempt (SwR-DATASET-201, End of the passport exempt from the successor authorisation check). The authorised company never writes into the data provider's database: the authorised company reports its event, and the data provider applies the event under the recorded authorisation (D6). The owner's decision rejects an authorisation without a period and a fourth table for the authorisations.
+**D18. The successor's authorisation with its period.** After the waste status the data provider changes the passport only while a written authorisation of the successor is in force. The passport stores the authorisation in three columns: a reference, a first day and an optional last day. The data provider records the authorisation through `EP-SUCCESSOR-AUTHORISATION`; a later authorisation replaces the earlier one, and each change is written to the audit table with the replaced and the recorded values (§9.2.7), so the replaced authorisation stays on record. The owner decided the design on 2026-11-16 (point 1 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The executor, the trigger `trg_passport_after_waste` and the five triggers of the function `check_child_after_waste` read the period against the UTC date of the request (D53 (One clock in UTC), D61 (The rule after the waste status covers the records of the passport)). The end of the passport is exempt (SwR-DATASET-201, End of the passport exempt from the successor authorisation check). The authorised company never writes into the data provider's database: the authorised company reports its event, and the data provider applies the event under the recorded authorisation (D6). The owner's decision rejects an authorisation without a period and a fourth table for the authorisations.
 
 **D19. The repair entry.** A repair is applied by the data provider on a received BatteryRepaired: one repair entry per repair certificate and the status `re-used`. A second notification with the same certificate adds no entry. This specification rejects a status change without the certificate reference, which SwR-DATASET-202 (Repair entry stored with the repair certificate's catenaXId) refuses with status 400. The owner has not decided this point, and the decision is listed in §19.1.
 
@@ -1241,7 +1262,7 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D23. The exposure after the commit.** A twin is registered and the offers are published after the transaction of the step has committed (§9.2.5, §9.3). A failed refresh leaves the stored step in place, is answered in the field `exposure`, and is repeated through `EP-TWIN` or `EP-MODEL-TWIN`. The rule holds for every endpoint whose column "After the commit" of §9.3 names a refresh. This specification rejects a rollback of the step after a failed registration, because the notifications of the step are already written.
 
-**D24. Two database roles and row-level security.** The database enforces the single writer through row-level security policies that read the transaction setting `app.acting_bpnl` (SwR-DATASET-190, Passport rows written only under the responsible operator's context). The server connects only as the role `refserver_app`, which owns no table, holds no `DELETE` privilege and cannot create a role, and only the migration command connects as the owner of the schema (§9.2.8). The threat and its bound: a defect of the server, or an injected statement, acts with the privileges of the connected role, so the connected role must not be able to disable a trigger, to change a policy or to delete a record; the two roles give that bound, and a statement `RESET ROLE` gains nothing, because the session never changes its role. This specification rejects the design of version 2, in which the server connected as the owner and lowered its role inside each transaction.
+**D24. Two database roles and row-level security.** The database enforces the single writer through row-level security policies that read the transaction setting `app.acting_bpnl` (SwR-DATASET-190, Passport rows written only under the responsible operator's context). The server connects only as the role `refserver_app`, which owns no table, holds no `DELETE` privilege, cannot create a role, cannot create a table and cannot create a temporary table, and only the migration command connects as the owner of the schema (§9.2.8). The threat and its bound: a defect of the server, or an injected statement, acts with the privileges of the connected role, so the connected role must not be able to disable a trigger, to change a policy, to delete a record or to replace a table inside a trigger function; the two roles and the fixed search path of D60 (A fixed search path for every function, and no temporary table for the application role) give that bound, and a statement `RESET ROLE` gains nothing, because the session never changes its role. **The bound of the two settings.** The role `refserver_app` sets `app.acting_bpnl` and `app.today` itself. The twelve policies and the rule after the waste status therefore protect against a defect of the server code that passes a wrong value in one statement, and do not protect against a party that holds the credentials of the role: that party sets `app.acting_bpnl` to another Business Partner Number, records an authorisation and sets `app.today`. The triggers that read no setting (the permanent identity, the lineage, the responsibility timeline, the append-only records, the end of a passport) hold against that party as well. The separation of companies does not rest on the policies: one deployment serves one company and one database schema holds the passports of that one company (D6), on which §9.2.2 (the single-writer rule), §9.2.8 (`withTransaction` passes `config.ownBpnl`), §9.4 and the five tables without a policy rely. The in-process binding of the test kit gives each of its three participants a schema of its own in one test database (§9.2.9), which is a test arrangement and no deployment. **The protection of the credentials.** The password of `refserver_app` exists in the environment variable `DATABASE_URL` of the server process and in the secret store from which the operator of the deployment fills the variable; no file of the repository holds the password (§13), the logger writes no connection string, the server offers no endpoint that takes SQL text, and every statement of the server passes its values as parameters. This specification rejects the design of version 2, in which the server connected as the owner and lowered its role inside each transaction, and rejects a signed setting that the database verifies, which needs a key inside the database and protects one schema of one company against no further party.
 
 **D25. The audit table.** The audit trail is the table `passport_write_decisions` (D42): one record per granted and per refused write decision, written after the transaction of the request has ended (§9.2.7). SwR-AUDIT-045 (Dataset write decisions recorded with the authorisation relied on) names the fields of the record. This specification rejects a log line alone, which no reader of the database finds, and an audit record inside the transaction of the request, which a refused request rolls back.
 
@@ -1294,9 +1315,9 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 **D52. The tools in containers.** Node.js 24 runs in a container of the image `node:24`, Java 21 in a container of the image `eclipse-temurin:21`, and PostgreSQL 17 in a container of the image `postgres:17` with a published local port; nothing is installed on the machine, and the SAMM command line tool is downloaded once into `tools/` from the releases of its Eclipse project (§11.0, §11.2). Two named volumes of Docker hold the installed npm packages, so that the repository folder holds no installed package. The owner decided the rule on 2026-11-16 (point 5 of the section "Four decisions before phases P1 to P3, and the tools" of the owner's file of §12.1). The owner's decision rejects an installation of the three tools on the machine.
 
-**D53. One clock in UTC.** Every time of the server comes from the injected `clock`, and every date of the server is the UTC date of that time. `createPool` sets the time zone UTC on every connection, and `withTransaction` passes the UTC date to the database in the setting `app.today`, which the trigger of the rule after the waste status reads in place of the date of the database server. This specification rejects two date sources for one rule, which disagree in a test with an advanced clock and close to midnight.
+**D53. One clock in UTC.** Every time of the server comes from the injected `clock`, and every date of the server is the UTC date of that time. `createPool` sets the time zone UTC on every connection, and `withTransaction` passes the UTC date to the database in the setting `app.today`, which the trigger of the rule after the waste status reads in place of the date of the database server. This specification rejects two date sources for one rule, which disagree in a test with an advanced clock and close to midnight. The helper function `app_today` of the database admits only a text of the form `YYYY-MM-DD` that names a calendar date, so the date words of PostgreSQL that read the clock of the database server are refused with `ERR-DB-TODAY`.
 
-**D54. The lineage of a new passport is open only inside its own transaction.** The column `passports.lineage_open` is set by a trigger at the insertion of a passport: true for a new passport, false for a first passport. The trigger of `passport_lineage_links` admits a link only while the column is true, the executor sets the column to false after the last link, a trigger refuses a change of the column from false to true, and the deferred check of the insertion refuses a commit with an open lineage. A lineage link can therefore exist only for a passport that the same transaction inserted, under a savepoint as well, and no statement of a later transaction adds a link, for the application role and for the owner alike. This specification rejects the comparison of the transaction identifier of the passport row, which version 4 held: an update of the passport by a later transaction gives the row the identifier of that transaction, and a savepoint gives the row another identifier. This specification also rejects a transaction-local setting that names the passport, because a caller that reaches the database under the application role can set the setting itself.
+**D54. The lineage of a new passport is open only inside its own transaction.** The column `passports.lineage_open` is set by a trigger at the insertion of a passport: true for a new passport, false for a first passport. The trigger of `passport_lineage_links` admits a link only while the column is true, the executor sets the column to false after the last link, a trigger refuses a change of the column from false to true, and the deferred check of the insertion refuses a commit with an open lineage. A lineage link can therefore exist only for a passport that the same transaction inserted, under a savepoint as well, and no statement of a later transaction adds a link, for the application role and for the owner alike. This specification rejects the comparison of the transaction identifier of the passport row, which version 4 held: an update of the passport by a later transaction gives the row the identifier of that transaction, and a savepoint gives the row another identifier. This specification also rejects a transaction-local setting that names the passport, because a caller that reaches the database under the application role can set the setting itself. The rule holds against a temporary table of the session as well, because the function that reads `lineage_open` has the fixed search path of D60.
 
 **D55. The dates of the waste status and of the end are rules of the database.** The deferred function `check_responsibility` requires that the open interval of a waste passport starts at the waste date and that an earlier interval ends at the waste date; the constraint `passports_end_after_waste_check` refuses a recycling date before the waste date; the same function refuses a recycling date before the start of the open interval; and a trigger freezes the responsibility intervals of an ended passport, as section 2.1.7 item 4 of the proposal forbids a change of an ended passport. The executor applies the same rules first and answers the refusals of §10.4. This specification rejects rules in the executor alone, which a later implementer of the services can bypass.
 
@@ -1307,6 +1328,16 @@ A decision that holds the words "chosen by this specification; the owner has not
 **D58. Normative annexes.** §20, §21 and §22 print the files of phases P1 to P3 in full, the implementer copies them, and `scripts/check-annexes.mjs` compares each file with its block. A later change of such a file is a change of this specification. This specification rejects a description in prose alone, from which three reviewers built files that differed in the points that the prose left open.
 
 **D59. The registry check per environment.** The registry check runs in the container of the image `node:24` on the owner's machine, where the check skips the ten quotes of the one stored PDF file, and on the Ubuntu runner with `poppler-utils`, where the check skips no quote; the line of the runner is the gate. This specification rejects the installation of a package in every container run, which needs the network for each check.
+
+**D60. A fixed search path for every function, and no temporary table for the application role.** A function of `002_triggers.sql` names its tables without a schema, and PostgreSQL searches the temporary schema of a session first, so a session that created a temporary table `passports` made three rules of version 5 read the temporary table (finding R5-001 of the fourth review). Two barriers close the defect. First, the last statement of `002_triggers.sql` sets `search_path = <schema>, pg_temp` on every function of the schema, with the schema name read from `current_schema()` at the run, so a function resolves a table name in the schema of the migration and reaches the temporary schema last. Second, `003_policies.sql` revokes the privilege `TEMPORARY` of the database from PUBLIC and stops when the role `refserver_app` still holds the privilege or holds the privilege `CREATE` of a schema. The server needs neither privilege: the server creates no temporary table and no object, and the client library `pg` creates none. This specification rejects a schema name written into each statement of the functions with `format()`, which turns each function body into a text that no reader checks as SQL and which the fourteen functions would repeat; one `DO` block gives the same result and is proven by the catalogue column `proconfig`. This specification rejects the revocation alone, which a later grant of an administrator undoes without a failing test of the rules, and rejects a revocation from the role alone, which PostgreSQL does not offer for a privilege that the role holds through PUBLIC.
+
+**D61. The rule after the waste status covers the records of the passport.** The function `check_child_after_waste` refuses, without an authorisation of the successor in force, every insertion, update and deletion of a record of `passport_aspect_payloads`, `passport_purposes`, `passport_repair_entries`, `passport_successor_links` and `passport_lineage_links` of a waste passport, with the refusal id `ERR-DB-SUCCESSOR-AUTHORISATION` of D18, because the payloads and the records are the passport information that section 2.1.5 of the proposal places under the successor. §9.4.2 lists the writes that stay admitted. The same finding class gives the rule of the five values: an update never removes the date of putting into service or a performance value from a passport with a lineage link (D15). This specification rejects the rule in the executor alone, which D55 already rejects for the dates.
+
+**D62. A responsibility interval is inserted open and at the end of the timeline.** The trigger `trg_interval_change` refuses an inserted interval with an end, an inserted interval beside an open interval, and an inserted interval that starts before the end of an earlier interval of the passport. The only admitted update sets the end of the open interval. The intervals of one passport therefore never overlap, and no statement invents an interval of the past. This specification rejects an exclusion constraint on the passport and the period, which needs the extension `btree_gist` in PostgreSQL 17, so the three migration files need no extension and no privilege to create one.
+
+**D63. References across the bound of a company.** A passport references a battery model of its own manufacturer through a foreign key of two columns, and `access_map_versions`, `access_map_entries` and `issuer_contracts` have a policy, so a row of the acting company never references a battery model or a passport of another company (§9.4.3). A reference to a row of another company and a reference to no row give the same refusal. The unique passport identifier leaves one existence signal, which §9.4.3 states. This specification rejects a policy on the five tables of the deployment, whose records name no company of the schema.
+
+**D64. The generated schemas outside `models/`, and one compiler of the draft-04 schemas.** The folders of `models/` hold exactly the files of a stored Tractus-X namespace, and the generated schema and the example payload of each model are files of `docs/api/aspects/`, beside the other schemas that the server compiles. One module, `server/src/validation/aspectSchemaCompiler.mjs`, builds the compiler of the draft-04 schemas in strict mode with the two keywords of the SAMM command line tool. This specification rejects a folder `gen` inside `models/`, which no stored Tractus-X namespace holds, and rejects strict mode off, which lets a misspelled keyword and an unknown format pass.
 
 **D49. The retry of a failed transport.** The sender repeats a notification whose transport failed with the same `messageId`, up to `NOTIFICATION_MAX_ATTEMPTS` attempts, with a pause of `NOTIFICATION_RETRY_SECONDS` multiplied by the attempt count, and `EP-NOTIFICATION-RETRY` starts a further series (§9.2.5). The duty to send of sections 2.1.4, 2.1.5 and 2.1.7 of the proposal ends only when the receiver offers no asset or refuses the contract. This specification rejects the repetition of the whole event, which sends new messages to the receivers that already applied the step. The two default values are chosen by this specification; the owner has not decided.
 
@@ -1356,9 +1387,9 @@ A decision that holds the words "chosen by this specification; the owner has not
 
 | File | Phase | What the file asserts |
 |---|---|---|
-| `server/test/contractSchemas.test.mjs` | P1 | the eight schemas compile in the 2020-12 dialect with the formats of `ajv-formats`; for each operation, one valid message validates against the envelope definition of the operation and against `LifecycleNotification.schema.json`; for each operation these messages fail: a message with a third top-level property, a message without `content`, a message without `header`, a message with the context of another operation, a message without each required property of the header and of the content, a message with a further content property, a Business Partner Number of 11 characters, an identifier of 35 characters, a `sentDateTime` without a time zone, a content date without a time zone, and the text `tomorrow` as a date; an identifier validates in each of the four forms (with and without the prefix `urn:uuid:`, in upper and in lower case); a passport identifier of 300 characters validates; `ErrorResponse.schema.json` refuses a further property in the response, in `error` and in an item of `messages`; `docs/api/openAPI.yaml` parses, holds exactly four paths, each with one `post` operation whose `operationId` equals the path name and whose request body references the envelope definition of the operation, each operation holds the ten responses of §10.1, the server variable has its default, and the file holds no security scheme |
-| `server/test/modelExamples.test.mjs` | P2 | each of the three generated schemas compiles in the draft-04 dialect; each of the three example files of `models/` validates against its generated schema; the two example payloads of the proposal equal the example files of the lifecycle model and of the access map model, where the test reads the proposal file, takes the first fenced block of the language `json` after the heading "#### 3.2.2 PROPERTIES" and the first such block after the heading "#### 3.4.2 PROPERTIES", and compares the parsed values; the example file of the successors model equals the block of §21 |
-| `server/test/databaseRules.integration.test.mjs` | P3 | The file holds eight top-level tests, named `(a) catalogue` to `(h) types`, each with one sub-test per case. (a) Through `adminClient`: a second run of `migrate` applies no file; the 17 tables, the 12 functions, the 22 triggers, the 9 policies, the two domain constraints `bpnl_check` and `bpns_check` and every named constraint of §9.4.1 exist by their names in the catalogue (`pg_tables`, `pg_proc`, `pg_trigger`, `pg_policies`, `pg_constraint`, `pg_indexes`). (b) Through `adminClient`, one accepted and one refused statement for each constraint whose refusal a statement can reach: each CHECK constraint fails with the SQLSTATE `23514` and its constraint name; a domain fails with `23514` and the constraint name `bpnl_check` or `bpns_check`; each UNIQUE constraint and each unique index fails with `23505` and its name; a NOT NULL column fails with `23502` and the name of the column, because PostgreSQL reports no constraint name for that refusal; each foreign key fails with `23503` and its name, except `passport_lineage_links_passport_fkey`, which no insert reaches because `trg_passport_lineage_links_insert` answers first with `ERR-DB-LINEAGE`, so the catalogue of group (a) proves that key. (c) Through `adminClient`, for each of the 22 triggers one accepted and one refused statement, where the refused statement fails with the SQLSTATE `P0001` and the message of §22; the cases include an update of `manufacturer_bpnl` by the superuser, a deletion of a passport, a passport inserted without a responsibility interval (refused at the commit with `ERR-DB-RESPONSIBILITY`), the status `waste` with the successor's interval that starts at another instant than the waste date (refused at the commit with `ERR-DB-WASTE-SUCCESSOR`), a recycling date before the waste date (`23514`, `passports_end_after_waste_check`), a recycling date before the start of the open interval (`ERR-DB-END-DATE`), an interval change of an ended passport (`ERR-DB-PASSPORT-ENDED`), the three end columns set by one update on a passport of each of the five statuses, and a change of an ended waste passport without an authorisation, which fails with `ERR-DB-PASSPORT-ENDED`. The lineage cases: a new passport with its link and the closing update commits, also when the three statements run under a savepoint; a new passport without the closing update fails at the commit; a transaction that first updates a first passport of an earlier transaction and then inserts a link for that passport fails with `ERR-DB-LINEAGE`; a link for a closed new passport of an earlier transaction fails; an update of `lineage_open` from false to true fails. (d) Through `adminClient` with the setting `app.today`: an update of a waste passport is refused without an authorisation, refused on the day before `valid_from`, admitted on the day of `valid_from`, admitted on the day of `valid_to`, refused on the day after `valid_to`, refused when the setting is absent, and refused with `ERR-DB-SUCCESSOR-AUTHORISATION` on a connection whose earlier transaction set the setting, where the setting is the empty text. (e) Through `appPool`, per table with a policy. For `passports`, `passport_aspect_payloads`, `passport_responsibility_intervals` and `passport_access_records`: with `app.acting_bpnl` equal to the Business Partner Number of the passport, a SELECT returns the row and an INSERT and an UPDATE succeed; with another Business Partner Number, and without the setting, a SELECT returns 0 rows, an UPDATE changes 0 rows, and an INSERT fails with `42501`. For `battery_models`, `passport_purposes`, `passport_successor_links` and `passport_repair_entries`: a SELECT and an INSERT behave in the same way, and an UPDATE fails with `42501` for every company, because the role holds no UPDATE privilege on the table. For `passport_lineage_links`: the accepted INSERT runs in the transaction that inserts the passport; an INSERT with another Business Partner Number or without the setting fails with `P0001` and `ERR-DB-LINEAGE`, because the trigger does not see the passport; an UPDATE fails with `42501`. (f) Through `appPool`: a `DELETE` on each of the 17 tables fails with `42501`; a SELECT on `schema_migrations` returns the three names, and an INSERT into `schema_migrations` fails with `42501`. (g) Two overlapping transactions on two clients: the first sets the end columns of a passport and waits; the second inserts an aspect payload of the passport, blocks until the first commits, and then fails with `ERR-DB-PASSPORT-ENDED`. (h) The test file sets `process.env.TZ = "Pacific/Kiritimati"` in its first statement, before the first `Date` of the process: a column of the type `date` is read as the stored text `YYYY-MM-DD`, a `numeric` column and a `bigint` column are read as numbers, and a `timestamptz` value is written and read as the same instant |
+| `server/test/contractSchemas.test.mjs` | P1 | the eight schemas compile in the 2020-12 dialect in strict mode with the formats of `ajv-formats`; every property of the eight schema files, at every depth, carries a description; for each operation, one valid message validates against the envelope definition of the operation and against `LifecycleNotification.schema.json`; for each operation these messages fail: a message with a third top-level property, a message without `content`, a message without `header`, a message with the context of another operation, a message without each required property of the header and of the content, a message with a further content property, a Business Partner Number of 11 characters, an identifier of 35 characters, a `sentDateTime` without a time zone, a `sentDateTime` with a space in place of the letter T, a content date without a time zone, a content date with a space in place of the letter T, and the text `tomorrow` as a date; a `sentDateTime` with the offset `+02:00` validates; an identifier validates in each of the four forms (with and without the prefix `urn:uuid:`, in upper and in lower case); a passport identifier of 300 characters validates; `ErrorResponse.schema.json` refuses a further property in the response, in `error` and in an item of `messages`; `docs/api/openAPI.yaml` parses, holds exactly four paths, each with one `post` operation whose `operationId` equals the path name and whose request body references the envelope definition of the operation, each operation holds the ten responses of §10.1, the server variable has its default, and the file holds no security scheme |
+| `server/test/modelExamples.test.mjs` | P2 | every compiler of the test is the result of `createAspectSchemaCompiler()`; each of the three generated schemas of `docs/api/aspects/` compiles; each of the three example files of `docs/api/aspects/` validates against its generated schema; an access map with the text `18 February 2027` as `validFrom`, an access map with an unknown access group, an access map without `entries` and a lifecycle payload with a Business Partner Number of 5 characters fail; each stored schema file `*-schema.json` below `sources/IDTA/` compiles; a compiler of `ajv-draft-04` in strict mode without the two keywords of `SAMM_SCHEMA_KEYWORDS` throws for a generated schema; the two example payloads of the proposal equal the example files of the lifecycle model and of the access map model, where the test reads the proposal file, takes the first fenced block of the language `json` after the heading "#### 3.2.2 PROPERTIES" and the first such block after the heading "#### 3.4.2 PROPERTIES", and compares the parsed values; the example file of the successors model equals the block of §21 |
+| `server/test/databaseRules.integration.test.mjs` | P3 | The file holds eight top-level tests, named `(a) catalogue` to `(h) types`, each with one sub-test per case. (a) Through `adminClient`: a second run of `migrate` applies no file; the 17 tables, the 14 functions, the 27 triggers, the 12 policies, the two domain constraints `bpnl_check` and `bpns_check` and every named constraint of §9.4.1 exist by their names in the catalogue (`pg_tables`, `pg_proc`, `pg_trigger`, `pg_policies`, `pg_constraint`, `pg_indexes`); `pg_proc.proconfig` of each of the 14 functions holds exactly the value `search_path=<schema>, pg_temp`; `has_database_privilege('refserver_app', current_database(), 'TEMPORARY')` is false, and `has_schema_privilege('refserver_app', <schema>, 'CREATE')` is false for the schema of the test and for `public`. (b) Through `adminClient`, one accepted and one refused statement for each constraint whose refusal a statement can reach: each CHECK constraint fails with the SQLSTATE `23514` and its constraint name; a domain fails with `23514` and the constraint name `bpnl_check` or `bpns_check`; each UNIQUE constraint and each unique index fails with `23505` and its name; a NOT NULL column fails with `23502` and the name of the column, because PostgreSQL reports no constraint name for that refusal; each foreign key fails with `23503` and its name, where `passports_battery_model_fkey` fails in the same way for a battery model of another manufacturer and for an unknown battery model. Two constraints are proven by the catalogue of group (a) only: `passport_lineage_links_passport_fkey`, which no insert reaches because `trg_passport_lineage_links_insert` answers first with `ERR-DB-LINEAGE`, and `battery_models_id_manufacturer_key`, whose refusal `battery_models_pkey` always precedes. (c) Through `adminClient`, the statements of the 27 triggers, where a refused statement fails with the SQLSTATE `P0001` and the message of §22. Nineteen triggers have one accepted and one refused statement each. `trg_passport_insert` raises no refusal: the test asserts the value of `lineage_open` after an insertion with each of the five statuses, and an insertion of a `re-used` passport with `lineage_open = false` in the statement returns true. The seven triggers that refuse every row of their events (`trg_battery_model_identity` and the six triggers with the suffix `_append_only`) have the refused update and the refused deletion, and their accepted statement is the insertion, on which the trigger does not fire. The cases include an update of `manufacturer_bpnl` by the superuser, a deletion of a passport, a passport inserted without a responsibility interval (refused at the commit with `ERR-DB-RESPONSIBILITY`), the status `waste` with the successor's interval that starts at another instant than the waste date (refused at the commit with `ERR-DB-WASTE-SUCCESSOR`), a recycling date before the waste date (`23514`, `passports_end_after_waste_check`), a recycling date before the start of the open interval (`ERR-DB-END-DATE`), an interval change of an ended passport (`ERR-DB-PASSPORT-ENDED`), the three end columns set by one update on a passport of each of the five statuses, and a change of an ended waste passport without an authorisation, which fails with `ERR-DB-PASSPORT-ENDED`. The lineage cases: a new passport with its link and the closing update commits, also when the three statements run under a savepoint; a new passport without the closing update fails at the commit; a transaction that first updates a first passport of an earlier transaction and then inserts a link for that passport fails with `ERR-DB-LINEAGE`; a link for a closed new passport of an earlier transaction fails; an update of `lineage_open` from false to true fails; an update that sets one of the five values of a new passport to null fails with `ERR-DB-LINEAGE`, an update that replaces a value succeeds, and an update that sets `date_into_service` of a first passport to null succeeds. The interval cases: an inserted interval with an end, a second open interval, and an interval that starts before the end of the closed interval each fail with `ERR-DB-RESPONSIBILITY`; an interval that starts at the end of the closed interval succeeds; an update of a closed interval fails with `ERR-DB-APPEND-ONLY`. The cases of the records of a waste passport without an authorisation: an update and an insertion of an aspect payload, an insertion of a purpose, of a repair entry and of a successor link, and a deletion of a lineage link each fail with `ERR-DB-SUCCESSOR-AUTHORISATION`; an insertion of an access record succeeds; the same statements succeed under an authorisation in force, except the deletion, which then fails with `ERR-DB-APPEND-ONLY`. The three cases of the temporary table, where the superuser of `adminClient` creates the table: a transaction that creates the temporary table `passports` with one row that names a closed first passport with `lineage_open` true and then inserts a lineage link for that passport fails with `ERR-DB-LINEAGE`; a transaction that creates the same temporary table with a row that names an ended passport without a recycling date and then inserts an aspect payload of that passport fails with `ERR-DB-PASSPORT-ENDED`; a transaction that creates the temporary table `passport_responsibility_intervals` with one open interval of a new passport identifier and then inserts that passport without an interval fails at the commit with `ERR-DB-RESPONSIBILITY`. (d) Through `adminClient` with the setting `app.today`: an update of a waste passport is refused without an authorisation, refused on the day before `valid_from`, admitted on the day of `valid_from`, admitted on the day of `valid_to`, refused on the day after `valid_to`, refused when the setting is absent, and refused with `ERR-DB-SUCCESSOR-AUTHORISATION` on a connection whose earlier transaction set the setting, where the setting is the empty text. With each of the settings `today`, `epoch`, `infinity`, `garbage` and `2026-13-45`, an update of the waste passport and an update of an aspect payload of the waste passport fail with the SQLSTATE `22007` and `ERR-DB-TODAY`; with the setting `garbage`, an update of a passport that is not waste succeeds, and an update of an ended passport fails with `ERR-DB-PASSPORT-ENDED`. (e) Through `appPool`, per table with a policy. For `passports`, `passport_aspect_payloads`, `passport_responsibility_intervals` and `passport_access_records`: with `app.acting_bpnl` equal to the Business Partner Number of the passport, a SELECT returns the row and an INSERT and an UPDATE succeed; with another Business Partner Number, and without the setting, a SELECT returns 0 rows, an UPDATE changes 0 rows, and an INSERT fails with `42501`. For `battery_models`, `passport_purposes`, `passport_successor_links` and `passport_repair_entries`: a SELECT and an INSERT behave in the same way, and an UPDATE fails with `42501` for every company, because the role holds no UPDATE privilege on the table. For `passport_lineage_links`: the accepted INSERT runs in the transaction that inserts the passport; an INSERT with another Business Partner Number or without the setting fails with `P0001` and `ERR-DB-LINEAGE`, because the trigger does not see the passport; an UPDATE fails with `42501`. For `access_map_versions` and `access_map_entries`: an INSERT for a battery model of the acting company succeeds, with the version and the entry in two statements; an INSERT for a battery model of another company and an INSERT for an unknown battery model both fail with `42501`; another company reads 0 rows. For `issuer_contracts`: an INSERT with a passport of the acting company and an INSERT without a passport succeed; an INSERT with a passport of another company and an INSERT with an unknown passport both fail with `42501`. An INSERT of a passport on a battery model of another company fails with `23503` on `passports_battery_model_fkey`. (f) Through `appPool`: a `DELETE` on each of the 17 tables fails with `42501`; a SELECT on `schema_migrations` returns the three names, and an INSERT into `schema_migrations` fails with `42501`; `CREATE TEMP TABLE passports (id uuid)` fails with `42501`. (g) Two overlapping transactions on two clients: the first sets the end columns of a passport and waits; the second inserts an aspect payload of the passport, blocks until the first commits, and then fails with `ERR-DB-PASSPORT-ENDED`. (h) The test file sets `process.env.TZ = "Pacific/Kiritimati"` in its first statement, before the first `Date` of the process: a column of the type `date` is read as the stored text `YYYY-MM-DD`, a `numeric` column and a `bigint` column are read as numbers, and a `timestamptz` value is written and read as the same instant |
 | `server/test/dependencyLicenses.test.mjs` | P3 | The test builds its fixture at run time in a directory of `os.tmpdir()` (a `package-lock.json` with two packages, the two `package.json` files of the packages, and one nested `package.json` without a licence below the first package) and removes the directory in its `after` hook, because git ignores every folder `node_modules`. `listLockedPackages` returns the two keys of the lock file and not the nested file; `licencePasses` for a listed licence, for an unlisted licence, for an `OR` expression with one listed alternative, for an `AND` expression with one unlisted part, for a missing field and for a value that is not a string. The script runs its command part only when the script is the entry module of the process (`import.meta.url` equals the file address of `process.argv[1]`), so the import of the test starts no check |
 | `server/test/config.test.mjs` | P4 | `loadConfig` names every missing required variable of §9.6 and refuses a malformed value of each checked variable |
 | `server/test/operatorToken.test.mjs` | P4 | a signed token verifies; a changed signature, an expired token, a token without `exp`, a token whose lifetime is above 3600 seconds, a token with another `alg`, a token of another Business Partner Number and a `sub` outside its pattern are refused |
@@ -1440,7 +1471,7 @@ Every command runs at the repository root, on the commit that the last phase pro
 
 1. The four checks of §11.0 print, in this order, the registry line of the environment (§11.0: `0 problems, 10 quotes skipped` in the container of the owner's machine, `0 problems, 0 quotes skipped` on the Ubuntu runner), a line that holds `0 problems`, the line `0 files without a license header or NOTICE section` and the line `0 private references`, and the command exits 0. `node24 node scripts/check-annexes.mjs --require P3` prints a last line that ends with `0 differ, 0 missing`.
 2. `node24 npx --yes @stoplight/spectral-cli@6 lint docs/api/openAPI.yaml --ruleset .spectral.yaml --fail-severity error` exits 0.
-3. `java21 bash scripts/validate-models.sh --generate` prints three lines that start with `VALID` and three lines that start with `GENERATED`, exits 0, and `git diff --exit-code -- models` then exits 0.
+3. `java21 bash scripts/validate-models.sh --generate` prints three lines that start with `VALID` and three lines that start with `GENERATED`, exits 0, and `git diff --exit-code -- docs/api/aspects` then exits 0.
 4. `find models -name "*.ttl" | wc -l` prints 3, and `find models -name metadata.json | wc -l` prints 3.
 5. `node24 bash -c "cd server && npm ci && npm test && node ../scripts/check-dependency-licenses.mjs"` exits 0 and prints the lines `# fail 0` and `0 packages outside the licence list`, and `ls server/test/*.test.mjs | wc -l` prints 31.
 6. `node24 bash -c "cd server && npm ci && cd ../tck && npm ci && TCK_BINDING=in-process npm test && node ../scripts/check-dependency-licenses.mjs"` exits 0 and prints the lines `# fail 0`, `# skipped 0` and `0 packages outside the licence list`.
@@ -1651,10 +1682,10 @@ The table names, for each requirement of §5.1 and §5.2, each verification meas
 Each item of the checklist has its section: the header (the table at the top of the document); how to read (§1); goal (§2); scope (§3); users and success measures (§4); requirements (§5); files to read (§6); files to write (§7); deletions (§8); sources of truth (§9.1); architecture (§9.2, §9.3, §9.4, §9.6, §9.7 and §9.8, where the column "Endpoint id" of §9.3 stands for the test id column, because the specification has no screen); strings (§9.5); data contract (§10); decisions (§12); notes for the implementer (§13); tests (§14); done when (§15); import dependencies and cutover order (§16); traceability (§17); gate evidence (§18).
 
 - **Checker command**, in a POSIX shell at the repository root: `node scripts/spec-gate-check.mjs docs/architecture/implementation_plan.md --src . --screens-heading "Interfaces" --id-column "Endpoint id" --testid-prefix "EP-"`
-- **Checker results**: `result: PASS` on 2026-11-16 for each of the versions 1 to 5, each against the working tree of this repository with that version of this document.
-- **Registry check, version 5**: a script compared every requirement, measure and decision identifier and every title of this document with the registry of `requirements/` at the commit 4ccd705 on 2026-11-16: 0 unknown identifiers and 0 titles that differ.
-- **Annex check, version 5**: a script compared the prose with the annexes on 2026-11-16: the 17 tables of §9.4.1, the 22 trigger names and the 12 function names of §9.4.2, the 9 policy names of §9.4.3, the property names of the header and of the four contents of §10.1, and the property names of sections 3.2.2, 3.3 and 3.4.2 of the proposal equal the names of the files of §20, §21 and §22: 0 differences.
-- **Independent review**: a reviewer that is not the author reviewed version 2 against the commit 1b85963 and raised 64 findings (5 blocking, 31 major, 28 minor). The author verified each finding against the texts and found none wrong. Version 3 closed each finding by a change, as the first table states. A second reviewer that is not the author reviewed version 3 and raised 36 findings (2 blocking, 20 major, 14 minor), three of which reopen findings of the first review (R2-010, R2-020 and R2-026). The author verified each finding against the texts and found none wrong. Version 4 closed each finding by a change, as the second table states. A third reviewer that is not the author built phases P1 to P3 from version 4 on a scratch copy and raised 19 findings (1 blocking, 6 major, 12 minor). The author verified each finding against the texts and against the SQL files and the outputs of the reviewer, and found none wrong. Version 5 closes each finding by a change, as the third table states. No reviewer has reviewed version 5.
+- **Checker results**: `result: PASS` on 2026-11-16 for each of the versions 1 to 6, each against the working tree of this repository with that version of this document.
+- **Registry check, version 6**: a script compared every requirement, measure and decision identifier and every title of this document with the registry of `requirements/` at the commit e2b1118 on 2026-11-16: 0 unknown identifiers and 0 titles that differ.
+- **Annex check, version 6**: a script compared the prose with the annexes on 2026-11-16: the 17 tables of §9.4.1, the 27 trigger names and the 14 function names of §9.4.2, the 12 policy names of §9.4.3, the 11 refusal ids of the database, the property names of the header and of the four contents of §10.1, and the property names of sections 3.2.2, 3.3 and 3.4.2 of the proposal equal the names of the files of §20, §21 and §22: 0 differences.
+- **Independent review**: a reviewer that is not the author reviewed version 2 against the commit 1b85963 and raised 64 findings (5 blocking, 31 major, 28 minor). The author verified each finding against the texts and found none wrong. Version 3 closed each finding by a change, as the first table states. A second reviewer that is not the author reviewed version 3 and raised 36 findings (2 blocking, 20 major, 14 minor), three of which reopen findings of the first review (R2-010, R2-020 and R2-026). The author verified each finding against the texts and found none wrong. Version 4 closed each finding by a change, as the second table states. A third reviewer that is not the author built phases P1 to P3 from version 4 on a scratch copy and raised 19 findings (1 blocking, 6 major, 12 minor). The author verified each finding against the texts and against the SQL files and the outputs of the reviewer, and found none wrong. Version 5 closed each finding by a change, as the third table states. A fourth reviewer that is not the author copied the 27 annex files of version 5 into a scratch tree, ran them, and attacked the database under a login as the role `refserver_app`, and raised 15 findings (1 blocking, 3 major, 11 minor). The author repeated the run of each finding and found none wrong. Version 6 closes each finding by a change, as the fourth table states, and the author ran every changed annex file again: the three migration files on PostgreSQL 17.12 with the six lifecycle scenarios, the refusals of §14.2 and the three temporary table attacks under a login as `refserver_app`; the eight schema files with Ajv in strict mode; the OpenAPI file with Spectral 6; and the validation script with the SAMM command line tool. No reviewer has reviewed version 6.
 
 | Finding | Severity | How version 3 closes the finding | Section |
 |---|---|---|---|
@@ -1784,6 +1815,24 @@ Each item of the checklist has its section: the header (the table at the top of 
 | R4-018 | minor | the private reference check excepts the one expression inside the two lock files, and every other hit is a finding | §11.1 |
 | R4-019 | minor | two named volumes hold the installed packages outside the repository folder | §11.0 |
 
+| Finding of the fourth review | Severity | How version 6 closes the finding | Section |
+|---|---|---|---|
+| R5-001 | blocking | every function has the fixed search path `<schema>, pg_temp`; the migration revokes the privilege `TEMPORARY` from PUBLIC and stops when the role holds the privilege or the privilege `CREATE` of a schema; the three attacks are refused cases of the tests, and the catalogue test reads `proconfig` | D60 (A fixed search path for every function, and no temporary table for the application role), §9.4.2, §9.4.3, §22, §14.2 |
+| R5-002 | major | the function `check_child_after_waste` and its five triggers hold the rule after the waste status for the records of a passport; §9.4.2 lists the covered tables and the admitted writes | D61 (The rule after the waste status covers the records of the passport), §9.4.2, §22, §14.2 |
+| R5-003 | major | the trigger `trg_passport_identity` refuses an update that removes one of the five values from a passport with a lineage link | D61, §9.4.1, §9.4.2, §22, §14.2 |
+| R5-004 | major | one module builds the compiler of the draft-04 schemas in strict mode with the two keywords; the annex prints the module, and phases P2 and P4 use the module | D64 (The generated schemas outside `models/`, and one compiler of the draft-04 schemas), §10.6, §21, §14.2 |
+| R5-005 | minor | the helper function `app_today` admits only a text of the form `YYYY-MM-DD` that names a calendar date; the date words are refused cases of the tests | D53, §9.4.2, §22, §14.2 |
+| R5-006 | minor | the two functions read the setting after the two early returns, so a wrong setting changes nothing for a passport that is not waste, and an ended passport is refused with `ERR-DB-PASSPORT-ENDED` | §9.4.2, §22, §14.2 |
+| R5-007 | minor | the decision on the two roles states the bound of the two settings, where the specification relies on one company per deployment, and what protects the credentials | D24 |
+| R5-008 | minor | a passport references a battery model of its own manufacturer; three further tables have a policy; the residual existence signal is stated | D63 (References across the bound of a company), §9.4.1, §9.4.3, §22, §14.2 |
+| R5-009 | minor | an interval is inserted open and at the end of the timeline, by a trigger and without an extension | D62 (A responsibility interval is inserted open and at the end of the timeline), §9.4.2, §22, §14.2 |
+| R5-010 | minor | group (c) names the eight triggers that have only an accepted or only a refused statement, and states their cases | §14.2 |
+| R5-011 | minor | the two done-when items of phase P2 are replaced by a checksum comparison of two runs and by `git check-ignore` | §11.2 |
+| R5-012 | minor | `.gitattributes` names the shell scripts, the script states its line endings, and a done-when item proves the line endings in the working tree | §11.2, §20, §21 |
+| R5-013 | minor | the twelve properties of the envelope file carry a description, and the test asserts a description on every property | §20, §14.2 |
+| R5-014 | minor | each property with a date and time carries a pattern that requires the letter T, beside the format | §10.1, §20, §14.2 |
+| R5-015 | minor | the folders of `models/` hold exactly the files of a stored Tractus-X namespace; the generated schemas and the example payloads are files of `docs/api/aspects/` | D64, §10.6, §7, §21 |
+
 ## 19. Open points for the owner
 
 
@@ -1809,15 +1858,15 @@ No decision of the table changes a file of phases P1, P2 or P3: the column `comp
 1. The registry texts of §5.7 that wait for the owner, the rewording of SyR-LIFE-129 (Producer of the current passport takes over a waste battery's passport) first, and the sentence proposed for Table 4.4 of the next draft of the proposal.
 2. The three open decisions of the registry of §5.5.
 3. The claims marked "not verified against a stored text": the two header names and the key header of §9.6; the paths of the connector's management API, of the registry API and of the BPN-DID Resolution Service (§9.6); the patterns of the MessageHeader model other than the identifier pattern, and the four values of `messageType` (§10.1); the `dct:type` of a submodel offer (§10.5); the five semantic identifiers of §10.6 that carry the mark; the meaning of the path suffix `/$value` (§9.3); every image name and version of §10.7; the action names of §9.7; the major versions and the licences of §9.8; and the need for the file `DEPENDENCIES` (§3.2).
-4. The Spectral linter has not run on the OpenAPI file of §20, and the resolution of the imported models is to be confirmed by the first run of phase P2 in the repository (§11.1, §11.2).
+4. The resolution of the imported models is to be confirmed by the first run of phase P2 in the repository (§11.2). The migration `003_policies.sql` revokes the privilege `TEMPORARY` of the database from PUBLIC, which changes the database for every role without a superuser attribute (decision D60, A fixed search path for every function, and no temporary table for the application role); the owner decides whether a deployment that shares its database with another application is in scope.
 5. The connector release that the owner names before phase P7 (§11.7).
-6. The review of version 5 by a reviewer who is not the author.
+6. The review of version 6 by a reviewer who is not the author.
 
 
 
 ## 20. Annex A: the files of phase P1 in full
 
-The annexes are normative (decision D58, Normative annexes). Each block below a heading "File" is the whole content of the named file. The implementer copies each block into its file without a change, with LF line endings, and `node scripts/check-annexes.mjs` compares each file with its block. The author built every file of the three annexes on 2026-11-16 and verified the files by a run: the eight schema files compile in the 2020-12 dialect and accept and refuse the cases of `server/test/contractSchemas.test.mjs` that a validator without format assertion decides; the OpenAPI file parses and holds the four operations with their ten responses. The author did not run the Spectral linter, because the run needs a download.
+The annexes are normative (decision D58, Normative annexes). Each block below a heading "File" is the whole content of the named file. The implementer copies each block into its file without a change, with LF line endings, and `node scripts/check-annexes.mjs` compares each file with its block. The author built every file of the three annexes on 2026-11-16 and verified the files by a run in a container of the image `node:24`: the eight schema files compile with Ajv 8.20.0 in the 2020-12 dialect in strict mode with the formats of `ajv-formats` 3.0.1, and accept and refuse 60 message cases as `server/test/contractSchemas.test.mjs` states them; every property of the eight files carries a description; and Spectral 6 prints "No results with a severity of 'error' found!" for the OpenAPI file and exits 0.
 
 #### File: `.gitattributes` (phase P1)
 
@@ -1844,6 +1893,9 @@ The annexes are normative (decision D58, Normative annexes). Each block below a 
 
 # Text files are stored and checked out with LF line endings on every machine.
 * text=auto eol=lf
+
+# A shell script runs in a Linux container and needs LF line endings.
+*.sh text eol=lf
 
 # Binary files are never converted.
 *.jar binary
@@ -2182,6 +2234,7 @@ components:
     "sentDateTime": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time at which the sender sent the message, with a time zone."
     },
     "senderBpn": {
@@ -2201,6 +2254,7 @@ components:
     "expectedResponseBy": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time by which the sender expects a response."
     },
     "relatedMessageId": {
@@ -2246,6 +2300,7 @@ components:
       ],
       "properties": {
         "header": {
+          "description": "The header of the message, with the context of the operation NewPassportIssued.",
           "allOf": [
             {
               "$ref": "MessageHeader.schema.json"
@@ -2257,13 +2312,15 @@ components:
               ],
               "properties": {
                 "context": {
-                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1"
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-NewPassportIssued:1",
+                  "description": "The context of the operation NewPassportIssued."
                 }
               }
             }
           ]
         },
         "content": {
+          "description": "The content of the operation NewPassportIssued.",
           "$ref": "NewPassportIssued.schema.json"
         }
       }
@@ -2279,6 +2336,7 @@ components:
       ],
       "properties": {
         "header": {
+          "description": "The header of the message, with the context of the operation BatteryRepaired.",
           "allOf": [
             {
               "$ref": "MessageHeader.schema.json"
@@ -2290,13 +2348,15 @@ components:
               ],
               "properties": {
                 "context": {
-                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1"
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryRepaired:1",
+                  "description": "The context of the operation BatteryRepaired."
                 }
               }
             }
           ]
         },
         "content": {
+          "description": "The content of the operation BatteryRepaired.",
           "$ref": "BatteryRepaired.schema.json"
         }
       }
@@ -2312,6 +2372,7 @@ components:
       ],
       "properties": {
         "header": {
+          "description": "The header of the message, with the context of the operation BatteryBecameWaste.",
           "allOf": [
             {
               "$ref": "MessageHeader.schema.json"
@@ -2323,13 +2384,15 @@ components:
               ],
               "properties": {
                 "context": {
-                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1"
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-BatteryBecameWaste:1",
+                  "description": "The context of the operation BatteryBecameWaste."
                 }
               }
             }
           ]
         },
         "content": {
+          "description": "The content of the operation BatteryBecameWaste.",
           "$ref": "BatteryBecameWaste.schema.json"
         }
       }
@@ -2345,6 +2408,7 @@ components:
       ],
       "properties": {
         "header": {
+          "description": "The header of the message, with the context of the operation PassportEnded.",
           "allOf": [
             {
               "$ref": "MessageHeader.schema.json"
@@ -2356,13 +2420,15 @@ components:
               ],
               "properties": {
                 "context": {
-                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1"
+                  "const": "BatteryPass-BatteryPassLifecycleNotificationAPI-PassportEnded:1",
+                  "description": "The context of the operation PassportEnded."
                 }
               }
             }
           ]
         },
         "content": {
+          "description": "The content of the operation PassportEnded.",
           "$ref": "PassportEnded.schema.json"
         }
       }
@@ -2412,6 +2478,7 @@ components:
     "operationDate": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time at which the new passport was issued."
     },
     "predecessorPassportIdentifier": {
@@ -2447,6 +2514,7 @@ components:
     "repairDate": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time of the repair."
     },
     "repairCertificateCatenaXId": {
@@ -2497,6 +2565,7 @@ components:
     "date": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time at which the battery became waste."
     }
   }
@@ -2527,6 +2596,7 @@ components:
     "recyclingDate": {
       "type": "string",
       "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt]",
       "description": "The date and time of the recycling."
     },
     "recyclerBpnl": {
@@ -2653,7 +2723,7 @@ components:
 
 ## 21. Annex B: the files of phase P2 in full
 
-The author validated the three model files of this annex on 2026-11-16 with the SAMM command line tool 2.11.1 in a container of the image `eclipse-temurin:21`, on a scratch copy outside the repository: the script of this annex printed `VALID` for each of the three models, the tool printed "Input model is valid" for each, two runs of the script with the argument `--generate` wrote the same three schema files byte for byte, and each of the three example payloads validates against its generated schema. The generated schema files are the output of the tool and are not printed in this annex.
+The author validated the three model files of this annex on 2026-11-16 with the SAMM command line tool 2.11.1 in a container of the image `eclipse-temurin:21`, on a scratch copy outside the repository: the script of this annex printed `VALID` for each of the three models, the tool printed "Input model is valid" for each, two runs of the script with the argument `--generate` wrote the same three schema files byte for byte, and each of the three example payloads validates against its generated schema with the compiler of `aspectSchemaCompiler.mjs`, which also compiles the six stored schema files of `sources/IDTA/` in strict mode. The generated schema files are the output of the tool and are not printed in this annex.
 
 #### File: `scripts/validate-models.sh` (phase P2)
 
@@ -2680,7 +2750,8 @@ The author validated the three model files of this annex on 2026-11-16 with the 
 ################################################################################
 
 # Validates the three proposed aspect models with the SAMM command line tool 2.11.1.
-# With the argument --generate the script also writes the JSON schema of each model.
+# With the argument --generate the script also writes the JSON schema of each model to docs/api/aspects.
+# The file has LF line endings, which the file .gitattributes of the repository root sets for every shell script.
 # The script runs at the repository root, in a shell with Java 21.
 set -euo pipefail
 
@@ -2688,6 +2759,7 @@ JAR="tools/samm-cli-2.11.1.jar"
 JAR_SHA256="fab66a72e1969ff2e4d9db5d1c0eeb55936f89e2159045576301ea46c49ffc0f"
 ROOT="tools/models-root"
 SHARED="sources/Tractus-X/semantic-models"
+GENERATED="docs/api/aspects"
 MODELS=(
   "io.catenax.battery.passport_lifecycle:BatteryPassportLifecycle"
   "io.catenax.battery.passport_successors:BatteryPassportSuccessors"
@@ -2737,11 +2809,55 @@ if [ "${1:-}" = "--generate" ]; then
   for entry in "${MODELS[@]}"; do
     namespace="${entry%%:*}"
     aspect="${entry##*:}"
-    mkdir -p "models/$namespace/1.0.0/gen"
-    java -jar "$JAR" aspect "$ROOT/$namespace/1.0.0/$aspect.ttl" to schema > "models/$namespace/1.0.0/gen/$aspect-schema.json"
+    mkdir -p "$GENERATED"
+    java -jar "$JAR" aspect "$ROOT/$namespace/1.0.0/$aspect.ttl" to schema > "$GENERATED/$aspect-schema.json"
     echo "GENERATED $aspect"
   done
 fi
+````
+
+#### File: `server/src/validation/aspectSchemaCompiler.mjs` (phase P2)
+
+````text
+/********************************************************************************
+ * Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+// Requirement: PrR-CXD-026 (Three proposed models in the sldt-semantic-models layout).
+// The one compiler of the aspect schemas in the draft-04 dialect of JSON Schema: the three
+// schemas that the SAMM command line tool generates and the stored schemas of sources/IDTA.
+import Ajv04 from "ajv-draft-04";
+import addFormats from "ajv-formats";
+
+// The two keywords that a schema of the SAMM command line tool holds beside the draft-04
+// vocabulary. "x-samm-aspect-model-urn" is an annotation, and "components" holds the
+// definitions that the references "#/components/schemas/<name>" of the schema name.
+export const SAMM_SCHEMA_KEYWORDS = Object.freeze(["x-samm-aspect-model-urn", "components"]);
+
+// Returns a new compiler in strict mode, so that every other unknown keyword and every unknown
+// format of a schema fails the compilation. The compiler collects every error of a payload.
+export function createAspectSchemaCompiler() {
+  const compiler = new Ajv04({ strict: true, allErrors: true });
+  addFormats(compiler);
+  for (const keyword of SAMM_SCHEMA_KEYWORDS) compiler.addKeyword(keyword);
+  return compiler;
+}
 ````
 
 #### File: `models/io.catenax.battery.passport_lifecycle/1.0.0/BatteryPassportLifecycle.ttl` (phase P2)
@@ -2915,7 +3031,7 @@ fi
 { "status" : "draft" }
 ````
 
-#### File: `models/io.catenax.battery.passport_lifecycle/1.0.0/gen/BatteryPassportLifecycle.json` (phase P2)
+#### File: `docs/api/aspects/BatteryPassportLifecycle.json` (phase P2)
 
 ````text
 {
@@ -3055,7 +3171,7 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 { "status" : "draft" }
 ````
 
-#### File: `models/io.catenax.battery.passport_successors/1.0.0/gen/BatteryPassportSuccessors.json` (phase P2)
+#### File: `docs/api/aspects/BatteryPassportSuccessors.json` (phase P2)
 
 ````text
 {
@@ -3222,7 +3338,7 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 { "status" : "draft" }
 ````
 
-#### File: `models/io.catenax.battery.passport_access_map/1.0.0/gen/BatteryPassportAccessMap.json` (phase P2)
+#### File: `docs/api/aspects/BatteryPassportAccessMap.json` (phase P2)
 
 ````text
 {
@@ -3281,7 +3397,7 @@ This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses
 
 ## 22. Annex C: the files of phase P3 in full
 
-The author applied the three migration files of this annex on 2026-11-16 to an empty schema of a PostgreSQL 17 database, with the role name of the application replaced by a scratch role, and no statement was refused: the catalogue then held 17 tables, 12 functions, 22 triggers and 9 policies. The author ran the rule scenarios of §9.4.2 as the superuser and as the application role, and each scenario gave the refusal that §9.4.2 and §14.2 state, the bypass case and the savepoint case of the lineage rule included. The file `001_schema.sql` starts from the file that the third reviewer built from version 4 of this specification.
+The author applied the three migration files of this annex on 2026-11-16 to an empty schema of a PostgreSQL 17.12 database, and no statement was refused: the catalogue then held 17 tables and the table `schema_migrations`, 14 functions that each carry the fixed search path, 27 triggers and 12 policies, and the role `refserver_app` held neither the privilege `TEMPORARY` of the database nor the privilege `CREATE` of a schema. The author ran the six lifecycle scenarios and the refusals of §9.4.2 and §14.2 under a login as the role `refserver_app`, and each case gave the stated result, the bypass case and the savepoint case of the lineage rule included. The three temporary table attacks of the fourth review failed at the creation of the temporary table with the SQLSTATE `42501`; with the privilege `TEMPORARY` granted to the role for one run, the three attacks were refused by the rules with `ERR-DB-LINEAGE`, `ERR-DB-PASSPORT-ENDED` and `ERR-DB-RESPONSIBILITY`. The file `001_schema.sql` starts from the file that the third reviewer built from version 4 of this specification.
 
 #### File: `server/src/db/migrations/001_schema.sql` (phase P3)
 
@@ -3326,7 +3442,8 @@ CREATE TABLE battery_models (
   original_model_manufacturer_bpnl bpnl,
   created_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT battery_models_original_check CHECK ((original_model_catena_x_id IS NULL) = (original_model_manufacturer_bpnl IS NULL)),
-  CONSTRAINT battery_models_manufacturer_part_key UNIQUE (manufacturer_bpnl, manufacturer_part_id)
+  CONSTRAINT battery_models_manufacturer_part_key UNIQUE (manufacturer_bpnl, manufacturer_part_id),
+  CONSTRAINT battery_models_id_manufacturer_key UNIQUE (id, manufacturer_bpnl)
 );
 
 CREATE TABLE passports (
@@ -3334,7 +3451,7 @@ CREATE TABLE passports (
   passport_identifier text NOT NULL DEFAULT ('urn:uuid:' || gen_random_uuid()::text) CONSTRAINT passports_passport_identifier_key UNIQUE,
   battery_identifier text NOT NULL CONSTRAINT passports_battery_identifier_check CHECK (length(battery_identifier) BETWEEN 1 AND 200),
   manufacturer_bpnl bpnl NOT NULL CONSTRAINT passports_manufacturer_fkey REFERENCES companies(bpnl) ON DELETE RESTRICT,
-  battery_model_id uuid NOT NULL CONSTRAINT passports_battery_model_fkey REFERENCES battery_models(id) ON DELETE RESTRICT,
+  battery_model_id uuid NOT NULL,
   lifecycle_status text NOT NULL CONSTRAINT passports_lifecycle_status_check CHECK (lifecycle_status IN ('original','repurposed','re-used','remanufactured','waste')),
   battery_category text NOT NULL CONSTRAINT passports_battery_category_check CHECK (battery_category IN ('lmt','ev','industrial','stationary')),
   facility_bpns bpns NOT NULL,
@@ -3355,6 +3472,7 @@ CREATE TABLE passports (
   material_recycling_certificate_catena_x_id uuid,
   lineage_open boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT passports_battery_model_fkey FOREIGN KEY (battery_model_id, manufacturer_bpnl) REFERENCES battery_models(id, manufacturer_bpnl) ON DELETE RESTRICT,
   CONSTRAINT passports_waste_successor_check CHECK ((lifecycle_status = 'waste') = (waste_successor_bpnl IS NOT NULL) AND (waste_successor_bpnl IS NULL) = (waste_successor_role IS NULL) AND (waste_successor_bpnl IS NULL) = (waste_date IS NULL)),
   CONSTRAINT passports_authorisation_check CHECK ((successor_authorisation_ref IS NULL) = (successor_authorisation_valid_from IS NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_ref IS NOT NULL) AND (successor_authorisation_valid_to IS NULL OR successor_authorisation_valid_to >= successor_authorisation_valid_from) AND (successor_authorisation_ref IS NULL OR lifecycle_status = 'waste')),
   CONSTRAINT passports_end_check CHECK ((recycling_date IS NULL) = (recycler_bpnl IS NULL) AND (material_recycling_certificate_catena_x_id IS NULL OR recycling_date IS NOT NULL)),
@@ -3563,8 +3681,26 @@ CREATE TABLE received_battery_information (
 --
 -- SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
--- Migration 002: the twelve trigger functions and the twenty-two triggers of the reference server.
--- Every refusal is raised with the error code P0001, and its message starts with the refusal id.
+-- Migration 002: the fourteen functions and the twenty-seven triggers of the reference server.
+-- Every refusal of a rule is raised with the error code P0001, and its message starts with the refusal id.
+-- The last statement of the file fixes the search path of every function of the schema.
+
+CREATE FUNCTION app_today() RETURNS date LANGUAGE plpgsql STABLE SECURITY INVOKER AS $$
+DECLARE
+  setting text := NULLIF(current_setting('app.today', true), '');
+BEGIN
+  IF setting IS NULL THEN
+    RETURN NULL;
+  END IF;
+  IF setting !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' THEN
+    RAISE EXCEPTION 'ERR-DB-TODAY: The setting app.today is a date of the form YYYY-MM-DD.' USING ERRCODE = '22007';
+  END IF;
+  BEGIN
+    RETURN to_date(setting, 'YYYY-MM-DD');
+  EXCEPTION WHEN OTHERS THEN
+    RAISE EXCEPTION 'ERR-DB-TODAY: The setting app.today is a date of the form YYYY-MM-DD.' USING ERRCODE = '22007';
+  END;
+END $$;
 
 CREATE FUNCTION set_passport_insert_defaults() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
 BEGIN
@@ -3584,6 +3720,11 @@ BEGIN
   END IF;
   IF NEW.lineage_open AND NOT OLD.lineage_open THEN
     RAISE EXCEPTION 'ERR-DB-LINEAGE: The lineage of a passport is never opened again.' USING ERRCODE = 'P0001';
+  END IF;
+  IF (NEW.date_into_service IS NULL OR NEW.rated_capacity_ah IS NULL OR NEW.capacity_fade_percent IS NULL
+      OR NEW.power_fade_percent IS NULL OR NEW.expected_lifetime_years IS NULL)
+     AND EXISTS (SELECT 1 FROM passport_lineage_links l WHERE l.passport_id = NEW.id) THEN
+    RAISE EXCEPTION 'ERR-DB-LINEAGE: A new passport keeps a date of putting into service and its four performance values.' USING ERRCODE = 'P0001';
   END IF;
   RETURN NEW;
 END $$;
@@ -3624,7 +3765,7 @@ CREATE TRIGGER trg_passport_ended BEFORE UPDATE OR DELETE ON passports FOR EACH 
 
 CREATE FUNCTION check_passport_after_waste() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
 DECLARE
-  today date := NULLIF(current_setting('app.today', true), '')::date;
+  today date;
   in_force boolean;
   exempt text[] := ARRAY['successor_authorisation_ref', 'successor_authorisation_valid_from', 'successor_authorisation_valid_to',
                          'recycling_date', 'recycler_bpnl', 'material_recycling_certificate_catena_x_id'];
@@ -3635,6 +3776,7 @@ BEGIN
   IF OLD.lifecycle_status <> 'waste' THEN
     RETURN NEW;
   END IF;
+  today := app_today();
   in_force := today IS NOT NULL
     AND OLD.successor_authorisation_valid_from IS NOT NULL
     AND OLD.successor_authorisation_valid_from <= today
@@ -3645,6 +3787,36 @@ BEGIN
   RETURN NEW;
 END $$;
 CREATE TRIGGER trg_passport_after_waste BEFORE UPDATE ON passports FOR EACH ROW EXECUTE FUNCTION check_passport_after_waste();
+
+CREATE FUNCTION check_child_after_waste() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  pid uuid;
+  p passports%ROWTYPE;
+  today date;
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    pid := OLD.passport_id;
+  ELSE
+    pid := NEW.passport_id;
+  END IF;
+  SELECT * INTO p FROM passports WHERE id = pid FOR SHARE;
+  IF FOUND AND p.recycling_date IS NULL AND p.lifecycle_status = 'waste' THEN
+    today := app_today();
+    IF today IS NULL OR p.successor_authorisation_valid_from IS NULL OR p.successor_authorisation_valid_from > today
+       OR (p.successor_authorisation_valid_to IS NOT NULL AND p.successor_authorisation_valid_to < today) THEN
+      RAISE EXCEPTION 'ERR-DB-SUCCESSOR-AUTHORISATION: A record of a waste passport changes only under an authorisation of the successor that is in force.' USING ERRCODE = 'P0001';
+    END IF;
+  END IF;
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER trg_passport_aspect_payloads_after_waste BEFORE INSERT OR UPDATE OR DELETE ON passport_aspect_payloads FOR EACH ROW EXECUTE FUNCTION check_child_after_waste();
+CREATE TRIGGER trg_passport_purposes_after_waste BEFORE INSERT OR UPDATE OR DELETE ON passport_purposes FOR EACH ROW EXECUTE FUNCTION check_child_after_waste();
+CREATE TRIGGER trg_passport_repair_entries_after_waste BEFORE INSERT OR UPDATE OR DELETE ON passport_repair_entries FOR EACH ROW EXECUTE FUNCTION check_child_after_waste();
+CREATE TRIGGER trg_passport_successor_links_after_waste BEFORE INSERT OR UPDATE OR DELETE ON passport_successor_links FOR EACH ROW EXECUTE FUNCTION check_child_after_waste();
+CREATE TRIGGER trg_passport_lineage_links_after_waste BEFORE INSERT OR UPDATE OR DELETE ON passport_lineage_links FOR EACH ROW EXECUTE FUNCTION check_child_after_waste();
 
 CREATE FUNCTION check_passport_lineage() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
 DECLARE
@@ -3715,16 +3887,30 @@ CREATE TRIGGER trg_passport_write_decisions_append_only BEFORE UPDATE OR DELETE 
 CREATE TRIGGER trg_received_battery_information_append_only BEFORE UPDATE OR DELETE ON received_battery_information FOR EACH ROW EXECUTE FUNCTION refuse_change();
 
 CREATE FUNCTION check_interval_change() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
+DECLARE
+  ended timestamptz;
 BEGIN
   IF TG_OP = 'DELETE' THEN
     RAISE EXCEPTION 'ERR-DB-APPEND-ONLY: A responsibility interval is never deleted.' USING ERRCODE = 'P0001';
+  END IF;
+  IF TG_OP = 'INSERT' THEN
+    SELECT recycling_date INTO ended FROM passports WHERE id = NEW.passport_id FOR SHARE;
+    IF ended IS NOT NULL THEN
+      RAISE EXCEPTION 'ERR-DB-PASSPORT-ENDED: A record of an ended passport never changes.' USING ERRCODE = 'P0001';
+    END IF;
+    IF NEW.valid_to IS NOT NULL
+       OR EXISTS (SELECT 1 FROM passport_responsibility_intervals i
+                  WHERE i.passport_id = NEW.passport_id AND (i.valid_to IS NULL OR i.valid_to > NEW.valid_from)) THEN
+      RAISE EXCEPTION 'ERR-DB-RESPONSIBILITY: A responsibility interval is inserted open and starts not before the end of every earlier interval of its passport.' USING ERRCODE = 'P0001';
+    END IF;
+    RETURN NEW;
   END IF;
   IF OLD.valid_to IS NOT NULL OR (to_jsonb(NEW) - 'valid_to') IS DISTINCT FROM (to_jsonb(OLD) - 'valid_to') THEN
     RAISE EXCEPTION 'ERR-DB-APPEND-ONLY: Only the end of an open responsibility interval is set.' USING ERRCODE = 'P0001';
   END IF;
   RETURN NEW;
 END $$;
-CREATE TRIGGER trg_interval_change BEFORE UPDATE OR DELETE ON passport_responsibility_intervals FOR EACH ROW EXECUTE FUNCTION check_interval_change();
+CREATE TRIGGER trg_interval_change BEFORE INSERT OR UPDATE OR DELETE ON passport_responsibility_intervals FOR EACH ROW EXECUTE FUNCTION check_interval_change();
 
 CREATE FUNCTION refuse_child_of_ended_passport() RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER AS $$
 DECLARE
@@ -3762,6 +3948,17 @@ BEGIN
   RETURN NEW;
 END $$;
 CREATE TRIGGER trg_passport_lineage_links_insert BEFORE INSERT ON passport_lineage_links FOR EACH ROW EXECUTE FUNCTION check_lineage_link_insert();
+
+-- The fixed search path of every function of the schema: the schema of the migration first and the
+-- temporary schema last, so that no temporary table of a session replaces a table inside a function.
+DO $$
+DECLARE
+  f regprocedure;
+BEGIN
+  FOR f IN SELECT p.oid::regprocedure FROM pg_proc p WHERE p.pronamespace = (SELECT n.oid FROM pg_namespace n WHERE n.nspname = current_schema()) LOOP
+    EXECUTE format('ALTER FUNCTION %s SET search_path = %I, pg_temp', f, current_schema());
+  END LOOP;
+END $$;
 ````
 
 #### File: `server/src/db/migrations/003_policies.sql` (phase P3)
@@ -3786,7 +3983,7 @@ CREATE TRIGGER trg_passport_lineage_links_insert BEFORE INSERT ON passport_linea
 --
 -- SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
--- Migration 003: the grants of the role refserver_app and the nine row-level security policies.
+-- Migration 003: the privileges of the role refserver_app and the twelve row-level security policies.
 -- The role refserver_app exists before this file runs; the file creates no role.
 
 DO $$
@@ -3795,6 +3992,17 @@ BEGIN
     RAISE EXCEPTION 'The role refserver_app does not exist. Run "npm run create-role" before "npm run migrate".';
   END IF;
   EXECUTE format('GRANT USAGE ON SCHEMA %I TO refserver_app', current_schema());
+  -- The server creates no temporary table. Every role holds the privilege TEMPORARY of a database through PUBLIC.
+  IF has_database_privilege('refserver_app', current_database(), 'TEMPORARY') THEN
+    EXECUTE format('REVOKE TEMPORARY ON DATABASE %I FROM PUBLIC', current_database());
+  END IF;
+  IF has_database_privilege('refserver_app', current_database(), 'TEMPORARY') THEN
+    RAISE EXCEPTION 'ERR-DB-ROLE-PRIVILEGE: The role refserver_app holds the privilege TEMPORARY of the database. The owner of the database revokes the privilege from PUBLIC before the migration.';
+  END IF;
+  IF has_schema_privilege('refserver_app', current_schema(), 'CREATE')
+     OR (to_regnamespace('public') IS NOT NULL AND has_schema_privilege('refserver_app', 'public', 'CREATE')) THEN
+    RAISE EXCEPTION 'ERR-DB-ROLE-PRIVILEGE: The role refserver_app holds the privilege CREATE of a schema. The owner of the schema revokes the privilege before the migration.';
+  END IF;
 END $$;
 
 GRANT SELECT, INSERT, UPDATE ON companies TO refserver_app;
@@ -3834,6 +4042,12 @@ ALTER TABLE passport_responsibility_intervals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE passport_responsibility_intervals FORCE ROW LEVEL SECURITY;
 ALTER TABLE passport_access_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE passport_access_records FORCE ROW LEVEL SECURITY;
+ALTER TABLE access_map_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE access_map_versions FORCE ROW LEVEL SECURITY;
+ALTER TABLE access_map_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE access_map_entries FORCE ROW LEVEL SECURITY;
+ALTER TABLE issuer_contracts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE issuer_contracts FORCE ROW LEVEL SECURITY;
 
 CREATE POLICY battery_models_own ON battery_models FOR ALL TO refserver_app
   USING (manufacturer_bpnl = current_setting('app.acting_bpnl', true))
@@ -3862,6 +4076,15 @@ CREATE POLICY passport_responsibility_intervals_own ON passport_responsibility_i
 CREATE POLICY passport_access_records_own ON passport_access_records FOR ALL TO refserver_app
   USING (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
   WITH CHECK (EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY access_map_versions_own ON access_map_versions FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM battery_models m WHERE m.id = battery_model_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM battery_models m WHERE m.id = battery_model_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY access_map_entries_own ON access_map_entries FOR ALL TO refserver_app
+  USING (EXISTS (SELECT 1 FROM access_map_versions v JOIN battery_models m ON m.id = v.battery_model_id WHERE v.id = map_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true)))
+  WITH CHECK (EXISTS (SELECT 1 FROM access_map_versions v JOIN battery_models m ON m.id = v.battery_model_id WHERE v.id = map_id AND m.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
+CREATE POLICY issuer_contracts_own_passport ON issuer_contracts FOR ALL TO refserver_app
+  USING (true)
+  WITH CHECK (passport_id IS NULL OR EXISTS (SELECT 1 FROM passports p WHERE p.id = passport_id AND p.manufacturer_bpnl = current_setting('app.acting_bpnl', true)));
 ````
 
 ## NOTICE
