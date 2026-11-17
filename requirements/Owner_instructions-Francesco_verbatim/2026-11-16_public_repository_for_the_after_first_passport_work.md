@@ -257,6 +257,22 @@ The words decide that every commit of the public repository carries the publishe
 author address and its committer address. The commits made before the first push were rewritten to that address, and
 the commit identifiers that the specification names were replaced by the new identifiers.
 
+## The tests of the configuration, the logger and the identifier conversions, and phase P4
+
+Francesco's words, verbatim, in his message of 2026-11-17 that answered the question "Do you want me to write these
+three test cases into version 9 of the specification, or should the implementer of phase P4 add them when that phase
+starts?", after the finding that section 14.2 of the specification names a test of the configuration reader with one
+sentence and no test of the logger and of the identifier conversions:
+
+> add these test cases then proceed with the plan with P4 and the next steps
+
+The words order three things: version 9 of the specification adds the recommended test cases of the configuration
+reader, the logger and the identifier conversions, with the recommended rule that the logger drops a fixed list of
+field names; the execution then continues with phase P4; and the execution continues with the phases after P4. The words
+do not decide the nine decisions that the specification marks as waiting for the owner; the phases build the stated
+provisional behaviour of those decisions, as section 1 of the specification states for a sentence with the tag
+"[waits for the owner]".
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
