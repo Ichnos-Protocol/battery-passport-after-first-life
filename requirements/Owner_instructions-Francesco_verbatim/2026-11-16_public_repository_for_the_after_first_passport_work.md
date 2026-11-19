@@ -348,6 +348,25 @@ option labels are quoted as he answered them:
    local deployment use?" Selected option: "Vault as a test-only image". The option stated: pulled at test time, never
    distributed with the repository; listed among the test images with its licence, and stated in NOTICE.
 
+## Three decisions after the second run across Tractus-X EDC 0.13.0 connectors (2026-11-19)
+
+Francesco chose one option for each of three questions of 2026-11-19, after the second run of phase P7 passed 44 of 71
+conformance subtests across connectors. The questions and the selected option labels are quoted as he answered them:
+
+1. Question: "The Tractus-X EDC 0.13.0 data plane turns every refusal of the receiving server (404, 405, 409) into 500
+   without the server's error body, so the sender resends five times and never learns the reason. How should the
+   reference implementation handle it?" Selected option: "Read the connector's error text". The option stated: the
+   connector transport treats a data plane 500 whose text names a 4xx code as a final refusal with that code; resending
+   stops at once and the proposal is unchanged; the finding goes to the expert group.
+2. Question: "All test files share one deployment (your pending decision D84), and each file's wait covers every sent
+   notification of the three servers, so one stuck notification made all 24 failures of the default run. How should a
+   file wait?" Selected option: "Only for its own notifications". The option stated: the binding tracks the passports
+   that a file creates and waits only for their notifications.
+3. Question: "CAC-009 compares the planned send time of a PassportEnded with that of a waste notice planned a moment
+   later; across connectors the real clock makes the difference just under 5 seconds. How should the test check the 5
+   seconds delay?" Selected option: "Against the record time". The option stated: the planned send time must be at
+   least 5 seconds after the time the server recorded the PassportEnded.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
