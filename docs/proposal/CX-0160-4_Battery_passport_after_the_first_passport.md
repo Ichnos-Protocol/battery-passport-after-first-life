@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | Draft proposal for the Catena-X Digital Product Passport (DPP) Expert Group; not adopted, not normative |
-| Version | 0.7 (drafts 0.1 to 0.3 were revised after three independent reviews; draft 0.5 added the points for discussion of Annex D; draft 0.6 added the proposed access map model of section 3.4, the rules of section 2.2 items 8 to 12, the criterion CX-0160-4-CAC-016 and Annex B point 19, and changed Annex B point 11; draft 0.7 states that `AccessMapEntry.path` is a JSONPath query (RFC 9535) in section 3.4.2, adds RFC 9535 and the seven IDTA-02035 parts to the normative references of section 6.1, names the current draft in Annex A and names the four operations in decision D5 of Annex C) |
-| Date | 2026-11-16 |
+| Version | 0.8 (drafts 0.1 to 0.3 were revised after three independent reviews; draft 0.5 added the points for discussion of Annex D; draft 0.6 added the proposed access map model of section 3.4, the rules of section 2.2 items 8 to 12, the criterion CX-0160-4-CAC-016 and Annex B point 19, and changed Annex B point 11; draft 0.7 states that `AccessMapEntry.path` is a JSONPath query (RFC 9535) in section 3.4.2, adds RFC 9535 and the seven IDTA-02035 parts to the normative references of section 6.1, names the current draft in Annex A and names the four operations in decision D5 of Annex C; draft 0.8 adds the topic B.5 with Annex B point 20 on the descriptive error body across the connector, and names the current draft in Annex A) |
+| Date | 2026-11-19 |
 | Author | Francesco Maltoni, Ichnos Protocol, ordinary member of the Catena-X Association and member of the Catena-X Digital Product Passport Expert Group |
 | Document | proposed use case document CX-0160-4 of CX-0160 Battery Passport Data Management, beside CX-0160-1, CX-0160-2 (announced) and CX-0160-3, with one proposed change of the base document in its section 4.2 (section 4.2 of this document) |
 | Release | CX-Neptune; CX-0160 1.1.0 states that its version is not yet eligible for certification, and the criteria of Annex A apply once CX-0160 becomes eligible |
@@ -486,7 +486,7 @@ A reference implementation is in preparation by the author.
 
 ## Annex A: Conformity Assessment Criteria
 
-> General information: cxId CX-0160-4 (proposed); name Battery Passport after the First Passport; capability Battery Passport Data Management; version 0.7 (draft); release CX-Neptune.
+> General information: cxId CX-0160-4 (proposed); name Battery Passport after the First Passport; capability Battery Passport Data Management; version 0.8 (draft); release CX-Neptune.
 
 Every criterion has the assessment method Inspection unless the criterion names another, and is not automatable unless the criterion says so.
 
@@ -513,7 +513,7 @@ The proposed change of section 4.2 of the base document (section 4.2 of CX-0160-
 
 ## Annex B: Differences with the regulation and open points
 
-Annex B groups the differences between CX-0160-4 and the stored legal texts, and the points that the stored texts leave open, into four topics. Each topic first describes what the texts state and what CX-0160-4 does, and then names the open points. Each point keeps its number, which other sections of CX-0160-4 cite.
+Annex B groups the differences between CX-0160-4 and the stored legal texts, and the points that the stored texts leave open, into five topics. Each topic first describes what the texts state and what CX-0160-4 does, and then names the open points. Each point keeps its number, which other sections of CX-0160-4 cite.
 
 ### B.1 Access to the individual battery information
 
@@ -553,6 +553,11 @@ Art. 77(7), second subparagraph, transfers the responsibility for the passport t
 - **Point 5: The end of the passport differs from Art. 77(8).** Art. 77(8) says the passport "shall cease to exist" after recycling, while section 2.1.7 records the end and keeps the ended passport readable; Art. 78(e) keeps the passport available after its economic operator ceases to exist. The persistence period comes from EN 18221, and the `dppStatus` value from EN 18223, which are not stored.
 - **Point 13: A battery placed on the market in several Member States has a producer per Member State (Art. 3(1)(47)).** The waste receiver names, in BatteryBecameWaste, the successor of the Member State where the battery became waste, and the recycler notifies that successor; the manufacturer that the nameplate names can differ from the producer when an importer placed the battery on the market.
 - **Point 17: The data provider records the end of the passport without an authorisation of the successor.** Art. 78(c) lets the passport data be stored by the responsible operator or by an operator it authorises; CX-0160-4 lets the data provider record the end of the passport in every case, because the end follows from the recycling (Art. 77(8)) and a passport whose successor gives no authorisation would otherwise never show its end.
+### B.5 The lifecycle notification API across the connector
+
+Section 4.3 defines the lifecycle notification API, which the participants offer as an asset of their connectors, and section 4.3 item 7 requires a descriptive error body on every refusal. The point below names what a connector release leaves open.
+
+- **Point 20: The descriptive error body across the connector.** Section 4.3 item 7 requires the receiver of a lifecycle notification to answer every refusal with a descriptive error body (what failed, the reason, and what the sender must do). The provider data plane of Tractus-X EDC 0.13.0 passes an answer 200 of the receiving backend through unchanged and answers every other status of the backend with 500. The 500 answer does not carry the backend's body. It carries either a text of the form 'Received code transferring HTTP data: 405 - Method Not Allowed.' or an empty error list, and the data plane logs 'Failed to read data from source: NOT_FOUND'. A sender that uses this release therefore receives neither the refusal code nor the descriptive body. It cannot tell a refused notification from a failure of the receiver, and it repeats a refused notification. The open point asks the Digital Product Passport Expert Group whether the data plane of the Catena-X connector shall pass the status and the body of a backend refusal through to the consumer for notification APIs, or whether the notification API shall answer every refusal with 200 and a refusal object in the body. Until this is decided, a sender reads the code from the error text of the data plane where the text names one, and treats an answer without a code as a failed transfer. The public file `tck/README.md` of the reference implementation repository battery-passport-after-first-life, section "The second run of phase P7", records the observed answers.
 
 ## Annex C: Decisions
 

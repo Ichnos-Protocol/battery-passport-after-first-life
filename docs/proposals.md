@@ -1,6 +1,6 @@
 # Proposals: the items that no standard covers
 
-This document lists every item of this repository that no released Catena-X standard covers. Each item is a proposal of the document [CX-0160-4 Battery Passport after the First Passport](proposal/CX-0160-4_Battery_passport_after_the_first_passport.md), draft 0.7 of 2026-11-16, called "the proposal" below. No Catena-X body has approved the proposal, and the Catena-X Association has not assigned the number CX-0160-4. Each paragraph ends with the section of the proposal that defines the item. Process requirement PrR-CXD-025 (List of the items that no stored standard covers) requires this document.
+This document lists every item of this repository that no released Catena-X standard covers. Each item is a proposal of the document [CX-0160-4 Battery Passport after the First Passport](proposal/CX-0160-4_Battery_passport_after_the_first_passport.md), draft 0.8 of 2026-11-19, called "the proposal" below. No Catena-X body has approved the proposal, and the Catena-X Association has not assigned the number CX-0160-4. Each paragraph ends with the section of the proposal that defines the item. Process requirement PrR-CXD-025 (List of the items that no stored standard covers) requires this document.
 
 The battery passport is the electronic record of Article 77 of Regulation (EU) 2023/1542. The abbreviation SAMM means Semantic Aspect Meta Model, API means application programming interface, BPNL means the Business Partner Number of a legal entity, and IDTA means the Industrial Digital Twin Association.
 
@@ -54,7 +54,7 @@ The proposal also changes one sentence of the base document of CX-0160 1.1.0, se
 
 ## 4. The open points of Annex B
 
-Annex B of the proposal names 19 points where the proposal differs from a legal text or where the texts leave a question open. Each point keeps its number of Annex B.
+Annex B of the proposal names 20 points where the proposal differs from a legal text or where the texts leave a question open. Each point keeps its number of Annex B.
 
 ### 4.1 Access to the individual battery information (Annex B.1)
 
@@ -101,6 +101,9 @@ Annex B of the proposal names 19 points where the proposal differs from a legal 
 **Point 13.** A battery placed on the market in several Member States has a producer per Member State, so the waste receiver names the successor of the Member State where the battery became waste. Pointer: Annex B.4 point 13.
 
 **Point 17.** The data provider records the end of the passport without an authorisation of the successor, because the end follows from the recycling. Pointer: Annex B.4 point 17 and section 2.1.7 item 3.
+### 4.5 The lifecycle notification API across the connector (Annex B.5)
+
+**Point 20.** The provider data plane of Tractus-X EDC 0.13.0 answers every refusal of the receiving backend with 500 and without the descriptive error body that section 4.3 item 7 requires, so the sender learns neither the refusal code nor the reason; the point asks the Digital Product Passport Expert Group how the error body reaches the sender. Pointer: Annex B.5 point 20 and section 4.3 item 7.
 
 ## 5. The points for discussion of Annex D
 

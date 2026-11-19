@@ -367,6 +367,18 @@ conformance subtests across connectors. The questions and the selected option la
    seconds delay?" Selected option: "Against the record time". The option stated: the planned send time must be at
    least 5 seconds after the time the server recorded the PassportEnded.
 
+## The open point on the lost error body in Annex B of the proposal (2026-11-19)
+
+Francesco's choice of 2026-11-19 on the question "The Tractus-X EDC 0.13.0 data plane answers every refusal of the
+receiving server with 500 and without the descriptive error body that section 4.3 item 7 of the proposal requires.
+Should the drafted open point go into Annex B of the proposal CX-0160-4?", quoted as he selected it:
+
+> Add it, and draft an EDC issue
+
+The option stated: the open point goes into Annex B as drafted (proposal draft 0.8), with the run record as public
+evidence; an issue for the eclipse-tractusx/tractusx-edc repository is drafted for Francesco to post under his own
+account.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).

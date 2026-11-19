@@ -4,7 +4,7 @@ The table states what each path holds on 2026-11-16.
 
 | Path | Content | State |
 |---|---|---|
-| `proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` | The text of the proposal CX-0160-4 (Battery Passport after the First Passport) | Draft 0.7 of 2026-11-16 |
+| `proposal/CX-0160-4_Battery_passport_after_the_first_passport.md` | The text of the proposal CX-0160-4 (Battery Passport after the First Passport) | Draft 0.8 of 2026-11-19 |
 | `api/openAPI.yaml` | The OpenAPI specification of the lifecycle notification API: OpenAPI 3.1.0, the four POST operations NewPassportIssued, BatteryRepaired, BatteryBecameWaste and PassportEnded, each with ten responses | Written in phase P1 of the implementation specification |
 | `api/aspects/` | The JSON schema that the SAMM command line tool 2.11.1 generates from each of the three proposed aspect models (`<Aspect>-schema.json`, draft-04 dialect) and one example payload per model (`<Aspect>.json`) | Written in phase P2 of the implementation specification |
 | `api/schemas/` | The eight JSON schemas of the notification messages in the 2020-12 dialect: the message header, the envelope, the content of each of the four operations, the body of the response 200 and the error body | Written in phase P1 of the implementation specification |
