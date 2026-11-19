@@ -20,7 +20,7 @@
 
 # Runs the tests of the reference server and the conformance test kit on the in-process binding with a
 # PostgreSQL 17 database on every pull request and on every push to the branch main, and checks the
-# licences of the locked packages of the server.
+# licences of the locked packages of the server and of the conformance test kit.
 # Software requirements: SwR-RDB-007 (Dataset writes only by the responsible or an authorised operator)
 # and SwR-DATASET-208 (Database trigger refuses a change of a passport's manufacturer). Process
 # requirements: PrR-CXD-028 (One conformance test per criterion CX-0160-4-CAC-001 to 016) and PrR-CXD-029
@@ -93,3 +93,6 @@ jobs:
         env:
           TCK_BINDING: in-process
         run: npm test
+      - name: Check the licences of the locked packages of the conformance test kit
+        working-directory: tck
+        run: node ../scripts/check-dependency-licenses.mjs

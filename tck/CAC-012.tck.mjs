@@ -26,7 +26,8 @@
 // of a new passport under contract), SyR-LIFE-152 (Receiver without a notification asset recorded by
 // the sender), SyR-LIFE-153 (One lifecycle notification per receiver and per passport) and SyR-LIFE-154
 // (Notification changes a passport only by the receiver's assigned steps), with decision D11 (The
-// receiver resolution behind a port) and decision D12 (No notification to the own company). Section 14.3
+// receiver resolution behind a port), decision D12 (No notification to the own company) and decision D74
+// (The binding contract and criterion CAC-012 (notification API)) [waits for the owner]. Section 14.3
 // of docs/architecture/implementation_plan.md; lesson 8 (one operation sends no notification) of
 // section 14.4.
 import assert from "node:assert/strict";
@@ -83,6 +84,13 @@ test("CX-0160-4-CAC-012 (Notification API): the receiver offers one asset and on
   await binding.settle();
   planned.PassportEnded = await report("recycling", { passportIdentifier: ended.passportIdentifier, dataProviderBpnl: provider.bpnl, nameplateManufacturerBpnl: provider.bpnl, receivedFromSuccessorBpnl: SUCCESSOR, recyclingDate: DATES.recycling });
   await binding.settle();
+  // D74 [waits for the owner]: the data provider withdraws its notification asset, the recycler reports a
+  // repair to the data provider, and the data provider publishes the asset again after the attempt.
+  const unoffered = await givenOriginalPassport(provider, { batteryModelId: first.batteryModelId });
+  await provider.withdrawNotificationAsset();
+  const withoutAsset = await report("repair", { passportIdentifier: unoffered.passportIdentifier, dataProviderBpnl: provider.bpnl, repairDate: DATES.repair, repairCertificateCatenaXId: certificate });
+  await binding.settle();
+  await provider.publishNotificationAsset();
   const senderOf = { NewPassportIssued: operator, BatteryRepaired: recycler, BatteryBecameWaste: recycler, PassportEnded: recycler };
   const records = { operator: await sentOf(operator), recycler: await sentOf(recycler) };
   const recordOf = (operation, item) => records[operation === "NewPassportIssued" ? "operator" : "recycler"].find((record) => record.id === item.id);
@@ -144,6 +152,18 @@ test("CX-0160-4-CAC-012 (Notification API): the receiver offers one asset and on
       assert.equal(typeof record.attemptedAt, "string");
       assert.equal(typeof record.cause, "string");
     }
+  });
+  await t.test("section 4.3 item 3 (D74): the sender records a receiver that offers no notification asset with the outcome no_asset, the receiver and the date of the attempt, and the receiver applies nothing", async () => {
+    assert.equal(withoutAsset.length, 1);
+    const record = records.recycler.find((item) => item.id === withoutAsset[0].id);
+    assert.deepStrictEqual(
+      [record.outcome, record.receiverBpnl, record.operation, record.passportIdentifier, record.httpStatus, record.attempts],
+      ["no_asset", provider.bpnl, "BatteryRepaired", unoffered.passportIdentifier, null, 1],
+    );
+    assert.equal(typeof record.attemptedAt, "string");
+    assert.equal(typeof record.cause, "string");
+    assert.equal((await receivedOf(provider)).some((item) => item.messageId === record.messageId), false);
+    assert.equal((await passportOf(provider, unoffered.id)).lifecycleStatus, "original");
   });
   await t.test("section 4.3 items 6 and 7: the receiver applies only its assigned steps and refuses a message that it cannot process with a 4xx status and the cause of its error body", async () => {
     const received = await receivedOf(provider);

@@ -21,7 +21,8 @@
 // Requirements: PrR-CXD-028 (One conformance test per criterion CX-0160-4-CAC-001 to 016) and
 // PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding), with
 // decision D43 (One test code and two bindings), decision D41 (Authentication without an identity
-// provider) and decision D11 (The receiver resolution behind a port). Section 9.2.9 of
+// provider), decision D11 (The receiver resolution behind a port) and decision D74 (The binding contract
+// and criterion CAC-012 (notification API)) [waits for the owner]. Section 9.2.9 of
 // docs/architecture/implementation_plan.md.
 // The in-process binding of the conformance test kit: three applications of the reference server, for
 // the data provider, the second-life operator and the recycler, each with its own database schema, on one
@@ -35,6 +36,7 @@ import { loadConfig } from "../../server/src/config.mjs";
 import { createMemoryOfferStore } from "../../server/src/connector/memoryOfferStore.mjs";
 import { createMemoryReceiverResolver } from "../../server/src/connector/memoryReceiverResolver.mjs";
 import { createMemoryTransport } from "../../server/src/connector/memoryTransport.mjs";
+import { NOTIFICATION_ASSET_ID } from "../../server/src/connector/policyBuilder.mjs";
 import { upsertOwnCompany } from "../../server/src/dataset/companyRepository.mjs";
 import { createLogger } from "../../server/src/logger.mjs";
 import { createMemoryTwinRegistry } from "../../server/src/twins/memoryTwinRegistry.mjs";
@@ -125,8 +127,9 @@ export async function startInProcessBinding({ accessRegime = "after-act", passpo
       const lines = [];
       const logger = createLogger({ level: "error", stream: { write: (text) => lines.push(text) }, clock });
       const { app, worker } = createApp({ config, pool: db.appPool, clock, transport, offerStore, twinRegistry, receiverResolver: resolver, logger });
-      Object.assign(instance, { role, bpnl, config, offerStore, twinRegistry, transport, worker, lines });
-      await app.locals.context.offerPublisher.publishNotificationAsset();
+      const { offerPublisher } = app.locals.context;
+      Object.assign(instance, { role, bpnl, config, offerStore, offerPublisher, twinRegistry, transport, worker, lines });
+      await offerPublisher.publishNotificationAsset();
       const did = `did:web:${bpnl.toLowerCase()}.memory.invalid`;
       network.participants.set(config.publicBaseUrl, { bpnl, app, dataPlaneKey: DATA_PLANE_KEY, dataPlaneKeyHeader: DATA_PLANE_KEY_HEADER, partnerBpnHeader: PARTNER_BPN_HEADER });
       network.offerStores.set(bpnl, offerStore);
@@ -165,6 +168,12 @@ export async function startInProcessBinding({ accessRegime = "after-act", passpo
         }),
       catalogue: async (reader) => (await instance.offerStore.list()).filter((offer) => admits(offer, bpnlOf(reader))),
       registry: Object.freeze({ put: (shell) => instance.twinRegistry.put(shell), read: (shellId) => instance.twinRegistry.read(shellId) }),
+      // The withdrawal and the publication of the notification asset of the participant through its offer
+      // store (D74 [waits for the owner]), so that criterion CAC-012 tests a receiver without an asset.
+      withdrawNotificationAsset: () => instance.offerStore.withdraw(NOTIFICATION_ASSET_ID),
+      publishNotificationAsset: async () => {
+        await instance.offerPublisher.publishNotificationAsset();
+      },
     });
   }
 
