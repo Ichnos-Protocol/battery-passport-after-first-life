@@ -292,6 +292,20 @@ phases P4 and P5. The questions and the selected option labels are quoted as he 
    inside data; [...] Phase P6 freezes these names. Which names should the specification record?" Selected option:
    "Accept the names as built". The option stated: section 9.3 records the names that the code uses.
 
+## The push of phases P4 to P6 and the connector release of phase P7 (2026-11-19)
+
+Francesco chose one option for each of two questions of 2026-11-19, after phase P6 was verified. The questions and the
+selected option labels are quoted as he answered them:
+
+1. Question: "Eight local commits (phases P4, P5 and P6, the code review corrections, specification versions 9 and 10)
+   are not on GitHub yet. When should they be pushed to the public repository
+   Ichnos-Protocol/battery-passport-after-first-life?" Selected option: "Push now".
+2. Question: "Phase P7 runs the 16 conformance test files across real Tractus-X connectors (Eclipse Dataspace
+   Connector). Which connector release should phase P7 use?" Selected option: "Tractus-X EDC 0.13.0". The option
+   stated: the newest tag of the public eclipse-tractusx/tractusx-edc repository read on 2026-11-19, and the newest
+   interface version that its stored metadata file names; phase P7 checks every value against the documentation of
+   that release.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
