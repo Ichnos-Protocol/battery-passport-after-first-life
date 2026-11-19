@@ -328,6 +328,26 @@ are quoted as he answered them:
    locally". The option stated: the registry's own configuration switches OAuth2 off in the local test deployment only;
    production keeps it.
 
+## Three decisions after the first run across Tractus-X EDC 0.13.0 connectors (2026-11-19)
+
+Francesco chose one option for each of three questions of 2026-11-19, after the first run of phase P7 across connectors
+of release 0.13.0 stopped at the check of the wallet stub, as decision D76 required. The questions and the selected
+option labels are quoted as he answered them:
+
+1. Question: "Three wallet stubs 0.1.0 refuse each other in the local run, because the stub reads another stub's identity
+   document only over https and the local deployment has none. With one stub shared by the three companies (the
+   Tractus-X umbrella layout), catalog, negotiation and transfer worked end to end. Which wallet layout should phase P7
+   use?" Selected option: "One shared stub".
+2. Question: "The wallet stub writes no DataService entry into the identity documents, so the connector discovery of
+   your decision D75 finds no connector in the local run, with either stub layout. How should the sender find a
+   receiver's connector in the local run?" Selected option: "Fixed address list, local only". The option stated: the
+   local test deployment maps each Business Partner Number to its connector address in the configuration; production
+   keeps the discovery of D75, and the discovery resolver stays tested against the answers recorded from release 0.13.0.
+3. Question: "Each connector of release 0.13.0 keeps its keys in HashiCorp Vault 1.16.1, which the connector's chart
+   names, under the Business Source License 1.1. That licence is not on the repository's licence list. What should the
+   local deployment use?" Selected option: "Vault as a test-only image". The option stated: pulled at test time, never
+   distributed with the repository; listed among the test images with its licence, and stated in NOTICE.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
