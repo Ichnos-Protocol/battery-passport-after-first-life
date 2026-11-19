@@ -273,6 +273,25 @@ do not decide the nine decisions that the specification marks as waiting for the
 provisional behaviour of those decisions, as section 1 of the specification states for a sentence with the tag
 "[waits for the owner]".
 
+## Three decisions after the code review of phases P4 and P5 (2026-11-19)
+
+Francesco chose one option for each of three questions of 2026-11-19, after the independent review of the code of
+phases P4 and P5. The questions and the selected option labels are quoted as he answered them:
+
+1. Question: "When the audit record of a stored step cannot be written after the commit, the server answers 500
+   'stored nothing', although the passport has changed; a resend then gets 'duplicate' and the audit record is
+   lost. Which answer and which repair should the reference server give?" Selected option: "Success, and audit queued".
+   The option stated: the server answers the true outcome (200 applied), logs the failure at level error, and writes
+   the audit record into a retry queue that the outbox worker writes later, in a fourth migration file, with the three
+   frozen files unchanged.
+2. Question: "A PassportEnded notification names the recycler in content.recyclerBpnl, and the server stores that value
+   without a comparison to the Business Partner Number of the authenticated sender. Which rule should apply?" Selected
+   option: "Must equal the sender". The option stated: the receiving step refuses a PassportEnded whose recyclerBpnl
+   differs from the authenticated sender, with the sender mismatch refusal (403).
+3. Question: "The operator endpoints answer { success: true, data: ... } and the specification never named the fields
+   inside data; [...] Phase P6 freezes these names. Which names should the specification record?" Selected option:
+   "Accept the names as built". The option stated: section 9.3 records the names that the code uses.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
