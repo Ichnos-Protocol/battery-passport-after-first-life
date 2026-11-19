@@ -306,6 +306,28 @@ selected option labels are quoted as he answered them:
    interface version that its stored metadata file names; phase P7 checks every value against the documentation of
    that release.
 
+## Three decisions after the verification of Tractus-X EDC 0.13.0 (2026-11-19)
+
+Francesco chose one option for each of three questions of 2026-11-19, after the first part of phase P7 verified the
+connector values against the public documentation of Tractus-X EDC 0.13.0. The questions and the selected option labels
+are quoted as he answered them:
+
+1. Question: "The server must find a receiver's connector before it sends a notification. The Catena-X BPN-DID
+   Resolution Service answers only callers with a Membership Credential, which the server does not hold (your decision
+   D41 kept the wallet out of the server). How should the server find the receiver's connector?" Selected option: "Ask
+   the own connector". The option stated: Tractus-X EDC 0.13.0 offers POST /v3/connectordiscovery/connectors, which
+   resolves the receiver and returns its connector address; the connector holds the credential, so the server needs
+   none and D41 stays intact.
+2. Question: "The three local Tractus-X connectors need an identity (verifiable credentials). Release 0.13.0 documents
+   only an operator's managed wallet with an account. Which local identity should phase P7 use?" Selected option:
+   "Wallet stub with EDC 0.13.0". The option stated: tractusx/ssi-dim-wallet-stub 0.1.0, the stub that Tractus-X itself
+   uses for local tests, with connector 0.13.0 in Docker Compose; no text states that the stub works with 0.13.0, and
+   the first run proves it or fails.
+3. Question: "The Digital Twin Registry 0.13.0 protects its interface with OAuth2 by default, and the specification
+   names no registry credential. How should the local test deployment reach the registry?" Selected option: "OAuth2 off
+   locally". The option stated: the registry's own configuration switches OAuth2 off in the local test deployment only;
+   production keeps it.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
