@@ -1,0 +1,25 @@
+{
+  "URIOfTheProduct": "https://provider.example/battery/TCK-BATTERY-0001",
+  "ManufacturerName": [{ "en": "Example Battery Company" }],
+  "AddressInformation": {
+    "NationalCode": [{ "en": "XX" }],
+    "CityTown": [{ "en": "Example City" }],
+    "Street": [{ "en": "Example Street 1" }],
+    "ZipCode": [{ "en": "00000" }]
+  },
+  "SerialNumber": "TCK-BATTERY-0001",
+  "DateOfManufacture": "2026-01-10",
+  "DateOfPuttingIntoService": "2026-02-01",
+  "UniqueFacilityIdentifier": "BPNS00000000TCK1",
+  "LifeCycleStage": "original",
+  "OperatorIdentifier": "TCK-OPERATOR-0001",
+  "ManufacturerIdentifier": "BPNL00000000TCK1",
+  "Markings": [
+    {
+      "MarkingName": "CE",
+      "MarkingFile": { "value": "https://provider.example/battery/marking-ce.png", "contentType": "image/png" }
+    }
+  ],
+  "EUDeclarationOfConformity": ["https://provider.example/battery/declaration-of-conformity.pdf"],
+  "ResultsOfTestReportsProvingCompliance": ["https://provider.example/battery/test-report.pdf"]
+}

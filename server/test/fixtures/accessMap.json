@@ -1,0 +1,25 @@
+{
+  "mapVersion": "1.0.0",
+  "validFrom": "2026-01-01",
+  "entries": [
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.URIOfTheProduct", "accessGroup": "public", "legalBasis": "Annex XIII point 1" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.ManufacturerName", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.AddressInformation", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.SerialNumber", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.DateOfManufacture", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.DateOfPuttingIntoService", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.UniqueFacilityIdentifier", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.LifeCycleStage", "accessGroup": "legitimateInterestBattery", "legalBasis": "Annex XIII point 4(c)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.OperatorIdentifier", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.ManufacturerIdentifier", "accessGroup": "public", "legalBasis": "Annex XIII point 1(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.Markings", "accessGroup": "public", "legalBasis": "Annex XIII point 1(d)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.EUDeclarationOfConformity", "accessGroup": "public", "legalBasis": "Annex XIII point 1(e)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#BatteryNameplate", "twinLevel": "PartInstance", "path": "$.ResultsOfTestReportsProvingCompliance", "accessGroup": "legitimateInterestModel", "legalBasis": "Annex XIII point 2(c)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#TechnicalData", "twinLevel": "PartInstance", "path": "$.GeneralInformation", "accessGroup": "public", "legalBasis": "Annex XIII point 1" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#TechnicalData", "twinLevel": "PartInstance", "path": "$.TechnicalPropertyAreas", "accessGroup": "public", "legalBasis": "Annex XIII point 1(o)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition", "twinLevel": "PartInstance", "path": "$.NumberOfFullCycles", "accessGroup": "legitimateInterestBattery", "legalBasis": "Annex XIII point 4(d)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition", "twinLevel": "PartInstance", "path": "$.InformationOnAccidents", "accessGroup": "legitimateInterestBattery", "legalBasis": "Annex XIII point 4(a)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition", "twinLevel": "PartInstance", "path": "$.TemperatureInformation", "accessGroup": "legitimateInterestBattery", "legalBasis": "Annex XIII point 4(d)" },
+    { "aspect": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition", "twinLevel": "PartInstance", "path": "$.StateOfCharge", "accessGroup": "legitimateInterestBattery", "legalBasis": "Annex XIII point 4(d)" }
+  ]
+}

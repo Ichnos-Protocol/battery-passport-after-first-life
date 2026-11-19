@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "issuerContract.schema.json",
+  "title": "issuerContract",
+  "description": "The request body of EP-PROVIDER-CONTRACT and EP-ISSUER-CONTRACT: the provider form or the issuer form (section 10.2 of the implementation specification).",
+  "type": "object",
+  "oneOf": [
+    {
+      "title": "provider form",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passportIdentifier",
+        "issuerBpnl"
+      ],
+      "properties": {
+        "passportIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The passport identifier of the battery."
+        },
+        "issuerBpnl": {
+          "type": "string",
+          "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+          "description": "The Business Partner Number of the issuer that receives the information."
+        },
+        "productCondition": {
+          "type": "object",
+          "description": "The product condition of the battery, supplied for the purchaser."
+        }
+      }
+    },
+    {
+      "title": "issuer form",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passportIdentifier",
+        "providerBpnl",
+        "batteryIdentifier"
+      ],
+      "properties": {
+        "passportIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The passport identifier of the battery."
+        },
+        "providerBpnl": {
+          "type": "string",
+          "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+          "description": "The Business Partner Number of the deployment that offers the information."
+        },
+        "batteryIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The battery identifier of the battery."
+        }
+      }
+    }
+  ]
+}

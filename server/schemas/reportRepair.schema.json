@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reportRepair.schema.json",
+  "title": "reportRepair",
+  "description": "The request body of EP-REPORT-REPAIR (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "dataProviderBpnl",
+    "repairDate",
+    "repairCertificateCatenaXId"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the repaired battery."
+    },
+    "dataProviderBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the data provider of the passport."
+    },
+    "repairDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time of the repair."
+    },
+    "repairCertificateCatenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the repair certificate."
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "issueNewPassport.schema.json",
+  "title": "issueNewPassport",
+  "description": "The request body of EP-ISSUE-NEW-PASSPORT: the new passport of a treated battery that is placed on the market again (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "operation",
+    "predecessors",
+    "batteryModelId",
+    "batteryIdentifier",
+    "batteryCategory",
+    "facilityBpns",
+    "purpose",
+    "dateOfManufacture",
+    "dateIntoService",
+    "ratedCapacityAh",
+    "capacityFadePercent",
+    "powerFadePercent",
+    "expectedLifetimeYears"
+  ],
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": [
+        "preparationForReUse",
+        "preparationForRepurposing",
+        "repurposing",
+        "remanufacturing"
+      ],
+      "description": "The lineage operation."
+    },
+    "predecessors": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "description": "One entry per original passport.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "passportIdentifier",
+          "catenaXId",
+          "dataProviderBpnl",
+          "batteryIdentifier",
+          "lifeCycleStage",
+          "originalPurpose",
+          "originalModelCatenaXId"
+        ],
+        "properties": {
+          "passportIdentifier": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The passport identifier of the original passport."
+          },
+          "catenaXId": {
+            "type": "string",
+            "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+            "description": "The catenaXId of the twin of the original passport."
+          },
+          "dataProviderBpnl": {
+            "type": "string",
+            "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+            "description": "The Business Partner Number of the data provider of the original passport."
+          },
+          "batteryIdentifier": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The battery identifier of the original battery."
+          },
+          "lifeCycleStage": {
+            "type": "string",
+            "enum": [
+              "original",
+              "repurposed",
+              "re-used",
+              "remanufactured",
+              "waste"
+            ],
+            "description": "The status of the original passport that the second-life operator read."
+          },
+          "originalPurpose": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "The purpose for which the original battery was originally designed."
+          },
+          "originalModelCatenaXId": {
+            "type": "string",
+            "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+            "description": "The catenaXId of the original battery model of the original battery."
+          }
+        }
+      }
+    },
+    "batteryModelId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "The id of a battery model of the own company that references the original battery model: the 36 characters of a UUID."
+    },
+    "batteryIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The battery identifier of the treated battery."
+    },
+    "batteryCategory": {
+      "type": "string",
+      "enum": [
+        "lmt",
+        "ev",
+        "industrial",
+        "stationary"
+      ],
+      "description": "The battery category of the new use."
+    },
+    "facilityBpns": {
+      "type": "string",
+      "pattern": "^BPNS[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the site of the treatment."
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "The purpose of the treated battery."
+    },
+    "dateOfManufacture": {
+      "type": "string",
+      "format": "date",
+      "description": "The date of the treatment."
+    },
+    "dateIntoService": {
+      "type": "string",
+      "format": "date",
+      "description": "The date of putting into service of the treated battery."
+    },
+    "ratedCapacityAh": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 99999999.99,
+      "multipleOf": 0.01,
+      "description": "The rated capacity of the treated battery in Ah."
+    },
+    "capacityFadePercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 0.01,
+      "description": "The capacity fade of the treated battery in %."
+    },
+    "powerFadePercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 0.01,
+      "description": "The power fade of the treated battery in %."
+    },
+    "expectedLifetimeYears": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 999.9,
+      "multipleOf": 0.1,
+      "description": "The expected lifetime of the treated battery in calendar years."
+    },
+    "operationDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time of the operation; the current time of the clock when absent."
+    },
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The passport identifier that the operator attributes to the new passport."
+    }
+  }
+}

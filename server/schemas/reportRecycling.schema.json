@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reportRecycling.schema.json",
+  "title": "reportRecycling",
+  "description": "The request body of EP-REPORT-RECYCLING (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "dataProviderBpnl",
+    "nameplateManufacturerBpnl",
+    "recyclingDate"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the recycled battery."
+    },
+    "dataProviderBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the data provider of the passport."
+    },
+    "nameplateManufacturerBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the manufacturer that the nameplate names."
+    },
+    "recyclingDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time of the recycling."
+    },
+    "receivedFromSuccessorBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the successor from whom the recycler received the battery."
+    },
+    "materialRecyclingCertificateCatenaXId": {
+      "type": "string",
+      "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+      "description": "The catenaXId of the material recycling certificate."
+    },
+    "predecessorDataProviderBpnls": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+        "description": "The Business Partner Number of the data provider of a predecessor passport."
+      },
+      "description": "The data providers of the predecessor passports that receive PassportEnded."
+    }
+  }
+}

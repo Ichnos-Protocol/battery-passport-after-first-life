@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "createPassport.schema.json",
+  "title": "createPassport",
+  "description": "The request body of EP-PASSPORT-CREATE: a first passport with the status original (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "batteryModelId",
+    "batteryIdentifier",
+    "batteryCategory",
+    "facilityBpns",
+    "dateOfManufacture",
+    "originalPurpose"
+  ],
+  "properties": {
+    "batteryModelId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "The id of a battery model of the own company: the 36 characters of a UUID."
+    },
+    "batteryIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The battery identifier of the battery."
+    },
+    "batteryCategory": {
+      "type": "string",
+      "enum": [
+        "lmt",
+        "ev",
+        "industrial",
+        "stationary"
+      ],
+      "description": "The battery category."
+    },
+    "facilityBpns": {
+      "type": "string",
+      "pattern": "^BPNS[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the manufacturing site."
+    },
+    "dateOfManufacture": {
+      "type": "string",
+      "format": "date",
+      "description": "The date of manufacture."
+    },
+    "originalPurpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "The purpose for which the battery was originally designed."
+    },
+    "dateIntoService": {
+      "type": "string",
+      "format": "date",
+      "description": "The date of putting into service."
+    },
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The passport identifier that the operator attributes to the passport."
+    }
+  }
+}

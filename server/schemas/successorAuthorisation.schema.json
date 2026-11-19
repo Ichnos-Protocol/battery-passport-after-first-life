@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "successorAuthorisation.schema.json",
+  "title": "successorAuthorisation",
+  "description": "The request body of EP-SUCCESSOR-AUTHORISATION (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "authorisationRef",
+    "validFrom"
+  ],
+  "properties": {
+    "authorisationRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "The reference of the written authorisation of the successor, which holds no name of a person."
+    },
+    "validFrom": {
+      "type": "string",
+      "format": "date",
+      "description": "The first day on which the authorisation is in force."
+    },
+    "validTo": {
+      "type": "string",
+      "format": "date",
+      "description": "The last day on which the authorisation is in force, not before validFrom."
+    }
+  }
+}

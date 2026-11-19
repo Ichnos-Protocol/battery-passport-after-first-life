@@ -1,0 +1,9 @@
+{
+  "digitalProductPassportId": "TCK-PASSPORT-0001",
+  "uniqueProductIdentifier": "TCK-BATTERY-0001",
+  "granularity": "Item",
+  "dppSchemaVersion": "1.0.0",
+  "dppStatus": "Active",
+  "lastUpdate": "2026-06-01T10:00:00Z",
+  "economicOperatorId": "BPNL00000000TCK1"
+}

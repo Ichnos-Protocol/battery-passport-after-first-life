@@ -1,0 +1,6 @@
+{
+  "NumberOfFullCycles": { "NumberOfFullCyclesValue": 420, "LastUpdate": "2026-06-01T10:00:00Z" },
+  "InformationOnAccidents": ["TCK-ACCIDENT-REPORT-NONE"],
+  "TemperatureInformation": { "TimeExtremeHighTemp": 12, "TimeExtremeLowTemp": 3, "LastUpdate": "2026-06-01T10:00:00Z" },
+  "StateOfCharge": { "StateOfChargeValue": 64, "LastUpdate": "2026-06-01T10:00:00Z" }
+}

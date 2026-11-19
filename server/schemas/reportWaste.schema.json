@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reportWaste.schema.json",
+  "title": "reportWaste",
+  "description": "The request body of EP-REPORT-WASTE (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "passportIdentifier",
+    "dataProviderBpnl",
+    "successorBpnl",
+    "successorRole",
+    "wasteDate"
+  ],
+  "properties": {
+    "passportIdentifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The passport identifier of the waste battery."
+    },
+    "dataProviderBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the data provider of the passport."
+    },
+    "successorBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the named successor."
+    },
+    "successorRole": {
+      "type": "string",
+      "enum": [
+        "producer",
+        "producerResponsibilityOrganisation",
+        "wasteManagementOperator"
+      ],
+      "description": "The role of the named successor."
+    },
+    "wasteDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which the battery became waste."
+    }
+  }
+}

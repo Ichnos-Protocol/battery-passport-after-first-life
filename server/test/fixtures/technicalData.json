@@ -1,0 +1,47 @@
+{
+  "GeneralInformation": {
+    "ManufacturerName": "Example Battery Company",
+    "ManufacturerProductDesignation": [{ "en": "Example battery pack" }],
+    "ManufacturerArticleNumber": "TCK-ARTICLE-0001",
+    "ManufacturerOrderCode": "TCK-ORDER-0001",
+    "ManufacturerIdentifier": "BPNL00000000TCK1",
+    "WarrantyPeriod": "2034-01",
+    "BatteryCategory": "ev",
+    "BatteryMass": 450
+  },
+  "TechnicalPropertyAreas": {
+    "CapacityEnergyVoltage": {
+      "NominalVoltage": 400,
+      "MinVoltage": 300,
+      "MaxVoltage": 450,
+      "RatedCapacity": 200,
+      "CapacityFade": 0
+    },
+    "RoundTripEnergyEfficiency": {
+      "InitialRoundTripEnergyEfficiency": 95,
+      "RoundTripEnergyEfficiencyAt50PercentOfCycleLife": 92
+    },
+    "Resistance": {
+      "InitialInternalResistanceAtBatteryCellLevel": 0.5,
+      "InitialInternalResistanceAtBatteryPackLevel": 50,
+      "InternalResistanceIncreaseAtBatteryPackLevel": 0
+    },
+    "PowerCapability": {
+      "MaximumPermittedBatteryPower": 150000,
+      "PowerFade": 0,
+      "RatioNominalBatteryPowerAndBatteryEnergy": 1.9,
+      "OriginalPowerCapability": [{ "atSoC": 80, "powerCapabilityAt": 150000 }]
+    },
+    "Temperature": {
+      "TemperatureRangeIdleState_LowerBoundary": -20,
+      "TemperatureRangeIdleState_UpperBoundary": 55
+    },
+    "Lifetime": {
+      "ExpectedLifetimeInCalendarYears": 12,
+      "ExpectedNumberOfCycles": 3000,
+      "CapacityThresholdExhaustion": 70,
+      "CycleLifeReferenceTest": ["TCK-CYCLE-LIFE-TEST-0001"],
+      "CrateOfRelevantCycleLifeTest": 1
+    }
+  }
+}

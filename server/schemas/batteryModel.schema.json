@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "batteryModel.schema.json",
+  "title": "batteryModel",
+  "description": "The request body of EP-MODEL-CREATE: a battery model of the own company (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manufacturerPartId"
+  ],
+  "properties": {
+    "manufacturerPartId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The catalogue part identifier of the battery model of the own company."
+    },
+    "originalModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catenaXId",
+        "manufacturerBpnl"
+      ],
+      "properties": {
+        "catenaXId": {
+          "type": "string",
+          "pattern": "(^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)|(^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)",
+          "description": "The catenaXId of the PartType twin of the original battery model."
+        },
+        "manufacturerBpnl": {
+          "type": "string",
+          "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+          "description": "The Business Partner Number of the manufacturer of the original battery model."
+        }
+      },
+      "description": "The original battery model of a treated battery (decision D35, The reference to the original battery model)."
+    }
+  }
+}

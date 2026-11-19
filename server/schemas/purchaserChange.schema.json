@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "purchaserChange.schema.json",
+  "title": "purchaserChange",
+  "description": "The request body of EP-PURCHASER (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "purchaserBpnl"
+  ],
+  "properties": {
+    "purchaserBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the application acting for the new purchaser."
+    },
+    "purchaserAgentBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the agent of the new purchaser."
+    }
+  }
+}

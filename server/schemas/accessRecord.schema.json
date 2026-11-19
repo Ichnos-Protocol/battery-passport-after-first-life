@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "accessRecord.schema.json",
+  "title": "accessRecord",
+  "description": "The request body of EP-ACCESS-RECORD (section 10.2 of the implementation specification).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recipientBpnl",
+    "recipientRole",
+    "aspectKey"
+  ],
+  "properties": {
+    "recipientBpnl": {
+      "type": "string",
+      "pattern": "^BPNL[a-zA-Z0-9]{12}$",
+      "description": "The Business Partner Number of the recipient."
+    },
+    "recipientRole": {
+      "type": "string",
+      "enum": [
+        "purchaser",
+        "purchaserAgent",
+        "responsibleOperator",
+        "successor",
+        "marketSurveillanceAuthority",
+        "authorisedRecipient"
+      ],
+      "description": "The role of the recipient."
+    },
+    "aspectKey": {
+      "type": "string",
+      "enum": [
+        "digital-nameplate",
+        "handover-documentation",
+        "carbon-footprint",
+        "technical-data",
+        "product-condition",
+        "material-composition",
+        "circularity",
+        "dpp-metadata",
+        "serial-part",
+        "single-level-bom-as-built",
+        "lifecycle",
+        "successors"
+      ],
+      "description": "The aspect key of the record."
+    }
+  }
+}
