@@ -70,6 +70,29 @@ function offerOfPath(offers, path) {
   return offers.filter((offer) => path === offer.path || path.startsWith(`${offer.path}/`)).sort((left, right) => right.path.length - left.path.length)[0];
 }
 
+// The passport identifiers that a request body and the field data of its answer name (decision D86, A
+// test file waits only for its own notifications): passportIdentifier and predecessors[].passportIdentifier
+// of the body, passport.passportIdentifier and notifications[].passportIdentifier of data.
+function passportIdentifiersOf(body, answer) {
+  const identifiers = [];
+  if (body !== null && typeof body === "object") {
+    if (typeof body.passportIdentifier === "string") identifiers.push(body.passportIdentifier);
+    for (const predecessor of Array.isArray(body.predecessors) ? body.predecessors : []) {
+      if (typeof predecessor?.passportIdentifier === "string") identifiers.push(predecessor.passportIdentifier);
+    }
+  }
+  const data = answer?.body?.data;
+  if (typeof data?.passport?.passportIdentifier === "string") identifiers.push(data.passport.passportIdentifier);
+  for (const notification of Array.isArray(data?.notifications) ? data.notifications : []) {
+    if (typeof notification?.passportIdentifier === "string") identifiers.push(notification.passportIdentifier);
+  }
+  return identifiers;
+}
+
+// A sent record is settled when it is not pending, or when the sender has made its attempt and plans the
+// retry of D49 [waits for the owner] after the time of the poll.
+const settled = (record, pollTime) => record.outcome !== "pending" || (record.attempts >= 1 && new Date(record.notBefore).getTime() > pollTime);
+
 const unavailable = (participant, service, cause) => new Error(`connector binding not available: ${participant} ${service}: ${cause}`);
 
 // Returns the binding object of section 9.2.9 on the started deployment. The argument deployment holds
@@ -123,6 +146,8 @@ export async function startConnectorBinding({ accessRegime = "after-act", passpo
   }
 
   const byBpnl = new Map(instances.map((instance) => [instance.bpnl, instance]));
+  // The passports of the test file (D86).
+  const registered = new Set();
   // A reader is a participant of the binding, a Business Partner Number of a participant, or a Business
   // Partner Number without a deployment.
   const readerOf = (reader) => {
@@ -150,7 +175,11 @@ export async function startConnectorBinding({ accessRegime = "after-act", passpo
     const token = () => signOperatorToken({ sub: "tck-operator", bpnl: instance.bpnl, expiresInSeconds: 3600 }, { secret: deployment.operatorTokenSecret, now: new Date() });
     return Object.freeze({
       bpnl: instance.bpnl,
-      call: (method, path, body) => request(instance.server, method, path, body, { authorization: `Bearer ${token()}` }),
+      call: async (method, path, body) => {
+        const answer = await request(instance.server, method, path, body, { authorization: `Bearer ${token()}` });
+        for (const identifier of passportIdentifiersOf(body, answer)) registered.add(identifier);
+        return answer;
+      },
       asPartner: (reader) =>
         Object.freeze({
           async get(path) {
@@ -194,15 +223,19 @@ export async function startConnectorBinding({ accessRegime = "after-act", passpo
     provider,
     operator,
     recycler,
-    // Polls the sent records of the three servers once per second until no record is pending, at most 60
-    // times, and then waits twice the pause of the workers, so that a pending pull has run.
+    // Polls the sent records of the three servers once per second until every sent record of the
+    // passports of the test file is settled, at most 60 times, and then waits twice the pause of the
+    // workers, so that a pending pull has run (D86).
     async settle() {
       let pending = [];
       for (let poll = 0; poll < SETTLE_POLLS; poll += 1) {
         pending = [];
         for (const [index, participant] of participants.entries()) {
           const answer = await participant.call("GET", "/api/notifications/sent");
-          for (const record of answer.body?.data?.notifications ?? []) if (record.outcome === "pending") pending.push([instances[index].role, record.messageId]);
+          const pollTime = Date.now();
+          for (const record of answer.body?.data?.notifications ?? []) {
+            if (registered.has(record.passportIdentifier) && !settled(record, pollTime)) pending.push([instances[index].role, record.messageId]);
+          }
         }
         if (pending.length === 0) break;
         await sleep(1000);

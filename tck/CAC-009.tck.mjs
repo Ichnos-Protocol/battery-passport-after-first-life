@@ -51,7 +51,6 @@ test("CX-0160-4-CAC-009 (End of the passport): the recycler sends PassportEnded 
   const { provider, operator, recycler } = binding;
   const original = await givenOriginalPassport(provider);
   const passport = (await givenNewPassport(operator, [original], "repurposing")).passport;
-  const companion = await givenOriginalPassport(provider);
   await binding.settle();
   let planned;
 
@@ -67,15 +66,14 @@ test("CX-0160-4-CAC-009 (End of the passport): the recycler sends PassportEnded 
       }),
       202,
     ).notifications;
-    // A BatteryBecameWaste of another passport planned right after leaves without a delay.
-    const [immediate] = expectData(
-      await recycler.call("POST", "/api/lifecycle-events/waste", { passportIdentifier: companion.passportIdentifier, dataProviderBpnl: provider.bpnl, successorBpnl: SUCCESSOR, successorRole: "producer", wasteDate: DATES.waste }),
-      202,
-    ).notifications;
     assert.deepStrictEqual(planned.map((item) => item.receiverBpnl).sort(), [provider.bpnl, operator.bpnl, SUCCESSOR].sort(), "two rules that name one BPNL produce one notification");
+    // D87: the planned send time lies at least 5 seconds after the time of the record, which
+    // header.sentDateTime of the stored message holds.
+    const stored = await sentOf(recycler);
     for (const item of planned) {
       assert.deepStrictEqual([item.operation, item.outcome], ["PassportEnded", "pending"]);
-      assert.ok(time(item.notBefore) - time(immediate.notBefore) >= DELAY_MILLISECONDS, "decision D1: the delay of 5 seconds");
+      const record = stored.find((entry) => entry.id === item.id);
+      assert.ok(time(item.notBefore) - time(record.message.header.sentDateTime) >= DELAY_MILLISECONDS, "decision D1: the delay of 5 seconds after the record time");
     }
   });
   await t.test("PassportEnded leaves after the delay with the mandatory content of Table 4.4", async () => {

@@ -25,6 +25,7 @@
 // The fixture builders of the sixteen test files. Each builder calls only the endpoints of section 9.3
 // through the call of a participant of the binding.
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 const FIXTURES = new URL("../../server/test/fixtures/", import.meta.url);
@@ -95,7 +96,10 @@ const SUPPLIED = Object.freeze({
 });
 
 let counter = 0;
-export const unique = (prefix) => `${prefix}-${process.pid}-${String((counter += 1)).padStart(4, "0")}`;
+// Eight hexadecimal characters drawn once per process, because the process identifier repeats between
+// the containers of the test kit on one deployment (section 9.2.9).
+const RUN = randomUUID().slice(0, 8);
+export const unique = (prefix) => `${prefix}-${RUN}-${String((counter += 1)).padStart(4, "0")}`;
 
 // Asserts the status of an answer and returns the field data of an operator answer.
 export function expectData(answer, status) {

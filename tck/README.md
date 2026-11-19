@@ -7,7 +7,7 @@ This folder holds the conformance test kit of the proposal CX-0160-4 (Battery Pa
 The variable `TCK_BINDING` selects the binding. Both bindings return the same contract: the three participants `provider` (the data provider of the original passports, `BPNL00000000TCK1`), `operator` (the second-life operator, `BPNL00000000TCK2`) and `recycler` (the recycler, the repairer and the waste receiver, `BPNL00000000TCK3`), and the two functions `settle()` and `stop()`.
 
 - **The in-process binding** (`TCK_BINDING=in-process`, `lib/inProcessBinding.mjs`) starts three applications of the reference server in the process of the test file, each with its own schema of the test database, on one memory network: one memory transport per participant, one memory receiver resolver, one memory offer store and one memory twin registry per participant. The binding needs only Node.js and PostgreSQL. `settle()` advances the clock of the three applications by 6 seconds and runs the worker of each application twice.
-- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) runs the sixteen files on a started deployment of `docker-compose.yml`: three reference servers, their Tractus-X EDC 0.13.0 connectors and their Digital Twin Registries (decision D84, The connector binding on a started deployment, which waits for the owner). The binding runs no docker command and restarts no server; each test file works on identifiers of its own. The second run of phase P7 below records the results and the cause of each failure, and the process requirement PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding) stays unverified for the connector binding until the owner decides.
+- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) runs the sixteen files on a started deployment of `docker-compose.yml`: three reference servers, their Tractus-X EDC 0.13.0 connectors and their Digital Twin Registries (decision D84, The connector binding on a started deployment, which waits for the owner). The binding runs no docker command and restarts no server; each test file works on identifiers of its own. The second and the third run of phase P7 below record the results and the cause of each failure, and the process requirement PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding) stays unverified for the connector binding until the owner decides.
 - **The local deployment.** `docker-compose.yml` reads its images and its local test values from `tck/.env`, which git ignores; `.env.example` names every variable with a placeholder. The commands at the repository root are `docker compose -f tck/docker-compose.yml --env-file tck/.env up -d --wait` and `docker compose -f tck/docker-compose.yml --env-file tck/.env down -v`.
 - **The notification asset of a participant.** Each participant of both bindings has the methods `withdrawNotificationAsset()` and `publishNotificationAsset()`, which withdraw and publish the lifecycle notification asset through the offer store of the participant (decision D74, The binding contract and criterion CAC-012 (notification API), which waits for the owner). `CAC-012.tck.mjs` uses the two methods to assert the record `no_asset` of a receiver without an asset.
 
@@ -144,6 +144,36 @@ The second run on 2026-11-19 followed version 13 of the implementation plan: one
 | CX-0160-4-CAC-016 (Access map) | 6 of 6 | 6 of 6 |
 
 A count "0 of 1" names a file whose test failed before its subtests ran. Every failure across connectors of the default run is the failure of `settle()` of result 2. The owner decides results 1 to 3.
+
+### The third run of phase P7
+
+The third run on 2026-11-19 followed version 14 of the implementation plan: the error text of the provider data plane (decision D85), a test file that waits only for its own notifications (decision D86), the delay checked against the record time (decision D87) and an answer 500 without a code as a failed transport (decision D88). Each regime ran on a fresh deployment, and `docker compose up -d --wait` exited 0 for each. The header test passed: the data provider applied the BatteryRepaired that the second-life operator posted with the header `Edc-Bpn: BPNL00000000TCK6`, and the received record names the sender `BPNL00000000TCK2`. The run found four results.
+
+1. **The parallel files share the notification asset of the data provider.** The command of section 15 item 7 runs the fourteen files of the default regime in parallel, which is the default of `node --test`. While `CAC-012.tck.mjs` withdraws the notification asset of the data provider (decision D74), the notifications of other files to the data provider end as `no_asset` with the cause `the receiver offers no lifecycle notification asset to the sender`; the files `CAC-006`, `CAC-007` and further steps then read a passport that the notification did not change. A diagnostic run of the same fourteen files with `--test-concurrency=1`, as the script `test` of `package.json` runs the files, passed `CAC-006` and `CAC-007` completely.
+2. **The registry returns the lists of a shell in another order.** `CAC-002.tck.mjs` compares the shell of the original passport before and after the new passport with `assert.deepStrictEqual`. The Digital Twin Registry 0.13.0 answered two reads of one shell, with the same `createdAt`, with `specificAssetIds` and `submodelDescriptors` in different orders.
+3. **The data plane hides the error body from a reader.** `CAC-012.tck.mjs` reads a GET of each receiving endpoint and an unknown operation through `asPartner(reader).get(path)` and expects 405 and 404 with the error body. Across connectors the read of a participant passes the provider data plane, which answers 500 with the list `errors` (decision D85), so the body holds no field `error`.
+4. **One assertion names the refusal id of the server.** `CAC-009.tck.mjs` asserts the cause `ERR-RX-STEP-REFUSED` of a refused BatteryBecameWaste. The connector transport stores the cause of D85, `the data plane answered 500: Received code transferring HTTP data: 422 - Unprocessable Entity.`, and the final outcome `receiver_refused` with the status 422.
+
+| Criterion | In-process | Across connectors, the three regimes | Default files one after the other (diagnostic) |
+|---|---|---|---|
+| CX-0160-4-CAC-001 (New passport) | 7 of 7 | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-002 (Digital twin) | 5 of 5 | 3 of 5 | 3 of 5 |
+| CX-0160-4-CAC-003 (Model elements) | 6 of 6 | 6 of 6 | 6 of 6 |
+| CX-0160-4-CAC-004 (Predecessor links) | 3 of 3 | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-005 (Forward link) | 7 of 7 | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-006 (Status and repair) | 11 of 11 | 9 of 11 | 11 of 11 |
+| CX-0160-4-CAC-007 (Waste status) | 7 of 7 | 5 of 7 | 7 of 7 |
+| CX-0160-4-CAC-008 (Donors) | 3 of 3 | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-009 (End of the passport) | 7 of 7 | 5 of 7 | not run |
+| CX-0160-4-CAC-010 (Access) | 7 of 7 | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-011 (Access before the Art. 77(9) act) | 4 of 4 | 4 of 4 | not run |
+| CX-0160-4-CAC-012 (Notification API) | 9 of 9 | 7 of 9 | 7 of 9 |
+| CX-0160-4-CAC-013 (Data assets) | 5 of 5 | 5 of 5 | 5 of 5 |
+| CX-0160-4-CAC-014 (Certificates) | 3 of 3 | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-015 (Persistence) | 4 of 4 | 4 of 4 | 4 of 4 |
+| CX-0160-4-CAC-016 (Access map) | 6 of 6 | 6 of 6 | 6 of 6 |
+
+A count holds the subtests and the test of the file. The owner decides results 1 to 4.
 
 ### The recorded answers of phase P7
 

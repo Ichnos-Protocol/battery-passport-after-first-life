@@ -142,10 +142,27 @@ export function createEdcTransferClient({ config, fetch }) {
   return Object.freeze({ catalog, open, call });
 }
 
+// The error text of the provider data plane (decision D85, The error text of the provider data plane):
+// Tractus-X EDC 0.13.0 answers every status of the server other than 200 with 500 and the list errors,
+// whose first entry names the status of the server when the entry matches this expression.
+const DATA_PLANE_ERROR = /^Received code transferring HTTP data: ([1-5][0-9]{2})\b/;
+
+// The status of the receiver and the cause of an answer of the data plane other than 200. An answer 500
+// gives the named code, or 500 when the list errors is empty, absent or names no code (decision D88, A data
+// plane answer 500 without a code) [waits for the owner].
+function receiverAnswerOf(answer) {
+  if (answer.status !== 500) {
+    return { status: answer.status, cause: typeof answer.body?.error?.code === "string" ? answer.body.error.code : `status ${answer.status}` };
+  }
+  const errors = Array.isArray(answer.body?.errors) ? answer.body.errors : [];
+  const first = typeof errors[0] === "string" ? errors[0] : null;
+  const match = first === null ? null : DATA_PLANE_ERROR.exec(first);
+  return { status: match === null ? 500 : Number(match[1]), cause: `the data plane answered 500: ${first ?? "no error text"}` };
+}
+
 // Returns a transport with the methods send and pull of the transport contract.
 export function createEdcTransport({ config, fetch }) {
   const client = createEdcTransferClient({ config, fetch });
-  const causeOf = (answer) => (typeof answer.body?.error?.code === "string" ? answer.body.error.code : `status ${answer.status}`);
 
   async function send({ receiverBpnl, connectorUrl, operation, message }) {
     try {
@@ -156,7 +173,8 @@ export function createEdcTransport({ config, fetch }) {
       const reference = await client.open(connectorUrl, entry);
       const answer = await client.call(reference, "POST", `/${operation}`, message);
       if (answer.status === 200) return { outcome: "sent", httpStatus: 200, body: answer.body, cause: null };
-      return { outcome: answer.status >= 500 ? "transport_failed" : "receiver_refused", httpStatus: answer.status, body: answer.body, cause: causeOf(answer) };
+      const refused = receiverAnswerOf(answer);
+      return { outcome: refused.status >= 500 ? "transport_failed" : "receiver_refused", httpStatus: refused.status, body: answer.body, cause: refused.cause };
     } catch (error) {
       return { outcome: error instanceof TransportStep ? error.outcome : "transport_failed", httpStatus: null, body: null, cause: error.message };
     }
@@ -168,7 +186,10 @@ export function createEdcTransport({ config, fetch }) {
       if (entry === undefined) return { outcome: "no_asset", agreementId: null, body: null, cause: "the provider offers no asset of the semantic identifier and the passport identifier to the consumer" };
       const reference = await client.open(connectorUrl, entry);
       const answer = await client.call(reference, "GET", "", undefined);
-      if (answer.status !== 200) return { outcome: answer.status >= 500 ? "transport_failed" : "provider_refused", agreementId: null, body: answer.body, cause: causeOf(answer) };
+      if (answer.status !== 200) {
+        const refused = receiverAnswerOf(answer);
+        return { outcome: refused.status >= 500 ? "transport_failed" : "provider_refused", agreementId: null, body: answer.body, cause: refused.cause };
+      }
       return { outcome: "received", agreementId: reference.agreementId, body: answer.body, cause: null };
     } catch (error) {
       return { outcome: error instanceof TransportStep ? error.outcome : "transport_failed", agreementId: null, body: null, cause: error.message };

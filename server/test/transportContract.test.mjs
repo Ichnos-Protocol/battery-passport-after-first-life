@@ -307,7 +307,11 @@ for (const [name, create] of IMPLEMENTATIONS) {
     await t.test("send: a receiver that answers 500 gives transport_failed with the status 500 and the refusal id as the cause", async () => {
       Object.assign(answered, { status: 500, code: "ERR-RX-INTERNAL" });
       const result = await send();
-      assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["transport_failed", 500, "ERR-RX-INTERNAL"]);
+      // The memory transport names the refusal id; the connector transport reads every answer 500 as an
+      // answer of the provider data plane, whose list errors this body does not hold (D85, D88 [waits for
+      // the owner]).
+      const cause = name === "the memory transport" ? "ERR-RX-INTERNAL" : "the data plane answered 500: no error text";
+      assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["transport_failed", 500, cause]);
       assert.equal(result.body.error.code, "ERR-RX-INTERNAL");
     });
     await t.test("send: a receiver that answers 404 gives receiver_refused with the status 404", async () => {
@@ -333,3 +337,42 @@ for (const [name, create] of IMPLEMENTATIONS) {
   });
 }
 
+
+test("D85 (The error text of the provider data plane) and D88 (A data plane answer 500 without a code) [waits for the owner]: the connector transport reads the recorded answers 500 of the provider data plane of Tractus-X EDC 0.13.0", async (t) => {
+  const answers = [];
+  const setup = network();
+  await setup.receiverStore.publish(buildNotificationAssetOffer({ allowedBpnls: null }));
+  await setup.receiverStore.publish(buildBatteryInformationOffer({ contractId: CONTRACT_ID, issuerBpnl: SENDER, passportIdentifier: "TCK-PASSPORT-A", semanticId: SEMANTIC_ID }));
+  const stubbed = edcFetch(setup);
+  // The data plane answers the next call with the recorded answer of the test step.
+  const fetchWithDataPlane = async (url, init) => {
+    if (url.startsWith(DATA_PLANE) && answers.length > 0) return new Response(JSON.stringify(answers.shift()), { status: 500, headers: { "content-type": "application/json" } });
+    return stubbed(url, init);
+  };
+  const transport = createEdcTransport({ config: EDC_CONFIG, fetch: fetchWithDataPlane });
+  const send = () => transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
+  const pull = () => transport.pull({ providerBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", semanticId: SEMANTIC_ID, passportIdentifier: "TCK-PASSPORT-A" });
+  await t.test("an answer 500 with the named code 405 gives the final outcome receiver_refused with the status 405", async () => {
+    answers.push({ errors: ["Received code transferring HTTP data: 405 - Method Not Allowed."] });
+    const result = await send();
+    assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["receiver_refused", 405, "the data plane answered 500: Received code transferring HTTP data: 405 - Method Not Allowed."]);
+    answers.push({ errors: ["Received code transferring HTTP data: 405 - Method Not Allowed."] });
+    const pulled = await pull();
+    assert.deepStrictEqual([pulled.outcome, pulled.agreementId], ["provider_refused", null]);
+  });
+  await t.test("an answer 500 with the named code 503 gives transport_failed with the status 503", async () => {
+    answers.push({ errors: ["Received code transferring HTTP data: 503 - Service Unavailable."] });
+    const result = await send();
+    assert.deepStrictEqual([result.outcome, result.httpStatus], ["transport_failed", 503]);
+    answers.push({ errors: ["Received code transferring HTTP data: 503 - Service Unavailable."] });
+    assert.equal((await pull()).outcome, "transport_failed");
+  });
+  await t.test("an answer 500 with an empty list gives transport_failed with the status 500 and the cause of no error text", async () => {
+    answers.push({ errors: [] });
+    const result = await send();
+    assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["transport_failed", 500, "the data plane answered 500: no error text"]);
+    answers.push({});
+    const absent = await send();
+    assert.deepStrictEqual([absent.outcome, absent.httpStatus, absent.cause], ["transport_failed", 500, "the data plane answered 500: no error text"]);
+  });
+});

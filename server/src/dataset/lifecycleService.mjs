@@ -144,11 +144,15 @@ export function createLifecycleService({
     return passport;
   }
 
-  // Writes one pending notification per entry of the plan and returns the field notifications.
-  async function storePlan(client, plan, notBefore) {
+  // Writes one pending notification per entry of the plan and returns the field notifications. The step
+  // takes the current time once (decision D1, The delay of the end notice): header.sentDateTime of each
+  // planned message is stepTime, and not_before is stepTime plus delaySeconds.
+  async function storePlan(client, plan, stepTime, delaySeconds = 0) {
     const notifications = [];
+    const notBefore = new Date(stepTime.getTime() + delaySeconds * 1000);
+    const stepClock = { now: () => new Date(stepTime.getTime()) };
     for (const entry of plan) {
-      const header = buildMessageHeader({ operation: entry.operation, senderBpnl: ownBpnl, receiverBpnl: entry.receiverBpnl, clock, newUuid });
+      const header = buildMessageHeader({ operation: entry.operation, senderBpnl: ownBpnl, receiverBpnl: entry.receiverBpnl, clock: stepClock, newUuid });
       const row = await notificationRepository.insertSentNotification(client, {
         messageId: header.messageId,
         operation: entry.operation,
@@ -160,10 +164,6 @@ export function createLifecycleService({
       notifications.push(notificationOf(row));
     }
     return notifications;
-  }
-
-  function endNoticeTime() {
-    return new Date(now().getTime() + passportEndedDelaySeconds * 1000);
   }
 
   // The refusal of the step of section 10.4 for a passport of the own company, or null when the step is
@@ -449,7 +449,7 @@ export function createLifecycleService({
     // The tenth check: the step.
     if (outcome === "recorded") return { outcome, messageId, passportId: null, notifications: [], auditEntries: [] };
     const reliedOn = await applyStep(client, { operation, passport, content, senderBpnl: header.senderBpn, messageId });
-    const notifications = operation === "PassportEnded" ? await storePlan(client, passportServiceProviderPlan(content), endNoticeTime()) : [];
+    const notifications = operation === "PassportEnded" ? await storePlan(client, passportServiceProviderPlan(content), now(), passportEndedDelaySeconds) : [];
     return { outcome, messageId, passportId: passport.id, notifications, auditEntries: [auditEntry(subject, passport.id, action, "granted", { reliedOn })] };
   }
 
@@ -496,12 +496,13 @@ export function createLifecycleService({
       applied = true;
     }
     const plan = notificationPlanner.buildNotificationPlan({ operation, content, receivers, ownBpnl });
-    const notBefore = operation === "PassportEnded" ? endNoticeTime() : now();
-    const notifications = await storePlan(client, plan, notBefore);
+    const stepTime = now();
+    const delaySeconds = operation === "PassportEnded" ? passportEndedDelaySeconds : 0;
+    const notifications = await storePlan(client, plan, stepTime, delaySeconds);
     if (applied && operation === "PassportEnded") {
       const planned = new Set(plan.map((entry) => JSON.stringify([entry.receiverBpnl, entry.passportIdentifier])));
       const further = passportServiceProviderPlan(content).filter((entry) => !planned.has(JSON.stringify([entry.receiverBpnl, entry.passportIdentifier])));
-      notifications.push(...(await storePlan(client, further, endNoticeTime())));
+      notifications.push(...(await storePlan(client, further, stepTime, passportEndedDelaySeconds)));
     }
     return { notifications, appliedLocally: applied, passportId, auditEntries };
   }
