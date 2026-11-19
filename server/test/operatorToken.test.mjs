@@ -23,7 +23,8 @@
 // Requirements of the registry that this file verifies:
 //   SwR-ACCESS-088 (Passport dataset writes only by the responsible or authorised operator)
 //   SwR-DATASET-119 (Changes applied only for the responsible or an authorised operator)
-// Decision D41 (Authentication without an identity provider), section 9.2.3 of the specification.
+// Decision D41 (Authentication without an identity provider) and decision D72 (The clock tolerance of an
+// operator token) [waits for the owner], section 9.2.3 of the specification.
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { test } from "node:test";
@@ -84,6 +85,11 @@ test("SwR-ACCESS-088 (Passport dataset writes only by the responsible or authori
   });
   await t.test("a sub outside its pattern is refused", () => {
     for (const sub of ["", "a person name", "x".repeat(101), "operator/1"]) assert.equal(verify(rawToken(HEADER, claims({ sub }))), null, sub);
+  });
+  await t.test("decision D72 [waits for the owner]: a token whose iat lies 61 seconds after the current time is refused, and one whose iat lies 59 seconds after it is accepted", () => {
+    assert.equal(verify(rawToken(HEADER, claims({ iat: NOW_SECONDS + 61, exp: NOW_SECONDS + 61 + 3600 }))), null);
+    assert.notEqual(verify(rawToken(HEADER, claims({ iat: NOW_SECONDS + 59, exp: NOW_SECONDS + 59 + 3600 }))), null);
+    assert.equal(verify(rawToken(HEADER, claims({ iat: NOW_SECONDS + 10 * 365 * 86400, exp: NOW_SECONDS + 10 * 365 * 86400 + 3600 }))), null, "finding R45-010: a token signed for ten years ahead");
   });
   await t.test("a token of two parts, a token that is no text and a token with claims that are no JSON are refused", () => {
     assert.equal(verify("a.b"), null);

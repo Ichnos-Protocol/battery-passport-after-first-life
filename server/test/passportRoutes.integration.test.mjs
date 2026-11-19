@@ -325,3 +325,58 @@ test("SwR-DATASET-197 (Forward link added on the original data provider's reques
     assertRefusal(await operator.call("POST", "/api/lifecycle-events/recycling", { passportIdentifier: unique("TCK-UNKNOWN"), dataProviderBpnl: SECOND_LIFE, nameplateManufacturerBpnl: RECYCLER, recyclingDate: "2026-06-15T09:00:00Z" }), 404, "ERR-LC-PASSPORT-NOT-FOUND");
   });
 });
+
+test("version 10 of the specification: the operator endpoints of a passport after the code review of phases P4 and P5", async (t) => {
+  const table = (name) => `${provider.db.adminClient.escapeIdentifier(provider.db.schema)}.${name}`;
+  await t.test("decision D71: the answers hold the fields of section 9.3", async () => {
+    const model = await provider.call("POST", "/api/battery-models", { manufacturerPartId: unique("TCK-PART") });
+    assert.deepStrictEqual(Object.keys(model.body.data).sort(), ["exposure", "model"]);
+    assert.deepStrictEqual(Object.keys(model.body.data.model).sort(), ["catenaXId", "id", "manufacturerBpnl", "manufacturerPartId", "originalModel"]);
+    assert.deepStrictEqual(Object.keys((await provider.call("POST", `/api/battery-models/${model.body.data.model.id}/twin`)).body.data), ["exposure"]);
+    const created = await provider.call("POST", "/api/passports", passportBody(model.body.data.model.id));
+    assert.deepStrictEqual(Object.keys(created.body.data).sort(), ["exposure", "passport"]);
+    const passportId = created.body.data.passport.id;
+    assert.deepStrictEqual(Object.keys((await provider.call("PUT", `/api/passports/${passportId}/aspects/serial-part`, { any: "payload" })).body.data).sort(), ["exposure", "passport"]);
+    assert.deepStrictEqual(Object.keys((await provider.call("POST", `/api/passports/${passportId}/twin`)).body.data), ["exposure"]);
+    assert.deepStrictEqual(Object.keys((await provider.call("GET", `/api/passports/${passportId}`)).body.data), ["passport"]);
+    const record = await provider.call("POST", `/api/passports/${passportId}/access-records`, { recipientBpnl: SUCCESSOR, recipientRole: "authorisedRecipient", aspectKey: "serial-part" });
+    assert.deepStrictEqual(Object.keys(record.body.data).sort(), ["exposure", "record"]);
+    assert.deepStrictEqual(Object.keys(record.body.data.record).sort(), ["aspectKey", "id", "passportId", "recipientBpnl", "recipientRole", "validFrom", "validTo"]);
+    assert.deepStrictEqual(Object.keys((await provider.call("DELETE", `/api/passports/${passportId}/access-records/${record.body.data.record.id}`)).body.data).sort(), ["exposure", "record"]);
+    assert.deepStrictEqual(Object.keys((await provider.call("POST", `/api/passports/${passportId}/purchaser`, { purchaserBpnl: SUCCESSOR })).body.data).sort(), ["closed", "exposure", "opened"]);
+  });
+  await t.test("findings R45-007 and R45-008: PUT of aspects/serial-part as text/plain, without a body, with null, with a list and with a number answers ERR-LC-BODY-INVALID and stores nothing", async () => {
+    const passport = (await provider.call("POST", "/api/passports", passportBody(providerModel.id))).body.data.passport;
+    const path = `/api/passports/${passport.id}/aspects/serial-part`;
+    assertRefusal(await provider.call("PUT", path, JSON.stringify({ any: "payload" }), { "content-type": "text/plain" }), 400, "ERR-LC-BODY-INVALID");
+    assertRefusal(await provider.call("PUT", path), 400, "ERR-LC-BODY-INVALID");
+    for (const body of ["null", "[]", "[1, 2]", "42"]) assertRefusal(await provider.call("PUT", path, body), 400, "ERR-LC-BODY-INVALID");
+    assert.equal((await provider.query("SELECT 1 FROM passport_aspect_payloads WHERE passport_id = $1", [passport.id])).length, 0);
+  });
+  await t.test("finding R45-006: a second passport with a stored passportIdentifier answers 409 and stores one refused record of passport_write_decisions through runWrite", async () => {
+    const identifier = unique("TCK-PASSPORT");
+    assert.equal((await provider.call("POST", "/api/passports", passportBody(providerModel.id, { passportIdentifier: identifier }))).status, 201);
+    const before = await provider.query("SELECT * FROM passport_write_decisions WHERE decision = 'refused' AND refusal_id = 'ERR-LC-IDENTIFIER-EXISTS'");
+    assertRefusal(await provider.call("POST", "/api/passports", passportBody(providerModel.id, { passportIdentifier: identifier })), 409, "ERR-LC-IDENTIFIER-EXISTS");
+    const after = await provider.query("SELECT * FROM passport_write_decisions WHERE decision = 'refused' AND refusal_id = 'ERR-LC-IDENTIFIER-EXISTS'");
+    assert.equal(after.length, before.length + 1);
+    const record = after.at(-1);
+    assert.deepStrictEqual([record.action, record.requester_bpnl, record.requester_kind, record.passport_id, record.relied_on], ["passport.create", PROVIDER, "operator", null, null]);
+  });
+  await t.test("decision D69: with the privilege INSERT on passport_write_decisions revoked, EP-PASSPORT-CREATE answers 201", async () => {
+    await provider.db.adminClient.query(`REVOKE INSERT ON ${table("passport_write_decisions")} FROM refserver_app`);
+    try {
+      const answer = await provider.call("POST", "/api/passports", passportBody(providerModel.id));
+      assert.equal(answer.status, 201, JSON.stringify(answer.body));
+      const queued = await provider.query("SELECT entries FROM audit_outbox WHERE written_at IS NULL");
+      assert.ok(queued.some((row) => row.entries[0].passportId === answer.body.data.passport.id), "the audit record of the step is queued");
+    } finally {
+      await provider.db.adminClient.query(`GRANT INSERT ON ${table("passport_write_decisions")} TO refserver_app`);
+    }
+  });
+  await t.test("finding R45-012: GET /api/passports/:passportId/nothing answers 404 ERR-LC-PATH-UNKNOWN with the error body of D9", async () => {
+    const answer = await provider.raw("GET", `/api/passports/${randomUUID()}/nothing`);
+    assert.equal(answer.status, 404);
+    assert.deepStrictEqual(answer.body.error, { message: answer.body.messages[0].text, code: "ERR-LC-PATH-UNKNOWN" });
+  });
+});

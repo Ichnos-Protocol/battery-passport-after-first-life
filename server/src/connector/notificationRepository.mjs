@@ -102,3 +102,15 @@ export async function resetSentNotification(client, id, notBefore) {
     await client.query("UPDATE notifications_sent SET outcome = 'pending', attempts = 0, cause = NULL, not_before = $2 WHERE id = $1 RETURNING *", [id, notBefore]),
   );
 }
+
+// The second transaction of the sender after a failed write of an attempt: the row again, locked so that
+// a concurrent sender skips the row.
+export async function claimSentNotificationById(client, id) {
+  return one(await client.query("SELECT * FROM notifications_sent WHERE id = $1 AND outcome = 'pending' FOR UPDATE SKIP LOCKED", [id]));
+}
+
+// Writes the four columns of a failed write of an attempt: the outcome, the cause, the attempt count and
+// the next attempt.
+export async function recordFailedSendAttempt(client, id, { outcome, cause, attempts, notBefore }) {
+  return one(await client.query("UPDATE notifications_sent SET outcome = $2, cause = $3, attempts = $4, not_before = $5 WHERE id = $1 RETURNING *", [id, outcome, cause, attempts, notBefore]));
+}

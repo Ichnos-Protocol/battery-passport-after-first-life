@@ -69,3 +69,10 @@ export async function hasAccessMapVersion(client, modelId) {
 export async function listAccessMapEntries(client, mapId) {
   return (await client.query("SELECT * FROM access_map_entries WHERE map_id = $1 ORDER BY aspect, twin_level, path", [mapId])).rows;
 }
+
+// The transaction-level advisory lock of one battery model (finding R45-005), which serialises a new
+// access map and a new payload of the model. The role refserver_app holds no privilege for a row lock of
+// battery_models, and every role takes an advisory lock.
+export async function lockBatteryModel(client, modelId) {
+  await client.query("SELECT pg_advisory_xact_lock(hashtextextended('battery-model:' || $1, 0))", [modelId]);
+}

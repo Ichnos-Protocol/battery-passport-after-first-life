@@ -35,10 +35,21 @@ export function isReceivingRequest(req) {
   return req.originalUrl === RECEIVING_PREFIX || req.originalUrl.startsWith(`${RECEIVING_PREFIX}/`) || req.originalUrl.startsWith(`${RECEIVING_PREFIX}?`);
 }
 
+// True for an error of the body parser that is a client error: entity.parse.failed,
+// charset.unsupported, encoding.unsupported and every other error of the parser with a status from 400
+// to 499, and the refusal of another content type of createApp (finding R45-011).
+function isInvalidBody(error) {
+  if (error?.type === "content.invalid") return true;
+  return typeof error?.type === "string" && Number.isInteger(error.status) && error.status >= 400 && error.status <= 499;
+}
+
 function refusalOf(error, receiving) {
-  if (error instanceof Refusal) return error;
-  if (error?.type === "entity.parse.failed" || error?.type === "content.invalid") return new Refusal(receiving ? "ERR-RX-CONTENT-INVALID" : "ERR-LC-BODY-INVALID");
+  if (error instanceof Refusal) {
+    // A receiving endpoint answers ERR-RX-INTERNAL for every refusal of the class 5xx.
+    return receiving && error.status >= 500 && !error.id.startsWith("ERR-RX-") ? new Refusal("ERR-RX-INTERNAL") : error;
+  }
   if (error?.type === "entity.too.large") return new Refusal(receiving ? "ERR-RX-BODY-TOO-LARGE" : "ERR-LC-BODY-TOO-LARGE");
+  if (isInvalidBody(error)) return new Refusal(receiving ? "ERR-RX-CONTENT-INVALID" : "ERR-LC-BODY-INVALID");
   if (error instanceof IdentifierFormatError) {
     return receiving ? new Refusal("ERR-RX-INTERNAL") : new Refusal("ERR-LC-BODY-INVALID", { messages: [error.message] });
   }

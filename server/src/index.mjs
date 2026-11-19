@@ -38,7 +38,8 @@ import { createPool } from "./db/pool.mjs";
 import { createLogger } from "./logger.mjs";
 import { createMemoryTwinRegistry } from "./twins/memoryTwinRegistry.mjs";
 
-const MIGRATIONS = ["001_schema.sql", "002_triggers.sql", "003_policies.sql"];
+// The four migration files of phases P3 and P5; the fourth file holds the audit queue of decision D69.
+const MIGRATIONS = ["001_schema.sql", "002_triggers.sql", "003_policies.sql", "004_audit_outbox.sql"];
 
 async function checkDatabase(pool) {
   const applied = new Set((await pool.query("SELECT name FROM schema_migrations")).rows.map((row) => row.name));
@@ -103,17 +104,39 @@ async function main() {
     holder.register(app);
     await app.locals.context.offerPublisher.publishNotificationAsset();
     worker.start();
-    const server = app.listen(config.port, () => logger.info("The reference server started.", { traceId: randomUUID(), port: config.port, binding: config.binding }));
-    const shutdown = async (signal) => {
-      logger.info("The reference server stops.", { signal });
-      await worker.stop();
-      server.close();
-      server.closeAllConnections();
-      await ports.transport.close?.();
-      await pool.end();
+    // Express 5 calls the callback of listen also with an error, so the start is logged on the event
+    // listening only.
+    const server = app.listen(config.port);
+    server.once("listening", () => logger.info("The reference server started.", { traceId: randomUUID(), port: config.port, binding: config.binding }));
+    let stopping = null;
+    const shutdown = (reason) => {
+      stopping ??= (async () => {
+        await worker.stop();
+        server.close();
+        server.closeAllConnections();
+        await ports.transport.close?.();
+        await pool.end();
+      })();
+      return stopping.catch((error) => {
+        logger.error("The shutdown of the reference server failed.", { reason, error });
+        process.exitCode = 1;
+      });
     };
-    process.once("SIGTERM", () => shutdown("SIGTERM"));
-    process.once("SIGINT", () => shutdown("SIGINT"));
+    // An error of the HTTP server, for example a port that another process holds, stops the worker,
+    // ends the pool and ends the process with the status 1 (finding R45-017).
+    server.on("error", (error) => {
+      logger.error("The HTTP server of the reference server failed.", { port: config.port, code: error.code ?? null, error });
+      process.exitCode = 1;
+      shutdown("server error");
+    });
+    process.once("SIGTERM", () => {
+      logger.info("The reference server stops.", { signal: "SIGTERM" });
+      shutdown("SIGTERM");
+    });
+    process.once("SIGINT", () => {
+      logger.info("The reference server stops.", { signal: "SIGINT" });
+      shutdown("SIGINT");
+    });
   } catch (error) {
     logger.error("The reference server did not start.", { error });
     await pool.end();

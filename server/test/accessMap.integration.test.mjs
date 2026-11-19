@@ -262,3 +262,35 @@ test("section 9.2.4: the tie rule and the date rule of readAccessMap", async (t)
     assertRefusal(await readMap(model.id), 404, "ERR-LC-SUBMODEL-NOT-FOUND");
   });
 });
+
+test("version 10 of the specification: the access map after the code review of phases P4 and P5", async (t) => {
+  const errorLines = () => deployment.lines.filter((line) => line.level === "error").length;
+  await t.test("finding R45-005: twelve concurrent pairs of a map without an entry for product-condition and a product-condition payload never leave both requests committed", async () => {
+    const withoutCondition = (version) => ({ ...fixture("accessMap.json"), mapVersion: version, entries: fixture("accessMap.json").entries.filter((item) => item.aspect !== PRODUCT_CONDITION) });
+    for (let pair = 0; pair < 12; pair += 1) {
+      const model = await newModel();
+      const passport = await passportOf(model.id);
+      const [map, payload] = await Promise.all([putMap(model.id, withoutCondition("1.0.0")), deployment.call("PUT", `/api/passports/${passport.id}/aspects/product-condition`, fixture("productCondition.json"))]);
+      const statuses = [map.status, payload.status];
+      assert.ok(
+        (map.status === 201 && payload.status === 422 && payload.body.error.code === "ERR-LC-ACCESS-MAP-INCOMPLETE") ||
+          (payload.status === 200 && map.status === 422 && map.body.error.code === "ERR-LC-ACCESS-MAP-INCOMPLETE"),
+        `pair ${pair}: ${JSON.stringify(statuses)}`,
+      );
+    }
+  });
+  await t.test("finding R45-009: a map with two entries of one field and two groups answers ERR-LC-ACCESS-MAP-INCOMPLETE, and two equal entries answer ERR-LC-BODY-INVALID, each without a stored payload and without a log line at the level error", async () => {
+    const model = await newModel();
+    const before = errorLines();
+    const twoGroups = await putMap(model.id, { mapVersion: "1.0.0", validFrom: "2026-01-01", entries: [entry(NAMEPLATE, "$.SerialNumber", "public"), entry(NAMEPLATE, "$.SerialNumber", "authorities")] });
+    assertRefusal(twoGroups, 422, "ERR-LC-ACCESS-MAP-INCOMPLETE");
+    assertRefusal(await putMap(model.id, { mapVersion: "1.0.0", validFrom: "2026-01-01", entries: [entry(NAMEPLATE, "$.SerialNumber"), entry(NAMEPLATE, "$.SerialNumber")] }), 400, "ERR-LC-BODY-INVALID");
+    assert.equal(errorLines(), before);
+    assertRefusal(await readMap(model.id), 404, "ERR-LC-SUBMODEL-NOT-FOUND");
+  });
+  await t.test("finding R45-008: a map that is not a JSON object answers ERR-LC-BODY-INVALID", async () => {
+    const model = await newModel();
+    assertRefusal(await deployment.call("PUT", `/api/battery-models/${model.id}/access-map`), 400, "ERR-LC-BODY-INVALID");
+    assertRefusal(await deployment.call("PUT", `/api/battery-models/${model.id}/access-map`, "[]"), 400, "ERR-LC-BODY-INVALID");
+  });
+});

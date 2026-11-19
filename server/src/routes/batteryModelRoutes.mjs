@@ -29,7 +29,7 @@ import express from "express";
 import { authenticate } from "../access/authenticate.mjs";
 import { requireCapability } from "../access/requireCapability.mjs";
 import { Refusal } from "../dataset/refusals.mjs";
-import { combinedExposure, contextOf, runRead, runWrite, sendData, uuidParameter, validatedBody } from "./runWrite.mjs";
+import { combinedExposure, contextOf, objectBody, runRead, runWrite, sendData, uuidParameter, validatedBody } from "./runWrite.mjs";
 
 // Returns the router of the battery model endpoints, mounted at /api/battery-models.
 export function createBatteryModelRoutes({ config, clock }) {
@@ -45,7 +45,7 @@ export function createBatteryModelRoutes({ config, clock }) {
 
   router.post("/:modelId/twin", authenticated, requireCapability("passport.create"), async (req, res) => {
     const modelId = uuidParameter(req, "modelId");
-    const model = await runRead(req, (client) => contextOf(req).passportRepository.findBatteryModel(client, modelId));
+    const model = await runRead(req, (client) => contextOf(req).lifecycle.readBatteryModel({ client, modelId }));
     if (model === null) throw new Refusal("ERR-LC-MODEL-NOT-FOUND");
     sendData(res, 200, { exposure: await refreshModel(req, modelId) });
   });
@@ -53,7 +53,7 @@ export function createBatteryModelRoutes({ config, clock }) {
   router.put("/:modelId/access-map", authenticated, requireCapability("access-map.write"), async (req, res) => {
     const context = contextOf(req);
     const modelId = uuidParameter(req, "modelId");
-    const map = req.body;
+    const map = objectBody(req);
     const result = await runWrite(req, (client) => context.accessMaps.putAccessMap({ client, modelId, map }));
     const exposures = [await refreshModel(req, modelId)];
     for (const passportId of result.passportIds) exposures.push(await context.exposure.refreshPassportExposure({ pool: context.pool, passportId }));

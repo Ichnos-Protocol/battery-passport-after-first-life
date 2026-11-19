@@ -19,32 +19,34 @@
  ********************************************************************************/
 
 // Requirements: SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST through the
-// connector) and SwR-BGWORK-020 (End of a recycled battery's passport sent in time), with decision D1
-// (The delay of the end notice) and decision D22 (The outbox). System requirement SyR-LIFE-127 (End of a
-// recycled battery's passport made known to the provider). Section 9.2.5 of
-// docs/architecture/implementation_plan.md.
+// connector), SwR-BGWORK-020 (End of a recycled battery's passport sent in time) and SwR-AUDIT-045
+// (Dataset write decisions recorded with the authorisation relied on), with decision D1 (The delay of the
+// end notice), decision D22 (The outbox) and decision D69 (The audit record after a failed write is
+// queued). System requirement SyR-LIFE-127 (End of a recycled battery's passport made known to the
+// provider). Section 9.2.5 of docs/architecture/implementation_plan.md.
 // The worker of the background work (EL-BGWORK, the background work): one run sends the due
-// notifications and then pulls the pending battery information.
+// notifications, pulls the pending battery information and writes the queued audit records.
 
 // Returns { start(), stop(), tick() }. A call of tick() during a running tick() returns the promise of
-// the running call, so two runs never overlap in one process. An error of the sender or of the puller
-// is logged at the level error, and the run continues with the next step.
-export function createOutboxWorker({ sender, puller, intervalMilliseconds, logger }) {
+// the running call, so two runs never overlap in one process. An error of one of the three calls is
+// logged at the level error and does not stop the two other calls.
+export function createOutboxWorker({ sender, puller, audit, intervalMilliseconds, logger }) {
   let running = null;
   let timer = null;
   let started = false;
 
+  async function step(work, message) {
+    try {
+      await work();
+    } catch (error) {
+      logger.error(message, { error });
+    }
+  }
+
   async function run() {
-    try {
-      await sender.sendDue();
-    } catch (error) {
-      logger.error("The sender of the outbox failed.", { error });
-    }
-    try {
-      await puller.pullDue();
-    } catch (error) {
-      logger.error("The puller of the battery information failed.", { error });
-    }
+    await step(() => sender.sendDue(), "The sender of the outbox failed.");
+    await step(() => puller.pullDue(), "The puller of the battery information failed.");
+    await step(() => audit.writeQueued(), "The writer of the queued audit records failed.");
   }
 
   function tick() {

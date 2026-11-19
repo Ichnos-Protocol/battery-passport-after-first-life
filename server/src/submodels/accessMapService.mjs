@@ -127,13 +127,34 @@ export function createAccessMapService({ repository, passportRepository, company
     return IDTA_02035_ASPECT_KEYS.filter((aspectKey) => entriesOfAspect(map, aspectKey).some((entry) => entry.accessGroup === "legitimateInterestBattery"));
   }
 
+  // The advisory lock of a battery model, which putAccessMap takes first and putAspectPayload takes
+  // after the row lock of its passport (finding R45-005).
+  async function lockModel({ client, modelId }) {
+    await repository.lockBatteryModel(client, modelId);
+  }
+
   // Stores a new version of the access map of a battery model of the own company.
   async function putAccessMap({ client, modelId, map }) {
+    await repository.lockBatteryModel(client, modelId);
     if ((await passportRepository.findBatteryModel(client, modelId)) === null) throw new Refusal("ERR-LC-MODEL-NOT-FOUND");
     const validation = validator.validateAspect("access-map", map);
     if (!validation.valid) throw new Refusal("ERR-LC-BODY-INVALID", { messages: validatorMessages(validation.errors) });
     const unsupported = map.entries.filter((entry) => compilePath(entry.path) === null).map((entry) => `${entry.path}: the path lies outside the supported subset`);
     if (unsupported.length > 0) throw new Refusal("ERR-LC-PATH-NOT-SUPPORTED", { messages: unsupported });
+    // A repeated entry of one aspect, twin level and path is refused before any insert (finding R45-009):
+    // two groups for one field break the rule of one group per field, and two equal entries are invalid.
+    const groupsByField = new Map();
+    for (const entry of map.entries) {
+      const field = JSON.stringify([entry.aspect, entry.twinLevel, entry.path]);
+      if (!groupsByField.has(field)) groupsByField.set(field, []);
+      groupsByField.get(field).push(entry.accessGroup);
+    }
+    const repeated = [...groupsByField.entries()].filter(([, groups]) => groups.length > 1);
+    const twoGroups = repeated.filter(([, groups]) => new Set(groups).size > 1);
+    if (twoGroups.length > 0) {
+      throw new Refusal("ERR-LC-ACCESS-MAP-INCOMPLETE", { messages: twoGroups.map(([field, groups]) => `${JSON.parse(field).join(" ")}: the entries name the access groups ${[...new Set(groups)].sort().join(" and ")}`) });
+    }
+    if (repeated.length > 0) throw new Refusal("ERR-LC-BODY-INVALID", { messages: repeated.map(([field]) => `${JSON.parse(field).join(" ")}: the entry is repeated`) });
     if (await repository.accessMapVersionExists(client, { modelId, mapVersion: map.mapVersion })) throw new Refusal("ERR-LC-ACCESS-MAP-VERSION-EXISTS");
     const problems = [];
     const passportIds = await passportRepository.listPassportIdsOfModel(client, modelId);
@@ -154,5 +175,5 @@ export function createAccessMapService({ repository, passportRepository, company
     return { id: version.id, accessMap: accessMapPayload(version, entries), passportIds };
   }
 
-  return Object.freeze({ putAccessMap, readAccessMap, payloadCoverageProblems, isPublicWithoutRecord, legitimateInterestBatteryKeys, coverageProblems });
+  return Object.freeze({ lockModel, putAccessMap, readAccessMap, payloadCoverageProblems, isPublicWithoutRecord, legitimateInterestBatteryKeys, coverageProblems });
 }

@@ -146,6 +146,7 @@ const recordingTransport = {
   pull: async () => ({ outcome: "transport_failed", agreementId: null, body: null, cause: "no provider" }),
 };
 const noPuller = { pullDue: async () => 0 };
+const noAudit = { writeQueued: async () => 0 };
 const silentLogger = { error() {}, warn() {}, info() {}, debug() {} };
 
 before(async () => {
@@ -157,7 +158,7 @@ after(async () => {
 
 test("SwR-BGWORK-020 (End of a recycled battery's passport sent in time): the delay of D1", async (t) => {
   const sender = createNotificationSender({ pool: recycler.db.appPool, repository: notificationRepository, transport: recordingTransport, receiverResolver: { resolve: async (bpnl) => ({ did: `did:web:${bpnl.toLowerCase()}.memory.invalid`, connectorUrl: `http://${bpnl.toLowerCase()}.memory.invalid` }) }, clock, maxAttempts: 5, retrySeconds: 60, ownBpnl: RECYCLER });
-  const worker = createOutboxWorker({ sender, puller: noPuller, intervalMilliseconds: 10, logger: silentLogger });
+  const worker = createOutboxWorker({ sender, puller: noPuller, audit: noAudit, intervalMilliseconds: 10, logger: silentLogger });
   current = new Date(START);
   const answer = await recycler.call("POST", "/api/lifecycle-events/recycling", { passportIdentifier: "TCK-PASSPORT-A", dataProviderBpnl: PROVIDER, nameplateManufacturerBpnl: PROVIDER, recyclingDate: "2026-06-15T09:00:00.000Z" });
   const [planned] = answer.body.data.notifications;
@@ -187,22 +188,22 @@ test("SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST throug
     let release;
     const sender = { sendDue: () => new Promise((resolve) => (order.push("send"), (release = resolve))) };
     const puller = { pullDue: async () => order.push("pull") };
-    const worker = createOutboxWorker({ sender, puller, intervalMilliseconds: 10, logger: silentLogger });
+    const worker = createOutboxWorker({ sender, puller, audit: { writeQueued: async () => order.push("audit") }, intervalMilliseconds: 10, logger: silentLogger });
     const first = worker.tick();
     const second = worker.tick();
     assert.equal(first, second);
     release();
     await first;
-    assert.deepStrictEqual(order, ["send", "pull"]);
+    assert.deepStrictEqual(order, ["send", "pull", "audit"]);
     const third = worker.tick();
     assert.notEqual(third, first, "a tick() after the end of the earlier run starts a new run");
     release();
     await third;
-    assert.deepStrictEqual(order, ["send", "pull", "send", "pull"]);
+    assert.deepStrictEqual(order, ["send", "pull", "audit", "send", "pull", "audit"]);
   });
   await t.test("start() schedules the runs after the interval, stop() cancels the schedule and awaits the running tick()", async () => {
     let runs = 0;
-    const worker = createOutboxWorker({ sender: { sendDue: async () => (runs += 1) }, puller: noPuller, intervalMilliseconds: 10, logger: silentLogger });
+    const worker = createOutboxWorker({ sender: { sendDue: async () => (runs += 1) }, puller: noPuller, audit: noAudit, intervalMilliseconds: 10, logger: silentLogger });
     worker.start();
     await new Promise((resolve) => setTimeout(resolve, 80));
     await worker.stop();
@@ -211,18 +212,25 @@ test("SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST throug
     await new Promise((resolve) => setTimeout(resolve, 40));
     assert.equal(runs, stopped, "no run after stop()");
   });
-  await t.test("an error of the sender is logged at the level error, and the puller still runs", async () => {
-    const logged = [];
-    let pulled = false;
-    const worker = createOutboxWorker({
-      sender: { sendDue: async () => Promise.reject(new Error("the outbox failed")) },
-      puller: { pullDue: async () => (pulled = true) },
-      intervalMilliseconds: 10,
-      logger: { ...silentLogger, error: (message, fields) => logged.push({ message, fields }) },
+  for (const failing of ["sender", "puller", "audit"]) {
+    await t.test(`tick() calls the sender, the puller and audit.writeQueued() in this order, and an error of the ${failing} is logged and does not stop the two other calls`, async () => {
+      const logged = [];
+      const order = [];
+      const call = (name) => async () => {
+        order.push(name);
+        if (name === failing) throw new Error(`the ${name} failed`);
+      };
+      const worker = createOutboxWorker({
+        sender: { sendDue: call("sender") },
+        puller: { pullDue: call("puller") },
+        audit: { writeQueued: call("audit") },
+        intervalMilliseconds: 10,
+        logger: { ...silentLogger, error: (message, fields) => logged.push({ message, fields }) },
+      });
+      await worker.tick();
+      assert.deepStrictEqual(order, ["sender", "puller", "audit"]);
+      assert.equal(logged.length, 1);
+      assert.equal(logged[0].fields.error.message, `the ${failing} failed`);
     });
-    await worker.tick();
-    assert.equal(pulled, true);
-    assert.equal(logged.length, 1);
-    assert.equal(logged[0].fields.error.message, "the outbox failed");
-  });
+  }
 });

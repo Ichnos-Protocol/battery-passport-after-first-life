@@ -29,6 +29,7 @@
 import { withTransaction } from "../db/transaction.mjs";
 import { ASPECTS } from "../submodels/submodelService.mjs";
 import { validatorMessages } from "../validation/schemaValidator.mjs";
+import { cleanCause } from "./notificationSender.mjs";
 
 const PRODUCT_CONDITION = ASPECTS["product-condition"];
 
@@ -41,8 +42,8 @@ export function createBatteryInformationPuller({ pool, repository, transport, re
     let resolved;
     try {
       resolved = await receiverResolver.resolve(contract.provider_bpnl);
-    } catch (error) {
-      return { outcome: "transport_failed", cause: `provider resolution failed: ${error.message}` };
+    } catch {
+      return { outcome: "transport_failed", cause: "provider resolution failed" };
     }
     if (resolved === null) return { outcome: "receiver_unresolved", cause: `no connector resolved for ${contract.provider_bpnl}` };
     try {
@@ -52,8 +53,8 @@ export function createBatteryInformationPuller({ pool, repository, transport, re
         semanticId: PRODUCT_CONDITION.semanticId,
         passportIdentifier: contract.passport_identifier,
       });
-    } catch (error) {
-      return { outcome: "transport_failed", cause: error.message };
+    } catch {
+      return { outcome: "transport_failed", cause: "transport failed" };
     }
   }
 
@@ -63,14 +64,14 @@ export function createBatteryInformationPuller({ pool, repository, transport, re
       if (contract === null) return false;
       const result = await attempt(contract);
       if (result.outcome !== "received") {
-        await repository.setPullState(client, contract.id, { pullState: result.outcome, pullCause: result.cause ?? null });
+        await repository.setPullState(client, contract.id, { pullState: result.outcome, pullCause: cleanCause(result.cause) });
         return true;
       }
       const validation = validator.validateAspect("product-condition", result.body);
       if (!validation.valid) {
         await repository.setPullState(client, contract.id, {
           pullState: "provider_refused",
-          pullCause: `the received body fails the stored schema of product-condition: ${validatorMessages(validation.errors).join("; ")}`,
+          pullCause: cleanCause(`the received body fails the stored schema of product-condition: ${validatorMessages(validation.errors).join("; ")}`),
         });
         return true;
       }

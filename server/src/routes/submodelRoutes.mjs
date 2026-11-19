@@ -52,7 +52,7 @@ export function createSubmodelRoutes({ config, clock }) {
     const modelId = uuidParameter(req, "modelId");
     const today = context.clock.now().toISOString().slice(0, 10);
     const payload = await runRead(req, async (client) => {
-      if ((await context.passportRepository.findBatteryModel(client, modelId)) === null) throw new Refusal("ERR-LC-MODEL-NOT-FOUND");
+      if ((await context.lifecycle.readBatteryModel({ client, modelId })) === null) throw new Refusal("ERR-LC-MODEL-NOT-FOUND");
       return context.accessMaps.readAccessMap({ client, modelId, today });
     });
     if (payload === null) throw new Refusal("ERR-LC-SUBMODEL-NOT-FOUND");

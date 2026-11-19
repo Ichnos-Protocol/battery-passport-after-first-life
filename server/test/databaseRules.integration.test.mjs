@@ -79,6 +79,8 @@ const TABLES = [
   "passport_write_decisions",
   "issuer_contracts",
   "received_battery_information",
+  // The table of the fourth migration file 004_audit_outbox.sql (section 9.4.4, decision D69).
+  "audit_outbox",
 ];
 
 const FUNCTIONS = [
@@ -98,9 +100,10 @@ const FUNCTIONS = [
   "check_interval_change",
   "refuse_child_of_ended_passport",
   "check_lineage_link_insert",
+  "check_audit_outbox_change",
 ];
 
-// The 37 triggers of section 9.4.2, each with its table.
+// The 37 triggers of section 9.4.2 and the trigger of section 9.4.4, each with its table.
 const TRIGGERS = {
   trg_fixed_passport_passport_purposes: "passport_purposes",
   trg_fixed_passport_passport_aspect_payloads: "passport_aspect_payloads",
@@ -139,6 +142,7 @@ const TRIGGERS = {
   trg_passport_purposes_ended: "passport_purposes",
   trg_passport_responsibility_intervals_ended: "passport_responsibility_intervals",
   trg_passport_lineage_links_insert: "passport_lineage_links",
+  trg_audit_outbox_change: "audit_outbox",
 };
 
 // The twelve policies of section 9.4.3, each with its table.
@@ -240,6 +244,11 @@ const TABLE_CONSTRAINTS = [
   "issuer_contracts_side_columns_check",
   "received_battery_information_pkey",
   "received_battery_information_contract_fkey",
+  "audit_outbox_pkey",
+  "audit_outbox_entries_check",
+  "audit_outbox_attempts_check",
+  "audit_outbox_last_error_check",
+  "audit_outbox_written_check",
 ];
 
 // The indexes of section 9.4.1 that no constraint creates.
@@ -254,6 +263,7 @@ const PLAIN_INDEXES = [
   "passport_access_records_open_key",
   "passport_write_decisions_passport_idx",
   "issuer_contracts_open_key",
+  "audit_outbox_due_idx",
 ];
 
 // The columns with the privilege UPDATE of the role refserver_app, by the table of section 9.4.3.
@@ -277,6 +287,7 @@ const UPDATE_COLUMNS = {
   notifications_sent: ["outcome", "cause", "http_status", "attempts", "attempted_at", "not_before", "receiver_did", "receiver_connector_url"],
   passport_access_records: ["valid_to"],
   issuer_contracts: ["pull_state", "pull_cause", "valid_to"],
+  audit_outbox: ["attempts", "not_before", "last_error", "written_at"],
 };
 
 // One column per table of section 9.4.3 that holds no privilege UPDATE.
@@ -288,6 +299,7 @@ const COLUMN_WITHOUT_UPDATE = {
   issuer_contracts: "issuer_bpnl",
   companies: "bpnl",
   passport_responsibility_intervals: "responsible_bpnl",
+  audit_outbox: "entries",
 };
 
 // The refusals of server/src/db/migrations/002_triggers.sql, each with the sentence of section 22.
@@ -689,30 +701,30 @@ test("(a) catalogue", async (t) => {
       [schema],
     );
 
-  await t.test("SwR-RDB-007: a second run of migrate applies no file, and schema_migrations holds the three file names", async () => {
+  await t.test("SwR-RDB-007: a second run of migrate applies no file, and schema_migrations holds the four file names", async () => {
     assert.deepEqual(await migrate(admin, { schema }), []);
-    assert.deepEqual(await names("SELECT name FROM schema_migrations", []), ["001_schema.sql", "002_triggers.sql", "003_policies.sql"]);
+    assert.deepEqual(await names("SELECT name FROM schema_migrations", []), ["001_schema.sql", "002_triggers.sql", "003_policies.sql", "004_audit_outbox.sql"]);
   });
 
-  await t.test("SwR-RDB-007: the 17 tables and the table schema_migrations exist by their names in pg_tables", async () => {
-    assert.equal(TABLES.length, 17);
+  await t.test("SwR-RDB-007: the 18 tables and the table schema_migrations exist by their names in pg_tables", async () => {
+    assert.equal(TABLES.length, 18);
     assert.deepEqual(await names("SELECT tablename AS name FROM pg_tables WHERE schemaname = $1"), [...TABLES, "schema_migrations"].sort());
   });
 
-  await t.test("SwR-RDB-007: the 16 functions exist by their names in pg_proc", async () => {
-    assert.equal(FUNCTIONS.length, 16);
+  await t.test("SwR-RDB-007: the 17 functions exist by their names in pg_proc", async () => {
+    assert.equal(FUNCTIONS.length, 17);
     assert.deepEqual(await names("SELECT p.proname AS name FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1"), [...FUNCTIONS].sort());
   });
 
-  await t.test("SwR-RDB-007: the 37 triggers exist by their names and their tables in pg_trigger", async () => {
-    assert.equal(Object.keys(TRIGGERS).length, 37);
+  await t.test("SwR-RDB-007: the 38 triggers exist by their names and their tables in pg_trigger", async () => {
+    assert.equal(Object.keys(TRIGGERS).length, 38);
     const result = await admin.query(
       `SELECT g.tgname AS name, c.relname AS table_name FROM pg_trigger g JOIN pg_class c ON c.oid = g.tgrelid JOIN pg_namespace n ON n.oid = c.relnamespace
         WHERE n.nspname = $1 AND NOT g.tgisinternal`,
       [schema],
     );
     assert.deepEqual(Object.fromEntries(result.rows.map((row) => [row.name, row.table_name]).sort()), Object.fromEntries(Object.entries(TRIGGERS).sort()));
-    assert.equal(result.rowCount, 37);
+    assert.equal(result.rowCount, 38);
   });
 
   await t.test("SwR-RDB-007: the 12 policies exist by their names and their tables in pg_policies, each for the role refserver_app", async () => {
@@ -744,7 +756,7 @@ test("(a) catalogue", async (t) => {
     );
   });
 
-  await t.test("SwR-RDB-075: every named constraint of section 9.4.1 exists by its name in pg_constraint, and the 17 tables hold no further constraint", async () => {
+  await t.test("SwR-RDB-075: every named constraint of sections 9.4.1 and 9.4.4 exists by its name in pg_constraint, and the 18 tables hold no further constraint", async () => {
     assert.deepEqual(
       await names(
         `SELECT c.conname AS name FROM pg_constraint c JOIN pg_namespace n ON n.oid = c.connamespace JOIN pg_class r ON r.oid = c.conrelid
@@ -776,7 +788,7 @@ test("(a) catalogue", async (t) => {
     }
   });
 
-  await t.test("SwR-RDB-007: no column of the 17 tables has the type timestamptz or date without a domain", async () => {
+  await t.test("SwR-RDB-007: no column of the 18 tables has the type timestamptz or date without a domain", async () => {
     const result = await admin.query(
       `SELECT c.relname AS table_name, a.attname AS column_name FROM pg_attribute a JOIN pg_class c ON c.oid = a.attrelid JOIN pg_namespace n ON n.oid = c.relnamespace
         WHERE n.nspname = $1 AND c.relkind = 'r' AND c.relname <> 'schema_migrations' AND a.attnum > 0 AND NOT a.attisdropped
@@ -790,7 +802,10 @@ test("(a) catalogue", async (t) => {
       [schema],
     );
     const counts = Object.fromEntries(domains.rows.map((row) => [row.name, row.columns]));
-    assert.equal(counts.finite_timestamptz + counts.finite_date, 40, "decision D68 (Finite dates and no NaN) counts 40 columns of the two types");
+    // Decision D68 (Finite dates and no NaN) counts 40 columns of the two types in the 17 tables of the
+    // three first files; the four columns decided_at, not_before, written_at and created_at of
+    // audit_outbox (section 9.4.4) take the domain as well.
+    assert.equal(counts.finite_timestamptz + counts.finite_date, 44, "40 columns of the 17 tables and 4 columns of audit_outbox");
     const lastColumns = await admin.query(
       `SELECT c.relname AS name FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
         WHERE n.nspname = $1 AND c.relkind = 'r' AND c.relname <> 'schema_migrations'
@@ -803,7 +818,7 @@ test("(a) catalogue", async (t) => {
   await t.test("SwR-RDB-007: pg_proc.proconfig of every function of the schema holds the search path of the schema and pg_temp, and app_today also holds DateStyle", async () => {
     assert.deepEqual((await functionsWithoutSearchPath()).rows, []);
     const counted = await admin.query("SELECT count(*)::int AS functions FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1", [schema]);
-    assert.equal(counted.rows[0].functions, 16);
+    assert.equal(counted.rows[0].functions, 17);
     const today = await admin.query("SELECT p.proconfig FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1 AND p.proname = 'app_today'", [schema]);
     assert.deepEqual([...today.rows[0].proconfig].sort(), ["DateStyle=ISO, YMD", `search_path=${schema}, pg_temp`].sort());
     const invoker = await admin.query("SELECT count(*)::int AS definers FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1 AND p.prosecdef", [schema]);
@@ -815,7 +830,7 @@ test("(a) catalogue", async (t) => {
       "SELECT p.proname AS name, p.prosrc AS source FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = $1 AND p.prorettype = 'trigger'::regtype",
       [schema],
     );
-    assert.equal(result.rowCount, 14);
+    assert.equal(result.rowCount, 15);
     for (const row of result.rows) {
       assert.ok(row.source.includes("PERFORM require_read_committed();"), `${row.name} holds no call`);
       assert.match(row.source, /\bBEGIN\s+PERFORM require_read_committed\(\);/, `${row.name} does not call the helper in its first statement`);
@@ -852,7 +867,7 @@ END $$`);
     assert.deepEqual(result.rows, []);
   });
 
-  await t.test("SwR-RDB-007: the column privileges UPDATE of the role refserver_app equal the table of section 9.4.3, and the role holds no privilege UPDATE, DELETE or TRUNCATE on a table", async () => {
+  await t.test("SwR-RDB-007: the column privileges UPDATE of the role refserver_app equal the table of section 9.4.3 and the columns of audit_outbox of section 9.4.4, and the role holds no privilege UPDATE, DELETE or TRUNCATE on a table", async () => {
     const columns = await admin.query(
       "SELECT table_name, column_name FROM information_schema.column_privileges WHERE grantee = 'refserver_app' AND table_schema = $1 AND privilege_type = 'UPDATE'",
       [schema],
@@ -1307,7 +1322,30 @@ test("(c) triggers", async (t) => {
     });
   });
 
-  await t.test("the nineteen triggers with one accepted and one refused statement each", async (t19) => {
+  await t.test("the twenty triggers with one accepted and one refused statement each", async (t19) => {
+    await t19.test("SwR-AUDIT-045: trg_audit_outbox_change of section 9.4.4 admits the update of the four columns of an unwritten row and refuses each stated change", async () => {
+      const queue = (row = {}) =>
+        insertRow(admin, "audit_outbox", { entries: JSON.stringify([{ decision: "granted", action: "passport.create" }]), decided_at: "2026-06-15T10:00:00Z", not_before: "2026-06-15T10:00:00Z", ...row });
+      const row = await queue();
+      assert.equal(
+        (await admin.query("UPDATE audit_outbox SET attempts = 1, not_before = $2, last_error = 'sqlstate 42501', written_at = NULL WHERE id = $1", [row.id, "2026-06-15T10:01:00Z"])).rowCount,
+        1,
+      );
+      const changeOnly = rule("ERR-DB-APPEND-ONLY", "Only the attempt count, the next attempt, the last error and the write time of a record of the audit queue change, and the attempt count never decreases.");
+      await assertRefused(() => admin.query("UPDATE audit_outbox SET attempts = 0 WHERE id = $1", [row.id]), changeOnly, "a lower attempt count");
+      await assertRefused(() => admin.query("UPDATE audit_outbox SET entries = '[{}]' WHERE id = $1", [row.id]), changeOnly, "an update of entries");
+      await assertRefused(() => admin.query("UPDATE audit_outbox SET decided_at = $2 WHERE id = $1", [row.id, "2026-06-15T09:00:00Z"]), changeOnly, "an update of decided_at");
+      await assertRefused(() => admin.query("DELETE FROM audit_outbox WHERE id = $1", [row.id]), rule("ERR-DB-APPEND-ONLY", "A record of the audit queue is never deleted."), "a deletion");
+      assert.equal((await admin.query("UPDATE audit_outbox SET written_at = $2 WHERE id = $1", [row.id, "2026-06-15T10:02:00Z"])).rowCount, 1);
+      await assertRefused(() => admin.query("UPDATE audit_outbox SET attempts = 5 WHERE id = $1", [row.id]), rule("ERR-DB-APPEND-ONLY", "A written record of the audit queue never changes."), "an update of a written row");
+      await assertRefused(() => queue({ entries: "[]" }), { code: "23514", constraint: "audit_outbox_entries_check" }, "an empty list");
+      await assertRefused(() => queue({ entries: "{}" }), { code: "23514", constraint: "audit_outbox_entries_check" }, "an object in place of a list");
+      await assertRefused(() => queue({ decided_at: "infinity" }), { code: "23514", constraint: "finite_timestamptz_check" }, "the value infinity");
+      await assertRefused(() => queue({ last_error: "" }), { code: "23514", constraint: "audit_outbox_last_error_check" }, "an empty last error");
+      await assertRefused(() => queue({ attempts: -1 }), { code: "23514", constraint: "audit_outbox_attempts_check" }, "a negative attempt count");
+      await assertRefused(() => queue({ written_at: "2026-06-15T09:00:00Z" }), { code: "23514", constraint: "audit_outbox_written_check" }, "a write time before the decision");
+    });
+
     await t19.test("SwR-DATASET-208: trg_passport_identity admits an update of another column and refuses an update of manufacturer_bpnl by the superuser", async () => {
       const passport = await createFirstPassport();
       assert.equal((await admin.query("UPDATE passports SET battery_category = 'industrial' WHERE id = $1", [passport.id])).rowCount, 1);
@@ -2062,6 +2100,12 @@ test("(f) privileges", async (t) => {
   const contract = await insertRow(admin, "issuer_contracts", providerContractRow(passport.id));
   const sent = await insertRow(admin, "notifications_sent", sentRow());
   const asA = (work) => withTransaction(db.appPool, asCompany(COMPANY_A), work);
+  // A row of the audit queue of section 9.4.4, written by the role refserver_app.
+  const queued = (
+    await asA((client) =>
+      client.query("INSERT INTO audit_outbox (entries, decided_at, not_before) VALUES ($1, $2, $2) RETURNING id", [JSON.stringify([{ decision: "granted", action: "passport.create" }]), "2026-06-15T10:00:00Z"]),
+    )
+  ).rows[0];
   const rowOf = {
     companies: ["bpnl = $1", COMPANY_A],
     passports: ["id = $1", passport.id],
@@ -2070,6 +2114,7 @@ test("(f) privileges", async (t) => {
     notifications_sent: ["id = $1", sent.id],
     passport_access_records: ["passport_id = $1", passport.id],
     issuer_contracts: ["id = $1", contract.id],
+    audit_outbox: ["id = $1", queued.id],
   };
 
   for (const table of TABLES) {
@@ -2079,10 +2124,10 @@ test("(f) privileges", async (t) => {
     });
   }
 
-  await t.test("SwR-RDB-007: a SELECT on schema_migrations returns the three names, and an INSERT into schema_migrations fails with 42501", async () => {
+  await t.test("SwR-RDB-007: a SELECT on schema_migrations returns the four names, and an INSERT into schema_migrations fails with 42501", async () => {
     const result = await asA((client) => client.query("SELECT name FROM schema_migrations ORDER BY name"));
-    assert.deepEqual(result.rows.map((row) => row.name), ["001_schema.sql", "002_triggers.sql", "003_policies.sql"]);
-    await assertRefused(() => asA((client) => client.query("INSERT INTO schema_migrations (name) VALUES ('004_further.sql')")), NO_PRIVILEGE, "INSERT into schema_migrations");
+    assert.deepEqual(result.rows.map((row) => row.name), ["001_schema.sql", "002_triggers.sql", "003_policies.sql", "004_audit_outbox.sql"]);
+    await assertRefused(() => asA((client) => client.query("INSERT INTO schema_migrations (name) VALUES ('005_further.sql')")), NO_PRIVILEGE, "INSERT into schema_migrations");
     await assertRefused(() => asA((client) => client.query("UPDATE schema_migrations SET name = 'changed'")), NO_PRIVILEGE, "UPDATE of schema_migrations");
     await assertRefused(() => asA((client) => client.query("DELETE FROM schema_migrations")), NO_PRIVILEGE, "DELETE on schema_migrations");
   });
@@ -2511,7 +2556,7 @@ test("(i) isolation levels", async (t) => {
     });
   });
 
-  await t.test("SwR-RDB-007: while the setting for the test database exists, migrate for a new schema rejects with ERR-DB-ROLE-PRIVILEGE and names npm run create-role, and after createAppRole the same call of migrate applies the third file and returns its name", async () => {
+  await t.test("SwR-RDB-007: while the setting for the test database exists, migrate for a new schema rejects with ERR-DB-ROLE-PRIVILEGE and names npm run create-role, and after createAppRole the same call of migrate applies the third and the fourth file and returns their names", async () => {
     const schema = `${db.schema}_m`;
     const migrator = await connectAdminClient();
     try {
@@ -2529,8 +2574,8 @@ test("(i) isolation levels", async (t) => {
         const names = async () => (await migrator.query("SELECT name FROM schema_migrations ORDER BY name")).rows.map((line) => line.name);
         assert.deepEqual(await names(), ["001_schema.sql", "002_triggers.sql"]);
         await createAppRole(admin, { password: appPassword });
-        assert.deepEqual(await migrate(migrator, { schema }), ["003_policies.sql"]);
-        assert.deepEqual(await names(), ["001_schema.sql", "002_triggers.sql", "003_policies.sql"]);
+        assert.deepEqual(await migrate(migrator, { schema }), ["003_policies.sql", "004_audit_outbox.sql"]);
+        assert.deepEqual(await names(), ["001_schema.sql", "002_triggers.sql", "003_policies.sql", "004_audit_outbox.sql"]);
         assert.deepEqual(await migrate(migrator, { schema }), []);
       });
     } finally {

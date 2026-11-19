@@ -78,7 +78,7 @@ test("SwR-CXCLIENT-182 (Lifecycle record offer restricted to purchaser, operator
     assert.deepStrictEqual(offer.allowedBpnls, ["BPNL00000000TCK4", "BPNL00000000TCK5"]);
     assert.deepStrictEqual(admitted(offer), ["BPNL00000000TCK4", "BPNL00000000TCK5"]);
   });
-  await t.test("an empty list publishes no offer to any participant: the asset is registered and its access policy admits nobody", () => {
+  await t.test("an empty list builds an offer whose access policy admits nobody, so the asset stays registered (section 9.2.5)", () => {
     const offer = buildPassportSubmodelOffer({ passportId: PASSPORT_ID, aspectKey: "successors", semanticId: "urn:samm:io.catenax.battery.passport_successors:1.0.0#BatteryPassportSuccessors", allowedBpnls: [] });
     assert.deepStrictEqual(offer.allowedBpnls, []);
     assert.deepStrictEqual(admitted(offer), []);

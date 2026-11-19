@@ -28,10 +28,19 @@
 // The sender of the outbox (EL-CXCLIENT, the connector client): each due notification is sent exactly
 // as the executor stored it, and each attempt is recorded on its row.
 import { withTransaction } from "../db/transaction.mjs";
-import { Refusal } from "../dataset/refusals.mjs";
 import { notificationOf } from "../dataset/lifecycleService.mjs";
+import { Refusal } from "../dataset/refusals.mjs";
 
 const RETRYABLE_OUTCOMES = Object.freeze(["transport_failed", "receiver_unresolved"]);
+const CAUSE_LENGTH = 500;
+
+// The cause of an attempt before the write: every character U+0000 removed, because PostgreSQL refuses
+// the character in a text, and the text cut to 500 characters, because a receiver chooses its error code.
+export function cleanCause(cause) {
+  if (cause === null || cause === undefined) return null;
+  const text = String(cause).replaceAll("\u0000", "").slice(0, CAUSE_LENGTH);
+  return text.length === 0 ? null : text;
+}
 
 // The record of a sent notification in the answer of EP-NOTIFICATIONS-SENT.
 export function sentNotificationOf(row) {
@@ -47,60 +56,84 @@ export function sentNotificationOf(row) {
   };
 }
 
-// Returns the sender. The function sendDue repeats one unit of work until no row qualifies; the
-// function retry sets a failed row back to pending. A thrown error of the receiver resolver or of the
-// transport, which the two contracts do not admit, is recorded as the outcome transport_failed, so that
-// the row is not locked again and again in the same call.
-export function createNotificationSender({ pool, repository, transport, receiverResolver, clock, maxAttempts, retrySeconds, ownBpnl }) {
+// Returns the sender with the functions sendDue, retry and listSent. The function sendDue repeats one
+// unit of work until no row qualifies. A thrown error of the receiver resolver or of the transport, which
+// the two contracts do not admit, is the result transport_failed. When the write of an attempt fails, the
+// sender writes the attempt in a second transaction, so that one row never blocks the outbox (R45-002).
+export function createNotificationSender({ pool, repository, transport, receiverResolver, clock, maxAttempts, retrySeconds, ownBpnl, logger }) {
   const options = () => ({ actingBpnl: ownBpnl, today: clock.now().toISOString().slice(0, 10) });
 
   async function attempt(row) {
     let resolved;
     try {
       resolved = await receiverResolver.resolve(row.receiver_bpnl);
-    } catch (error) {
-      return { resolved: null, result: { outcome: "transport_failed", httpStatus: null, cause: `receiver resolution failed: ${error.message}` } };
+    } catch {
+      return { resolved: null, result: { outcome: "transport_failed", httpStatus: null, cause: "receiver resolution failed" } };
     }
     if (resolved === null) return { resolved: null, result: { outcome: "receiver_unresolved", httpStatus: null, cause: `no connector resolved for ${row.receiver_bpnl}` } };
     try {
       const result = await transport.send({ receiverBpnl: row.receiver_bpnl, connectorUrl: resolved.connectorUrl, operation: row.operation, message: row.message });
       return { resolved, result };
-    } catch (error) {
-      return { resolved, result: { outcome: "transport_failed", httpStatus: null, cause: error.message } };
+    } catch {
+      return { resolved, result: { outcome: "transport_failed", httpStatus: null, cause: "transport failed" } };
     }
   }
 
+  // The outcome, the attempt count and the next attempt of the rule of D49 for one result.
+  function nextState(row, result, now) {
+    const attempts = row.attempts + 1;
+    if (result.outcome === "transport_failed" && attempts < maxAttempts) {
+      return { outcome: "pending", attempts, notBefore: new Date(now.getTime() + retrySeconds * attempts * 1000) };
+    }
+    return { outcome: result.outcome, attempts, notBefore: row.not_before };
+  }
+
+  // One unit of work: resolves to true when a row was handled, and to false when no row qualifies or when
+  // the second write of a failed attempt failed as well.
   async function sendOne() {
-    return withTransaction(pool, options(), async (client) => {
-      const now = clock.now();
-      const row = await repository.claimDueNotification(client, now);
-      if (row === null) return false;
-      const { resolved, result } = await attempt(row);
-      const attempts = row.attempts + 1;
-      let outcome = result.outcome;
-      let notBefore = row.not_before;
-      if (outcome === "transport_failed" && attempts < maxAttempts) {
-        outcome = "pending";
-        notBefore = new Date(now.getTime() + retrySeconds * attempts * 1000);
-      }
-      await repository.recordSendAttempt(client, row.id, {
-        outcome,
-        cause: result.cause ?? null,
-        httpStatus: result.httpStatus ?? null,
-        attemptedAt: now,
-        receiverDid: resolved?.did ?? null,
-        receiverConnectorUrl: resolved?.connectorUrl ?? null,
-        attempts,
-        notBefore,
+    let claimed = null;
+    let state = null;
+    try {
+      return await withTransaction(pool, options(), async (client) => {
+        const now = clock.now();
+        const row = await repository.claimDueNotification(client, now);
+        if (row === null) return false;
+        claimed = row;
+        const { resolved, result } = await attempt(row);
+        state = nextState(row, result, now);
+        await repository.recordSendAttempt(client, row.id, {
+          outcome: state.outcome,
+          cause: cleanCause(result.cause),
+          httpStatus: result.httpStatus ?? null,
+          attemptedAt: now,
+          receiverDid: resolved?.did ?? null,
+          receiverConnectorUrl: resolved?.connectorUrl ?? null,
+          attempts: state.attempts,
+          notBefore: state.notBefore,
+        });
+        return true;
       });
-      return true;
-    });
+    } catch (error) {
+      if (claimed === null || state === null) throw error;
+      const cause = `the attempt record failed: sqlstate ${error.code ?? "none"}`;
+      logger.error("The record of a notification attempt failed.", { notificationId: claimed.id, sqlState: error.code ?? null, constraint: error.constraint ?? null });
+      try {
+        await withTransaction(pool, options(), async (client) => {
+          if ((await repository.claimSentNotificationById(client, claimed.id)) === null) return;
+          await repository.recordFailedSendAttempt(client, claimed.id, { outcome: state.outcome, cause, attempts: state.attempts, notBefore: state.notBefore });
+        });
+        return true;
+      } catch (second) {
+        logger.error("The second record of a notification attempt failed.", { notificationId: claimed.id, sqlState: second.code ?? null, constraint: second.constraint ?? null });
+        return false;
+      }
+    }
   }
 
   async function sendDue() {
-    let sent = 0;
-    while (await sendOne()) sent += 1;
-    return sent;
+    let handled = 0;
+    while (await sendOne()) handled += 1;
+    return handled;
   }
 
   // EP-NOTIFICATION-RETRY: a row of the outcome transport_failed or receiver_unresolved returns to
@@ -112,5 +145,10 @@ export function createNotificationSender({ pool, repository, transport, receiver
     return { notification: sentNotificationOf(await repository.resetSentNotification(client, id, clock.now())) };
   }
 
-  return Object.freeze({ sendDue, retry });
+  // EP-NOTIFICATIONS-SENT: the sent records in the order of id.
+  async function listSent({ client }) {
+    return (await repository.listSentNotifications(client)).map(sentNotificationOf);
+  }
+
+  return Object.freeze({ sendDue, retry, listSent });
 }

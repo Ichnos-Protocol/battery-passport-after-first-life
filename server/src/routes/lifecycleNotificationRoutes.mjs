@@ -22,7 +22,8 @@
 // (Notification answered 200 when accepted, 4xx or 5xx otherwise), SwR-BACKEND-206 (Lifecycle
 // notification failures answered with envelope and result object) and SwR-BACKEND-207 (Four lifecycle
 // notification operations received as POST endpoints), with decision D7 (The receiver guard), decision
-// D8 (Idempotency by the message identifier) and decision D23 (The exposure after the commit). System
+// D8 (Idempotency by the message identifier), decision D23 (The exposure after the commit) and decision
+// D70 (The recycler of PassportEnded is the sender). System
 // requirements SyR-CXD-092 (Notification APIs offered and called with HTTP POST only) and SyR-CXD-096
 // (Notification endpoints answer 200, or 4xx or 5xx on failure). Sections 9.3 and 10.4 of
 // docs/architecture/implementation_plan.md.
@@ -69,13 +70,17 @@ export function createLifecycleNotificationRoutes({ config, clock }) {
       if (invalid !== null) throw invalid;
       if (req.body.header.receiverBpn !== config.ownBpnl) throw new Refusal("ERR-RX-RECEIVER-MISMATCH");
       if (req.body.header.senderBpn !== req.subject.bpnl) throw new Refusal("ERR-RX-SENDER-MISMATCH");
+      // Decision D70 (The recycler of PassportEnded is the sender).
+      if (operation === "PassportEnded" && req.body.content.recyclerBpnl !== req.body.header.senderBpn) {
+        throw new Refusal("ERR-RX-SENDER-MISMATCH", { messages: ["/content/recyclerBpnl differs from /header/senderBpn"] });
+      }
       const message = normaliseMessage(req.body);
       const result = await runWrite(req, (client) => context.lifecycle.applyNotification({ client, subject: req.subject, operation, message }));
       if (result.outcome === "applied" && operation === "BatteryBecameWaste") {
         await context.exposure.refreshPassportExposure({ pool: context.pool, passportId: result.passportId });
       }
       if (result.outcome === "applied" && operation === "PassportEnded") {
-        await afterCommit(req, { passportId: result.passportId }, () => context.offerPublisher.withdrawDatasetOffers({ passportId: result.passportId }));
+        await afterCommit(req, { passportId: result.passportId }, () => context.offerPublisher.withdrawDatasetOffers({ passportId: result.passportId }), "offerStore");
         await context.exposure.refreshPassportExposure({ pool: context.pool, passportId: result.passportId });
       }
       res.status(200).json({ messageId: result.messageId, outcome: result.outcome });

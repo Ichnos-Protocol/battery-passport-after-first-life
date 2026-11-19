@@ -70,6 +70,7 @@ import { withTransaction } from "../src/db/transaction.mjs";
 import { normaliseMessage, normaliseUuid } from "../src/identifiers.mjs";
 import * as accessMapRepository from "../src/submodels/accessMapRepository.mjs";
 import { createAccessMapService } from "../src/submodels/accessMapService.mjs";
+import { createMemoryTwinRegistry } from "../src/twins/memoryTwinRegistry.mjs";
 import { createSchemaValidator } from "../src/validation/schemaValidator.mjs";
 import { createTestDatabase } from "./support/database.mjs";
 
@@ -110,6 +111,7 @@ async function createDeployment(label, ownBpnl, { passportServiceProviderBpnl = 
     ownOperatorIdentifier: null,
   });
   const accessMaps = createAccessMapService({ repository: accessMapRepository, passportRepository, companyRepository, validator, clock });
+  const twinRegistry = createMemoryTwinRegistry();
   const lifecycle = createLifecycleService({
     repository: passportRepository,
     catalogue,
@@ -125,9 +127,11 @@ async function createDeployment(label, ownBpnl, { passportServiceProviderBpnl = 
     accessMaps,
     companyRepository,
     recordReader,
+    twinRegistry,
   });
   return {
     ...database,
+    twinRegistry,
     ownBpnl,
     lifecycle,
     accessMaps,
@@ -587,7 +591,19 @@ test("applyNotification: the receiving step of section 10.4 on the deployment of
 });
 
 test("reportEvent: the sending side and the local application of decision D12", async (t) => {
-  const report = (deployment, operation, data) => deployment.run((client) => deployment.lifecycle.reportEvent({ client, subject: deployment.operator, operation, data }));
+  // A repair report registers the twin of its certificate first, as the repairer does (D48).
+  const report = async (deployment, operation, data) => {
+    if (operation === "BatteryRepaired") await deployment.twinRegistry.put({ id: normaliseUuid(data.repairCertificateCatenaXId), idShort: "repairCertificate", specificAssetIds: [], submodelDescriptors: [] });
+    return deployment.run((client) => deployment.lifecycle.reportEvent({ client, subject: deployment.operator, operation, data }));
+  };
+  await t.test("decision D48 [waits for the owner]: reportEvent refuses a repair whose certificate twin the own registry does not hold, and plans nothing", async () => {
+    const before = (await recycler.query("SELECT 1 FROM notifications_sent")).length;
+    await refused(
+      () => recycler.run((client) => recycler.lifecycle.reportEvent({ client, subject: recycler.operator, operation: "BatteryRepaired", data: { passportIdentifier: "TCK-PASSPORT-X", dataProviderBpnl: PROVIDER, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() } })),
+      "ERR-LC-CERTIFICATE-NOT-REGISTERED",
+    );
+    assert.equal((await recycler.query("SELECT 1 FROM notifications_sent")).length, before);
+  });
   await t.test("the recycler plans BatteryRepaired, BatteryBecameWaste and PassportEnded for the receivers of section 10.3 and writes no passport", async () => {
     const repair = await report(recycler, "BatteryRepaired", { passportIdentifier: "TCK-PASSPORT-X", dataProviderBpnl: PROVIDER, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() });
     assert.deepStrictEqual(repair.notifications.map((item) => [item.operation, item.receiverBpnl, item.notBefore]), [["BatteryRepaired", PROVIDER, NOW]]);

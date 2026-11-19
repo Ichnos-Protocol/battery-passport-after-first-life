@@ -20,7 +20,8 @@
 
 // Requirement: SwR-AUDIT-045 (Dataset write decisions recorded with the authorisation relied on), with
 // decision D25 (The audit table). Section 9.2.7 of docs/architecture/implementation_plan.md.
-// The one module that holds the SQL on the table passport_write_decisions (EL-AUDIT, the audit trail).
+// The one module that holds the SQL on the tables passport_write_decisions and audit_outbox (EL-AUDIT,
+// the audit trail), with decision D69 (The audit record after a failed write is queued).
 
 export async function insertWriteDecision(client, entry, decidedAt) {
   const result = await client.query(
@@ -43,4 +44,34 @@ export async function insertWriteDecision(client, entry, decidedAt) {
 
 export async function listWriteDecisions(client) {
   return (await client.query("SELECT * FROM passport_write_decisions ORDER BY id")).rows;
+}
+
+// The queue of decision D69 (The audit record after a failed write is queued), table audit_outbox of
+// server/src/db/migrations/004_audit_outbox.sql.
+export async function insertAuditOutbox(client, { entries, decidedAt, notBefore }) {
+  const result = await client.query("INSERT INTO audit_outbox (entries, decided_at, not_before) VALUES ($1, $2, $3) RETURNING *", [JSON.stringify(entries), decidedAt, notBefore]);
+  return result.rows[0];
+}
+
+// One unwritten row whose next attempt is due, locked so that a concurrent writer skips the row.
+export async function claimDueAuditOutbox(client, at) {
+  const result = await client.query("SELECT * FROM audit_outbox WHERE written_at IS NULL AND not_before <= $1 ORDER BY not_before, id FOR UPDATE SKIP LOCKED LIMIT 1", [at]);
+  return result.rows[0] ?? null;
+}
+
+export async function claimAuditOutboxById(client, id) {
+  const result = await client.query("SELECT * FROM audit_outbox WHERE id = $1 AND written_at IS NULL FOR UPDATE SKIP LOCKED", [id]);
+  return result.rows[0] ?? null;
+}
+
+export async function markAuditOutboxWritten(client, id, writtenAt) {
+  await client.query("UPDATE audit_outbox SET written_at = $2 WHERE id = $1", [id, writtenAt]);
+}
+
+export async function recordAuditOutboxFailure(client, id, { attempts, lastError, notBefore }) {
+  await client.query("UPDATE audit_outbox SET attempts = $2, last_error = $3, not_before = $4 WHERE id = $1", [id, attempts, lastError, notBefore]);
+}
+
+export async function listAuditOutbox(client) {
+  return (await client.query("SELECT * FROM audit_outbox ORDER BY id")).rows;
 }

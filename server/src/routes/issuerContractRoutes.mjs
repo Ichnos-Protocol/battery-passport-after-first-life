@@ -22,7 +22,8 @@
 // SwR-CXCLIENT-167 (Issuer's negotiation for point 4 information run without a user step),
 // SwR-CXCLIENT-168 (Point 4 transfer to the issuer stored without a user step) and SwR-CXCLIENT-177
 // (Second-life battery's point 4 offer to the original data provider), with decision D38 (The sharing
-// of individual battery information). System requirement SyR-PASS-215 (Individual battery information
+// of individual battery information) and decision D73 (The exposure of a battery information offer)
+// [waits for the owner]. System requirement SyR-PASS-215 (Individual battery information
 // shared with the passport issuer under contract). Section 9.3 of
 // docs/architecture/implementation_plan.md.
 // The endpoints of the issuer contracts (EL-BACKEND, the HTTP API): EP-PROVIDER-CONTRACT,
@@ -55,10 +56,14 @@ export function createIssuerContractRoutes({ config, clock }) {
   router.post("/provider", ...operator, async (req, res) => {
     const data = contractBody(req, "provider");
     const { contract } = await runWrite(req, (client) => contracts(req).recordProviderContract({ client, subject: req.subject, data }));
-    await afterCommit(req, { contractId: contract.id }, () =>
-      contextOf(req).offerPublisher.publishBatteryInformationOffer({ contractId: contract.id, issuerBpnl: contract.issuerBpnl, passportIdentifier: contract.passportIdentifier }),
+    // Decision D73 (The exposure of a battery information offer) [waits for the owner].
+    const exposure = await afterCommit(
+      req,
+      { contractId: contract.id },
+      () => contextOf(req).offerPublisher.publishBatteryInformationOffer({ contractId: contract.id, issuerBpnl: contract.issuerBpnl, passportIdentifier: contract.passportIdentifier }),
+      "offerStore",
     );
-    sendData(res, 201, { contract });
+    sendData(res, 201, { contract, exposure });
   });
 
   router.post("/issuer", ...operator, async (req, res) => {
@@ -69,9 +74,22 @@ export function createIssuerContractRoutes({ config, clock }) {
 
   router.delete("/:contractId", ...operator, async (req, res) => {
     const contractId = uuidParameter(req, "contractId");
-    const { contract } = await runWrite(req, (client) => contracts(req).endContract({ client, subject: req.subject, contractId }));
-    if (contract.side === "provider") await afterCommit(req, { contractId }, () => contextOf(req).offerPublisher.withdrawBatteryInformationOffer({ contractId }));
-    sendData(res, 200, { contract });
+    const withdraw = () => afterCommit(req, { contractId }, () => contextOf(req).offerPublisher.withdrawBatteryInformationOffer({ contractId }), "offerStore");
+    let contract;
+    try {
+      ({ contract } = await runWrite(req, (client) => contracts(req).endContract({ client, subject: req.subject, contractId })));
+    } catch (error) {
+      // Decision D73 [waits for the owner]: a repeated end withdraws the offer again, so that a failed
+      // withdrawal is repaired; the withdrawal of an absent offer, also of an issuer contract, is a
+      // success. The result is logged, and the refusal is answered.
+      if (error instanceof Refusal && error.id === "ERR-LC-CONTRACT-ENDED") {
+        const repeated = await withdraw();
+        contextOf(req).logger.info("The offer of an ended contract was withdrawn again.", { traceId: req.traceId ?? null, contractId, refreshed: repeated.refreshed });
+      }
+      throw error;
+    }
+    const exposure = contract.side === "provider" ? await withdraw() : { refreshed: true };
+    sendData(res, 200, { contract, exposure });
   });
 
   router.post("/:contractId/pulls", ...operator, async (req, res) => {

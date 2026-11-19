@@ -32,7 +32,7 @@ import express from "express";
 import { authenticate } from "../access/authenticate.mjs";
 import { requireCapability } from "../access/requireCapability.mjs";
 import { Refusal } from "../dataset/refusals.mjs";
-import { contextOf, identityParameter, runRead, runWrite, sendData, uuidParameter, validatedBody } from "./runWrite.mjs";
+import { contextOf, identityParameter, objectBody, runRead, runWrite, sendData, uuidParameter, validatedBody } from "./runWrite.mjs";
 
 // Returns the router of the passport endpoints, mounted at /api/passports.
 export function createPassportRoutes({ config, clock }) {
@@ -58,21 +58,21 @@ export function createPassportRoutes({ config, clock }) {
 
   router.get("/:passportId", authenticated, requireCapability("passport.write"), async (req, res) => {
     const passportId = uuidParameter(req, "passportId");
-    const passport = await runRead(req, (client) => contextOf(req).recordReader.readPassportRecord({ client, passportId }));
+    const passport = await runRead(req, (client) => lifecycle(req).readPassportRecord({ client, passportId }));
     if (passport === null) throw new Refusal("ERR-LC-PASSPORT-NOT-FOUND");
     sendData(res, 200, { passport });
   });
 
   router.put("/:passportId/aspects/:aspectKey", authenticated, requireCapability("passport.write"), async (req, res) => {
     const passportId = uuidParameter(req, "passportId");
-    const payload = req.body;
+    const payload = objectBody(req);
     const result = await runWrite(req, (client) => lifecycle(req).putAspectPayload({ client, subject: req.subject, passportId, aspectKey: req.params.aspectKey, payload }));
     sendData(res, 200, { passport: result.passport, exposure: await refresh(req, passportId) });
   });
 
   router.post("/:passportId/twin", authenticated, requireCapability("passport.write"), async (req, res) => {
     const passportId = uuidParameter(req, "passportId");
-    const passport = await runRead(req, (client) => contextOf(req).recordReader.readPassportRecord({ client, passportId }));
+    const passport = await runRead(req, (client) => lifecycle(req).readPassportRecord({ client, passportId }));
     if (passport === null) throw new Refusal("ERR-LC-PASSPORT-NOT-FOUND");
     sendData(res, 200, { exposure: await refresh(req, passportId) });
   });

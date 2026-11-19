@@ -26,6 +26,7 @@
 // The helpers of the routes (EL-BACKEND, the HTTP API): the one transaction of a request with its
 // audit records, the path parameters, the normalisation of the identifiers of a request and the body
 // validation.
+import { callOf, failureCause } from "../connector/exposure.mjs";
 import { withTransaction } from "../db/transaction.mjs";
 import { Refusal } from "../dataset/refusals.mjs";
 import { normaliseUuid } from "../identifiers.mjs";
@@ -43,7 +44,8 @@ function transactionOptions(context) {
 
 // Runs the work in one transaction, then records the audit entries of the result after the commit, or
 // the audit entries of a thrown refusal after the rollback, and rethrows the refusal. The request has
-// released its database client before the audit log takes a client.
+// released its database client before the audit log takes a client. The function record of the audit
+// log never throws, so the answer keeps the true outcome (decision D69).
 export async function runWrite(req, work) {
   const context = contextOf(req);
   let result;
@@ -114,13 +116,23 @@ export function combinedExposure(results) {
 
 // Runs a call of the column "After the commit" of section 9.3 that is no refresh of the exposure, such
 // as the withdrawal of an offer. The stored step stands, so a failure is logged at the level error and
-// returned as { refreshed: false, cause } and never answered as a refusal (decision D23).
-export async function afterCommit(req, fields, work) {
+// returned as { refreshed: false, cause } with a fixed text of section 9.2.5 and never answered as a
+// refusal (decision D23). The parameter kind names the dependency of the call: "offerStore", "registry"
+// or "call".
+export async function afterCommit(req, fields, work, kind = "call") {
   try {
-    await work();
+    await callOf(kind, work);
     return { refreshed: true };
   } catch (error) {
     contextOf(req).logger.error("A call after the commit failed.", { traceId: req.traceId ?? null, ...fields, error });
-    return { refreshed: false, cause: String(error?.message ?? error) };
+    return { refreshed: false, cause: failureCause(error) };
   }
+}
+
+// The body of a supplied payload of EP-ASPECT-PUT and EP-ACCESS-MAP-PUT: a JSON object, or the refusal
+// ERR-LC-BODY-INVALID before the service runs (finding R45-008).
+export function objectBody(req) {
+  const body = req.body;
+  if (body === null || typeof body !== "object" || Array.isArray(body)) throw new Refusal("ERR-LC-BODY-INVALID", { messages: ["/ must be a JSON object"] });
+  return body;
 }

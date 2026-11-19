@@ -43,6 +43,7 @@ const STATUSES = {
   "ERR-RX-STEP-REFUSED": 422,
   "ERR-RX-METHOD-NOT-ALLOWED": 405,
   "ERR-RX-BODY-TOO-LARGE": 413,
+  "ERR-RX-OPERATION-UNKNOWN": 404,
   "ERR-RX-INTERNAL": 500,
   "ERR-AC-UNAUTHENTICATED": 401,
   "ERR-AC-CAPABILITY-MISSING": 403,
@@ -74,6 +75,7 @@ const STATUSES = {
   "ERR-LC-CONTRACT-EXISTS": 409,
   "ERR-LC-CONTRACT-NOT-FOUND": 404,
   "ERR-LC-CONTRACT-ENDED": 409,
+  "ERR-LC-PATH-UNKNOWN": 404,
   "ERR-LC-INTERNAL": 500,
 };
 
@@ -116,7 +118,7 @@ const MAPPING = [
 
 test("SwR-BACKEND-206 (Lifecycle notification failures answered with envelope and result object): the refusals of section 9.5", async (t) => {
   const validator = createSchemaValidator();
-  await t.test("REFUSALS holds the 43 refusal ids of section 9.5", () => {
+  await t.test("REFUSALS holds the 45 refusal ids of section 9.5", () => {
     assert.deepStrictEqual(Object.keys(REFUSALS).sort(), Object.keys(STATUSES).sort());
   });
   for (const [id, status] of Object.entries(STATUSES)) {

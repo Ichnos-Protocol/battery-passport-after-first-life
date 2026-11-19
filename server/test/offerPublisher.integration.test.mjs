@@ -118,6 +118,7 @@ before(async () => {
     accessMaps,
     companyRepository,
     recordReader,
+    twinRegistry: createMemoryTwinRegistry(),
   });
   logged = [];
   offerStore = createMemoryOfferStore();
@@ -263,9 +264,35 @@ test("SwR-CXCLIENT-110 (Recycling withdraws the passport dataset offers): the wi
     const shell = await twinRegistry.read(`urn:uuid:${passport.id}`);
     assert.deepStrictEqual(shell.submodelDescriptors.map((descriptor) => descriptor.idShort), ["batteryPassportLifecycle"]);
   });
+  await t.test("finding R45-013: a refresh of an ended passport withdraws the dataset offers itself and keeps the lifecycle offers, also when an offer is already withdrawn", async () => {
+    const original = await firstPassport();
+    await newPassport({ ...externalPredecessor(), passportIdentifier: original.passportIdentifier, batteryIdentifier: original.batteryIdentifier, dataProviderBpnl: OWN });
+    const [received] = (await db.adminClient.query("SELECT message_id FROM notifications_received WHERE passport_identifier = $1", [original.passportIdentifier])).rows;
+    await run((client) => lifecycle.addForwardLink({ client, subject: operator, passportId: original.id, messageId: received.message_id }));
+    for (const [key, name] of [["product-condition", "productCondition.json"], ["technical-data", "technicalData.json"], ["dpp-metadata", "dppMetadata.json"]]) await put(original.id, key, fixture(name));
+    await put(original.id, "serial-part", { any: "payload" });
+    await exposure.refreshPassportExposure({ pool: db.appPool, passportId: original.id });
+    assert.deepStrictEqual(Object.keys(await offersOf(original.id)).sort(), ["dpp-metadata", "product-condition", "serial-part", "successors", "technical-data"]);
+    await run((client) =>
+      lifecycle.reportEvent({ client, subject: operator, operation: "PassportEnded", data: { passportIdentifier: original.passportIdentifier, dataProviderBpnl: OWN, nameplateManufacturerBpnl: OWN, recyclingDate: "2026-06-15T09:00:00.000Z" } }),
+    );
+    // One offer is already withdrawn, as after a withdrawal that stopped part way.
+    await offerStore.withdraw(`serial-part-${original.id}`);
+    assert.deepStrictEqual(await exposure.refreshPassportExposure({ pool: db.appPool, passportId: original.id }), { refreshed: true });
+    assert.deepStrictEqual(Object.keys(await offersOf(original.id)).sort(), ["lifecycle", "successors"]);
+  });
 });
 
 test("decision D23 (The exposure after the commit): the result of the refresh after a failing registry", async (t) => {
+  await t.test("finding R45-014: the field cause of a failing offer store, of an unknown passport and of a failing database holds a fixed text and no text of the caught error", async () => {
+    const failingStore = { publish: async () => Promise.reject(new Error("store secret detail")), withdraw: async () => Promise.reject(new Error("store secret detail")), list: async () => [] };
+    const { exposure: storeExposure } = services(createMemoryTwinRegistry(), failingStore);
+    const passport = await newPassport(externalPredecessor());
+    assert.deepStrictEqual(await storeExposure.refreshPassportExposure({ pool: db.appPool, passportId: passport.id }), { refreshed: false, cause: "the offer store failed" });
+    assert.deepStrictEqual(await exposure.refreshPassportExposure({ pool: db.appPool, passportId: randomUUID() }), { refreshed: false, cause: "the call failed" });
+    const closedPool = { connect: async () => Promise.reject(Object.assign(new Error("connection refused at a secret host"), { code: "08006" })) };
+    assert.deepStrictEqual(await exposure.refreshPassportExposure({ pool: closedPool, passportId: passport.id }), { refreshed: false, cause: "the database failed" });
+  });
   await t.test("refreshPassportExposure resolves to refreshed false with the cause, logs at the level error and leaves the stored step in place", async () => {
     const failing = { put: async () => Promise.reject(new Error("the registry is unreachable")), read: async () => null };
     const store = createMemoryOfferStore();
@@ -273,7 +300,7 @@ test("decision D23 (The exposure after the commit): the result of the refresh af
     const passport = await newPassport(externalPredecessor());
     logged.length = 0;
     const result = await failingExposure.refreshPassportExposure({ pool: db.appPool, passportId: passport.id });
-    assert.deepStrictEqual(result, { refreshed: false, cause: "the registry is unreachable" });
+    assert.deepStrictEqual(result, { refreshed: false, cause: "the twin registry failed" }, "the field cause holds a fixed text of section 9.2.5 and no text of the caught error");
     assert.equal(logged.length, 1);
     assert.equal(logged[0].fields.passportId, passport.id);
     assert.deepStrictEqual(await store.list(), []);

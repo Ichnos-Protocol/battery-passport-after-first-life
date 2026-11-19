@@ -76,6 +76,10 @@ export const REFUSALS = Object.freeze({
     413,
     "The notification was refused because its body is larger than one megabyte. The receiver reads only a body within its size limit. The sender must send a notification of the documented content only. Resend the notification with a body within the limit.",
   ),
+  "ERR-RX-OPERATION-UNKNOWN": refusal(
+    404,
+    "The notification was refused because the receiver offers no notification endpoint at this path. A notification API offers one endpoint for each of its four operations. The sender must use the path of the operation of the notification. Resend the notification to the endpoint of its operation.",
+  ),
   "ERR-RX-INTERNAL": refusal(
     500,
     "The notification was not applied because the receiver failed to store the notification. The receiver has recorded nothing of this message. The operator of the receiver must act, and the sender has nothing to correct. Resend the notification with the same messageId later.",
@@ -199,6 +203,10 @@ export const REFUSALS = Object.freeze({
   "ERR-LC-CONTRACT-ENDED": refusal(
     409,
     "The request was refused because the contract has ended. The information of an individual battery is shared only while the contract with the purchaser is recorded. The operator must record a new contract. Repeat the request after the new contract is recorded.",
+  ),
+  "ERR-LC-PATH-UNKNOWN": refusal(
+    404,
+    "The request was refused because the server offers no endpoint at this path. The server answers only the endpoints of its documented API. The caller must use a documented path. Repeat the request with a path of the API.",
   ),
   "ERR-LC-INTERNAL": refusal(
     500,

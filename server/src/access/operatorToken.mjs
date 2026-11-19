@@ -20,7 +20,8 @@
 
 // Requirements: SwR-ACCESS-088 (Passport dataset writes only by the responsible or authorised
 // operator) and SwR-DATASET-119 (Changes applied only for the responsible or an authorised operator),
-// with decision D41 (Authentication without an identity provider). Section 9.2.3 of
+// with decision D41 (Authentication without an identity provider) and decision D72 (The clock tolerance
+// of an operator token) [waits for the owner]. Section 9.2.3 of
 // docs/architecture/implementation_plan.md.
 // The operator token of a deployment (EL-ACCESS, the access control): a JSON Web Token with the HMAC
 // signature with SHA-256 (HS256), signed and verified with node:crypto.
@@ -31,6 +32,10 @@ import { BPNL_PATTERN } from "../identifiers.mjs";
 const HEADER_TEXT = '{"alg":"HS256","typ":"JWT"}';
 const SUBJECT_PATTERN = /^[A-Za-z0-9._-]{1,100}$/;
 export const MAXIMUM_LIFETIME_SECONDS = 3600;
+// Decision D72 (The clock tolerance of an operator token) [waits for the owner]: a token whose iat lies
+// more than 60 seconds after the current time is refused, so that a token is valid for 3600 seconds or
+// less from the moment of its check (D41).
+export const CLOCK_TOLERANCE_SECONDS = 60;
 
 function base64url(text) {
   return Buffer.from(text, "utf8").toString("base64url");
@@ -92,5 +97,6 @@ export function verifyOperatorToken(token, { secret, now, ownBpnl }) {
   if (!Number.isInteger(iat) || !Number.isInteger(exp)) return null;
   if (exp <= seconds(now)) return null;
   if (exp - iat > MAXIMUM_LIFETIME_SECONDS) return null;
+  if (iat > seconds(now) + CLOCK_TOLERANCE_SECONDS) return null;
   return { sub, bpnl, iat, exp };
 }

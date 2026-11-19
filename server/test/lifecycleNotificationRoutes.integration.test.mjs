@@ -342,3 +342,86 @@ test("SwR-BACKEND-148 (Notification answered 200 when accepted, 4xx or 5xx other
     assert.equal(decision.relied_on, "data-provider");
   });
 });
+
+test("version 10 of the specification: the receiving step after the code review of phases P4 and P5", async (t) => {
+  const table = (name) => `${provider.db.adminClient.escapeIdentifier(provider.db.schema)}.${name}`;
+  const decisionsOf = (passportId) => provider.query("SELECT * FROM passport_write_decisions WHERE passport_id = $1 ORDER BY id", [passportId]);
+  const errorLines = () => provider.lines.filter((line) => line.level === "error").length;
+
+  await t.test("finding R45-001 and R45-019: for each of the four operations, two concurrent copies of one message answer the sorted outcomes applied and duplicate", async () => {
+    const contents = {
+      NewPassportIssued: (passport) => ({ passportIdentifier: unique("TCK-NEW"), catenaXId: randomUUID(), operation: "repurposing", operationDate: TODAY_INSTANT, predecessorPassportIdentifier: passport.passportIdentifier }),
+      BatteryRepaired: (passport) => ({ passportIdentifier: passport.passportIdentifier, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() }),
+      BatteryBecameWaste: (passport) => ({ passportIdentifier: passport.passportIdentifier, successorBpnl: SUCCESSOR, successorRole: "producer", date: TODAY_INSTANT }),
+      PassportEnded: (passport) => ({ passportIdentifier: passport.passportIdentifier, recyclingDate: TODAY_INSTANT, recyclerBpnl: RECYCLER }),
+    };
+    for (const [operation, content] of Object.entries(contents)) {
+      const passport = await firstPassport();
+      const sender = operation === "NewPassportIssued" ? SECOND_LIFE : RECYCLER;
+      const body = message(operation, content(passport), { sender });
+      const answers = await Promise.all([send(operation, body, sender), send(operation, body, sender)]);
+      assert.deepStrictEqual(
+        answers.map((answer) => [answer.status, answer.body.outcome ?? answer.body.error?.code]).sort(),
+        [
+          [200, "applied"],
+          [200, "duplicate"],
+        ],
+        operation,
+      );
+      assert.equal((await provider.query("SELECT 1 FROM notifications_received WHERE message_id = $1", [`urn:uuid:${body.header.messageId}`])).length, 1, operation);
+    }
+  });
+
+  await t.test("decision D70: a PassportEnded whose recyclerBpnl differs from the sender answers 403 ERR-RX-SENDER-MISMATCH and stores nothing", async () => {
+    const passport = await firstPassport();
+    const body = message("PassportEnded", { passportIdentifier: passport.passportIdentifier, recyclingDate: TODAY_INSTANT, recyclerBpnl: SECOND_LIFE });
+    assertRefusal(await send("PassportEnded", body), 403, "ERR-RX-SENDER-MISMATCH");
+    assert.equal((await passportRow(passport.id)).recycling_date, null);
+    assert.equal((await provider.query("SELECT 1 FROM notifications_received WHERE message_id = $1", [`urn:uuid:${body.header.messageId}`])).length, 0);
+  });
+
+  await t.test("finding R45-006: a refused BatteryRepaired on a waste passport stores one refused record of passport_write_decisions through runWrite", async () => {
+    const passport = await firstPassport();
+    await send("BatteryBecameWaste", message("BatteryBecameWaste", { passportIdentifier: passport.passportIdentifier, successorBpnl: SUCCESSOR, successorRole: "producer", date: TODAY_INSTANT }));
+    assertRefusal(await send("BatteryRepaired", message("BatteryRepaired", { passportIdentifier: passport.passportIdentifier, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() })), 422, "ERR-RX-STEP-REFUSED");
+    const refused = (await decisionsOf(passport.id)).filter((row) => row.decision === "refused");
+    assert.equal(refused.length, 1);
+    assert.deepStrictEqual([refused[0].action, refused[0].refusal_id, refused[0].requester_bpnl, refused[0].requester_kind, refused[0].relied_on], ["notification.apply.BatteryRepaired", "ERR-RX-STEP-REFUSED", RECYCLER, "partner", null]);
+  });
+
+  await t.test("decision D69: with the privilege INSERT on passport_write_decisions revoked, a BatteryRepaired answers 200 applied, the resend answers duplicate, and after one run of the worker the audit table holds one record of the step", async () => {
+    const passport = await firstPassport();
+    const body = message("BatteryRepaired", { passportIdentifier: passport.passportIdentifier, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() });
+    await provider.db.adminClient.query(`REVOKE INSERT ON ${table("passport_write_decisions")} FROM refserver_app`);
+    try {
+      const first = await send("BatteryRepaired", body);
+      assert.equal(first.status, 200, JSON.stringify(first.body));
+      assert.equal(first.body.outcome, "applied");
+      assert.equal((await send("BatteryRepaired", body)).body.outcome, "duplicate");
+      assert.equal((await decisionsOf(passport.id)).filter((row) => row.action === "notification.apply.BatteryRepaired").length, 0);
+    } finally {
+      await provider.db.adminClient.query(`GRANT INSERT ON ${table("passport_write_decisions")} TO refserver_app`);
+    }
+    await provider.worker.tick();
+    const records = (await decisionsOf(passport.id)).filter((row) => row.action === "notification.apply.BatteryRepaired");
+    assert.deepStrictEqual(records.map((row) => [row.decision, row.requester_bpnl, row.relied_on]), [["granted", RECYCLER, "data-provider"]]);
+  });
+
+  await t.test("findings R45-007 and R45-011: a valid message as text/plain, with the charset latin1 and with an unknown Content-Encoding answers 400 ERR-RX-CONTENT-INVALID and writes no log line at the level error", async () => {
+    const passport = await firstPassport();
+    const body = message("BatteryRepaired", { passportIdentifier: passport.passportIdentifier, repairDate: TODAY_INSTANT, repairCertificateCatenaXId: randomUUID() });
+    const before = errorLines();
+    assertRefusal(await send("BatteryRepaired", JSON.stringify(body), RECYCLER, { "content-type": "text/plain" }), 400, "ERR-RX-CONTENT-INVALID");
+    assertRefusal(await send("BatteryRepaired", JSON.stringify(body), RECYCLER, { "content-type": "application/json; charset=latin1" }), 400, "ERR-RX-CONTENT-INVALID");
+    assertRefusal(await send("BatteryRepaired", JSON.stringify(body), RECYCLER, { "content-encoding": "x-unknown" }), 400, "ERR-RX-CONTENT-INVALID");
+    assert.equal(errorLines(), before);
+    assert.equal((await passportRow(passport.id)).lifecycle_status, "original");
+  });
+
+  await t.test("finding R45-012: a POST to /api/lifecycle-notifications/BatteryDisassembled answers 404 ERR-RX-OPERATION-UNKNOWN with the error body of D9", async () => {
+    const answer = await provider.raw("POST", "/api/lifecycle-notifications/BatteryDisassembled", { header: {}, content: {} });
+    assert.equal(answer.status, 404);
+    assert.deepStrictEqual(answer.body.error, { message: answer.body.messages[0].text, code: "ERR-RX-OPERATION-UNKNOWN" });
+    assert.equal(answer.body.success, false);
+  });
+});

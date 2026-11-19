@@ -48,7 +48,8 @@ import * as recordReader from "./dataset/lifecycleRecordReader.mjs";
 import { createLifecycleService } from "./dataset/lifecycleService.mjs";
 import * as passportRepository from "./dataset/passportRepository.mjs";
 import { createBatteryModelRoutes } from "./routes/batteryModelRoutes.mjs";
-import { createErrorHandler } from "./routes/errorHandler.mjs";
+import { Refusal } from "./dataset/refusals.mjs";
+import { createErrorHandler, isReceivingRequest } from "./routes/errorHandler.mjs";
 import { createHealthRoutes } from "./routes/healthRoutes.mjs";
 import { createIssuerContractRoutes } from "./routes/issuerContractRoutes.mjs";
 import { createLifecycleEventRoutes } from "./routes/lifecycleEventRoutes.mjs";
@@ -89,12 +90,13 @@ export function createApp({ config, pool, clock, transport, offerStore, twinRegi
     accessMaps,
     companyRepository,
     recordReader,
+    twinRegistry,
   });
   const submodels = createSubmodelService({ passportRepository, companyRepository, recordReader, accessRecords });
   const issuerContracts = createIssuerContractService({ repository: issuerContractRepository, passportRepository, validator, clock, ownBpnl: config.ownBpnl });
   const offerPublisher = createOfferPublisher({ offerStore, config, clock, passportRepository, accessRecordRepository, accessMaps });
   const exposure = createExposure({ config, clock, twinRegistry, offerPublisher, passportRepository, accessMapRepository, logger });
-  const audit = createAuditLog({ pool, repository: auditRepository, clock, logger, ownBpnl: config.ownBpnl });
+  const audit = createAuditLog({ pool, repository: auditRepository, clock, logger, ownBpnl: config.ownBpnl, retrySeconds: config.notificationRetrySeconds });
   const sender = createNotificationSender({
     pool,
     repository: notificationRepository,
@@ -104,9 +106,10 @@ export function createApp({ config, pool, clock, transport, offerStore, twinRegi
     maxAttempts: config.notificationMaxAttempts,
     retrySeconds: config.notificationRetrySeconds,
     ownBpnl: config.ownBpnl,
+    logger,
   });
   const puller = createBatteryInformationPuller({ pool, repository: issuerContractRepository, transport, receiverResolver, validator, clock, ownBpnl: config.ownBpnl });
-  const worker = createOutboxWorker({ sender, puller, intervalMilliseconds: config.outboxIntervalMilliseconds, logger });
+  const worker = createOutboxWorker({ sender, puller, audit, intervalMilliseconds: config.outboxIntervalMilliseconds, logger });
 
   const app = express();
   app.disable("x-powered-by");
@@ -126,8 +129,6 @@ export function createApp({ config, pool, clock, transport, offerStore, twinRegi
     exposure,
     sender,
     twinRegistry,
-    recordReader,
-    passportRepository,
   });
   app.use((req, res, next) => {
     req.traceId = randomUUID();
@@ -152,6 +153,11 @@ export function createApp({ config, pool, clock, transport, offerStore, twinRegi
   app.use("/api/passports", createPassportRoutes({ config, clock }));
   app.use("/api/issuer-contracts", createIssuerContractRoutes({ config, clock }));
   app.use("/api", createSubmodelRoutes({ config, clock }));
+  // An unknown path answers one of the two refusals of section 9.5, without an authentication, because
+  // the answer names no data (finding R45-012).
+  app.use((req, res, next) => {
+    next(new Refusal(isReceivingRequest(req) ? "ERR-RX-OPERATION-UNKNOWN" : "ERR-LC-PATH-UNKNOWN"));
+  });
   app.use(createErrorHandler({ logger }));
   return { app, worker };
 }

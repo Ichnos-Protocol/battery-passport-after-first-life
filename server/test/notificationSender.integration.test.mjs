@@ -46,6 +46,8 @@ import { createMemoryTwinRegistry } from "../src/twins/memoryTwinRegistry.mjs";
 import { appConnectionString, createTestDatabase } from "./support/database.mjs";
 import { createNotificationSender } from "../src/connector/notificationSender.mjs";
 import * as notificationRepository from "../src/connector/notificationRepository.mjs";
+import express from "express";
+import { buildNotificationAssetOffer } from "../src/connector/policyBuilder.mjs";
 
 // The application of one participant on a migrated schema of its own (section 9.2.1).
 const KEY = "data-plane-key-0123456789abcdefghijkl";
@@ -236,7 +238,7 @@ test("SwR-CXCLIENT-183 (Sender's record of a receiver without an asset or a cont
 });
 
 test("SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST through the connector): the repetition and the row lock of the sender", async (t) => {
-  const options = { pool: recycler.db.appPool, repository: notificationRepository, clock, ownBpnl: RECYCLER };
+  const options = { pool: recycler.db.appPool, repository: notificationRepository, clock, ownBpnl: RECYCLER, logger: { error() {}, warn() {}, info() {}, debug() {} } };
   await t.test("a failed transport is sent again with the same messageId and the same message after the pause, and ends as transport_failed at the last attempt", async () => {
     at(100);
     const planned = await waste(UNREACHABLE, UNREACHABLE);
@@ -274,5 +276,121 @@ test("SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST throug
     await Promise.all([first.sendDue(), second.sendDue()]);
     for (const item of planned) assert.equal(counts.get(item.messageId), 1, item.receiverBpnl);
     for (const item of planned) assert.equal((await sent()).find((record) => record.id === item.id).outcome, "sent");
+  });
+});
+
+// A receiver of the memory network whose answer the test chooses: a status and an error code.
+const FAILING = "BPNL00000000TCK5";
+const answerOf = { status: 500, code: "ERR-RX-INTERNAL" };
+const failingReceiver = express();
+failingReceiver.use((req, res) => res.status(answerOf.status).json({ success: false, error: { code: answerOf.code, message: "refused" }, messages: [{ messageType: "Error", text: "refused" }] }));
+
+test("version 10 of the specification: the status classes, the thrown errors, the text of a receiver and a failed write of an attempt", async (t) => {
+  const failingStore = createMemoryOfferStore();
+  await failingStore.publish(buildNotificationAssetOffer({ allowedBpnls: null }));
+  network.participants.set("http://failing.memory.invalid", { bpnl: FAILING, app: failingReceiver, dataPlaneKey: KEY, dataPlaneKeyHeader: "x-api-key", partnerBpnHeader: "edc-bpn" });
+  network.offerStores.set(FAILING, failingStore);
+  network.didByBpnl.set(FAILING, "did:web:failing.memory.invalid");
+  network.connectorUrlByDid.set("did:web:failing.memory.invalid", "http://failing.memory.invalid");
+  const recordOf = async (id) => (await sent()).find((item) => item.id === id);
+  const table = `${recycler.db.adminClient.escapeIdentifier(recycler.db.schema)}.notifications_sent`;
+  const silent = { error() {}, warn() {}, info() {}, debug() {} };
+
+  await t.test("finding R45-003: a receiver that answers 500 gives the outcome pending with attempts 1 and the status stored, and the outcome transport_failed at the limit", async () => {
+    at(1000);
+    Object.assign(answerOf, { status: 500, code: "ERR-RX-INTERNAL" });
+    const [planned] = await waste(FAILING, FAILING);
+    await recycler.worker.tick();
+    const first = await recordOf(planned.id);
+    assert.deepStrictEqual([first.outcome, first.attempts, first.httpStatus, first.cause], ["pending", 1, 500, "ERR-RX-INTERNAL"]);
+    assert.equal(first.notBefore, new Date(new Date(START).getTime() + 1010 * 1000).toISOString());
+    at(1010);
+    await recycler.worker.tick();
+    at(1030);
+    await recycler.worker.tick();
+    const last = await recordOf(planned.id);
+    assert.deepStrictEqual([last.outcome, last.attempts, last.httpStatus], ["transport_failed", 3, 500]);
+  });
+  await t.test("finding R45-003: a receiver that answers 404 gives the final outcome receiver_refused, which EP-NOTIFICATION-RETRY refuses with ERR-LC-STATUS-NOT-ADMITTED", async () => {
+    at(2000);
+    Object.assign(answerOf, { status: 404, code: "ERR-RX-PASSPORT-UNKNOWN" });
+    const [planned] = await waste(FAILING, FAILING);
+    await recycler.worker.tick();
+    const record = await recordOf(planned.id);
+    assert.deepStrictEqual([record.outcome, record.attempts, record.httpStatus, record.cause], ["receiver_refused", 1, 404, "ERR-RX-PASSPORT-UNKNOWN"]);
+    const answer = await recycler.call("POST", `/api/notifications/sent/${planned.id}/retry`);
+    assert.equal(answer.status, 409);
+    assert.equal(answer.body.error.code, "ERR-LC-STATUS-NOT-ADMITTED");
+  });
+  await t.test("V10-7: a receiver resolver and a transport that throw give transport_failed with the fixed causes and no text of the caught error", async () => {
+    at(3000);
+    const [planned] = await waste(UNREACHABLE, UNREACHABLE);
+    const throwingResolver = createNotificationSender({
+      pool: recycler.db.appPool,
+      repository: notificationRepository,
+      clock,
+      ownBpnl: RECYCLER,
+      logger: silent,
+      transport: { send: async () => assert.fail("no send after a failed resolution") },
+      receiverResolver: { resolve: async () => Promise.reject(new Error("resolver secret")) },
+      maxAttempts: 2,
+      retrySeconds: 1,
+    });
+    await throwingResolver.sendDue();
+    const first = await recordOf(planned.id);
+    assert.deepStrictEqual([first.outcome, first.attempts, first.cause], ["pending", 1, "receiver resolution failed"]);
+    at(3001);
+    const throwingTransport = createNotificationSender({
+      pool: recycler.db.appPool,
+      repository: notificationRepository,
+      clock,
+      ownBpnl: RECYCLER,
+      logger: silent,
+      transport: { send: async () => Promise.reject(new Error("transport secret")) },
+      receiverResolver: resolver,
+      maxAttempts: 2,
+      retrySeconds: 1,
+    });
+    await throwingTransport.sendDue();
+    const last = await recordOf(planned.id);
+    assert.deepStrictEqual([last.outcome, last.attempts, last.cause], ["transport_failed", 2, "transport failed"]);
+  });
+  await t.test("finding R45-002: an error code with the character U+0000 and 600 further characters gives a stored cause without the character and of 500 characters, and the row of another receiver is sent in the same call", async () => {
+    at(4000);
+    Object.assign(answerOf, { status: 422, code: `bad\u0000${"x".repeat(600)}` });
+    const planned = await waste(FAILING, PROVIDER);
+    const failingRow = planned.find((item) => item.receiverBpnl === FAILING);
+    const providerRow = planned.find((item) => item.receiverBpnl === PROVIDER);
+    await recycler.worker.tick();
+    const failing = await recordOf(failingRow.id);
+    assert.deepStrictEqual([failing.outcome, failing.attempts, failing.httpStatus], ["receiver_refused", 1, 422]);
+    assert.equal(failing.cause.length, 500);
+    assert.equal(failing.cause.includes("\u0000"), false);
+    assert.ok(failing.cause.startsWith("badxxx"));
+    assert.equal((await recordOf(providerRow.id)).outcome, "sent");
+  });
+  await t.test("finding R45-002: a failed write of the attempt stores attempts 1 and the cause of the second transaction, and the later runs respect the limit of D49", async () => {
+    at(5000);
+    Object.assign(answerOf, { status: 500, code: "ERR-RX-INTERNAL" });
+    const [planned] = await waste(FAILING, FAILING);
+    // The first write of the attempt sets receiver_did and fails without the privilege; the second
+    // write sets only the outcome, the cause, the attempt count and the next attempt.
+    await recycler.db.adminClient.query(`REVOKE UPDATE (receiver_did) ON ${table} FROM refserver_app`);
+    try {
+      await recycler.worker.tick();
+    } finally {
+      await recycler.db.adminClient.query(`GRANT UPDATE (receiver_did) ON ${table} TO refserver_app`);
+    }
+    const first = await recordOf(planned.id);
+    assert.deepStrictEqual([first.outcome, first.attempts, first.cause, first.receiverDid], ["pending", 1, "the attempt record failed: sqlstate 42501", null]);
+    assert.ok(recycler.lines.some((line) => line.level === "error" && line.message === "The record of a notification attempt failed."));
+    at(5010);
+    await recycler.worker.tick();
+    at(5030);
+    await recycler.worker.tick();
+    at(6000);
+    await recycler.worker.tick();
+    const last = await recordOf(planned.id);
+    assert.deepStrictEqual([last.outcome, last.attempts], ["transport_failed", 3]);
   });
 });

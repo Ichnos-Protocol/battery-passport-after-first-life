@@ -32,6 +32,12 @@ import { randomUUID } from "node:crypto";
 
 import { NOTIFICATION_ASSET_ID, admits } from "./policyBuilder.mjs";
 
+// The cause of an answer other than 200: the refusal id of the error body, or the status.
+function causeOf(answer) {
+  const code = answer.body?.error?.code;
+  return typeof code === "string" ? code : `status ${answer.status}`;
+}
+
 // Returns a transport for the application of the participant ownBpnl. The map participants holds, per
 // connector address, { bpnl, app, dataPlaneKey, dataPlaneKeyHeader, partnerBpnHeader }; the map
 // offerStores holds the offer store of each participant by its Business Partner Number. Each
@@ -74,9 +80,11 @@ export function createMemoryTransport({ participants, offerStores, ownBpnl }) {
     if (!admits(asset, ownBpnl)) return { outcome: "contract_refused", httpStatus: null, body: null, cause: "the access policy of the notification asset does not admit the sender" };
     try {
       const answer = await call(participant, "POST", `${asset.path}/${operation}`, message);
-      return answer.status === 200
-        ? { outcome: "sent", httpStatus: 200, body: answer.body, cause: null }
-        : { outcome: "receiver_refused", httpStatus: answer.status, body: answer.body, cause: answer.body?.error?.code ?? `status ${answer.status}` };
+      if (answer.status === 200) return { outcome: "sent", httpStatus: 200, body: answer.body, cause: null };
+      // A status of the class 5xx is a failure of the receiver that the sender repeats (D49); every
+      // other status is final.
+      const outcome = answer.status >= 500 ? "transport_failed" : "receiver_refused";
+      return { outcome, httpStatus: answer.status, body: answer.body, cause: causeOf(answer) };
     } catch (error) {
       return { outcome: "transport_failed", httpStatus: null, body: null, cause: error.message };
     }
@@ -92,7 +100,9 @@ export function createMemoryTransport({ participants, offerStores, ownBpnl }) {
     if (offer === undefined) return { outcome: "contract_refused", agreementId: null, body: null, cause: "the access policy of the offer does not admit the consumer" };
     try {
       const answer = await call(participant, "GET", offer.path, undefined);
-      if (answer.status !== 200) return { outcome: "provider_refused", agreementId: null, body: answer.body, cause: answer.body?.error?.code ?? `status ${answer.status}` };
+      if (answer.status !== 200) {
+        return { outcome: answer.status >= 500 ? "transport_failed" : "provider_refused", agreementId: null, body: answer.body, cause: causeOf(answer) };
+      }
       return { outcome: "received", agreementId: `memory-agreement-${randomUUID()}`, body: answer.body, cause: null };
     } catch (error) {
       return { outcome: "transport_failed", agreementId: null, body: null, cause: error.message };

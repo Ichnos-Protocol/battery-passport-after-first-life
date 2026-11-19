@@ -178,3 +178,51 @@ for (const [name, create] of IMPLEMENTATIONS) {
     });
   });
 }
+
+// A receiver whose status the test chooses, for the status classes of version 10 of the specification.
+const answered = { status: 500, code: "ERR-RX-INTERNAL" };
+const chosen = express();
+chosen.use((req, res) => {
+  received.push({ method: req.method, path: req.path, headers: req.headers });
+  res.status(answered.status).json({ success: false, error: { code: answered.code, message: "refused" } });
+});
+
+for (const [name, create] of IMPLEMENTATIONS) {
+  test(`finding R45-003 (the status classes of the transport contract): an answer of the class 5xx is transport_failed with its status, and another status is final, against ${name}`, async (t) => {
+    const setup = network();
+    const chosenStore = createMemoryOfferStore();
+    setup.participants.set("http://chosen.memory.invalid", { bpnl: "BPNL00000000TCK5", app: chosen, dataPlaneKey: KEY, dataPlaneKeyHeader: "x-api-key", partnerBpnHeader: "edc-bpn" });
+    setup.offerStores.set("BPNL00000000TCK5", chosenStore);
+    await chosenStore.publish(buildNotificationAssetOffer({ allowedBpnls: null }));
+    await chosenStore.publish(buildBatteryInformationOffer({ contractId: CONTRACT_ID, issuerBpnl: SENDER, passportIdentifier: "TCK-PASSPORT-A", semanticId: SEMANTIC_ID }));
+    const transport = create(setup);
+    const send = () => transport.send({ receiverBpnl: "BPNL00000000TCK5", connectorUrl: "http://chosen.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
+    const pull = () => transport.pull({ providerBpnl: "BPNL00000000TCK5", connectorUrl: "http://chosen.memory.invalid", semanticId: SEMANTIC_ID, passportIdentifier: "TCK-PASSPORT-A" });
+    await t.test("send: a receiver that answers 500 gives transport_failed with the status 500 and the refusal id as the cause", async () => {
+      Object.assign(answered, { status: 500, code: "ERR-RX-INTERNAL" });
+      const result = await send();
+      assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["transport_failed", 500, "ERR-RX-INTERNAL"]);
+      assert.equal(result.body.error.code, "ERR-RX-INTERNAL");
+    });
+    await t.test("send: a receiver that answers 404 gives receiver_refused with the status 404", async () => {
+      Object.assign(answered, { status: 404, code: "ERR-RX-PASSPORT-UNKNOWN" });
+      const result = await send();
+      assert.deepStrictEqual([result.outcome, result.httpStatus, result.cause], ["receiver_refused", 404, "ERR-RX-PASSPORT-UNKNOWN"]);
+    });
+    await t.test("pull: a provider that answers 503 gives transport_failed, and a provider that answers 404 gives provider_refused", async () => {
+      Object.assign(answered, { status: 503, code: "ERR-RX-INTERNAL" });
+      assert.equal((await pull()).outcome, "transport_failed");
+      Object.assign(answered, { status: 404, code: "ERR-LC-RECORD-NOT-FOUND" });
+      assert.equal((await pull()).outcome, "provider_refused");
+    });
+    await t.test("each transport presents the Business Partner Number of its own participant in the header of D41", async () => {
+      Object.assign(answered, { status: 500, code: "ERR-RX-INTERNAL" });
+      const other = createMemoryTransport({ participants: setup.participants, offerStores: setup.offerStores, ownBpnl: "BPNL00000000TCK2" });
+      transports.push(other);
+      received.length = 0;
+      await send();
+      await other.send({ receiverBpnl: "BPNL00000000TCK5", connectorUrl: "http://chosen.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
+      assert.deepStrictEqual(received.map((item) => item.headers["edc-bpn"]), [SENDER, "BPNL00000000TCK2"]);
+    });
+  });
+}

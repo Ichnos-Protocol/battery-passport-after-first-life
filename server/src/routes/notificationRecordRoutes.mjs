@@ -28,21 +28,7 @@ import express from "express";
 
 import { authenticate } from "../access/authenticate.mjs";
 import { requireCapability } from "../access/requireCapability.mjs";
-import { sentNotificationOf } from "../connector/notificationSender.mjs";
-import * as notifications from "../connector/notificationRepository.mjs";
 import { contextOf, identityParameter, runRead, runWrite, sendData } from "./runWrite.mjs";
-
-function receivedNotificationOf(row) {
-  return {
-    messageId: row.message_id,
-    operation: row.operation,
-    senderBpnl: row.sender_bpnl,
-    passportIdentifier: row.passport_identifier,
-    outcome: row.outcome,
-    receivedAt: row.received_at.toISOString(),
-    message: row.message,
-  };
-}
 
 // Returns the router of the three endpoints, mounted at /api/notifications.
 export function createNotificationRecordRoutes({ config, clock }) {
@@ -50,13 +36,11 @@ export function createNotificationRecordRoutes({ config, clock }) {
   const authenticated = authenticate({ config, clock });
 
   router.get("/sent", authenticated, requireCapability("notification.read"), async (req, res) => {
-    const rows = await runRead(req, (client) => notifications.listSentNotifications(client));
-    sendData(res, 200, { notifications: rows.map(sentNotificationOf) });
+    sendData(res, 200, { notifications: await runRead(req, (client) => contextOf(req).sender.listSent({ client })) });
   });
 
   router.get("/received", authenticated, requireCapability("notification.read"), async (req, res) => {
-    const rows = await runRead(req, (client) => notifications.listReceivedNotifications(client));
-    sendData(res, 200, { notifications: rows.map(receivedNotificationOf) });
+    sendData(res, 200, { notifications: await runRead(req, (client) => contextOf(req).lifecycle.listReceivedNotifications({ client })) });
   });
 
   router.post("/sent/:id/retry", authenticated, requireCapability("lifecycle.report"), async (req, res) => {

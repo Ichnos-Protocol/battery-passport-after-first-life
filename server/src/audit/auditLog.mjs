@@ -19,14 +19,14 @@
  ********************************************************************************/
 
 // Requirement: SwR-AUDIT-045 (Dataset write decisions recorded with the authorisation relied on), with
-// decision D25 (The audit table). Section 9.2.7 of docs/architecture/implementation_plan.md.
+// decision D25 (The audit table) and decision D69 (The audit record after a failed write is queued).
+// Section 9.2.7 of docs/architecture/implementation_plan.md.
 // The audit trail of the write decisions on a passport (EL-AUDIT, the audit trail). The helper of the
-// routes calls record after the transaction of the request has ended and the request has released
-// its database client.
+// routes calls record after the transaction of the request has ended and the request has released its
+// database client; the outbox worker calls writeQueued.
 import { withTransaction } from "../db/transaction.mjs";
-import { Refusal } from "../dataset/refusals.mjs";
 
-// The eleven actions of the table of section 9.2.7.
+// The twelve actions of the table of section 9.2.7.
 export const AUDIT_ACTIONS = Object.freeze([
   "passport.create",
   "passport.issue",
@@ -42,24 +42,86 @@ export const AUDIT_ACTIONS = Object.freeze([
   "access-record.end",
 ]);
 
-// Returns the audit log of a deployment. The function record inserts one record of
-// passport_write_decisions per entry, with decided_at equal to the current time of the clock, in one
-// transaction of its own. A failed insert is logged at the level error and is thrown as the refusal
-// ERR-LC-INTERNAL.
-export function createAuditLog({ pool, repository, clock, logger, ownBpnl }) {
+const LAST_ERROR_LENGTH = 500;
+const MAXIMUM_PAUSE_SECONDS = 86400;
+
+function lastErrorOf(error) {
+  const text = `sqlstate ${error?.code ?? "none"}${error?.constraint ? ` constraint ${error.constraint}` : ""}`;
+  return text.slice(0, LAST_ERROR_LENGTH);
+}
+
+// Returns the audit log of a deployment with the functions record and writeQueued. The function record
+// never throws: a failed insert queues the entries in audit_outbox, and the answer of the request keeps
+// the true outcome (D69).
+export function createAuditLog({ pool, repository, clock, logger, ownBpnl, retrySeconds }) {
+  const options = () => ({ actingBpnl: ownBpnl, today: clock.now().toISOString().slice(0, 10) });
+  const summary = (entries) => ({
+    actions: entries.map((entry) => entry.action),
+    passportIds: entries.map((entry) => entry.passportId ?? null),
+  });
+
   async function record(entries) {
-    if (!Array.isArray(entries) || entries.length === 0) return [];
-    const now = clock.now();
+    if (!Array.isArray(entries) || entries.length === 0) return { written: true, queued: false };
+    const decidedAt = clock.now();
+    let failure;
     try {
-      return await withTransaction(pool, { actingBpnl: ownBpnl, today: now.toISOString().slice(0, 10) }, async (client) => {
-        const stored = [];
-        for (const entry of entries) stored.push(await repository.insertWriteDecision(client, entry, now));
-        return stored;
+      await withTransaction(pool, options(), async (client) => {
+        for (const entry of entries) await repository.insertWriteDecision(client, entry, decidedAt);
       });
+      return { written: true, queued: false };
     } catch (error) {
-      logger.error("The audit record of a write decision failed.", { sqlState: error.code ?? null, constraint: error.constraint ?? null, error });
-      throw new Refusal("ERR-LC-INTERNAL");
+      failure = error;
+    }
+    logger.error("The audit record of a write decision failed and is queued.", { sqlState: failure.code ?? null, constraint: failure.constraint ?? null, ...summary(entries) });
+    try {
+      await withTransaction(pool, options(), (client) => repository.insertAuditOutbox(client, { entries, decidedAt, notBefore: decidedAt }));
+      return { written: false, queued: true };
+    } catch (second) {
+      logger.error("The audit record of a write decision is lost.", {
+        ...summary(entries),
+        refusalIds: entries.map((entry) => entry.refusalId ?? null),
+        sqlStates: [failure.code ?? null, second.code ?? null],
+      });
+      return { written: false, queued: false };
     }
   }
-  return Object.freeze({ record });
+
+  // One unit of the queue: resolves to true when a row was handled, and to false when no row qualifies
+  // or when the record of a failed attempt failed as well.
+  async function writeOne() {
+    let claimed = null;
+    try {
+      return await withTransaction(pool, options(), async (client) => {
+        const row = await repository.claimDueAuditOutbox(client, clock.now());
+        if (row === null) return false;
+        claimed = row;
+        for (const entry of row.entries) await repository.insertWriteDecision(client, entry, row.decided_at);
+        await repository.markAuditOutboxWritten(client, row.id, clock.now());
+        return true;
+      });
+    } catch (error) {
+      if (claimed === null) throw error;
+      logger.error("A queued audit record was not written.", { auditOutboxId: claimed.id, sqlState: error.code ?? null, constraint: error.constraint ?? null });
+      const attempts = claimed.attempts + 1;
+      const pauseSeconds = Math.min(retrySeconds * attempts, MAXIMUM_PAUSE_SECONDS);
+      try {
+        await withTransaction(pool, options(), async (client) => {
+          if ((await repository.claimAuditOutboxById(client, claimed.id)) === null) return;
+          await repository.recordAuditOutboxFailure(client, claimed.id, { attempts, lastError: lastErrorOf(error), notBefore: new Date(clock.now().getTime() + pauseSeconds * 1000) });
+        });
+        return true;
+      } catch (second) {
+        logger.error("The attempt record of a queued audit record failed.", { auditOutboxId: claimed.id, sqlState: second.code ?? null });
+        return false;
+      }
+    }
+  }
+
+  async function writeQueued() {
+    let handled = 0;
+    while (await writeOne()) handled += 1;
+    return handled;
+  }
+
+  return Object.freeze({ record, writeQueued });
 }

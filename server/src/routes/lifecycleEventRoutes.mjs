@@ -32,7 +32,6 @@ import express from "express";
 
 import { authenticate } from "../access/authenticate.mjs";
 import { requireCapability } from "../access/requireCapability.mjs";
-import { Refusal } from "../dataset/refusals.mjs";
 import { afterCommit, contextOf, runWrite, sendData, validatedBody } from "./runWrite.mjs";
 
 // Returns the router of the three report endpoints, mounted at /api/lifecycle-events.
@@ -43,11 +42,8 @@ export function createLifecycleEventRoutes({ config, clock }) {
   const report = (operation, data, req) => runWrite(req, (client) => contextOf(req).lifecycle.reportEvent({ client, subject: req.subject, operation, data }));
 
   router.post("/repair", ...guard, async (req, res) => {
-    const data = validatedBody(req, "reportRepair");
-    // Decision D48 [waits for the owner]: the twin registry of the own deployment holds the shell of
-    // the repair certificate before the repairer reports the repair.
-    if ((await contextOf(req).twinRegistry.read(data.repairCertificateCatenaXId)) === null) throw new Refusal("ERR-LC-CERTIFICATE-NOT-REGISTERED");
-    const result = await report("BatteryRepaired", data, req);
+    // reportEvent refuses a repair certificate that the own twin registry does not hold (D48).
+    const result = await report("BatteryRepaired", validatedBody(req, "reportRepair"), req);
     sendData(res, 202, { notifications: result.notifications });
   });
 
@@ -62,7 +58,7 @@ export function createLifecycleEventRoutes({ config, clock }) {
     const context = contextOf(req);
     const result = await report("PassportEnded", validatedBody(req, "reportRecycling"), req);
     if (result.appliedLocally) {
-      await afterCommit(req, { passportId: result.passportId }, () => context.offerPublisher.withdrawDatasetOffers({ passportId: result.passportId }));
+      await afterCommit(req, { passportId: result.passportId }, () => context.offerPublisher.withdrawDatasetOffers({ passportId: result.passportId }), "offerStore");
       await context.exposure.refreshPassportExposure({ pool: context.pool, passportId: result.passportId });
     }
     sendData(res, 202, { notifications: result.notifications });

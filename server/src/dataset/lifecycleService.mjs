@@ -105,6 +105,7 @@ export function createLifecycleService({
   accessMaps,
   companyRepository,
   recordReader,
+  twinRegistry,
 }) {
   const now = () => clock.now();
   const today = () => clock.now().toISOString().slice(0, 10);
@@ -415,12 +416,15 @@ export function createLifecycleService({
       return { outcome: "duplicate", messageId, passportId: null, notifications: [], auditEntries: [] };
     };
 
-    // The sixth check: a stored record with the same messageId.
+    // The sixth check: the passport that the content names, read with a row lock, so that a second copy
+    // of the message waits here until the first copy has ended (finding R45-001).
+    const passport = await repository.findPassportByIdentifierForUpdate(client, passportIdentifier);
+
+    // The seventh check: a stored record with the same messageId.
     const stored = await notificationRepository.findReceivedNotification(client, messageId);
     if (stored !== null) return repeated(stored);
 
-    // The seventh check: the passport that the content names, read with a row lock.
-    const passport = await repository.findPassportByIdentifierForUpdate(client, passportIdentifier);
+    // The eighth check: the outcome of the step from the passport of the sixth check.
     let outcome = "applied";
     if (passport === null) {
       if (operation === "NewPassportIssued" || operation === "BatteryRepaired") throw refusal("ERR-RX-PASSPORT-UNKNOWN", { subject, action });
@@ -429,7 +433,8 @@ export function createLifecycleService({
       throw refusal("ERR-RX-STEP-REFUSED", { subject, passportId: passport.id, action });
     }
 
-    // The eighth check: the insertion of the received record, which a concurrent copy can precede.
+    // The ninth check: the insertion of the received record, which a concurrent copy of a message that
+    // names no passport of the own company can precede.
     const inserted = await notificationRepository.insertReceivedNotification(client, {
       messageId,
       operation,
@@ -441,7 +446,7 @@ export function createLifecycleService({
     });
     if (inserted === null) return repeated(await notificationRepository.findReceivedNotification(client, messageId));
 
-    // The ninth check: the step.
+    // The tenth check: the step.
     if (outcome === "recorded") return { outcome, messageId, passportId: null, notifications: [], auditEntries: [] };
     const reliedOn = await applyStep(client, { operation, passport, content, senderBpnl: header.senderBpn, messageId });
     const notifications = operation === "PassportEnded" ? await storePlan(client, passportServiceProviderPlan(content), endNoticeTime()) : [];
@@ -470,6 +475,11 @@ export function createLifecycleService({
   async function reportEvent({ client, subject, operation, data }) {
     const action = `notification.apply.${operation}`;
     const content = eventContent(operation, data);
+    // Decision D48 [waits for the owner]: the twin registry of the own deployment holds the shell of the
+    // repair certificate before the repairer reports the repair.
+    if (operation === "BatteryRepaired" && (await twinRegistry.read(normaliseUuid(data.repairCertificateCatenaXId))) === null) {
+      throw new Refusal("ERR-LC-CERTIFICATE-NOT-REGISTERED");
+    }
     const receivers = notificationPlanner.receiversOf({ operation, request: data });
     const auditEntries = [];
     let passportId = null;
@@ -545,6 +555,9 @@ export function createLifecycleService({
     if (!STORED_ASPECT_KEYS.includes(aspectKey)) throw refusal("ERR-LC-ASPECT-KEY-UNKNOWN", { subject, passportId, action });
     const passport = await passportForWrite(client, passportId, { subject, action });
     const reliedOn = writeDecision(passport, { subject, action });
+    // The advisory lock of the battery model after the row lock of the passport, before the access map
+    // is read (finding R45-005).
+    await accessMaps.lockModel({ client, modelId: passport.battery_model_id });
     const validation = validator.validateAspect(aspectKey, payload);
     if (!validation.valid) throw refusal("ERR-LC-BODY-INVALID", { subject, passportId, action, messages: validatorMessages(validation.errors) });
     const company = await companyRepository.findCompany(client, passport.manufacturer_bpnl);
@@ -559,7 +572,30 @@ export function createLifecycleService({
     };
   }
 
+  // The three read functions of the routes (finding R45-016).
+  async function readBatteryModel({ client, modelId }) {
+    const row = await repository.findBatteryModel(client, modelId);
+    return row === null ? null : batteryModelOf(row);
+  }
+  async function listReceivedNotifications({ client }) {
+    return (await notificationRepository.listReceivedNotifications(client)).map((row) => ({
+      messageId: row.message_id,
+      operation: row.operation,
+      senderBpnl: row.sender_bpnl,
+      passportIdentifier: row.passport_identifier,
+      outcome: row.outcome,
+      receivedAt: row.received_at.toISOString(),
+      message: row.message,
+    }));
+  }
+  function readPassportRecord({ client, passportId }) {
+    return recordReader.readPassportRecord({ client, passportId });
+  }
+
   return Object.freeze({
+    readBatteryModel,
+    listReceivedNotifications,
+    readPassportRecord,
     createBatteryModel,
     createFirstPassport,
     issueNewPassport,

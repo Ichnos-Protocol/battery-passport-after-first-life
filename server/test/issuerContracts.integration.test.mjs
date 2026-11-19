@@ -271,3 +271,28 @@ test("SwR-CXCLIENT-167 and SwR-CXCLIENT-168: the pull of the issuer without a fu
     assertRefusal(await issuer.call("POST", `/api/issuer-contracts/${randomUUID()}/pulls`), 404, "ERR-LC-CONTRACT-NOT-FOUND");
   });
 });
+
+test("decision D73 (The exposure of a battery information offer) [waits for the owner]: the field exposure and the repeated end", async (t) => {
+  let contract;
+  let offer;
+  await t.test("EP-PROVIDER-CONTRACT answers the field exposure with the result of the publication of the offer", async () => {
+    const answer = await offering.call("POST", "/api/issuer-contracts/provider", { passportIdentifier: unique("TCK-FOREIGN"), issuerBpnl: ISSUER, productCondition: fixture("productCondition.json") });
+    assert.equal(answer.status, 201, JSON.stringify(answer.body));
+    assert.deepStrictEqual(Object.keys(answer.body.data).sort(), ["contract", "exposure"]);
+    assert.deepStrictEqual(answer.body.data.exposure, { refreshed: true });
+    contract = answer.body.data.contract;
+    offer = (await offering.offerStore.list()).find((item) => item.assetId === `battery-information-${contract.id}`);
+    assert.ok(offer);
+  });
+  await t.test("EP-CONTRACT-END answers the field exposure with the result of the withdrawal, and a repeated end withdraws an offer that is still published and answers 409 ERR-LC-CONTRACT-ENDED", async () => {
+    const ended = await offering.call("DELETE", `/api/issuer-contracts/${contract.id}`);
+    assert.equal(ended.status, 200, JSON.stringify(ended.body));
+    assert.deepStrictEqual(Object.keys(ended.body.data).sort(), ["contract", "exposure"]);
+    assert.deepStrictEqual(ended.body.data.exposure, { refreshed: true });
+    assert.equal((await offering.offerStore.list()).some((item) => item.assetId === offer.assetId), false);
+    // The offer is published again, as after a withdrawal that failed.
+    await offering.offerStore.publish(offer);
+    assertRefusal(await offering.call("DELETE", `/api/issuer-contracts/${contract.id}`), 409, "ERR-LC-CONTRACT-ENDED");
+    assert.equal((await offering.offerStore.list()).some((item) => item.assetId === offer.assetId), false, "the repeated end withdraws the offer again");
+  });
+});
