@@ -24,7 +24,7 @@
 // The offer store of the memory binding (EL-CXCLIENT, the connector client): the published offers of
 // one participant, held in the memory of the process.
 
-const OFFER_FIELDS = ["assetId", "dctType", "version", "semanticId", "passportIdentifier", "path", "allowedBpnls", "usagePurposes"];
+const OFFER_FIELDS = ["assetId", "dctType", "version", "semanticId", "passportIdentifier", "path", "allowedBpnls", "usagePurposes", "frameworkAgreement"];
 
 // Returns an offer store with the methods publish, withdraw and list. The method publish replaces a
 // published offer with the same assetId.

@@ -19,22 +19,23 @@
  ********************************************************************************/
 
 // Requirement: PrR-CXD-029 (Conformance tests run against the in-process binding and the connector
-// binding), with decision D43 (One test code and two bindings) and decision D11 (The receiver resolution
-// behind a port). Sections 9.2.9 and 10.7 of docs/architecture/implementation_plan.md.
-// The connector binding of the conformance test kit is held by the contingency of section 10.7: the
-// verification of phase P7 against Tractus-X EDC 0.13.0 found no local deployment that the specification
-// states (tck/README.md, section "The verification of phase P7"). The binding therefore refuses to start,
-// and the process requirement PrR-CXD-029 stays unverified for the connector binding until the owner
-// decides.
+// binding), with decision D43 (One test code and two bindings), decision D75 (The receiver resolution
+// through the own connector) and decision D76 (The wallet stub as the local identity). Sections 9.2.9 and
+// 10.7 of docs/architecture/implementation_plan.md.
+// The connector binding of the conformance test kit waits for the owner: the first run of the second
+// part of phase P7 on 2026-11-19 showed that the wallet stub 0.1.0 does not serve the identity of the
+// connectors of Tractus-X EDC 0.13.0 as tck/docker-compose.yml configures it (tck/README.md, section "The
+// first run of phase P7"). Decision D76 makes the implementer report the failure to the owner before the
+// contingency of section 10.7 applies, so the binding refuses to start and runs no test.
 
-// The cause of the contingency, in the words of the verification record of tck/README.md.
+// The cause of the stop, in the words of the record of the first run in tck/README.md.
 export const CONNECTOR_BINDING_CAUSE =
-  "the BPN-DID Resolution Service of CX-0167 1.0.0 answers only a caller that presents a Verifiable Presentation " +
-  "with a Membership Credential, which the receiver resolver of decision D11 does not hold, and Tractus-X EDC 0.13.0 " +
-  "documents its identity only through an account of a managed wallet (DIV); the owner decides (tck/README.md)";
+  "the first run of phase P7 stopped under decision D76: the wallet stub 0.1.0 resolves the DID of another stub only over https, " +
+  "so a connector refuses the catalog request of a connector of another stub (answer 401), and the stub serves no DataService entry " +
+  "in a DID document (Tractus-X EDC 0.13.0 calls GET /api/v2.0.0/companyIdentities, answer 404), so the connector discovery of " +
+  "decision D75 finds no connector; the owner decides (tck/README.md)";
 
-// Fails with the message of the contingency of section 10.7, so that TCK_BINDING=connector stops at
-// startBinding() and runs no test.
+// Fails with the cause of the stop, so that TCK_BINDING=connector stops at startBinding() and runs no test.
 export async function startConnectorBinding() {
   throw new Error(`connector binding not available: ${CONNECTOR_BINDING_CAUSE}`);
 }

@@ -1,0 +1,527 @@
+################################################################################
+# Copyright (c) 2026 Ichnos Protocol Pte. Ltd.
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+################################################################################
+
+# The local deployment of the connector binding of the conformance test kit (section 10.7 of
+# docs/architecture/implementation_plan.md): for each of the three participants, one reference server
+# built from server/Dockerfile, one database of the server, one connector control plane and one connector
+# data plane of Tractus-X EDC 0.13.0, one database of the connector, one secret store, one wallet stub as
+# the identity of the connector (decision D76, The wallet stub as the local identity) and one Digital
+# Twin Registry with OAuth2 switched off (decision D77, OAuth2 off in the local registry); and one
+# BPN-DID Resolution Service for the three connectors. Process requirement PrR-CXD-029 (Conformance tests
+# run against the in-process binding and the connector binding) and decision D43 (One test code and two
+# bindings). Every image is a variable of tck/.env.example, and every secret is a local test value of
+# tck/.env, which git ignores. The verified values and their public addresses are in tck/README.md.
+#
+# Start: docker compose -f tck/docker-compose.yml --env-file tck/.env up -d --wait
+# Stop:  docker compose -f tck/docker-compose.yml --env-file tck/.env down -v
+name: tck
+
+x-healthcheck: &health
+  interval: 5s
+  timeout: 5s
+  retries: 60
+  start_period: 10s
+
+# The settings of a control plane and a data plane that are equal for the three participants.
+x-connector-environment: &connector-environment
+  EDC_IAM_DID_WEB_USE_HTTPS: "false"
+  EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS: client-secret
+  "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub-1%3A8080:BPNL000000000000"
+  "EDC_IAM_TRUSTED-ISSUER_1-ISSUER_ID": "did:web:stub-2%3A8080:BPNL000000000000"
+  "EDC_IAM_TRUSTED-ISSUER_2-ISSUER_ID": "did:web:stub-3%3A8080:BPNL000000000000"
+  TX_EDC_IAM_DCP_BDRS_SERVER_URL: http://bdrs:8082/api/directory
+  EDC_VAULT_HASHICORP_TOKEN: ${TCK_VAULT_TOKEN:?}
+  EDC_DATASOURCE_DEFAULT_USER: postgres
+  EDC_DATASOURCE_DEFAULT_PASSWORD: ${TCK_CONNECTOR_DATABASE_PASSWORD:?}
+  WEB_HTTP_PORT: "8080"
+  WEB_HTTP_PATH: /api
+  WEB_HTTP_CONTROL_PORT: "8083"
+  WEB_HTTP_CONTROL_PATH: /control
+  TX_EDC_DID_SERVICE_SELF_REGISTRATION_ENABLED: "false"
+  TX_EDC_DCP_CACHE_ENABLED: "false"
+
+x-control-plane: &control-plane
+  image: ${TCK_IMAGE_CONTROL_PLANE:?}
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/api/check/readiness"]
+
+x-data-plane: &data-plane
+  image: ${TCK_IMAGE_DATA_PLANE:?}
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/api/check/readiness"]
+
+x-connector-database: &connector-database
+  image: ${TCK_IMAGE_CONNECTOR_POSTGRES:?}
+  environment:
+    POSTGRES_PASSWORD: ${TCK_CONNECTOR_DATABASE_PASSWORD:?}
+    POSTGRES_DB: edc
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "pg_isready -U postgres -d edc"]
+
+x-vault: &vault
+  image: ${TCK_IMAGE_VAULT:?}
+  cap_add: [IPC_LOCK]
+  environment:
+    VAULT_DEV_ROOT_TOKEN_ID: ${TCK_VAULT_TOKEN:?}
+    VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8200/v1/sys/health"]
+
+x-stub: &stub
+  image: ${TCK_IMAGE_IDENTITY:?}
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "curl -fs -o /dev/null http://127.0.0.1:8080/actuator/health"]
+
+x-registry: &registry
+  image: ${TCK_IMAGE_DTR:?}
+  # D77: the chart value registry.authentication false starts the registry with the profile local
+  # (sldt-digital-twin-registry v0.13.0, INSTALL.md lines 28 and 38,
+  # charts/registry/templates/registry/registry-deployment.yaml lines 45 to 47).
+  command: ["--spring.profiles.active=local"]
+  restart: on-failure
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:4243/actuator/health/readiness"]
+
+x-server-database: &server-database
+  image: ${TCK_IMAGE_POSTGRES:?}
+  environment:
+    POSTGRES_PASSWORD: ${TCK_SERVER_DATABASE_PASSWORD:?}
+    POSTGRES_DB: refserver
+  healthcheck:
+    <<: *health
+    test: ["CMD-SHELL", "pg_isready -U postgres -d refserver"]
+
+# One service builds the image of the reference server; the five other services use the built image,
+# because six builds of one image tag in parallel fail.
+x-server-build: &server-build
+  image: tck-reference-server:local
+  pull_policy: never
+
+x-server-setup: &server-setup
+  <<: *server-build
+  command: ["sh", "-c", "node src/db/createAppRoleCli.mjs && node src/db/migrateCli.mjs"]
+  restart: "no"
+
+x-server: &server
+  <<: *server-build
+  healthcheck:
+    <<: *health
+    test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then((r) => process.exit(r.status === 200 ? 0 : 1), () => process.exit(1))"]
+
+# The environment of a reference server that is equal for the three participants.
+x-server-environment: &server-environment
+  OWN_ADDRESS: '{"NationalCode":[{"en":"XX"}],"CityTown":[{"en":"Example City"}],"Street":[{"en":"Example Street 1"}],"ZipCode":[{"en":"00000"}]}'
+  DATABASE_SCHEMA: ${DATABASE_SCHEMA:-tck000}
+  PORT: "8080"
+  BINDING: connector
+  OPERATOR_TOKEN_SECRET: ${TCK_OPERATOR_TOKEN_SECRET:?}
+  DATA_PLANE_KEY_HEADER: x-api-key
+  PARTNER_BPN_HEADER: Edc-Bpn
+  ACCESS_REGIME: ${ACCESS_REGIME:-after-act}
+  PASSPORT_SERVICE_PROVIDER_BPNL: ${PASSPORT_SERVICE_PROVIDER_BPNL:-}
+  EDC_MANAGEMENT_API_KEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+  EDC_MANAGEMENT_API_KEY_HEADER: x-api-key
+  LOG_LEVEL: ${TCK_SERVER_LOG_LEVEL:-info}
+
+services:
+  # The BPN-DID Resolution Service of the three connectors (bdrs-server-memory, tag 0.6.0). The directory
+  # API answers a caller that presents a Membership Credential of a trusted issuer.
+  bdrs:
+    image: ${TCK_IMAGE_BPN_DID:?}
+    environment:
+      WEB_HTTP_PORT: "8080"
+      WEB_HTTP_PATH: /api
+      WEB_HTTP_MANAGEMENT_PORT: "8081"
+      WEB_HTTP_MANAGEMENT_PATH: /api/management
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: tokenbased
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: ${TCK_BDRS_MANAGEMENT_API_KEY:?}
+      WEB_HTTP_DIRECTORY_PORT: "8082"
+      WEB_HTTP_DIRECTORY_PATH: /api/directory
+      EDC_IAM_ISSUER_ID: "required but not really needed"
+      "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub-1%3A8080:BPNL000000000000"
+      "EDC_IAM_TRUSTED-ISSUER_1-ISSUER_ID": "did:web:stub-2%3A8080:BPNL000000000000"
+      "EDC_IAM_TRUSTED-ISSUER_2-ISSUER_ID": "did:web:stub-3%3A8080:BPNL000000000000"
+      EDC_IAM_DID_WEB_USE_HTTPS: "false"
+    healthcheck:
+      <<: *health
+      test: ["CMD-SHELL", "curl -fs -o /dev/null http://127.0.0.1:8080/api/check/readiness"]
+
+  # One run after the start: the client secret and the token keys of each connector in its secret store,
+  # and the mapping of each Business Partner Number to the decentralised identifier of its connector in
+  # the BPN-DID Resolution Service. Every value is generated or a local test value.
+  seed:
+    image: ${TCK_IMAGE_NODE:?}
+    restart: "no"
+    environment:
+      TCK_VAULT_TOKEN: ${TCK_VAULT_TOKEN:?}
+      TCK_BDRS_MANAGEMENT_API_KEY: ${TCK_BDRS_MANAGEMENT_API_KEY:?}
+    depends_on:
+      vault-1: { condition: service_healthy }
+      vault-2: { condition: service_healthy }
+      vault-3: { condition: service_healthy }
+      bdrs: { condition: service_healthy }
+      stub-1: { condition: service_healthy }
+      stub-2: { condition: service_healthy }
+      stub-3: { condition: service_healthy }
+    command:
+      - node
+      - -e
+      - |
+        const { generateKeyPairSync } = require("node:crypto");
+        const env = process.env;
+        const check = async (answer, what) => { if (!answer.ok) throw new Error(what + " answered " + answer.status + " " + (await answer.text())); };
+        (async () => {
+          for (const n of [1, 2, 3]) {
+            const bpnl = "BPNL00000000TCK" + n;
+            const { privateKey, publicKey } = generateKeyPairSync("ec", { namedCurve: "P-256" });
+            const secrets = {
+              "client-secret": bpnl,
+              "key-1": privateKey.export({ type: "pkcs8", format: "pem" }),
+              "key-1-public": publicKey.export({ type: "spki", format: "pem" }),
+            };
+            for (const [alias, content] of Object.entries(secrets)) {
+              const answer = await fetch("http://vault-" + n + ":8200/v1/secret/data/" + alias, { method: "POST", headers: { "X-Vault-Token": env.TCK_VAULT_TOKEN, "content-type": "application/json" }, body: JSON.stringify({ data: { content } }) });
+              await check(answer, "vault-" + n + " " + alias);
+            }
+            const did = "did:web:stub-" + n + "%3A8080:" + bpnl;
+            const mapping = await fetch("http://bdrs:8081/api/management/bpn-directory", { method: "POST", headers: { "x-api-key": env.TCK_BDRS_MANAGEMENT_API_KEY, "content-type": "application/json" }, body: JSON.stringify({ bpn: bpnl, did }) });
+            if (mapping.status !== 204 && mapping.status !== 200 && mapping.status !== 409) await check(mapping, "bdrs " + bpnl);
+            console.log("seeded " + bpnl + " " + did);
+          }
+        })().catch((error) => { console.error(error.message); process.exit(1); });
+
+  # Participant 1: the data provider of the original passports, BPNL00000000TCK1.
+  vault-1: *vault
+  stub-1:
+    <<: *stub
+    environment:
+      STUB_ENV: local
+      BASE_WALLET_BPN: BPNL000000000000
+      SEED_WALLETS_BPN: BPNL00000000TCK1
+      DID_HOST: stub-1%3A8080
+      STUB_URL: http://stub-1:8080
+      PORTAL_WAIT_TIME: "86400"
+      APP_LOG_LEVEL: INFO
+  edc-db-1: *connector-database
+  cp-1:
+    <<: *control-plane
+    depends_on:
+      edc-db-1: { condition: service_healthy }
+      seed: { condition: service_completed_successfully }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_IAM_ISSUER_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck1
+      TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK1
+      EDC_RUNTIME_ID: cp-1
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-1:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK1
+      TX_EDC_IAM_STS_DIV_URL: http://stub-1:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-1:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-1:5432/edc
+      WEB_HTTP_MANAGEMENT_PORT: "8081"
+      WEB_HTTP_MANAGEMENT_PATH: /management
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: tokenbased
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+      WEB_HTTP_PROTOCOL_PORT: "8084"
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/dsp
+      EDC_CONTROL_ENDPOINT: http://cp-1:8083/control
+      EDC_DSP_CALLBACK_ADDRESS: http://cp-1:8084/api/v1/dsp
+  dp-1:
+    <<: *data-plane
+    depends_on:
+      cp-1: { condition: service_healthy }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_IAM_ISSUER_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck1
+      EDC_RUNTIME_ID: dp-1
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-1:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK1
+      TX_EDC_IAM_STS_DIV_URL: http://stub-1:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-1:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-1:5432/edc
+      WEB_HTTP_PUBLIC_PORT: "8081"
+      WEB_HTTP_PUBLIC_PATH: /api/public
+      EDC_CONTROL_ENDPOINT: http://dp-1:8083/control
+      EDC_DPF_SELECTOR_URL: http://cp-1:8083/control/v1/dataplanes
+      EDC_DATAPLANE_API_PUBLIC_BASEURL: http://dp-1:8081/api/public
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: key-1
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: key-1-public
+      TX_EDC_DPF_CONSUMER_PROXY_AUTH_APIKEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+  dtr-1:
+    <<: *registry
+    depends_on:
+      server-db-1: { condition: service_healthy }
+    environment:
+      # The profile local names an H2 database, whose driver the image does not hold, so the registry
+      # uses the database postgres of the database server of the participant.
+      # The owning tenant reads every shell; the client names it in the header Edc-Bpn.
+      REGISTRY_IDM_OWNINGTENANTID: BPNL00000000TCK1
+      SPRING_DATASOURCE_URL: jdbc:postgresql://server-db-1:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${TCK_SERVER_DATABASE_PASSWORD:?}
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_SQL_INIT_PLATFORM: pg
+  server-db-1: *server-database
+  server-setup-1:
+    <<: *server-setup
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    pull_policy: build
+    depends_on:
+      server-db-1: { condition: service_healthy }
+    environment:
+      DATABASE_MIGRATION_URL: postgres://postgres:${TCK_SERVER_DATABASE_PASSWORD:?}@server-db-1:5432/refserver
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA:-tck000}
+      APP_ROLE_PASSWORD: ${TCK_APP_ROLE_PASSWORD:?}
+  server-1:
+    <<: *server
+    depends_on:
+      server-setup-1: { condition: service_completed_successfully }
+      cp-1: { condition: service_healthy }
+      dp-1: { condition: service_healthy }
+      dtr-1: { condition: service_healthy }
+    environment:
+      <<: *server-environment
+      OWN_BPNL: BPNL00000000TCK1
+      OWN_LEGAL_NAME: Example Company TCK1
+      DATABASE_URL: postgres://refserver_app:${TCK_APP_ROLE_PASSWORD:?}@server-db-1:5432/refserver
+      PUBLIC_BASE_URL: http://server-1:8080
+      DATA_PLANE_KEY: ${TCK_DATA_PLANE_KEY_1:?}
+      CONNECTOR_DATA_PLANE_PUBLIC_URL: http://dp-1:8081/api/public
+      CONNECTOR_DSP_URL: http://cp-1:8084/api/v1/dsp
+      EDC_MANAGEMENT_URL: http://cp-1:8081/management
+      DTR_URL: http://dtr-1:4243/api/v3
+
+  # Participant 2: the second-life operator, BPNL00000000TCK2.
+  vault-2: *vault
+  stub-2:
+    <<: *stub
+    environment:
+      STUB_ENV: local
+      BASE_WALLET_BPN: BPNL000000000000
+      SEED_WALLETS_BPN: BPNL00000000TCK2
+      DID_HOST: stub-2%3A8080
+      STUB_URL: http://stub-2:8080
+      PORTAL_WAIT_TIME: "86400"
+      APP_LOG_LEVEL: INFO
+  edc-db-2: *connector-database
+  cp-2:
+    <<: *control-plane
+    depends_on:
+      edc-db-2: { condition: service_healthy }
+      seed: { condition: service_completed_successfully }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_IAM_ISSUER_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck2
+      TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK2
+      EDC_RUNTIME_ID: cp-2
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-2:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK2
+      TX_EDC_IAM_STS_DIV_URL: http://stub-2:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-2:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-2:5432/edc
+      WEB_HTTP_MANAGEMENT_PORT: "8081"
+      WEB_HTTP_MANAGEMENT_PATH: /management
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: tokenbased
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+      WEB_HTTP_PROTOCOL_PORT: "8084"
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/dsp
+      EDC_CONTROL_ENDPOINT: http://cp-2:8083/control
+      EDC_DSP_CALLBACK_ADDRESS: http://cp-2:8084/api/v1/dsp
+  dp-2:
+    <<: *data-plane
+    depends_on:
+      cp-2: { condition: service_healthy }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_IAM_ISSUER_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck2
+      EDC_RUNTIME_ID: dp-2
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-2:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK2
+      TX_EDC_IAM_STS_DIV_URL: http://stub-2:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-2:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-2:5432/edc
+      WEB_HTTP_PUBLIC_PORT: "8081"
+      WEB_HTTP_PUBLIC_PATH: /api/public
+      EDC_CONTROL_ENDPOINT: http://dp-2:8083/control
+      EDC_DPF_SELECTOR_URL: http://cp-2:8083/control/v1/dataplanes
+      EDC_DATAPLANE_API_PUBLIC_BASEURL: http://dp-2:8081/api/public
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: key-1
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: key-1-public
+      TX_EDC_DPF_CONSUMER_PROXY_AUTH_APIKEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+  dtr-2:
+    <<: *registry
+    depends_on:
+      server-db-2: { condition: service_healthy }
+    environment:
+      # The profile local names an H2 database, whose driver the image does not hold, so the registry
+      # uses the database postgres of the database server of the participant.
+      # The owning tenant reads every shell; the client names it in the header Edc-Bpn.
+      REGISTRY_IDM_OWNINGTENANTID: BPNL00000000TCK2
+      SPRING_DATASOURCE_URL: jdbc:postgresql://server-db-2:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${TCK_SERVER_DATABASE_PASSWORD:?}
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_SQL_INIT_PLATFORM: pg
+  server-db-2: *server-database
+  server-setup-2:
+    <<: *server-setup
+    depends_on:
+      server-db-2: { condition: service_healthy }
+    environment:
+      DATABASE_MIGRATION_URL: postgres://postgres:${TCK_SERVER_DATABASE_PASSWORD:?}@server-db-2:5432/refserver
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA:-tck000}
+      APP_ROLE_PASSWORD: ${TCK_APP_ROLE_PASSWORD:?}
+  server-2:
+    <<: *server
+    depends_on:
+      server-setup-2: { condition: service_completed_successfully }
+      cp-2: { condition: service_healthy }
+      dp-2: { condition: service_healthy }
+      dtr-2: { condition: service_healthy }
+    environment:
+      <<: *server-environment
+      OWN_BPNL: BPNL00000000TCK2
+      OWN_LEGAL_NAME: Example Company TCK2
+      DATABASE_URL: postgres://refserver_app:${TCK_APP_ROLE_PASSWORD:?}@server-db-2:5432/refserver
+      PUBLIC_BASE_URL: http://server-2:8080
+      DATA_PLANE_KEY: ${TCK_DATA_PLANE_KEY_2:?}
+      CONNECTOR_DATA_PLANE_PUBLIC_URL: http://dp-2:8081/api/public
+      CONNECTOR_DSP_URL: http://cp-2:8084/api/v1/dsp
+      EDC_MANAGEMENT_URL: http://cp-2:8081/management
+      DTR_URL: http://dtr-2:4243/api/v3
+
+  # Participant 3: the recycler, the repairer and the waste receiver, BPNL00000000TCK3.
+  vault-3: *vault
+  stub-3:
+    <<: *stub
+    environment:
+      STUB_ENV: local
+      BASE_WALLET_BPN: BPNL000000000000
+      SEED_WALLETS_BPN: BPNL00000000TCK3
+      DID_HOST: stub-3%3A8080
+      STUB_URL: http://stub-3:8080
+      PORTAL_WAIT_TIME: "86400"
+      APP_LOG_LEVEL: INFO
+  edc-db-3: *connector-database
+  cp-3:
+    <<: *control-plane
+    depends_on:
+      edc-db-3: { condition: service_healthy }
+      seed: { condition: service_completed_successfully }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_IAM_ISSUER_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck3
+      TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK3
+      EDC_RUNTIME_ID: cp-3
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-3:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK3
+      TX_EDC_IAM_STS_DIV_URL: http://stub-3:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-3:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-3:5432/edc
+      WEB_HTTP_MANAGEMENT_PORT: "8081"
+      WEB_HTTP_MANAGEMENT_PATH: /management
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: tokenbased
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+      WEB_HTTP_PROTOCOL_PORT: "8084"
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/dsp
+      EDC_CONTROL_ENDPOINT: http://cp-3:8083/control
+      EDC_DSP_CALLBACK_ADDRESS: http://cp-3:8084/api/v1/dsp
+  dp-3:
+    <<: *data-plane
+    depends_on:
+      cp-3: { condition: service_healthy }
+    environment:
+      <<: *connector-environment
+      EDC_PARTICIPANT_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_IAM_ISSUER_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_PARTICIPANT_CONTEXT_ID: participant-tck3
+      EDC_RUNTIME_ID: dp-3
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-3:8080/oauth/token
+      EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK3
+      TX_EDC_IAM_STS_DIV_URL: http://stub-3:8080/api/sts
+      EDC_VAULT_HASHICORP_URL: http://vault-3:8200
+      EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-3:5432/edc
+      WEB_HTTP_PUBLIC_PORT: "8081"
+      WEB_HTTP_PUBLIC_PATH: /api/public
+      EDC_CONTROL_ENDPOINT: http://dp-3:8083/control
+      EDC_DPF_SELECTOR_URL: http://cp-3:8083/control/v1/dataplanes
+      EDC_DATAPLANE_API_PUBLIC_BASEURL: http://dp-3:8081/api/public
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: key-1
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: key-1-public
+      TX_EDC_DPF_CONSUMER_PROXY_AUTH_APIKEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
+  dtr-3:
+    <<: *registry
+    depends_on:
+      server-db-3: { condition: service_healthy }
+    environment:
+      # The profile local names an H2 database, whose driver the image does not hold, so the registry
+      # uses the database postgres of the database server of the participant.
+      # The owning tenant reads every shell; the client names it in the header Edc-Bpn.
+      REGISTRY_IDM_OWNINGTENANTID: BPNL00000000TCK3
+      SPRING_DATASOURCE_URL: jdbc:postgresql://server-db-3:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${TCK_SERVER_DATABASE_PASSWORD:?}
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_SQL_INIT_PLATFORM: pg
+  server-db-3: *server-database
+  server-setup-3:
+    <<: *server-setup
+    depends_on:
+      server-db-3: { condition: service_healthy }
+    environment:
+      DATABASE_MIGRATION_URL: postgres://postgres:${TCK_SERVER_DATABASE_PASSWORD:?}@server-db-3:5432/refserver
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA:-tck000}
+      APP_ROLE_PASSWORD: ${TCK_APP_ROLE_PASSWORD:?}
+  server-3:
+    <<: *server
+    depends_on:
+      server-setup-3: { condition: service_completed_successfully }
+      cp-3: { condition: service_healthy }
+      dp-3: { condition: service_healthy }
+      dtr-3: { condition: service_healthy }
+    environment:
+      <<: *server-environment
+      OWN_BPNL: BPNL00000000TCK3
+      OWN_LEGAL_NAME: Example Company TCK3
+      DATABASE_URL: postgres://refserver_app:${TCK_APP_ROLE_PASSWORD:?}@server-db-3:5432/refserver
+      PUBLIC_BASE_URL: http://server-3:8080
+      DATA_PLANE_KEY: ${TCK_DATA_PLANE_KEY_3:?}
+      CONNECTOR_DATA_PLANE_PUBLIC_URL: http://dp-3:8081/api/public
+      CONNECTOR_DSP_URL: http://cp-3:8084/api/v1/dsp
+      EDC_MANAGEMENT_URL: http://cp-3:8081/management
+      DTR_URL: http://dtr-3:4243/api/v3

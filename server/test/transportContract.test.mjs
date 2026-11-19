@@ -33,8 +33,9 @@ import { after, test } from "node:test";
 import express from "express";
 
 import { createMemoryOfferStore } from "../src/connector/memoryOfferStore.mjs";
+import { createEdcTransport } from "../src/connector/edcTransport.mjs";
 import { createMemoryTransport } from "../src/connector/memoryTransport.mjs";
-import { buildBatteryInformationOffer, buildNotificationAssetOffer } from "../src/connector/policyBuilder.mjs";
+import { admits, buildBatteryInformationOffer, buildNotificationAssetOffer } from "../src/connector/policyBuilder.mjs";
 
 const SENDER = "BPNL00000000TCK3";
 const RECEIVER = "BPNL00000000TCK1";
@@ -74,10 +75,103 @@ function network() {
     [RECEIVER, receiverStore],
     [SILENT, silentStore],
   ]);
-  return { participants, offerStores, receiverStore, silentStore };
+  return { participants, offerStores, receiverStore, silentStore, refusedAssets: new Set() };
 }
 
 const transports = [];
+
+// The connector network of the connector transport: a stubbed fetch that answers the management API of
+// the own connector with the answer forms that phase P7 recorded on 2026-11-19 against Tractus-X EDC
+// 0.13.0 (tck/README.md, section "The recorded answers of phase P7"), and plays the provider data plane,
+// which calls the application of the counterparty with the data plane key and the Business Partner
+// Number of the consumer in the two headers of D41. The catalog of a counterparty lists the offers whose
+// access policy admits the consumer, as the connector does; an offer of setup.refusedAssets is listed and
+// its negotiation ends as TERMINATED, as a usage policy that the consumer does not meet ends it.
+const MANAGEMENT = "http://edc-management.memory.invalid/management";
+const DATA_PLANE = "http://edc-data-plane.memory.invalid/api/public";
+const EDC_CONFIG = Object.freeze({ edcManagementUrl: MANAGEMENT, edcManagementApiKey: "management-key-0123456789abcdefghij", edcManagementApiKeyHeader: "x-api-key" });
+const servers = [];
+async function baseUrlOf(app) {
+  const server = await new Promise((resolve, reject) => {
+    const started = app.listen(0, "127.0.0.1", () => resolve(started));
+    started.on("error", reject);
+  });
+  servers.push(server);
+  return `http://127.0.0.1:${server.address().port}`;
+}
+function edcFetch(setup) {
+  const negotiations = new Map();
+  const transfers = new Map();
+  const json = (status, body) => new Response(body === undefined ? null : JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+  const participantAt = (address) => [...setup.participants.entries()].find(([url]) => address.startsWith(url))?.[1];
+  const datasetOf = (offer) => {
+    const dataset = { "@id": offer.assetId, "@type": "Dataset", "dct:type": { "@id": offer.dctType.replace("cx-taxo:", "https://w3id.org/catenax/taxonomy#") }, id: offer.assetId };
+    if (offer.semanticId !== null) dataset["https://admin-shell.io/aas/3/0/HasSemantics/semanticId"] = { "@id": offer.semanticId };
+    if (offer.passportIdentifier !== null) dataset["https://w3id.org/edc/v0.0.1/ns/passportIdentifier"] = offer.passportIdentifier;
+    dataset.hasPolicy = [{ "@id": `offer-${offer.assetId}`, "@type": "Offer", permission: [{ action: "use" }] }];
+    return dataset;
+  };
+  return async (url, init = {}) => {
+    const body = init.body === undefined ? undefined : JSON.parse(init.body);
+    if (url.startsWith(MANAGEMENT)) {
+      assert.equal(init.headers["x-api-key"], EDC_CONFIG.edcManagementApiKey);
+      const path = url.slice(MANAGEMENT.length);
+      if (path === "/v3/catalog/request") {
+        const participant = participantAt(body.counterPartyAddress);
+        if (participant === undefined) return json(502, [{ message: "the counterparty does not answer", type: "BadGateway" }]);
+        const offers = (await setup.offerStores.get(participant.bpnl).list()).filter((offer) => admits(offer, SENDER) || setup.refusedAssets.has(refusalKey(offer)));
+        return json(200, { "@type": "Catalog", dataset: offers.map(datasetOf), participantId: `did:web:${participant.bpnl.toLowerCase()}.memory.invalid` });
+      }
+      if (path === "/v3/contractnegotiations") {
+        const id = `negotiation-${negotiations.size + 1}`;
+        const participant = participantAt(body.counterPartyAddress);
+        const offer = (await setup.offerStores.get(participant.bpnl).list()).find((item) => item.assetId === body.policy.target);
+        negotiations.set(id, { assetId: body.policy.target, address: body.counterPartyAddress, refused: setup.refusedAssets.has(refusalKey(offer)) });
+        return json(200, { "@type": "IdResponse", "@id": id });
+      }
+      if (path.startsWith("/v3/contractnegotiations/")) {
+        const negotiation = negotiations.get(path.split("/").pop());
+        if (negotiation.refused) return json(200, { "@type": "ContractNegotiation", state: "TERMINATED" });
+        return json(200, { "@type": "ContractNegotiation", state: "FINALIZED", contractAgreementId: `agreement-${path.split("/").pop()}` });
+      }
+      if (path === "/v3/transferprocesses") {
+        const id = `transfer-${transfers.size + 1}`;
+        const negotiation = negotiations.get(body.contractId.slice("agreement-".length));
+        transfers.set(id, { assetId: negotiation.assetId, address: negotiation.address });
+        return json(200, { "@type": "IdResponse", "@id": id });
+      }
+      if (path.startsWith("/v3/transferprocesses/")) return json(200, { "@type": "TransferProcess", state: "STARTED" });
+      if (path.startsWith("/v3/edrs/")) {
+        const id = path.split("/")[3];
+        return json(200, { "@type": "DataAddress", endpoint: `${DATA_PLANE}/${id}`, authorization: `token-${id}` });
+      }
+      return json(404, [{ message: `unknown path ${path}`, type: "ObjectNotFound" }]);
+    }
+    if (url.startsWith(DATA_PLANE)) {
+      const [id, ...rest] = url.slice(DATA_PLANE.length + 1).split("/");
+      assert.equal(init.headers.authorization, `token-${id}`);
+      const transfer = transfers.get(id);
+      const participant = participantAt(transfer.address);
+      const offer = (await setup.offerStores.get(participant.bpnl).list()).find((item) => item.assetId === transfer.assetId);
+      const suffix = rest.length === 0 ? "" : `/${rest.join("/")}`;
+      const headers = { [participant.dataPlaneKeyHeader]: participant.dataPlaneKey, [participant.partnerBpnHeader]: SENDER };
+      if (init.headers["content-type"] !== undefined) headers["content-type"] = init.headers["content-type"];
+      return fetch(`${await baseUrlOf(participant.app)}${offer.path}${suffix}`, { method: init.method ?? "GET", headers, body: init.body });
+    }
+    throw new TypeError(`fetch failed: ${url}`);
+  };
+}
+
+// The step that makes the counterparty refuse the contract: the memory transport reads the access policy
+// of the offer; the connector hides an offer whose access policy does not admit the consumer, so the
+// connector network refuses the negotiation of a listed offer.
+const refuseByAccessPolicy = (setup, store, offer) => store.publish(offer);
+const refusalKey = (offer) => `${offer.assetId} ${offer.passportIdentifier}`;
+const refuseByNegotiation = async (setup, store, offer) => {
+  setup.refusedAssets.add(refusalKey(offer));
+  await store.publish(offer);
+};
+
 const IMPLEMENTATIONS = [
   [
     "the memory transport",
@@ -86,14 +180,22 @@ const IMPLEMENTATIONS = [
       transports.push(transport);
       return transport;
     },
+    refuseByAccessPolicy,
   ],
+  ["the connector transport with a stubbed fetch", (setup) => createEdcTransport({ config: EDC_CONFIG, fetch: edcFetch(setup) }), refuseByNegotiation],
 ];
 
 after(async () => {
   for (const transport of transports) await transport.close();
+  for (const server of servers) {
+    await new Promise((resolve) => {
+      server.close(resolve);
+      server.closeAllConnections();
+    });
+  }
 });
 
-for (const [name, create] of IMPLEMENTATIONS) {
+for (const [name, create, refuse] of IMPLEMENTATIONS) {
   test(`SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST through the connector): the five outcomes of send against ${name}`, async (t) => {
     const setup = network();
     const transport = create(setup);
@@ -128,7 +230,7 @@ for (const [name, create] of IMPLEMENTATIONS) {
       assert.equal(unknown.outcome, "transport_failed");
     });
     await t.test("contract_refused: the access policy of the notification asset does not admit the sender", async () => {
-      await setup.receiverStore.publish(buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
+      await refuse(setup, setup.receiverStore, buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
       const result = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
       assert.equal(result.outcome, "contract_refused");
     });
@@ -163,7 +265,7 @@ for (const [name, create] of IMPLEMENTATIONS) {
     });
     await t.test("contract_refused: the access policy of the offer admits another participant only", async () => {
       assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-B" })).outcome, "no_asset");
-      await setup.receiverStore.publish(buildBatteryInformationOffer({ contractId: "c0ffee00-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: "BPNL00000000TCK2", passportIdentifier: "TCK-PASSPORT-B", semanticId: SEMANTIC_ID }));
+      await refuse(setup, setup.receiverStore, buildBatteryInformationOffer({ contractId: "c0ffee00-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: "BPNL00000000TCK2", passportIdentifier: "TCK-PASSPORT-B", semanticId: SEMANTIC_ID }));
       assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-B" })).outcome, "contract_refused");
     });
     await t.test("provider_refused: the provider answers 403", async () => {
@@ -187,7 +289,7 @@ chosen.use((req, res) => {
   res.status(answered.status).json({ success: false, error: { code: answered.code, message: "refused" } });
 });
 
-for (const [name, create] of IMPLEMENTATIONS) {
+for (const [name, create, refuse] of IMPLEMENTATIONS) {
   test(`finding R45-003 (the status classes of the transport contract): an answer of the class 5xx is transport_failed with its status, and another status is final, against ${name}`, async (t) => {
     const setup = network();
     const chosenStore = createMemoryOfferStore();
@@ -226,3 +328,11 @@ for (const [name, create] of IMPLEMENTATIONS) {
     });
   });
 }
+
+test("the connector transport reports a receiver whose access policy hides the notification asset as a receiver without an asset", async () => {
+  const setup = network();
+  await setup.receiverStore.publish(buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
+  const transport = createEdcTransport({ config: EDC_CONFIG, fetch: edcFetch(setup) });
+  const result = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
+  assert.equal(result.outcome, "no_asset");
+});

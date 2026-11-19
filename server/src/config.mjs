@@ -119,7 +119,7 @@ function allowedBpnls(text) {
   return value.every((item) => typeof item === "string" && BPNL_PATTERN.test(item)) ? accepted(value) : refused(rule);
 }
 
-// The 30 variables of section 9.6, in the order of its table, each with its property, its
+// The 29 variables of section 9.6, in the order of its table, each with its property, its
 // requirement, its default and its check.
 const REQUIRED = "required";
 const OPTIONAL = "optional";
@@ -153,7 +153,6 @@ const VARIABLES = [
   { name: "EDC_MANAGEMENT_API_KEY", property: "edcManagementApiKey", need: FOR_CONNECTOR, fallback: null, check: minimumLength(32) },
   { name: "EDC_MANAGEMENT_API_KEY_HEADER", property: "edcManagementApiKeyHeader", need: OPTIONAL, fallback: "x-api-key", check: headerName },
   { name: "DTR_URL", property: "dtrUrl", need: FOR_CONNECTOR, fallback: null, check: httpAddress },
-  { name: "BPN_DID_RESOLUTION_URL", property: "bpnDidResolutionUrl", need: FOR_CONNECTOR, fallback: null, check: httpAddress },
   { name: "LOG_LEVEL", property: "logLevel", need: OPTIONAL, fallback: "info", check: oneOf(LOG_LEVELS) },
 ];
 

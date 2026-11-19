@@ -41,7 +41,7 @@ const ADDRESS = {
   Street: [{ en: "Example Street 1" }],
   ZipCode: [{ en: "00000" }],
 };
-const CONNECTOR_VARIABLES = ["CONNECTOR_DATA_PLANE_PUBLIC_URL", "CONNECTOR_DSP_URL", "EDC_MANAGEMENT_URL", "EDC_MANAGEMENT_API_KEY", "DTR_URL", "BPN_DID_RESOLUTION_URL"];
+const CONNECTOR_VARIABLES = ["CONNECTOR_DATA_PLANE_PUBLIC_URL", "CONNECTOR_DSP_URL", "EDC_MANAGEMENT_URL", "EDC_MANAGEMENT_API_KEY", "DTR_URL"];
 
 // One complete input of valid values with BINDING=memory.
 function fixtureEnv() {
@@ -74,12 +74,11 @@ function fixtureEnv() {
     EDC_MANAGEMENT_API_KEY: MANAGEMENT_KEY,
     EDC_MANAGEMENT_API_KEY_HEADER: "X-Mgmt-Key",
     DTR_URL: "https://registry.example/api/v3",
-    BPN_DID_RESOLUTION_URL: "https://resolution.example/api",
     LOG_LEVEL: "debug",
   };
 }
 
-// The property of each of the 30 variables of section 9.6 for the input of fixtureEnv().
+// The property of each of the 29 variables of section 9.6 for the input of fixtureEnv().
 const EXPECTED = {
   OWN_BPNL: ["ownBpnl", "BPNL00000000TCK1"],
   OWN_LEGAL_NAME: ["ownLegalName", "Example Battery Company"],
@@ -109,7 +108,6 @@ const EXPECTED = {
   EDC_MANAGEMENT_API_KEY: ["edcManagementApiKey", MANAGEMENT_KEY],
   EDC_MANAGEMENT_API_KEY_HEADER: ["edcManagementApiKeyHeader", "x-mgmt-key"],
   DTR_URL: ["dtrUrl", "https://registry.example/api/v3"],
-  BPN_DID_RESOLUTION_URL: ["bpnDidResolutionUrl", "https://resolution.example/api"],
   LOG_LEVEL: ["logLevel", "debug"],
 };
 
@@ -134,11 +132,10 @@ const DEFAULTS = {
   EDC_MANAGEMENT_API_KEY: ["edcManagementApiKey", null],
   EDC_MANAGEMENT_API_KEY_HEADER: ["edcManagementApiKeyHeader", "x-api-key"],
   DTR_URL: ["dtrUrl", null],
-  BPN_DID_RESOLUTION_URL: ["bpnDidResolutionUrl", null],
   LOG_LEVEL: ["logLevel", "info"],
 };
 const REQUIRED = ["OWN_BPNL", "OWN_LEGAL_NAME", "OWN_ADDRESS", "DATABASE_URL", "PUBLIC_BASE_URL", "BINDING", "OPERATOR_TOKEN_SECRET", "DATA_PLANE_KEY", "ACCESS_REGIME"];
-const ADDRESS_VARIABLES = ["PUBLIC_BASE_URL", "CONNECTOR_DATA_PLANE_PUBLIC_URL", "CONNECTOR_DSP_URL", "EDC_MANAGEMENT_URL", "DTR_URL", "BPN_DID_RESOLUTION_URL"];
+const ADDRESS_VARIABLES = ["PUBLIC_BASE_URL", "CONNECTOR_DATA_PLANE_PUBLIC_URL", "CONNECTOR_DSP_URL", "EDC_MANAGEMENT_URL", "DTR_URL"];
 const HEADER_VARIABLES = ["DATA_PLANE_KEY_HEADER", "PARTNER_BPN_HEADER", "EDC_MANAGEMENT_API_KEY_HEADER"];
 const KEY_VARIABLES = ["OPERATOR_TOKEN_SECRET", "DATA_PLANE_KEY", "EDC_MANAGEMENT_API_KEY"];
 
@@ -203,9 +200,9 @@ function without(env, ...names) {
   return copy;
 }
 
-test("section 9.6: one accepted value of each of the 30 variables gives its property with its type", async (t) => {
+test("section 9.6: one accepted value of each of the 29 variables gives its property with its type", async (t) => {
   const config = loadConfig(fixtureEnv());
-  assert.equal(Object.keys(EXPECTED).length, 30);
+  assert.equal(Object.keys(EXPECTED).length, 29);
   for (const [variable, [property, value]] of Object.entries(EXPECTED)) {
     await t.test(`${variable} gives ${property}`, () => {
       assert.deepStrictEqual(config[property], value);
@@ -267,18 +264,18 @@ test("section 9.6: the variables of the connector", async (t) => {
       assert.equal(error.message, `Invalid configuration: ${variable} is missing`);
     });
   }
-  await t.test("with BINDING=connector, the six absent variables are named in the order of section 9.6", () => {
+  await t.test("with BINDING=connector, the five absent variables are named in the order of section 9.6", () => {
     const error = configError(without({ ...fixtureEnv(), BINDING: "connector" }, ...CONNECTOR_VARIABLES));
     assert.deepStrictEqual(error.variables, CONNECTOR_VARIABLES);
   });
-  await t.test("with BINDING=connector and the six variables, the configuration holds their values", () => {
+  await t.test("with BINDING=connector and the five variables, the configuration holds their values", () => {
     const config = loadConfig({ ...fixtureEnv(), BINDING: "connector" });
     assert.equal(config.binding, "connector");
     assert.equal(config.edcManagementApiKey, MANAGEMENT_KEY);
   });
-  await t.test("under BINDING=memory the four variables without a default are null", () => {
+  await t.test("under BINDING=memory the three variables without a default are null", () => {
     const config = loadConfig(without(fixtureEnv(), ...CONNECTOR_VARIABLES));
-    for (const property of ["edcManagementUrl", "edcManagementApiKey", "dtrUrl", "bpnDidResolutionUrl"]) assert.equal(config[property], null, property);
+    for (const property of ["edcManagementUrl", "edcManagementApiKey", "dtrUrl"]) assert.equal(config[property], null, property);
   });
 });
 
@@ -293,7 +290,7 @@ test("section 9.6: every default is applied when its variable is absent and when
   }
 });
 
-test("section 9.2.1: the configuration object is frozen, pure and holds the 30 properties only", async (t) => {
+test("section 9.2.1: the configuration object is frozen, pure and holds the 29 properties only", async (t) => {
   await t.test("the object, ownAddress and notificationAllowedBpnls are frozen, and an assignment throws a TypeError", () => {
     const config = loadConfig(fixtureEnv());
     for (const value of [config, config.ownAddress, config.notificationAllowedBpnls]) assert.equal(Object.isFrozen(value), true);

@@ -27,9 +27,16 @@
 // The builder of the offers of section 10.5 (EL-CXCLIENT, the connector client). Every function of the
 // module is pure.
 
-// The dct:type of a submodel offer of CX-0160 (Battery Passport) 1.1.0 section 4.1. The value is not
-// verified against a stored text, because CX-0160 1.1.0 is cited and not stored; phase P7 verifies it.
-export const SUBMODEL_DCT_TYPE = "cx-taxo:Submodel";
+// The dct:type and the version of a submodel offer of CX-0160 (Battery Passport) 1.1.0 section 4.1,
+// verified by phase P7 at https://catenax-ev.github.io/docs/next/standards/CX-0160-BatteryPassport
+// (tck/README.md, section "The verification of phase P7").
+export const SUBMODEL_DCT_TYPE = "cx-taxo:BatteryPass";
+export const SUBMODEL_DCT_VERSION = "1.0";
+
+// The value of the constraint FrameworkAgreement of every usage policy: tractusx-edc at the tag 0.13.0,
+// docs/usage/management-api-walkthrough/02_policies.md lines 99 and 256 to 258. The Catena-X dataspace
+// accepts no usage policy without the constraints FrameworkAgreement and UsagePurpose (lines 97 to 105).
+export const FRAMEWORK_AGREEMENT = "DataExchangeGovernance:1.0";
 
 // The usage purpose of every offer (section 2.2 item 1 of the proposal). The three proposed purposes of
 // Table 2.2 of the proposal are not added, because CX-0152 has not registered them.
@@ -39,7 +46,7 @@ export const NOTIFICATION_ASSET_ID = "asset-lifecycle-notification-1.0";
 export const NOTIFICATION_DCT_TYPE = "cx-taxo:BatteryPassLifecycleNotificationAPI";
 export const NOTIFICATION_VERSION = "1.0";
 
-function offer({ assetId, dctType, version = null, semanticId = null, passportIdentifier = null, path, allowedBpnls }) {
+function offer({ assetId, dctType, version = SUBMODEL_DCT_VERSION, semanticId = null, passportIdentifier = null, path, allowedBpnls }) {
   return {
     assetId,
     dctType,
@@ -49,6 +56,7 @@ function offer({ assetId, dctType, version = null, semanticId = null, passportId
     path,
     allowedBpnls: allowedBpnls === null ? null : [...new Set(allowedBpnls)].sort(),
     usagePurposes: [USAGE_PURPOSE],
+    frameworkAgreement: FRAMEWORK_AGREEMENT,
   };
 }
 

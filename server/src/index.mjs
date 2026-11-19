@@ -73,11 +73,11 @@ async function bindingOf(config, appHolder) {
       receiverResolver: createMemoryReceiverResolver({ didByBpnl: new Map(), connectorUrlByDid: new Map() }),
     };
   }
-  const [edcTransport, edcOfferStore, dtrTwinRegistry, didReceiverResolver] = await Promise.all([
+  const [edcTransport, edcOfferStore, dtrTwinRegistry, connectorDiscoveryResolver] = await Promise.all([
     import("./connector/edcTransport.mjs"),
     import("./connector/edcOfferStore.mjs"),
     import("./twins/dtrTwinRegistry.mjs"),
-    import("./connector/didReceiverResolver.mjs"),
+    import("./connector/connectorDiscoveryResolver.mjs"),
   ]).catch((error) => {
     throw new Error(`connector binding not available: ${error.message}`);
   });
@@ -86,7 +86,8 @@ async function bindingOf(config, appHolder) {
     transport: edcTransport.createEdcTransport({ config, fetch }),
     offerStore: edcOfferStore.createEdcOfferStore({ config, fetch }),
     twinRegistry: dtrTwinRegistry.createDtrTwinRegistry({ config, fetch }),
-    receiverResolver: didReceiverResolver.createDidReceiverResolver({ config, fetch }),
+    // D75: the own connector resolves a receiver with its own credential.
+    receiverResolver: connectorDiscoveryResolver.createConnectorDiscoveryResolver({ config, fetch }),
   };
 }
 

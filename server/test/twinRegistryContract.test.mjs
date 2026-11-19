@@ -28,9 +28,35 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { createDtrTwinRegistry } from "../src/twins/dtrTwinRegistry.mjs";
 import { createMemoryTwinRegistry } from "../src/twins/memoryTwinRegistry.mjs";
 
-const IMPLEMENTATIONS = [["the memory registry", () => createMemoryTwinRegistry()]];
+// The Digital Twin Registry 0.13.0 with a stubbed fetch that gives the answers recorded on 2026-11-19
+// (tck/README.md, section "The recorded answers of phase P7"): a PUT of a missing shell answers 201 and a
+// PUT of a registered shell 204; a GET answers 200 to the owning tenant in the header Edc-Bpn and 404 with
+// the result object of AAS Part 2 otherwise.
+const DTR_URL = "http://dtr.memory.invalid/api/v3";
+const OWN_BPNL = "BPNL00000000TCK1";
+function registryFetch() {
+  const shells = new Map();
+  return async (url, init = {}) => {
+    assert.ok(url.startsWith(`${DTR_URL}/shell-descriptors/`), url);
+    const id = Buffer.from(url.slice(`${DTR_URL}/shell-descriptors/`.length), "base64url").toString("utf8");
+    const notFound = () => new Response(JSON.stringify({ messages: [{ messageType: "Error", text: `Shell for identifier ${id} not found` }] }), { status: 404 });
+    if (init.method === "PUT") {
+      const existed = shells.has(id);
+      shells.set(id, init.body);
+      return existed ? new Response(null, { status: 204 }) : new Response(init.body, { status: 201 });
+    }
+    if (init.headers?.["Edc-Bpn"] !== OWN_BPNL || !shells.has(id)) return notFound();
+    return new Response(shells.get(id), { status: 200, headers: { "content-type": "application/json" } });
+  };
+}
+
+const IMPLEMENTATIONS = [
+  ["the memory registry", () => createMemoryTwinRegistry()],
+  ["the registry client with a stubbed fetch", () => createDtrTwinRegistry({ config: { dtrUrl: DTR_URL, ownBpnl: OWN_BPNL }, fetch: registryFetch() })],
+];
 
 const shell = (id, idShort) => ({ id, globalAssetId: id, idShort, specificAssetIds: [{ name: "digitalTwinType", value: "PartInstance" }], submodelDescriptors: [] });
 

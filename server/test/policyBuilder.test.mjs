@@ -30,8 +30,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  FRAMEWORK_AGREEMENT,
   NOTIFICATION_ASSET_ID,
   SUBMODEL_DCT_TYPE,
+  SUBMODEL_DCT_VERSION,
   USAGE_PURPOSE,
   admits,
   buildAccessMapOffer,
@@ -59,6 +61,7 @@ test("SwR-CXCLIENT-182 (Lifecycle record offer restricted to purchaser, operator
       path: "/api/lifecycle-notifications",
       allowedBpnls: null,
       usagePurposes: [USAGE_PURPOSE],
+      frameworkAgreement: FRAMEWORK_AGREEMENT,
     });
     assert.equal(USAGE_PURPOSE, "cx.circular.dpp:1");
     assert.deepStrictEqual(admitted(offer), PARTICIPANTS);
@@ -103,5 +106,17 @@ test("SwR-CXCLIENT-182 (Lifecycle record offer restricted to purchaser, operator
     assert.equal(offer.path, `/api/issuer-contracts/${CONTRACT_ID}/battery-information`);
     assert.deepStrictEqual(offer.usagePurposes, ["cx.circular.dpp:1"]);
     assert.deepStrictEqual(admitted(offer), ["BPNL00000000TCK1"]);
+  });
+  await t.test("V12-4 and V12-6: each submodel offer carries cx-taxo:BatteryPass and the version 1.0, and each offer holds FrameworkAgreement and UsagePurpose for its usage policy", () => {
+    assert.deepStrictEqual([SUBMODEL_DCT_TYPE, SUBMODEL_DCT_VERSION, FRAMEWORK_AGREEMENT], ["cx-taxo:BatteryPass", "1.0", "DataExchangeGovernance:1.0"]);
+    const submodelOffers = [
+      buildPassportSubmodelOffer({ passportId: PASSPORT_ID, aspectKey: "lifecycle", semanticId: LIFECYCLE_ID, allowedBpnls: [] }),
+      buildAccessMapOffer({ modelId: MODEL_ID, semanticId: "urn:samm:io.catenax.battery.passport_access_map:1.0.0#BatteryPassportAccessMap" }),
+      buildBatteryInformationOffer({ contractId: CONTRACT_ID, issuerBpnl: "BPNL00000000TCK1", passportIdentifier: "TCK-PASSPORT-A", semanticId: "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition" }),
+    ];
+    for (const offer of submodelOffers) assert.deepStrictEqual([offer.dctType, offer.version], ["cx-taxo:BatteryPass", "1.0"], offer.assetId);
+    for (const offer of [...submodelOffers, buildNotificationAssetOffer({ allowedBpnls: null })]) {
+      assert.deepStrictEqual([offer.frameworkAgreement, offer.usagePurposes], ["DataExchangeGovernance:1.0", ["cx.circular.dpp:1"]], offer.assetId);
+    }
   });
 });

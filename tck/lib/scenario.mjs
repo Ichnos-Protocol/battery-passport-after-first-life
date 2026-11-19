@@ -65,7 +65,7 @@ export const SEMANTIC_IDS = Object.freeze({
   "product-condition": "urn:samm:io.admin-shell.idta.batterypass.product_condition:1.0.0#ProductCondition",
   "dpp-metadata": "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
   "handover-documentation": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#HandoverDocumentation",
-  "carbon-footprint": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprint",
+  "carbon-footprint": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery",
   "material-composition": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition",
   circularity: "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity",
   "serial-part": "urn:samm:io.catenax.serial_part:3.0.0#SerialPart",

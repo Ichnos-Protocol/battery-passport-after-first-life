@@ -82,7 +82,7 @@ export const ASPECTS = Object.freeze({
     `${IDTA}io.admin-shell.idta.dpp.dpp_metadata/1.0.0/gen/DppMetadata-schema.json`,
   ),
   // not validated: the aspect model is cited and not stored (D28)
-  // The semantic identifier of IDTA-02035-2 in version 1.0.0 is not verified against a stored text.
+  // The semantic identifier of IDTA-02035-2 in version 1.0.0: CX-0160 section 3.3.3, verified by phase P7.
   "handover-documentation": aspect(
     "handover-documentation",
     "handoverDocumentation",
@@ -92,17 +92,17 @@ export const ASPECTS = Object.freeze({
     null,
   ),
   // not validated: the aspect model is cited and not stored (D28)
-  // The semantic identifier of IDTA-02035-3 in version 1.0.0 is not verified against a stored text.
+  // The semantic identifier of IDTA-02035-3 in version 1.0.0: CX-0160 section 3.4.3, verified by phase P7.
   "carbon-footprint": aspect(
     "carbon-footprint",
     "carbonFootprint",
-    "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprint",
+    "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery",
     "PartInstance",
     "stored",
     null,
   ),
   // not validated: the aspect model is cited and not stored (D28)
-  // The semantic identifier of IDTA-02035-6 in version 1.0.0 is not verified against a stored text.
+  // The semantic identifier of IDTA-02035-6 in version 1.0.0: CX-0160 section 3.7.3, verified by phase P7.
   "material-composition": aspect(
     "material-composition",
     "materialComposition",
@@ -112,12 +112,12 @@ export const ASPECTS = Object.freeze({
     null,
   ),
   // not validated: the aspect model is cited and not stored (D28)
-  // The semantic identifier of IDTA-02035-7 in version 1.0.0 is not verified against a stored text.
+  // The semantic identifier of IDTA-02035-7 in version 1.0.0: CX-0160 section 3.8.3, verified by phase P7.
   circularity: aspect("circularity", "circularity", "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity", "PartInstance", "stored", null),
   // not validated: the aspect model is cited and not stored (D28)
   "serial-part": aspect("serial-part", "serialPart", "urn:samm:io.catenax.serial_part:3.0.0#SerialPart", "PartInstance", "stored", null),
   // not validated: the aspect model is cited and not stored (D28)
-  // The semantic identifier of the SingleLevelBomAsBuilt model of CX-0127 is not verified against a stored text.
+  // The semantic identifier of the SingleLevelBomAsBuilt model of CX-0127 2.0.2 (CX-Titan), verified by phase P7.
   "single-level-bom-as-built": aspect(
     "single-level-bom-as-built",
     "singleLevelBomAsBuilt",
