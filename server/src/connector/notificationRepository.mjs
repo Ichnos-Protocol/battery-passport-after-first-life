@@ -71,3 +71,34 @@ export async function findReceivedNewPassportIssued(client, { messageId, passpor
 export async function listReceivedNotifications(client) {
   return (await client.query("SELECT * FROM notifications_received ORDER BY received_at, message_id")).rows;
 }
+
+// The sender of section 9.2.5: one pending notification whose not_before is not after the time, in
+// the order of id, locked so that a concurrent sender skips the row.
+export async function claimDueNotification(client, at) {
+  return one(
+    await client.query("SELECT * FROM notifications_sent WHERE outcome = 'pending' AND not_before <= $1 ORDER BY id FOR UPDATE SKIP LOCKED LIMIT 1", [at]),
+  );
+}
+
+// Writes the result of one attempt of the sender.
+export async function recordSendAttempt(client, id, { outcome, cause, httpStatus, attemptedAt, receiverDid, receiverConnectorUrl, attempts, notBefore }) {
+  return one(
+    await client.query(
+      `UPDATE notifications_sent SET outcome = $2, cause = $3, http_status = $4, attempted_at = $5, receiver_did = $6,
+         receiver_connector_url = $7, attempts = $8, not_before = $9
+       WHERE id = $1 RETURNING *`,
+      [id, outcome, cause, httpStatus, attemptedAt, receiverDid, receiverConnectorUrl, attempts, notBefore],
+    ),
+  );
+}
+
+export async function findSentNotificationForUpdate(client, id) {
+  return one(await client.query("SELECT * FROM notifications_sent WHERE id = $1 FOR UPDATE", [id]));
+}
+
+// Sets a failed notification back to pending for a further series of attempts (EP-NOTIFICATION-RETRY).
+export async function resetSentNotification(client, id, notBefore) {
+  return one(
+    await client.query("UPDATE notifications_sent SET outcome = 'pending', attempts = 0, cause = NULL, not_before = $2 WHERE id = $1 RETURNING *", [id, notBefore]),
+  );
+}

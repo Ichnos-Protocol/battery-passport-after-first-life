@@ -136,7 +136,8 @@ export function createAccessMapService({ repository, passportRepository, company
     if (unsupported.length > 0) throw new Refusal("ERR-LC-PATH-NOT-SUPPORTED", { messages: unsupported });
     if (await repository.accessMapVersionExists(client, { modelId, mapVersion: map.mapVersion })) throw new Refusal("ERR-LC-ACCESS-MAP-VERSION-EXISTS");
     const problems = [];
-    for (const passportId of await passportRepository.listPassportIdsOfModel(client, modelId)) {
+    const passportIds = await passportRepository.listPassportIdsOfModel(client, modelId);
+    for (const passportId of passportIds) {
       const passport = await passportRepository.findPassport(client, passportId);
       const company = await companyRepository.findCompany(client, passport.manufacturer_bpnl);
       const hasLineageLink = (await passportRepository.listLineageLinks(client, passportId)).length > 0;
@@ -150,7 +151,7 @@ export function createAccessMapService({ repository, passportRepository, company
     const version = await repository.insertAccessMapVersion(client, { modelId, mapVersion: map.mapVersion, validFrom: map.validFrom });
     const entries = [];
     for (const entry of map.entries) entries.push(await repository.insertAccessMapEntry(client, { mapId: version.id, ...entry }));
-    return { id: version.id, accessMap: accessMapPayload(version, entries) };
+    return { id: version.id, accessMap: accessMapPayload(version, entries), passportIds };
   }
 
   return Object.freeze({ putAccessMap, readAccessMap, payloadCoverageProblems, isPublicWithoutRecord, legitimateInterestBatteryKeys, coverageProblems });

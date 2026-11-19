@@ -108,5 +108,28 @@ export function createIssuerContractService({ repository, passportRepository, va
     return stored.payload;
   }
 
-  return Object.freeze({ recordProviderContract, recordIssuerContract, endContract, readBatteryInformation });
+  // EP-CONTRACT-PULL: sets an open issuer contract back to the pull state pending, so that the worker pulls.
+  async function requestPull({ client, contractId }) {
+    const contract = await repository.findIssuerContractForUpdate(client, contractId);
+    if (contract === null || contract.side !== "issuer") throw new Refusal("ERR-LC-CONTRACT-NOT-FOUND");
+    if (contract.valid_to !== null) throw new Refusal("ERR-LC-CONTRACT-ENDED");
+    return { contract: issuerContractOf(await repository.setPullState(client, contractId, { pullState: "pending", pullCause: null })) };
+  }
+
+  // EP-RECEIVED-INFORMATION: the issuer contract and the list of its received records.
+  async function readReceivedInformation({ client, contractId }) {
+    const contract = await repository.findIssuerContract(client, contractId);
+    if (contract === null || contract.side !== "issuer") throw new Refusal("ERR-LC-CONTRACT-NOT-FOUND");
+    const received = (await repository.listReceivedBatteryInformation(client, contractId)).map((row) => ({
+      id: row.id,
+      passportIdentifier: row.passport_identifier,
+      batteryIdentifier: row.battery_identifier,
+      agreementId: row.agreement_id,
+      receivedAt: row.received_at.toISOString(),
+      payload: row.payload,
+    }));
+    return { contract: issuerContractOf(contract), received };
+  }
+
+  return Object.freeze({ recordProviderContract, recordIssuerContract, endContract, readBatteryInformation, requestPull, readReceivedInformation });
 }

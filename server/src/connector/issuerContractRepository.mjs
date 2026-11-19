@@ -85,3 +85,15 @@ export async function insertReceivedBatteryInformation(client, { contractId, pas
 export async function listReceivedBatteryInformation(client, contractId) {
   return (await client.query("SELECT * FROM received_battery_information WHERE contract_id = $1 ORDER BY id", [contractId])).rows;
 }
+
+// The puller of section 9.2.5: one issuer contract whose pull state is pending and that has not ended,
+// locked so that a concurrent puller skips the row.
+export async function claimPendingIssuerContract(client) {
+  return one(
+    await client.query("SELECT * FROM issuer_contracts WHERE side = 'issuer' AND pull_state = 'pending' AND valid_to IS NULL ORDER BY valid_from, id FOR UPDATE SKIP LOCKED LIMIT 1"),
+  );
+}
+
+export async function findIssuerContractForUpdate(client, contractId) {
+  return one(await client.query("SELECT * FROM issuer_contracts WHERE id = $1 FOR UPDATE", [contractId]));
+}
