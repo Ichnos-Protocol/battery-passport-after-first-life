@@ -379,6 +379,28 @@ The option stated: the open point goes into Annex B as drafted (proposal draft 0
 evidence; an issue for the eclipse-tractusx/tractusx-edc repository is drafted for Francesco to post under his own
 account.
 
+## Four decisions after the third run across Tractus-X EDC 0.13.0 connectors (2026-11-19)
+
+Francesco chose one option for each of four questions of 2026-11-19, after the third run of phase P7 passed 84 of 94
+conformance tests across connectors in the three access regimes and the header test. The questions and the selected
+option labels are quoted as he answered them:
+
+1. Question: "Decision 1: the 14 default test files share the data provider's notification asset while they run in
+   parallel, and CAC-012 withdraws that asset. How should section 15 item 7 run them?" Selected option: "One file after
+   another". The option stated: run the files with --test-concurrency=1, as the kit's npm test script does; no assertion
+   changes.
+2. Question: "Decision 2: Digital Twin Registry 0.13.0 returns the lists of one unchanged shell in a different order, and
+   CAC-002 item 7 compares the shell exactly. What should CAC-002 compare?" Selected option: "Compare without order". The
+   option stated: sort both lists before the comparison; every added, removed or changed entry is still detected.
+3. Question: "Decision 3: across connectors the data plane turns the receiver's 405 and 404 error bodies into 500, so
+   CAC-012 item 2 cannot see them. Where should item 2 check the error body?" Selected option: "At the receiver's
+   server". The option stated: read the receiver's server directly in both bindings; also assert the 405 text through
+   the data plane.
+4. Question: "Decision 4: CAC-009 asserts the cause ERR-RX-STEP-REFUSED, while across connectors the record holds
+   receiver_refused, status 422 and the data plane's text. What should CAC-009 assert?" Selected option: "Outcome and
+   422; id in-process". The option stated: same rule as CAC-012 in version 14: outcome and status in both bindings, the
+   refusal id only in-process.
+
 ## NOTICE
 
 This work is licensed under the [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
