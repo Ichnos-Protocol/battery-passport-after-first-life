@@ -166,6 +166,12 @@ export async function startInProcessBinding({ accessRegime = "after-act", passpo
             return { outcome, status: answer.status, body: answer.body };
           },
         }),
+      // D91: a read of the participant's server itself as the partner reader, without the offer and
+      // without the data plane, with the two headers of D41.
+      atServer: (reader) =>
+        Object.freeze({
+          get: (path) => request(instance.base, "GET", path, undefined, { [DATA_PLANE_KEY_HEADER]: DATA_PLANE_KEY, [PARTNER_BPN_HEADER]: bpnlOf(reader) }),
+        }),
       catalogue: async (reader) => (await instance.offerStore.list()).filter((offer) => admits(offer, bpnlOf(reader))),
       registry: Object.freeze({ put: (shell) => instance.twinRegistry.put(shell), read: (shellId) => instance.twinRegistry.read(shellId) }),
       // The withdrawal and the publication of the notification asset of the participant through its offer

@@ -115,7 +115,10 @@ test("CX-0160-4-CAC-009 (End of the passport): the recycler sends PassportEnded 
     ).notifications.filter((item) => item.receiverBpnl === operator.bpnl);
     await binding.settle();
     const refused = (await sentOf(recycler)).find((item) => item.id === planned.id);
-    assert.deepStrictEqual([refused.outcome, refused.httpStatus, refused.cause], ["receiver_refused", 422, "ERR-RX-STEP-REFUSED"]);
+    // D92: both bindings show the outcome and the status; the memory transport of the in-process binding
+    // also shows the refusal id as the cause, by the rule of CAC-012.
+    assert.deepStrictEqual([refused.outcome, refused.httpStatus], ["receiver_refused", 422]);
+    if (refused.receiverConnectorUrl.endsWith(".memory.invalid")) assert.equal(refused.cause, "ERR-RX-STEP-REFUSED");
     assert.deepStrictEqual(await passportOf(operator, passport.id), before);
   });
 });

@@ -57,6 +57,17 @@ after(async () => {
 
 const valueOf = (shell, name) => shell.specificAssetIds.filter((item) => item.name === name).map((item) => item.value);
 
+// The shell with its list specificAssetIds sorted by name and value and its list submodelDescriptors
+// sorted by id (decision D90, The shell compared without order).
+function withoutOrder(shell) {
+  if (shell === null || typeof shell !== "object") return shell;
+  const text = (value) => JSON.stringify(value ?? null);
+  const sorted = structuredClone(shell);
+  if (Array.isArray(sorted.specificAssetIds)) sorted.specificAssetIds.sort((left, right) => text([left.name, left.value]).localeCompare(text([right.name, right.value])) || text(left).localeCompare(text(right)));
+  if (Array.isArray(sorted.submodelDescriptors)) sorted.submodelDescriptors.sort((left, right) => text(left.id).localeCompare(text(right.id)) || text(left).localeCompare(text(right)));
+  return sorted;
+}
+
 test("CX-0160-4-CAC-002 (Digital twin): the second-life operator registers a new PartInstance twin with the keys of Table 2.1.1, the SerialPart aspect and every model of CX-0160-3, and the original twins stay unchanged", async (t) => {
   const { provider, operator } = binding;
   const original = await givenOriginalPassport(provider);
@@ -95,7 +106,9 @@ test("CX-0160-4-CAC-002 (Digital twin): the second-life operator registers a new
     assert.equal(shell.submodelDescriptors.length, 11);
   });
   await t.test("section 2.1.1 item 7: the shell and every submodel of the original passport are equal before and after the new passport", async () => {
-    assert.deepStrictEqual(await provider.registry.read(original.catenaXId), originalShellBefore);
+    // D90: the registry returns the lists of an unchanged shell in another order, so both reads are
+    // compared with their lists sorted by a stable key; every added, removed or changed entry still differs.
+    assert.deepStrictEqual(withoutOrder(await provider.registry.read(original.catenaXId)), withoutOrder(originalShellBefore));
     for (const key of STORED_KEYS) assert.deepStrictEqual((await provider.call("GET", `/api/passports/${original.id}/submodels/${key}/submodel`)).body, originalPayloadsBefore[key], key);
     assert.equal(await operator.registry.read(original.catenaXId), null, "the second-life operator registers no shell of the original passport");
     expectRefusal(await operator.call("POST", `/api/passports/${original.id}/twin`), 404, "ERR-LC-PASSPORT-NOT-FOUND");

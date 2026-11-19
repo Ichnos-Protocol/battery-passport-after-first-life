@@ -7,7 +7,7 @@ This folder holds the conformance test kit of the proposal CX-0160-4 (Battery Pa
 The variable `TCK_BINDING` selects the binding. Both bindings return the same contract: the three participants `provider` (the data provider of the original passports, `BPNL00000000TCK1`), `operator` (the second-life operator, `BPNL00000000TCK2`) and `recycler` (the recycler, the repairer and the waste receiver, `BPNL00000000TCK3`), and the two functions `settle()` and `stop()`.
 
 - **The in-process binding** (`TCK_BINDING=in-process`, `lib/inProcessBinding.mjs`) starts three applications of the reference server in the process of the test file, each with its own schema of the test database, on one memory network: one memory transport per participant, one memory receiver resolver, one memory offer store and one memory twin registry per participant. The binding needs only Node.js and PostgreSQL. `settle()` advances the clock of the three applications by 6 seconds and runs the worker of each application twice.
-- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) runs the sixteen files on a started deployment of `docker-compose.yml`: three reference servers, their Tractus-X EDC 0.13.0 connectors and their Digital Twin Registries (decision D84, The connector binding on a started deployment, which waits for the owner). The binding runs no docker command and restarts no server; each test file works on identifiers of its own. The second and the third run of phase P7 below record the results and the cause of each failure, and the process requirement PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding) stays unverified for the connector binding until the owner decides.
+- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) runs the sixteen files on a started deployment of `docker-compose.yml`: three reference servers, their Tractus-X EDC 0.13.0 connectors and their Digital Twin Registries (decision D84, The connector binding on a started deployment, which waits for the owner). The binding runs no docker command and restarts no server; each test file works on identifiers of its own. The fourth run of phase P7 below records 94 of 94 tests passed across connectors; the second and the third run record the earlier failures and their causes.
 - **The local deployment.** `docker-compose.yml` reads its images and its local test values from `tck/.env`, which git ignores; `.env.example` names every variable with a placeholder. The commands at the repository root are `docker compose -f tck/docker-compose.yml --env-file tck/.env up -d --wait` and `docker compose -f tck/docker-compose.yml --env-file tck/.env down -v`.
 - **The notification asset of a participant.** Each participant of both bindings has the methods `withdrawNotificationAsset()` and `publishNotificationAsset()`, which withdraw and publish the lifecycle notification asset through the offer store of the participant (decision D74, The binding contract and criterion CAC-012 (notification API), which waits for the owner). `CAC-012.tck.mjs` uses the two methods to assert the record `no_asset` of a receiver without an asset.
 
@@ -48,7 +48,7 @@ docker run --rm --network tck_default -v "$(pwd -W):/work" -v bpafl_server_modul
   -v bpafl_tck_modules:/work/tck/node_modules -w /work/tck -e TCK_BINDING=connector -e TCK_OPERATOR_TOKEN_SECRET \
   -e TCK_EDC_MANAGEMENT_API_KEY -e TCK_DATA_PLANE_KEY_1 -e TCK_DATA_PLANE_KEY_2 -e TCK_DATA_PLANE_KEY_3 \
   -e TCK_ACCESS_REGIME=after-act -e TCK_PASSPORT_SERVICE_PROVIDER_BPNL= node:24 \
-  node --test --test-reporter=tap <the files of the regime>
+  node --test --test-reporter=tap --test-concurrency=1 <the files of the regime>
 docker compose -f tck/docker-compose.yml --env-file tck/.env down -v
 ```
 
@@ -174,6 +174,31 @@ The third run on 2026-11-19 followed version 14 of the implementation plan: the 
 | CX-0160-4-CAC-016 (Access map) | 6 of 6 | 6 of 6 | 6 of 6 |
 
 A count holds the subtests and the test of the file. The owner decides results 1 to 4.
+
+### The fourth run of phase P7
+
+The fourth run on 2026-11-19 followed version 15 of the implementation plan: the default files run one after another (decision D89, The default files run one after another), the shell of CAC-002 compared without order (decision D90, The shell compared without order), the error body of CAC-012 read at the receiver's server with `atServer(reader).get(path)` (decision D91, The error body read at the receiver's server), and the outcome and the status of a refused BatteryBecameWaste in CAC-009 (decision D92, CAC-009 asserts the outcome and the status). Each regime ran on a fresh deployment, and `docker compose up -d --wait` and `docker compose down -v` exited 0 for each. The fourteen default files passed 83 of 83 tests, `CAC-009.tck.mjs` with the passport service provider `BPNL00000000TCK6` passed 7 of 7, and `CAC-011.tck.mjs` before the act passed 4 of 4, each with `# fail 0` and `# skipped 0`. The header test passed 1 of 1.
+
+| Criterion | In-process | Across connectors |
+|---|---|---|
+| CX-0160-4-CAC-001 (New passport) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-002 (Digital twin) | 5 of 5 | 5 of 5 |
+| CX-0160-4-CAC-003 (Model elements) | 6 of 6 | 6 of 6 |
+| CX-0160-4-CAC-004 (Predecessor links) | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-005 (Forward link) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-006 (Status and repair) | 11 of 11 | 11 of 11 |
+| CX-0160-4-CAC-007 (Waste status) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-008 (Donors) | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-009 (End of the passport) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-010 (Access) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-011 (Access before the Art. 77(9) act) | 4 of 4 | 4 of 4 |
+| CX-0160-4-CAC-012 (Notification API) | 9 of 9 | 9 of 9 |
+| CX-0160-4-CAC-013 (Data assets) | 5 of 5 | 5 of 5 |
+| CX-0160-4-CAC-014 (Certificates) | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-015 (Persistence) | 4 of 4 | 4 of 4 |
+| CX-0160-4-CAC-016 (Access map) | 6 of 6 | 6 of 6 |
+
+The conformance test kit therefore passes 94 of 94 tests in the in-process binding and 94 of 94 tests in the connector binding.
 
 ### The recorded answers of phase P7
 

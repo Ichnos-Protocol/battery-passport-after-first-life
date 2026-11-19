@@ -46,6 +46,8 @@ const SCHEMAS = new URL("../docs/api/schemas/", import.meta.url);
 const OPENAPI = new URL("../docs/api/openAPI.yaml", import.meta.url);
 const OPERATIONS = Object.freeze(["NewPassportIssued", "BatteryRepaired", "BatteryBecameWaste", "PassportEnded"]);
 const TAXONOMY_NAME = "cx-taxo:BatteryPassLifecycleNotificationAPI";
+// The error text of the provider data plane (decision D85, The error text of the provider data plane).
+const DATA_PLANE_ERROR = /^Received code transferring HTTP data: ([1-5][0-9]{2})\b/;
 
 const ajv = new Ajv2020({ strict: true, allErrors: true });
 addFormats(ajv);
@@ -93,6 +95,8 @@ test("CX-0160-4-CAC-012 (Notification API): the receiver offers one asset and on
   await provider.publishNotificationAsset();
   const senderOf = { NewPassportIssued: operator, BatteryRepaired: recycler, BatteryBecameWaste: recycler, PassportEnded: recycler };
   const records = { operator: await sentOf(operator), recycler: await sentOf(recycler) };
+  // The in-process binding resolves every receiver to a connector address of the memory network.
+  const inProcess = [...records.operator, ...records.recycler].some((record) => record.receiverConnectorUrl?.endsWith(".memory.invalid"));
   const recordOf = (operation, item) => records[operation === "NewPassportIssued" ? "operator" : "recycler"].find((record) => record.id === item.id);
 
   await t.test("section 4.3 item 1: each receiver offers exactly one connector asset with the taxonomy name, the version 1.0 and the usage purpose cx.circular.dpp:1", async () => {
@@ -107,13 +111,24 @@ test("CX-0160-4-CAC-012 (Notification API): the receiver offers one asset and on
     const paths = Object.keys(parse(readFileSync(OPENAPI, "utf8")).paths);
     assert.deepStrictEqual(paths, OPERATIONS.map((operation) => `/${operation}`));
     const [asset] = await notificationAsset(provider, recycler.bpnl);
+    // D91: the error body is read at the receiver's server in both bindings.
     for (const operation of OPERATIONS) {
-      const answer = await provider.asPartner(recycler).get(`${asset.path}/${operation}`);
-      assert.deepStrictEqual([answer.outcome, answer.status, answer.body.error.code], ["provider_refused", 405, "ERR-RX-METHOD-NOT-ALLOWED"], operation);
-      assert.equal(validateError(answer.body), true, JSON.stringify(validateError.errors));
+      const direct = await provider.atServer(recycler).get(`${asset.path}/${operation}`);
+      assert.deepStrictEqual([direct.status, direct.body.error.code], [405, "ERR-RX-METHOD-NOT-ALLOWED"], operation);
+      assert.equal(validateError(direct.body), true, JSON.stringify(validateError.errors));
     }
-    const unknown = await provider.asPartner(recycler).get(`${asset.path}/BatteryDisassembled`);
+    const unknown = await provider.atServer(recycler).get(`${asset.path}/BatteryDisassembled`);
     assert.deepStrictEqual([unknown.status, unknown.body.error.code], [404, "ERR-RX-OPERATION-UNKNOWN"]);
+    assert.equal(validateError(unknown.body), true, JSON.stringify(validateError.errors));
+    // Through the data plane of the binding: the memory transport passes the answer 405 with its body; the
+    // provider data plane of Tractus-X EDC 0.13.0 answers 500 and names the code 405 in errors[0] (D85).
+    const throughDataPlane = await provider.asPartner(recycler).get(`${asset.path}/BatteryRepaired`);
+    if (inProcess) {
+      assert.deepStrictEqual([throughDataPlane.outcome, throughDataPlane.status, throughDataPlane.body.error.code], ["provider_refused", 405, "ERR-RX-METHOD-NOT-ALLOWED"]);
+    } else {
+      assert.equal(throughDataPlane.status, 500);
+      assert.equal(DATA_PLANE_ERROR.exec(throughDataPlane.body.errors[0])?.[1], "405", JSON.stringify(throughDataPlane.body));
+    }
   });
   await t.test("section 4.3 item 4: each sent message holds the MessageHeader with the context of Table 4.3 and the content of Table 4.4", () => {
     for (const operation of OPERATIONS) {
@@ -180,7 +195,7 @@ test("CX-0160-4-CAC-012 (Notification API): the receiver offers one asset and on
     const record = records.recycler.find((item) => item.id === refused[0].id);
     assert.notEqual(record.outcome, "sent");
     assert.equal(received.some((item) => item.messageId === record.messageId), false);
-    if (record.receiverConnectorUrl.endsWith(".memory.invalid")) {
+    if (inProcess) {
       assert.deepStrictEqual([record.outcome, record.httpStatus, record.cause], ["receiver_refused", 404, "ERR-RX-PASSPORT-UNKNOWN"]);
     }
   });

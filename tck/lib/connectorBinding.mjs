@@ -205,6 +205,12 @@ export async function startConnectorBinding({ accessRegime = "after-act", passpo
             return { outcome, status: answer.status, body: answer.body };
           },
         }),
+      // D91: a read of the participant's server itself as the partner reader, without the offer and
+      // without the data plane, with the two headers of D41.
+      atServer: (reader) =>
+        Object.freeze({
+          get: (path) => request(instance.server, "GET", path, undefined, { [DATA_PLANE_KEY_HEADER]: instance.dataPlaneKey, [PARTNER_BPN_HEADER]: readerOf(reader).bpnl }),
+        }),
       catalogue: (reader) => catalogueOf(instance, reader),
       registry: Object.freeze({ put: (shell) => instance.twinRegistry.put(shell), read: (shellId) => instance.twinRegistry.read(shellId) }),
       // D74 [waits for the owner]: the notification asset through the participant's connector offer store.
