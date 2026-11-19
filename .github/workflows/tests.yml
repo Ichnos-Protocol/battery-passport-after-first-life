@@ -18,10 +18,13 @@
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
 
-# Runs the tests of the reference server with a PostgreSQL 17 database on every pull request and on
-# every push to the branch main, and checks the licences of the locked packages.
+# Runs the tests of the reference server and the conformance test kit on the in-process binding with a
+# PostgreSQL 17 database on every pull request and on every push to the branch main, and checks the
+# licences of the locked packages of the server.
 # Software requirements: SwR-RDB-007 (Dataset writes only by the responsible or an authorised operator)
-# and SwR-DATASET-208 (Database trigger refuses a change of a passport's manufacturer).
+# and SwR-DATASET-208 (Database trigger refuses a change of a passport's manufacturer). Process
+# requirements: PrR-CXD-028 (One conformance test per criterion CX-0160-4-CAC-001 to 016) and PrR-CXD-029
+# (Conformance tests run against the in-process binding and the connector binding).
 name: Tests
 
 on:
@@ -79,4 +82,14 @@ jobs:
         run: node ../scripts/check-dependency-licenses.mjs
       - name: Run the tests of the server
         working-directory: server
+        run: npm test
+      # The conformance test kit imports the reference server by relative paths, so the packages of
+      # server/ are installed before the kit runs (section 11.6).
+      - name: Install the packages of the conformance test kit
+        working-directory: tck
+        run: npm ci
+      - name: Run the conformance test kit on the in-process binding
+        working-directory: tck
+        env:
+          TCK_BINDING: in-process
         run: npm test

@@ -1,0 +1,20 @@
+{
+  "name": "battery-passport-lifecycle-tck",
+  "description": "The conformance test kit of the proposal CX-0160-4 (Battery Passport after the First Passport), one test file per conformance criterion.",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test --test-reporter=tap --test-concurrency=1 \"*.tck.mjs\""
+  },
+  "dependencies": {
+    "ajv": "^8.0.0",
+    "ajv-draft-04": "^1.0.0",
+    "ajv-formats": "^3.0.0",
+    "pg": "^8.0.0",
+    "yaml": "^2.0.0"
+  }
+}
