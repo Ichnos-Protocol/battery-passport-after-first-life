@@ -35,7 +35,7 @@ import express from "express";
 import { createMemoryOfferStore } from "../src/connector/memoryOfferStore.mjs";
 import { createEdcTransport } from "../src/connector/edcTransport.mjs";
 import { createMemoryTransport } from "../src/connector/memoryTransport.mjs";
-import { admits, buildBatteryInformationOffer, buildNotificationAssetOffer } from "../src/connector/policyBuilder.mjs";
+import { FRAMEWORK_AGREEMENT, admits, buildBatteryInformationOffer, buildNotificationAssetOffer } from "../src/connector/policyBuilder.mjs";
 
 const SENDER = "BPNL00000000TCK3";
 const RECEIVER = "BPNL00000000TCK1";
@@ -75,7 +75,7 @@ function network() {
     [RECEIVER, receiverStore],
     [SILENT, silentStore],
   ]);
-  return { participants, offerStores, receiverStore, silentStore, refusedAssets: new Set() };
+  return { participants, offerStores, receiverStore, silentStore };
 }
 
 const transports = [];
@@ -85,8 +85,8 @@ const transports = [];
 // 0.13.0 (tck/README.md, section "The recorded answers of phase P7"), and plays the provider data plane,
 // which calls the application of the counterparty with the data plane key and the Business Partner
 // Number of the consumer in the two headers of D41. The catalog of a counterparty lists the offers whose
-// access policy admits the consumer, as the connector does; an offer of setup.refusedAssets is listed and
-// its negotiation ends as TERMINATED, as a usage policy that the consumer does not meet ends it.
+// access policy admits the consumer, as the connector does, and the negotiation of an offer whose usage
+// policy holds another framework agreement or lacks the usage purpose ends as TERMINATED.
 const MANAGEMENT = "http://edc-management.memory.invalid/management";
 const DATA_PLANE = "http://edc-data-plane.memory.invalid/api/public";
 const EDC_CONFIG = Object.freeze({ edcManagementUrl: MANAGEMENT, edcManagementApiKey: "management-key-0123456789abcdefghij", edcManagementApiKeyHeader: "x-api-key" });
@@ -119,14 +119,16 @@ function edcFetch(setup) {
       if (path === "/v3/catalog/request") {
         const participant = participantAt(body.counterPartyAddress);
         if (participant === undefined) return json(502, [{ message: "the counterparty does not answer", type: "BadGateway" }]);
-        const offers = (await setup.offerStores.get(participant.bpnl).list()).filter((offer) => admits(offer, SENDER) || setup.refusedAssets.has(refusalKey(offer)));
+        const offers = (await setup.offerStores.get(participant.bpnl).list()).filter((offer) => admits(offer, SENDER));
         return json(200, { "@type": "Catalog", dataset: offers.map(datasetOf), participantId: `did:web:${participant.bpnl.toLowerCase()}.memory.invalid` });
       }
       if (path === "/v3/contractnegotiations") {
         const id = `negotiation-${negotiations.size + 1}`;
         const participant = participantAt(body.counterPartyAddress);
         const offer = (await setup.offerStores.get(participant.bpnl).list()).find((item) => item.assetId === body.policy.target);
-        negotiations.set(id, { assetId: body.policy.target, address: body.counterPartyAddress, refused: setup.refusedAssets.has(refusalKey(offer)) });
+        // A connector refuses the negotiation of a usage policy that the consumer does not meet (D83).
+        const refused = offer.frameworkAgreement !== FRAMEWORK_AGREEMENT || !offer.usagePurposes.includes("cx.circular.dpp:1");
+        negotiations.set(id, { assetId: body.policy.target, address: body.counterPartyAddress, refused });
         return json(200, { "@type": "IdResponse", "@id": id });
       }
       if (path.startsWith("/v3/contractnegotiations/")) {
@@ -162,16 +164,6 @@ function edcFetch(setup) {
   };
 }
 
-// The step that makes the counterparty refuse the contract: the memory transport reads the access policy
-// of the offer; the connector hides an offer whose access policy does not admit the consumer, so the
-// connector network refuses the negotiation of a listed offer.
-const refuseByAccessPolicy = (setup, store, offer) => store.publish(offer);
-const refusalKey = (offer) => `${offer.assetId} ${offer.passportIdentifier}`;
-const refuseByNegotiation = async (setup, store, offer) => {
-  setup.refusedAssets.add(refusalKey(offer));
-  await store.publish(offer);
-};
-
 const IMPLEMENTATIONS = [
   [
     "the memory transport",
@@ -180,9 +172,8 @@ const IMPLEMENTATIONS = [
       transports.push(transport);
       return transport;
     },
-    refuseByAccessPolicy,
   ],
-  ["the connector transport with a stubbed fetch", (setup) => createEdcTransport({ config: EDC_CONFIG, fetch: edcFetch(setup) }), refuseByNegotiation],
+  ["the connector transport with a stubbed fetch", (setup) => createEdcTransport({ config: EDC_CONFIG, fetch: edcFetch(setup) })],
 ];
 
 after(async () => {
@@ -195,7 +186,7 @@ after(async () => {
   }
 });
 
-for (const [name, create, refuse] of IMPLEMENTATIONS) {
+for (const [name, create] of IMPLEMENTATIONS) {
   test(`SwR-BGWORK-010 (Lifecycle notifications sent unchanged as JSON POST through the connector): the five outcomes of send against ${name}`, async (t) => {
     const setup = network();
     const transport = create(setup);
@@ -229,10 +220,19 @@ for (const [name, create, refuse] of IMPLEMENTATIONS) {
       const unknown = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://unknown.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
       assert.equal(unknown.outcome, "transport_failed");
     });
-    await t.test("contract_refused: the access policy of the notification asset does not admit the sender", async () => {
-      await refuse(setup, setup.receiverStore, buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
+    await t.test("D83 no_asset: the access policy of the notification asset hides the asset from the sender, and no request reaches the receiver", async () => {
+      await setup.receiverStore.publish(buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
+      received.length = 0;
+      const result = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
+      assert.equal(result.outcome, "no_asset");
+      assert.equal(received.length, 0);
+    });
+    await t.test("D83 contract_refused: the usage policy of the notification asset holds the framework agreement OtherAgreement:1.0", async () => {
+      await setup.receiverStore.publish({ ...buildNotificationAssetOffer({ allowedBpnls: null }), frameworkAgreement: "OtherAgreement:1.0" });
+      received.length = 0;
       const result = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
       assert.equal(result.outcome, "contract_refused");
+      assert.equal(received.length, 0);
     });
     await t.test("no_asset: the receiver offers no lifecycle notification asset, and no request reaches the receiver", async () => {
       await setup.receiverStore.withdraw("asset-lifecycle-notification-1.0");
@@ -263,10 +263,14 @@ for (const [name, create, refuse] of IMPLEMENTATIONS) {
       assert.equal(received[0].headers["edc-bpn"], SENDER);
       assert.equal(received[0].headers["x-api-key"], KEY);
     });
-    await t.test("contract_refused: the access policy of the offer admits another participant only", async () => {
+    await t.test("D83 no_asset: the access policy of the offer admits another participant only", async () => {
       assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-B" })).outcome, "no_asset");
-      await refuse(setup, setup.receiverStore, buildBatteryInformationOffer({ contractId: "c0ffee00-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: "BPNL00000000TCK2", passportIdentifier: "TCK-PASSPORT-B", semanticId: SEMANTIC_ID }));
-      assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-B" })).outcome, "contract_refused");
+      await setup.receiverStore.publish(buildBatteryInformationOffer({ contractId: "c0ffee00-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: "BPNL00000000TCK2", passportIdentifier: "TCK-PASSPORT-B", semanticId: SEMANTIC_ID }));
+      assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-B" })).outcome, "no_asset");
+    });
+    await t.test("D83 contract_refused: the usage policy of the offer holds the framework agreement OtherAgreement:1.0", async () => {
+      await setup.receiverStore.publish({ ...buildBatteryInformationOffer({ contractId: "c0ffee01-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: SENDER, passportIdentifier: "TCK-PASSPORT-D", semanticId: SEMANTIC_ID }), frameworkAgreement: "OtherAgreement:1.0" });
+      assert.equal((await pull({ passportIdentifier: "TCK-PASSPORT-D" })).outcome, "contract_refused");
     });
     await t.test("provider_refused: the provider answers 403", async () => {
       await setup.receiverStore.publish(buildBatteryInformationOffer({ contractId: "c0ffee00-1c3f-4e5a-8b6d-0f9e8d7c6b5a", issuerBpnl: SENDER, passportIdentifier: "TCK-PASSPORT-C", semanticId: SEMANTIC_ID }));
@@ -289,7 +293,7 @@ chosen.use((req, res) => {
   res.status(answered.status).json({ success: false, error: { code: answered.code, message: "refused" } });
 });
 
-for (const [name, create, refuse] of IMPLEMENTATIONS) {
+for (const [name, create] of IMPLEMENTATIONS) {
   test(`finding R45-003 (the status classes of the transport contract): an answer of the class 5xx is transport_failed with its status, and another status is final, against ${name}`, async (t) => {
     const setup = network();
     const chosenStore = createMemoryOfferStore();
@@ -329,10 +333,3 @@ for (const [name, create, refuse] of IMPLEMENTATIONS) {
   });
 }
 
-test("the connector transport reports a receiver whose access policy hides the notification asset as a receiver without an asset", async () => {
-  const setup = network();
-  await setup.receiverStore.publish(buildNotificationAssetOffer({ allowedBpnls: ["BPNL00000000TCK2"] }));
-  const transport = createEdcTransport({ config: EDC_CONFIG, fetch: edcFetch(setup) });
-  const result = await transport.send({ receiverBpnl: RECEIVER, connectorUrl: "http://receiver.memory.invalid", operation: "BatteryRepaired", message: MESSAGE });
-  assert.equal(result.outcome, "no_asset");
-});

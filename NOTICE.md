@@ -48,6 +48,14 @@ text with its origin and its license.
 The file `DEPENDENCIES` lists the software dependencies. The Eclipse Dash License Tool builds the file at the first
 release.
 
+## Test-only images
+
+The local test deployment of the conformance test kit, `tck/docker-compose.yml`, pulls container images at test time.
+The repository distributes none of these images. The secret store of each connector is the image
+`hashicorp/vault:1.16.1` of HashiCorp Vault, which is licensed under the Business Source License 1.1 (BUSL-1.1), a
+source-available license that is not an open source license. The file `tck/README.md` lists every test image with its
+license.
+
 ## Cryptography
 
 Content may contain encryption software. The country in which you are currently

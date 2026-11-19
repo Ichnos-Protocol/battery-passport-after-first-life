@@ -119,11 +119,47 @@ function allowedBpnls(text) {
   return value.every((item) => typeof item === "string" && BPNL_PATTERN.test(item)) ? accepted(value) : refused(rule);
 }
 
-// The 29 variables of section 9.6, in the order of its table, each with its property, its
+// The host of a connector address of the address list: a name without a dot, localhost or a loopback
+// address, so that the list serves only a local test deployment (decision D81, A fixed address list in the
+// local deployment only).
+function localHost(hostname) {
+  const host = hostname.replace(/^\[|\]$/g, "");
+  return (!host.includes(".") && !host.includes(":")) || host === "localhost" || host === "::1" || /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host);
+}
+
+function receiverAddressList(text) {
+  const rule =
+    "a JSON object of 1 to 100 entries from a Business Partner Number to { connectorUrl, did }, where connectorUrl is an http or https address whose host is a name without a dot, localhost or a loopback address and did starts with did:";
+  let value;
+  try {
+    value = JSON.parse(text);
+  } catch {
+    return refused(rule);
+  }
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return refused(rule);
+  const entries = Object.entries(value);
+  if (entries.length < 1 || entries.length > 100) return refused(rule);
+  for (const [key, entry] of entries) {
+    if (!BPNL_PATTERN.test(key) || entry === null || typeof entry !== "object" || Array.isArray(entry)) return refused(rule);
+    if (Object.keys(entry).sort().join(",") !== "connectorUrl,did") return refused(rule);
+    if (typeof entry.did !== "string" || !entry.did.startsWith("did:") || typeof entry.connectorUrl !== "string") return refused(rule);
+    let url;
+    try {
+      url = new URL(entry.connectorUrl);
+    } catch {
+      return refused(rule);
+    }
+    if (!["http:", "https:"].includes(url.protocol) || !localHost(url.hostname)) return refused(rule);
+  }
+  return accepted(value);
+}
+
+// The 31 variables of section 9.6, in the order of its table, each with its property, its
 // requirement, its default and its check.
 const REQUIRED = "required";
 const OPTIONAL = "optional";
 const FOR_CONNECTOR = "required when BINDING is connector";
+const FOR_ADDRESS_LIST = "required when RECEIVER_RESOLUTION is address-list";
 const VARIABLES = [
   { name: "OWN_BPNL", property: "ownBpnl", need: REQUIRED, check: bpnl },
   { name: "OWN_LEGAL_NAME", property: "ownLegalName", need: REQUIRED, check: textOfLength(1, 300) },
@@ -136,6 +172,8 @@ const VARIABLES = [
   { name: "PORT", property: "port", need: OPTIONAL, fallback: 8080, check: integer(1, 65535) },
   { name: "PUBLIC_BASE_URL", property: "publicBaseUrl", need: REQUIRED, check: httpAddress, transform: (text) => text.replace(/\/+$/, "") },
   { name: "BINDING", property: "binding", need: REQUIRED, check: oneOf(["memory", "connector"]) },
+  { name: "RECEIVER_RESOLUTION", property: "receiverResolution", need: OPTIONAL, fallback: "discovery", check: oneOf(["discovery", "address-list"]) },
+  { name: "RECEIVER_ADDRESS_LIST", property: "receiverAddressList", need: FOR_ADDRESS_LIST, fallback: null, check: receiverAddressList },
   { name: "OPERATOR_TOKEN_SECRET", property: "operatorTokenSecret", need: REQUIRED, check: minimumLength(32) },
   { name: "DATA_PLANE_KEY", property: "dataPlaneKey", need: REQUIRED, check: minimumLength(32) },
   { name: "DATA_PLANE_KEY_HEADER", property: "dataPlaneKeyHeader", need: OPTIONAL, fallback: "x-api-key", check: headerName },
@@ -173,12 +211,13 @@ export function loadConfig(env) {
     return typeof value === "string" && value.length > 0 ? value : undefined;
   };
   const connector = read("BINDING") === "connector";
+  const addressList = read("RECEIVER_RESOLUTION") === "address-list";
   const problems = [];
   const config = {};
   for (const variable of VARIABLES) {
     const text = read(variable.name);
     if (text === undefined) {
-      const required = variable.need === REQUIRED || (variable.need === FOR_CONNECTOR && connector);
+      const required = variable.need === REQUIRED || (variable.need === FOR_CONNECTOR && connector) || (variable.need === FOR_ADDRESS_LIST && addressList);
       if (required) problems.push({ variable: variable.name, text: `${variable.name} is missing` });
       else config[variable.property] = variable.fallback;
       continue;

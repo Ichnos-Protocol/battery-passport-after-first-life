@@ -21,10 +21,11 @@
 # The local deployment of the connector binding of the conformance test kit (section 10.7 of
 # docs/architecture/implementation_plan.md): for each of the three participants, one reference server
 # built from server/Dockerfile, one database of the server, one connector control plane and one connector
-# data plane of Tractus-X EDC 0.13.0, one database of the connector, one secret store, one wallet stub as
-# the identity of the connector (decision D76, The wallet stub as the local identity) and one Digital
-# Twin Registry with OAuth2 switched off (decision D77, OAuth2 off in the local registry); and one
-# BPN-DID Resolution Service for the three connectors. Process requirement PrR-CXD-029 (Conformance tests
+# data plane of Tractus-X EDC 0.13.0, one database of the connector, one secret store and one Digital
+# Twin Registry with OAuth2 switched off (decision D77, OAuth2 off in the local registry); and, for the
+# three connectors, one wallet stub as their identity (decision D80, One wallet stub for the three
+# companies) and one BPN-DID Resolution Service. The servers resolve a receiver from a fixed address
+# list (decision D81, A fixed address list in the local deployment only). Process requirement PrR-CXD-029 (Conformance tests
 # run against the in-process binding and the connector binding) and decision D43 (One test code and two
 # bindings). Every image is a variable of tck/.env.example, and every secret is a local test value of
 # tck/.env, which git ignores. The verified values and their public addresses are in tck/README.md.
@@ -43,9 +44,7 @@ x-healthcheck: &health
 x-connector-environment: &connector-environment
   EDC_IAM_DID_WEB_USE_HTTPS: "false"
   EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS: client-secret
-  "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub-1%3A8080:BPNL000000000000"
-  "EDC_IAM_TRUSTED-ISSUER_1-ISSUER_ID": "did:web:stub-2%3A8080:BPNL000000000000"
-  "EDC_IAM_TRUSTED-ISSUER_2-ISSUER_ID": "did:web:stub-3%3A8080:BPNL000000000000"
+  "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub%3A8080:BPNL000000000000"
   TX_EDC_IAM_DCP_BDRS_SERVER_URL: http://bdrs:8082/api/directory
   EDC_VAULT_HASHICORP_TOKEN: ${TCK_VAULT_TOKEN:?}
   EDC_DATASOURCE_DEFAULT_USER: postgres
@@ -145,6 +144,9 @@ x-server-environment: &server-environment
   EDC_MANAGEMENT_API_KEY: ${TCK_EDC_MANAGEMENT_API_KEY:?}
   EDC_MANAGEMENT_API_KEY_HEADER: x-api-key
   LOG_LEVEL: ${TCK_SERVER_LOG_LEVEL:-info}
+  # D81: the Dataspace Protocol address and the decentralised identifier of each connector.
+  RECEIVER_RESOLUTION: address-list
+  RECEIVER_ADDRESS_LIST: '{"BPNL00000000TCK1":{"connectorUrl":"http://cp-1:8084/api/v1/dsp/2025-1","did":"did:web:stub%3A8080:BPNL00000000TCK1"},"BPNL00000000TCK2":{"connectorUrl":"http://cp-2:8084/api/v1/dsp/2025-1","did":"did:web:stub%3A8080:BPNL00000000TCK2"},"BPNL00000000TCK3":{"connectorUrl":"http://cp-3:8084/api/v1/dsp/2025-1","did":"did:web:stub%3A8080:BPNL00000000TCK3"}}'
 
 services:
   # The BPN-DID Resolution Service of the three connectors (bdrs-server-memory, tag 0.6.0). The directory
@@ -161,9 +163,7 @@ services:
       WEB_HTTP_DIRECTORY_PORT: "8082"
       WEB_HTTP_DIRECTORY_PATH: /api/directory
       EDC_IAM_ISSUER_ID: "required but not really needed"
-      "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub-1%3A8080:BPNL000000000000"
-      "EDC_IAM_TRUSTED-ISSUER_1-ISSUER_ID": "did:web:stub-2%3A8080:BPNL000000000000"
-      "EDC_IAM_TRUSTED-ISSUER_2-ISSUER_ID": "did:web:stub-3%3A8080:BPNL000000000000"
+      "EDC_IAM_TRUSTED-ISSUER_0-ISSUER_ID": "did:web:stub%3A8080:BPNL000000000000"
       EDC_IAM_DID_WEB_USE_HTTPS: "false"
     healthcheck:
       <<: *health
@@ -183,9 +183,7 @@ services:
       vault-2: { condition: service_healthy }
       vault-3: { condition: service_healthy }
       bdrs: { condition: service_healthy }
-      stub-1: { condition: service_healthy }
-      stub-2: { condition: service_healthy }
-      stub-3: { condition: service_healthy }
+      stub: { condition: service_healthy }
     command:
       - node
       - -e
@@ -206,7 +204,7 @@ services:
               const answer = await fetch("http://vault-" + n + ":8200/v1/secret/data/" + alias, { method: "POST", headers: { "X-Vault-Token": env.TCK_VAULT_TOKEN, "content-type": "application/json" }, body: JSON.stringify({ data: { content } }) });
               await check(answer, "vault-" + n + " " + alias);
             }
-            const did = "did:web:stub-" + n + "%3A8080:" + bpnl;
+            const did = "did:web:stub%3A8080:" + bpnl;
             const mapping = await fetch("http://bdrs:8081/api/management/bpn-directory", { method: "POST", headers: { "x-api-key": env.TCK_BDRS_MANAGEMENT_API_KEY, "content-type": "application/json" }, body: JSON.stringify({ bpn: bpnl, did }) });
             if (mapping.status !== 204 && mapping.status !== 200 && mapping.status !== 409) await check(mapping, "bdrs " + bpnl);
             console.log("seeded " + bpnl + " " + did);
@@ -215,14 +213,15 @@ services:
 
   # Participant 1: the data provider of the original passports, BPNL00000000TCK1.
   vault-1: *vault
-  stub-1:
+  # The one wallet stub of the three connectors (D80): one issuer and the wallets of the three companies.
+  stub:
     <<: *stub
     environment:
       STUB_ENV: local
       BASE_WALLET_BPN: BPNL000000000000
-      SEED_WALLETS_BPN: BPNL00000000TCK1
-      DID_HOST: stub-1%3A8080
-      STUB_URL: http://stub-1:8080
+      SEED_WALLETS_BPN: BPNL00000000TCK1,BPNL00000000TCK2,BPNL00000000TCK3
+      DID_HOST: stub%3A8080
+      STUB_URL: http://stub:8080
       PORTAL_WAIT_TIME: "86400"
       APP_LOG_LEVEL: INFO
   edc-db-1: *connector-database
@@ -233,14 +232,14 @@ services:
       seed: { condition: service_completed_successfully }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
-      EDC_IAM_ISSUER_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK1"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK1"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck1
       TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK1
       EDC_RUNTIME_ID: cp-1
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-1:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK1
-      TX_EDC_IAM_STS_DIV_URL: http://stub-1:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-1:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-1:5432/edc
       WEB_HTTP_MANAGEMENT_PORT: "8081"
@@ -257,13 +256,13 @@ services:
       cp-1: { condition: service_healthy }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
-      EDC_IAM_ISSUER_ID: "did:web:stub-1%3A8080:BPNL00000000TCK1"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK1"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK1"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck1
       EDC_RUNTIME_ID: dp-1
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-1:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK1
-      TX_EDC_IAM_STS_DIV_URL: http://stub-1:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-1:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-1:5432/edc
       WEB_HTTP_PUBLIC_PORT: "8081"
@@ -322,16 +321,6 @@ services:
 
   # Participant 2: the second-life operator, BPNL00000000TCK2.
   vault-2: *vault
-  stub-2:
-    <<: *stub
-    environment:
-      STUB_ENV: local
-      BASE_WALLET_BPN: BPNL000000000000
-      SEED_WALLETS_BPN: BPNL00000000TCK2
-      DID_HOST: stub-2%3A8080
-      STUB_URL: http://stub-2:8080
-      PORTAL_WAIT_TIME: "86400"
-      APP_LOG_LEVEL: INFO
   edc-db-2: *connector-database
   cp-2:
     <<: *control-plane
@@ -340,14 +329,14 @@ services:
       seed: { condition: service_completed_successfully }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
-      EDC_IAM_ISSUER_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK2"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK2"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck2
       TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK2
       EDC_RUNTIME_ID: cp-2
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-2:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK2
-      TX_EDC_IAM_STS_DIV_URL: http://stub-2:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-2:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-2:5432/edc
       WEB_HTTP_MANAGEMENT_PORT: "8081"
@@ -364,13 +353,13 @@ services:
       cp-2: { condition: service_healthy }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
-      EDC_IAM_ISSUER_ID: "did:web:stub-2%3A8080:BPNL00000000TCK2"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK2"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK2"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck2
       EDC_RUNTIME_ID: dp-2
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-2:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK2
-      TX_EDC_IAM_STS_DIV_URL: http://stub-2:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-2:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-2:5432/edc
       WEB_HTTP_PUBLIC_PORT: "8081"
@@ -425,16 +414,6 @@ services:
 
   # Participant 3: the recycler, the repairer and the waste receiver, BPNL00000000TCK3.
   vault-3: *vault
-  stub-3:
-    <<: *stub
-    environment:
-      STUB_ENV: local
-      BASE_WALLET_BPN: BPNL000000000000
-      SEED_WALLETS_BPN: BPNL00000000TCK3
-      DID_HOST: stub-3%3A8080
-      STUB_URL: http://stub-3:8080
-      PORTAL_WAIT_TIME: "86400"
-      APP_LOG_LEVEL: INFO
   edc-db-3: *connector-database
   cp-3:
     <<: *control-plane
@@ -443,14 +422,14 @@ services:
       seed: { condition: service_completed_successfully }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
-      EDC_IAM_ISSUER_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK3"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK3"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck3
       TRACTUSX_EDC_PARTICIPANT_BPN: BPNL00000000TCK3
       EDC_RUNTIME_ID: cp-3
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-3:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK3
-      TX_EDC_IAM_STS_DIV_URL: http://stub-3:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-3:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-3:5432/edc
       WEB_HTTP_MANAGEMENT_PORT: "8081"
@@ -467,13 +446,13 @@ services:
       cp-3: { condition: service_healthy }
     environment:
       <<: *connector-environment
-      EDC_PARTICIPANT_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
-      EDC_IAM_ISSUER_ID: "did:web:stub-3%3A8080:BPNL00000000TCK3"
+      EDC_PARTICIPANT_ID: "did:web:stub%3A8080:BPNL00000000TCK3"
+      EDC_IAM_ISSUER_ID: "did:web:stub%3A8080:BPNL00000000TCK3"
       EDC_PARTICIPANT_CONTEXT_ID: participant-tck3
       EDC_RUNTIME_ID: dp-3
-      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub-3:8080/oauth/token
+      EDC_IAM_STS_OAUTH_TOKEN_URL: http://stub:8080/oauth/token
       EDC_IAM_STS_OAUTH_CLIENT_ID: BPNL00000000TCK3
-      TX_EDC_IAM_STS_DIV_URL: http://stub-3:8080/api/sts
+      TX_EDC_IAM_STS_DIV_URL: http://stub:8080/api/sts
       EDC_VAULT_HASHICORP_URL: http://vault-3:8200
       EDC_DATASOURCE_DEFAULT_URL: jdbc:postgresql://edc-db-3:5432/edc
       WEB_HTTP_PUBLIC_PORT: "8081"

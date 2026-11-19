@@ -53,7 +53,7 @@ async function checkDatabase(pool) {
 
 // The implementations of the four ports of the binding. With BINDING=memory the server reaches no
 // partner: the resolver holds two empty maps, and every notification ends as receiver_unresolved.
-async function bindingOf(config, appHolder) {
+async function bindingOf(config, appHolder, logger) {
   if (config.binding === "memory") {
     const offerStore = createMemoryOfferStore();
     const participants = new Map();
@@ -73,11 +73,12 @@ async function bindingOf(config, appHolder) {
       receiverResolver: createMemoryReceiverResolver({ didByBpnl: new Map(), connectorUrlByDid: new Map() }),
     };
   }
-  const [edcTransport, edcOfferStore, dtrTwinRegistry, connectorDiscoveryResolver] = await Promise.all([
+  const resolverModule = config.receiverResolution === "address-list" ? "./connector/addressListResolver.mjs" : "./connector/connectorDiscoveryResolver.mjs";
+  const [edcTransport, edcOfferStore, dtrTwinRegistry, resolver] = await Promise.all([
     import("./connector/edcTransport.mjs"),
     import("./connector/edcOfferStore.mjs"),
     import("./twins/dtrTwinRegistry.mjs"),
-    import("./connector/connectorDiscoveryResolver.mjs"),
+    import(resolverModule),
   ]).catch((error) => {
     throw new Error(`connector binding not available: ${error.message}`);
   });
@@ -86,9 +87,19 @@ async function bindingOf(config, appHolder) {
     transport: edcTransport.createEdcTransport({ config, fetch }),
     offerStore: edcOfferStore.createEdcOfferStore({ config, fetch }),
     twinRegistry: dtrTwinRegistry.createDtrTwinRegistry({ config, fetch }),
-    // D75: the own connector resolves a receiver with its own credential.
-    receiverResolver: connectorDiscoveryResolver.createConnectorDiscoveryResolver({ config, fetch }),
+    receiverResolver: receiverResolverOf(config, resolver, logger),
   };
+}
+
+// The resolver of the connector binding that config.receiverResolution selects: the connector discovery
+// of the own connector (D75), or the address list of a local test deployment (D81), whose use the server
+// states at the level warn at the start.
+function receiverResolverOf(config, resolver, logger) {
+  if (config.receiverResolution === "address-list") {
+    logger.warn("The receiver resolution uses the address list of a local test deployment.");
+    return resolver.createAddressListResolver({ addressList: config.receiverAddressList });
+  }
+  return resolver.createConnectorDiscoveryResolver({ config, fetch });
 }
 
 async function main() {
@@ -100,7 +111,7 @@ async function main() {
     await checkDatabase(pool);
     await upsertOwnCompany(pool, config);
     const holder = {};
-    const ports = await bindingOf(config, holder);
+    const ports = await bindingOf(config, holder, logger);
     const { app, worker } = createApp({ config, pool, clock, ...ports, logger });
     holder.register(app);
     await app.locals.context.offerPublisher.publishNotificationAsset();

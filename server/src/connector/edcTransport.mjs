@@ -38,6 +38,9 @@ const PROTOCOL = "dataspace-protocol-http:2025-1";
 const TAXONOMY = "https://w3id.org/catenax/taxonomy#";
 const POLL_MILLISECONDS = 250;
 const POLL_ATTEMPTS = 240;
+const EDC = "https://w3id.org/edc/v0.0.1/ns/";
+// The number of catalog entries of one catalog request; the default of the connector is 50.
+const CATALOG_LIMIT = 5000;
 
 // The value of a property of a catalog entry, whatever form of the term the answer uses: the term
 // itself, a prefixed term or the full address; an object { "@id" } gives its identifier.
@@ -51,19 +54,30 @@ function propertyOf(entry, term) {
 const expandTaxonomy = (dctType) => (dctType.startsWith("cx-taxo:") ? `${TAXONOMY}${dctType.slice("cx-taxo:".length)}` : dctType);
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-class TransportStep extends Error {
+// A step of a transfer that ends with an outcome of the transport contract.
+export class TransportStep extends Error {
   constructor(outcome, cause) {
     super(cause);
     this.outcome = outcome;
   }
 }
 
-// Returns a transport with the methods send and pull of the transport contract.
-export function createEdcTransport({ config, fetch }) {
+// The transfer client of the own connector, which the transport uses and the connector binding of the
+// conformance test kit shares: the catalog request, the negotiation, the transfer HttpData-PULL, the
+// endpoint data reference and the call of the counterparty's data plane. The client keeps an endpoint
+// data reference per connector address and asset for 60 seconds less than its validity, so that each
+// further message of one asset needs one catalog request and no new negotiation; every call still
+// requests the catalog first, so that a withdrawn asset is an absent asset.
+export function createEdcTransferClient({ config, fetch }) {
   const management = { config, fetch };
+  const references = new Map();
 
-  async function catalogOf(connectorUrl, counterPartyId) {
-    const answer = await managementRequest(management, "POST", "/v3/catalog/request", { "@context": [VOCABULARY_CONTEXT], "@type": "CatalogRequest", counterPartyAddress: connectorUrl, counterPartyId, protocol: PROTOCOL }, [200, 400, 401, 403, 404, 500, 502, 503]);
+  // Resolves to the catalog entries { dataset, participantId } of the counterparty; with assetId, the
+  // catalog request holds a filter on the asset identifier.
+  async function catalog(connectorUrl, counterPartyId, assetId) {
+    const querySpec = { "@type": "QuerySpec", offset: 0, limit: CATALOG_LIMIT };
+    if (assetId !== undefined) querySpec.filterExpression = [{ operandLeft: `${EDC}id`, operator: "=", operandRight: assetId }];
+    const answer = await managementRequest(management, "POST", "/v3/catalog/request", { "@context": [VOCABULARY_CONTEXT], "@type": "CatalogRequest", counterPartyAddress: connectorUrl, counterPartyId, protocol: PROTOCOL, querySpec }, [200, 400, 401, 403, 404, 500, 502, 503]);
     if (answer.status !== 200) throw new TransportStep("transport_failed", `the catalog request answered ${answer.status}`);
     // The identifier of the counterparty is the field participantId of the catalog; a negotiation names
     // it as the assigner of the offer.
@@ -81,12 +95,15 @@ export function createEdcTransport({ config, fetch }) {
     throw new TransportStep("transport_failed", `no final state at ${path}`);
   }
 
-  // Negotiates the first offer of the dataset and starts the transfer; resolves to the agreement and
-  // the endpoint data reference { endpoint, authorization }.
-  async function openTransfer(connectorUrl, { dataset, participantId }) {
+  // Negotiates the first offer of the catalog entry and starts the transfer; resolves to the agreement
+  // and the endpoint data reference { agreementId, endpoint, authorization }.
+  async function open(connectorUrl, { dataset, participantId }) {
     const offer = [].concat(dataset.hasPolicy ?? [])[0];
     if (offer === undefined) throw new TransportStep("contract_refused", "the dataset holds no offer");
     const assetId = dataset["@id"] ?? propertyOf(dataset, "id");
+    const key = `${connectorUrl} ${assetId}`;
+    const cached = references.get(key);
+    if (cached !== undefined && cached.validUntil > Date.now()) return cached.reference;
     const assigner = participantId ?? offer.assigner;
     const started = await managementRequest(management, "POST", "/v3/contractnegotiations", { "@context": POLICY_CONTEXT, "@type": "ContractRequest", counterPartyAddress: connectorUrl, protocol: PROTOCOL, policy: { ...offer, assigner, target: assetId } }, [200]);
     const agreementId = await poll(`/v3/contractnegotiations/${started.body["@id"]}`, (negotiation) => {
@@ -101,14 +118,17 @@ export function createEdcTransport({ config, fetch }) {
       if (process.state === "TERMINATED") throw new TransportStep("transport_failed", "the transfer ended as TERMINATED");
       return undefined;
     });
-    const reference = await poll(`/v3/edrs/${transferId}/dataaddress`, (address) => (typeof address?.endpoint === "string" ? address : undefined));
-    return { agreementId, endpoint: reference.endpoint, authorization: reference.authorization };
+    const address = await poll(`/v3/edrs/${transferId}/dataaddress`, (value) => (typeof value?.endpoint === "string" ? value : undefined));
+    const reference = { agreementId, endpoint: address.endpoint, authorization: address.authorization };
+    const seconds = Number(propertyOf(address, "expiresIn"));
+    if (Number.isFinite(seconds) && seconds > 60) references.set(key, { reference, validUntil: Date.now() + (seconds - 60) * 1000 });
+    return reference;
   }
 
-  async function dataPlane(reference, method, suffix, body) {
-    const headers = { authorization: reference.authorization };
-    if (body !== undefined) headers["content-type"] = "application/json";
-    const response = await fetch(`${reference.endpoint}${suffix}`, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
+  async function call(reference, method, suffix, body, headers = {}) {
+    const sent = { ...headers, authorization: reference.authorization };
+    if (body !== undefined) sent["content-type"] = "application/json";
+    const response = await fetch(`${reference.endpoint}${suffix}`, { method, headers: sent, body: body === undefined ? undefined : JSON.stringify(body) });
     const text = await response.text();
     let parsed = null;
     try {
@@ -119,16 +139,22 @@ export function createEdcTransport({ config, fetch }) {
     return { status: response.status, body: parsed };
   }
 
+  return Object.freeze({ catalog, open, call });
+}
+
+// Returns a transport with the methods send and pull of the transport contract.
+export function createEdcTransport({ config, fetch }) {
+  const client = createEdcTransferClient({ config, fetch });
   const causeOf = (answer) => (typeof answer.body?.error?.code === "string" ? answer.body.error.code : `status ${answer.status}`);
 
   async function send({ receiverBpnl, connectorUrl, operation, message }) {
     try {
-      const dataset = (await catalogOf(connectorUrl, receiverBpnl)).find(({ dataset }) => propertyOf(dataset, "type") === expandTaxonomy(NOTIFICATION_DCT_TYPE));
-      // An access policy that does not admit the sender hides the asset from the catalog, so the
+      const entry = (await client.catalog(connectorUrl, receiverBpnl)).find(({ dataset }) => propertyOf(dataset, "type") === expandTaxonomy(NOTIFICATION_DCT_TYPE));
+      // D83: an access policy that does not admit the sender hides the asset from the catalog, so the
       // connector reports such a receiver as a receiver without an asset.
-      if (dataset === undefined) return { outcome: "no_asset", httpStatus: null, body: null, cause: "the receiver offers no lifecycle notification asset to the sender" };
-      const reference = await openTransfer(connectorUrl, dataset);
-      const answer = await dataPlane(reference, "POST", `/${operation}`, message);
+      if (entry === undefined) return { outcome: "no_asset", httpStatus: null, body: null, cause: "the receiver offers no lifecycle notification asset to the sender" };
+      const reference = await client.open(connectorUrl, entry);
+      const answer = await client.call(reference, "POST", `/${operation}`, message);
       if (answer.status === 200) return { outcome: "sent", httpStatus: 200, body: answer.body, cause: null };
       return { outcome: answer.status >= 500 ? "transport_failed" : "receiver_refused", httpStatus: answer.status, body: answer.body, cause: causeOf(answer) };
     } catch (error) {
@@ -138,10 +164,10 @@ export function createEdcTransport({ config, fetch }) {
 
   async function pull({ providerBpnl, connectorUrl, semanticId, passportIdentifier }) {
     try {
-      const dataset = (await catalogOf(connectorUrl, providerBpnl)).find(({ dataset }) => propertyOf(dataset, "semanticId") === semanticId && propertyOf(dataset, "passportIdentifier") === passportIdentifier);
-      if (dataset === undefined) return { outcome: "no_asset", agreementId: null, body: null, cause: "the provider offers no asset of the semantic identifier and the passport identifier to the consumer" };
-      const reference = await openTransfer(connectorUrl, dataset);
-      const answer = await dataPlane(reference, "GET", "", undefined);
+      const entry = (await client.catalog(connectorUrl, providerBpnl)).find(({ dataset }) => propertyOf(dataset, "semanticId") === semanticId && propertyOf(dataset, "passportIdentifier") === passportIdentifier);
+      if (entry === undefined) return { outcome: "no_asset", agreementId: null, body: null, cause: "the provider offers no asset of the semantic identifier and the passport identifier to the consumer" };
+      const reference = await client.open(connectorUrl, entry);
+      const answer = await client.call(reference, "GET", "", undefined);
       if (answer.status !== 200) return { outcome: answer.status >= 500 ? "transport_failed" : "provider_refused", agreementId: null, body: answer.body, cause: causeOf(answer) };
       return { outcome: "received", agreementId: reference.agreementId, body: answer.body, cause: null };
     } catch (error) {

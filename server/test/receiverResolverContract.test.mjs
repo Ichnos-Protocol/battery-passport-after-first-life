@@ -28,6 +28,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { createAddressListResolver } from "../src/connector/addressListResolver.mjs";
 import { createConnectorDiscoveryResolver } from "../src/connector/connectorDiscoveryResolver.mjs";
 import { createMemoryReceiverResolver } from "../src/connector/memoryReceiverResolver.mjs";
 
@@ -76,6 +77,9 @@ async function discoveryFetch(url, init) {
   if (counterParty === WITHOUT_CONNECTOR) return answer(400, [{ message: `No connector endpoints found for counterPartyId ${DID_WITHOUT_CONNECTOR}`, type: "InvalidRequest", path: null, invalidValue: null }]);
   return answer(400, [{ message: `No did found for identifier ${counterParty}`, type: "InvalidRequest", path: null, invalidValue: null }]);
 }
+// The address list of a local test deployment (D81): KNOWN has an entry, and WITHOUT_CONNECTOR and
+// UNKNOWN have none, so that both resolve to null as the second and the first step find nothing.
+IMPLEMENTATIONS.push(["the address list resolver", () => createAddressListResolver({ addressList: Object.freeze({ [KNOWN]: Object.freeze({ connectorUrl: CONNECTOR, did: DID }) }) })]);
 IMPLEMENTATIONS.push(["the connector discovery resolver with a stubbed fetch", () => createConnectorDiscoveryResolver({ config: DISCOVERY_CONFIG, fetch: discoveryFetch })]);
 
 for (const [name, create] of IMPLEMENTATIONS) {

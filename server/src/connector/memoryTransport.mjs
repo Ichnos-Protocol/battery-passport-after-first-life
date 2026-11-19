@@ -30,7 +30,12 @@
 // consumer in the two headers of D41, and returns the status and the body of the receiver unchanged.
 import { randomUUID } from "node:crypto";
 
-import { NOTIFICATION_ASSET_ID, admits } from "./policyBuilder.mjs";
+import { FRAMEWORK_AGREEMENT, NOTIFICATION_ASSET_ID, USAGE_PURPOSE, admits } from "./policyBuilder.mjs";
+
+// The usage policy of an offer admits the consumer when the policy holds the framework agreement and the
+// usage purpose that the consumer has agreed to (decision D83, One meaning of no_asset and
+// contract_refused): a connector refuses the negotiation of any other usage policy.
+const usageAdmits = (offer) => offer.frameworkAgreement === FRAMEWORK_AGREEMENT && Array.isArray(offer.usagePurposes) && offer.usagePurposes.includes(USAGE_PURPOSE);
 
 // The cause of an answer other than 200: the refusal id of the error body, or the status.
 function causeOf(answer) {
@@ -75,9 +80,11 @@ export function createMemoryTransport({ participants, offerStores, ownBpnl }) {
   async function send({ receiverBpnl, connectorUrl, operation, message }) {
     const participant = participants.get(connectorUrl);
     if (participant === undefined || participant.bpnl !== receiverBpnl) return { outcome: "transport_failed", httpStatus: null, body: null, cause: `no connector answers at ${connectorUrl}` };
-    const asset = (await offerStores.get(receiverBpnl)?.list())?.find((offer) => offer.assetId === NOTIFICATION_ASSET_ID);
-    if (asset === undefined) return { outcome: "no_asset", httpStatus: null, body: null, cause: "the receiver offers no lifecycle notification asset" };
-    if (!admits(asset, ownBpnl)) return { outcome: "contract_refused", httpStatus: null, body: null, cause: "the access policy of the notification asset does not admit the sender" };
+    // D83: an asset that the access policy hides is an absent asset, and a usage policy that the sender
+    // does not meet refuses the contract.
+    const asset = (await offerStores.get(receiverBpnl)?.list())?.find((offer) => offer.assetId === NOTIFICATION_ASSET_ID && admits(offer, ownBpnl));
+    if (asset === undefined) return { outcome: "no_asset", httpStatus: null, body: null, cause: "the receiver offers no lifecycle notification asset to the sender" };
+    if (!usageAdmits(asset)) return { outcome: "contract_refused", httpStatus: null, body: null, cause: "the usage policy of the notification asset refuses the contract" };
     try {
       const answer = await call(participant, "POST", `${asset.path}/${operation}`, message);
       if (answer.status === 200) return { outcome: "sent", httpStatus: 200, body: answer.body, cause: null };
@@ -94,10 +101,9 @@ export function createMemoryTransport({ participants, offerStores, ownBpnl }) {
     const participant = participants.get(connectorUrl);
     if (participant === undefined || participant.bpnl !== providerBpnl) return { outcome: "transport_failed", agreementId: null, body: null, cause: `no connector answers at ${connectorUrl}` };
     const offers = (await offerStores.get(providerBpnl)?.list()) ?? [];
-    const matching = offers.filter((offer) => offer.semanticId === semanticId && offer.passportIdentifier === passportIdentifier);
-    if (matching.length === 0) return { outcome: "no_asset", agreementId: null, body: null, cause: "the provider offers no asset of the semantic identifier and the passport identifier" };
-    const offer = matching.find((item) => admits(item, ownBpnl));
-    if (offer === undefined) return { outcome: "contract_refused", agreementId: null, body: null, cause: "the access policy of the offer does not admit the consumer" };
+    const offer = offers.find((item) => item.semanticId === semanticId && item.passportIdentifier === passportIdentifier && admits(item, ownBpnl));
+    if (offer === undefined) return { outcome: "no_asset", agreementId: null, body: null, cause: "the provider offers no asset of the semantic identifier and the passport identifier to the consumer" };
+    if (!usageAdmits(offer)) return { outcome: "contract_refused", agreementId: null, body: null, cause: "the usage policy of the offer refuses the contract" };
     try {
       const answer = await call(participant, "GET", offer.path, undefined);
       if (answer.status !== 200) {

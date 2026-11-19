@@ -18,24 +18,200 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-// Requirement: PrR-CXD-029 (Conformance tests run against the in-process binding and the connector
-// binding), with decision D43 (One test code and two bindings), decision D75 (The receiver resolution
-// through the own connector) and decision D76 (The wallet stub as the local identity). Sections 9.2.9 and
-// 10.7 of docs/architecture/implementation_plan.md.
-// The connector binding of the conformance test kit waits for the owner: the first run of the second
-// part of phase P7 on 2026-11-19 showed that the wallet stub 0.1.0 does not serve the identity of the
-// connectors of Tractus-X EDC 0.13.0 as tck/docker-compose.yml configures it (tck/README.md, section "The
-// first run of phase P7"). Decision D76 makes the implementer report the failure to the owner before the
-// contingency of section 10.7 applies, so the binding refuses to start and runs no test.
+// Requirements: PrR-CXD-028 (One conformance test per criterion CX-0160-4-CAC-001 to 016) and
+// PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding), with
+// decision D43 (One test code and two bindings), decision D41 (Authentication without an identity
+// provider), decision D74 (The binding contract and criterion CAC-012 (notification API)) [waits for the
+// owner] and decision D84 (The connector binding on a started deployment) [waits for the owner].
+// Section 9.2.9 of docs/architecture/implementation_plan.md.
+// The connector binding of the conformance test kit: the three reference servers, their Tractus-X EDC
+// 0.13.0 connectors and their Digital Twin Registries of a deployment of tck/docker-compose.yml that
+// "docker compose up -d --wait" has started. The binding runs no docker command, restarts no server and
+// empties no table: each test file works on identifiers of its own.
+import { signOperatorToken } from "../../server/src/access/operatorToken.mjs";
+import { createEdcOfferStore } from "../../server/src/connector/edcOfferStore.mjs";
+import { TransportStep, createEdcTransferClient } from "../../server/src/connector/edcTransport.mjs";
+import { NOTIFICATION_ASSET_ID, admits, buildNotificationAssetOffer } from "../../server/src/connector/policyBuilder.mjs";
+import { createDtrTwinRegistry } from "../../server/src/twins/dtrTwinRegistry.mjs";
 
-// The cause of the stop, in the words of the record of the first run in tck/README.md.
-export const CONNECTOR_BINDING_CAUSE =
-  "the first run of phase P7 stopped under decision D76: the wallet stub 0.1.0 resolves the DID of another stub only over https, " +
-  "so a connector refuses the catalog request of a connector of another stub (answer 401), and the stub serves no DataService entry " +
-  "in a DID document (Tractus-X EDC 0.13.0 calls GET /api/v2.0.0/companyIdentities, answer 404), so the connector discovery of " +
-  "decision D75 finds no connector; the owner decides (tck/README.md)";
+// The three participants of section 9.2.9 and the services of tck/docker-compose.yml.
+const PARTICIPANTS = Object.freeze([
+  { role: "provider", bpnl: "BPNL00000000TCK1", number: 1 },
+  { role: "operator", bpnl: "BPNL00000000TCK2", number: 2 },
+  { role: "recycler", bpnl: "BPNL00000000TCK3", number: 3 },
+]);
+const DATA_PLANE_KEY_HEADER = "x-api-key";
+const PARTNER_BPN_HEADER = "edc-bpn";
+const OUTBOX_INTERVAL_MILLISECONDS = 1000;
+const SETTLE_POLLS = 60;
 
-// Fails with the cause of the stop, so that TCK_BINDING=connector stops at startBinding() and runs no test.
-export async function startConnectorBinding() {
-  throw new Error(`connector binding not available: ${CONNECTOR_BINDING_CAUSE}`);
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function request(base, method, path, body, headers) {
+  const init = { method, headers: { ...headers } };
+  if (body !== undefined) {
+    init.headers["content-type"] = "application/json";
+    init.body = JSON.stringify(body);
+  }
+  const response = await fetch(`${base}${path}`, init);
+  const text = await response.text();
+  let parsed = null;
+  try {
+    parsed = text.length === 0 ? null : JSON.parse(text);
+  } catch {
+    parsed = text;
+  }
+  return { status: response.status, body: parsed };
+}
+
+// The offer whose path names the requested path: the path itself, or the path with a further suffix such
+// as /submodel, which the data plane appends (section 10.5).
+function offerOfPath(offers, path) {
+  return offers.filter((offer) => path === offer.path || path.startsWith(`${offer.path}/`)).sort((left, right) => right.path.length - left.path.length)[0];
+}
+
+const unavailable = (participant, service, cause) => new Error(`connector binding not available: ${participant} ${service}: ${cause}`);
+
+// Returns the binding object of section 9.2.9 on the started deployment. The argument deployment holds
+// the seven variables of the deployment that tck/lib/binding.mjs reads.
+export async function startConnectorBinding({ accessRegime = "after-act", passportServiceProviderBpnl } = {}, deployment = {}) {
+  if ((deployment.accessRegime ?? "after-act") !== accessRegime) {
+    throw unavailable("deployment", "regime", `the test file needs ACCESS_REGIME=${accessRegime}, and the deployment runs ${deployment.accessRegime ?? "after-act"}`);
+  }
+  if ((deployment.passportServiceProviderBpnl ?? null) !== (passportServiceProviderBpnl ?? null)) {
+    throw unavailable("deployment", "regime", `the test file needs PASSPORT_SERVICE_PROVIDER_BPNL=${passportServiceProviderBpnl ?? "(none)"}, and the deployment runs ${deployment.passportServiceProviderBpnl ?? "(none)"}`);
+  }
+  const instances = PARTICIPANTS.map(({ role, bpnl, number }) => {
+    const server = `http://server-${number}:8080`;
+    const dataPlaneKey = deployment[`dataPlaneKey${number}`];
+    const management = {
+      edcManagementUrl: `http://cp-${number}:8081/management`,
+      edcManagementApiKey: deployment.managementApiKey,
+      edcManagementApiKeyHeader: "x-api-key",
+      publicBaseUrl: server,
+      dataPlaneKey,
+      dataPlaneKeyHeader: DATA_PLANE_KEY_HEADER,
+    };
+    return {
+      role,
+      bpnl,
+      server,
+      dataPlaneKey,
+      dspUrl: `http://cp-${number}:8084/api/v1/dsp/2025-1`,
+      offerStore: createEdcOfferStore({ config: management, fetch }),
+      transfers: createEdcTransferClient({ config: management, fetch }),
+      twinRegistry: createDtrTwinRegistry({ config: { dtrUrl: `http://dtr-${number}:4243/api/v3`, ownBpnl: bpnl }, fetch }),
+    };
+  });
+
+  // The start checks of section 9.2.9.
+  for (const instance of instances) {
+    let health;
+    try {
+      health = await request(instance.server, "GET", "/health");
+    } catch (error) {
+      throw unavailable(instance.role, "server", error.message);
+    }
+    if (health.status !== 200 || health.body?.status !== "up") throw unavailable(instance.role, "server", `GET /health answered ${health.status}`);
+    let offers;
+    try {
+      offers = await instance.offerStore.list();
+    } catch (error) {
+      throw unavailable(instance.role, "connector", error.message);
+    }
+    if (!offers.some((offer) => offer.assetId === NOTIFICATION_ASSET_ID)) throw unavailable(instance.role, "connector", "the notification asset is not listed");
+  }
+
+  const byBpnl = new Map(instances.map((instance) => [instance.bpnl, instance]));
+  // A reader is a participant of the binding, a Business Partner Number of a participant, or a Business
+  // Partner Number without a deployment.
+  const readerOf = (reader) => {
+    const bpnl = typeof reader === "string" ? reader : reader.bpnl;
+    return { bpnl, instance: byBpnl.get(bpnl) ?? null };
+  };
+
+  // The offers of the participant that the catalog of the reader's connector lists.
+  async function catalogueOf(instance, reader) {
+    const { bpnl, instance: readerInstance } = readerOf(reader);
+    const offers = await instance.offerStore.list();
+    if (readerInstance === null) return offers.filter((offer) => admits(offer, bpnl));
+    const listed = new Set((await readerInstance.transfers.catalog(instance.dspUrl, instance.bpnl)).map(({ dataset }) => dataset["@id"]));
+    return offers.filter((offer) => listed.has(offer.assetId));
+  }
+
+  // The endpoint data reference of an asset of the participant for a reader with a connector.
+  async function referenceOf(instance, readerInstance, assetId) {
+    const [entry] = await readerInstance.transfers.catalog(instance.dspUrl, instance.bpnl, assetId);
+    if (entry === undefined) throw new TransportStep("no_asset", `the catalog of ${instance.role} lists no asset ${assetId} for ${readerInstance.role}`);
+    return readerInstance.transfers.open(instance.dspUrl, entry);
+  }
+
+  function participantOf(instance) {
+    const token = () => signOperatorToken({ sub: "tck-operator", bpnl: instance.bpnl, expiresInSeconds: 3600 }, { secret: deployment.operatorTokenSecret, now: new Date() });
+    return Object.freeze({
+      bpnl: instance.bpnl,
+      call: (method, path, body) => request(instance.server, method, path, body, { authorization: `Bearer ${token()}` }),
+      asPartner: (reader) =>
+        Object.freeze({
+          async get(path) {
+            const offer = offerOfPath(await instance.offerStore.list(), path);
+            if (offer === undefined) return { outcome: "no_asset", status: null, body: null };
+            const { bpnl, instance: readerInstance } = readerOf(reader);
+            if (!admits(offer, bpnl)) return { outcome: "contract_refused", status: null, body: null };
+            let answer;
+            if (readerInstance === null) {
+              // A reader without a deployment has no connector and reads through the server (D84).
+              answer = await request(instance.server, "GET", path, undefined, { [DATA_PLANE_KEY_HEADER]: instance.dataPlaneKey, [PARTNER_BPN_HEADER]: bpnl });
+            } else {
+              let reference;
+              try {
+                reference = await referenceOf(instance, readerInstance, offer.assetId);
+              } catch (error) {
+                if (error instanceof TransportStep) return { outcome: error.outcome, status: null, body: null };
+                throw error;
+              }
+              answer = await readerInstance.transfers.call(reference, "GET", path.slice(offer.path.length), undefined);
+            }
+            const outcome = answer.status === 200 ? "received" : answer.status >= 500 ? "transport_failed" : "provider_refused";
+            return { outcome, status: answer.status, body: answer.body };
+          },
+        }),
+      catalogue: (reader) => catalogueOf(instance, reader),
+      registry: Object.freeze({ put: (shell) => instance.twinRegistry.put(shell), read: (shellId) => instance.twinRegistry.read(shellId) }),
+      // D74 [waits for the owner]: the notification asset through the participant's connector offer store.
+      withdrawNotificationAsset: () => instance.offerStore.withdraw(NOTIFICATION_ASSET_ID),
+      publishNotificationAsset: () => instance.offerStore.publish(buildNotificationAssetOffer({ allowedBpnls: null })),
+      // The endpoint data reference of an asset of the participant `provider` for this participant, for
+      // the header test of tck/connectorHeader.test.mjs; the sixteen test files do not use it.
+      openTransfer: (provider, assetId) => referenceOf(byBpnl.get(provider.bpnl), instance, assetId),
+      callDataPlane: (reference, method, suffix, body, headers) => instance.transfers.call(reference, method, suffix, body, headers),
+    });
+  }
+
+  const participants = instances.map(participantOf);
+  const [provider, operator, recycler] = participants;
+  return Object.freeze({
+    provider,
+    operator,
+    recycler,
+    // Polls the sent records of the three servers once per second until no record is pending, at most 60
+    // times, and then waits twice the pause of the workers, so that a pending pull has run.
+    async settle() {
+      let pending = [];
+      for (let poll = 0; poll < SETTLE_POLLS; poll += 1) {
+        pending = [];
+        for (const [index, participant] of participants.entries()) {
+          const answer = await participant.call("GET", "/api/notifications/sent");
+          for (const record of answer.body?.data?.notifications ?? []) if (record.outcome === "pending") pending.push([instances[index].role, record.messageId]);
+        }
+        if (pending.length === 0) break;
+        await sleep(1000);
+      }
+      if (pending.length > 0) throw new Error(`settle: ${pending[0][0]} holds the pending notification ${pending[0][1]}`);
+      await sleep(2 * OUTBOX_INTERVAL_MILLISECONDS);
+    },
+    // The data of the test file stays in the deployment; "docker compose down -v" removes it (section 15
+    // item 7).
+    stop: async () => {},
+  });
 }

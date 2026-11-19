@@ -7,9 +7,9 @@ This folder holds the conformance test kit of the proposal CX-0160-4 (Battery Pa
 The variable `TCK_BINDING` selects the binding. Both bindings return the same contract: the three participants `provider` (the data provider of the original passports, `BPNL00000000TCK1`), `operator` (the second-life operator, `BPNL00000000TCK2`) and `recycler` (the recycler, the repairer and the waste receiver, `BPNL00000000TCK3`), and the two functions `settle()` and `stop()`.
 
 - **The in-process binding** (`TCK_BINDING=in-process`, `lib/inProcessBinding.mjs`) starts three applications of the reference server in the process of the test file, each with its own schema of the test database, on one memory network: one memory transport per participant, one memory receiver resolver, one memory offer store and one memory twin registry per participant. The binding needs only Node.js and PostgreSQL. `settle()` advances the clock of the three applications by 6 seconds and runs the worker of each application twice.
-- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) is to run the same sixteen files through the Tractus-X connectors and Digital Twin Registries of `docker-compose.yml`. The first run of phase P7 below showed that the wallet stub 0.1.0 does not serve the identity of the connectors as `docker-compose.yml` configures it. Decision D76 (The wallet stub as the local identity) makes the implementer report the failure to the owner, so `startBinding()` fails with the message `connector binding not available: <cause>`, and the process requirement PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding) stays unverified for the connector binding until the owner decides.
+- **The connector binding** (`TCK_BINDING=connector`, `lib/connectorBinding.mjs`) runs the sixteen files on a started deployment of `docker-compose.yml`: three reference servers, their Tractus-X EDC 0.13.0 connectors and their Digital Twin Registries (decision D84, The connector binding on a started deployment, which waits for the owner). The binding runs no docker command and restarts no server; each test file works on identifiers of its own. The second run of phase P7 below records the results and the cause of each failure, and the process requirement PrR-CXD-029 (Conformance tests run against the in-process binding and the connector binding) stays unverified for the connector binding until the owner decides.
 - **The local deployment.** `docker-compose.yml` reads its images and its local test values from `tck/.env`, which git ignores; `.env.example` names every variable with a placeholder. The commands at the repository root are `docker compose -f tck/docker-compose.yml --env-file tck/.env up -d --wait` and `docker compose -f tck/docker-compose.yml --env-file tck/.env down -v`.
-- **The notification asset of a participant.** Each participant of the in-process binding has the methods `withdrawNotificationAsset()` and `publishNotificationAsset()`, which withdraw and publish the lifecycle notification asset through the offer store of the participant (decision D74, The binding contract and criterion CAC-012 (notification API), which waits for the owner). `CAC-012.tck.mjs` uses the two methods to assert the record `no_asset` of a receiver without an asset.
+- **The notification asset of a participant.** Each participant of both bindings has the methods `withdrawNotificationAsset()` and `publishNotificationAsset()`, which withdraw and publish the lifecycle notification asset through the offer store of the participant (decision D74, The binding contract and criterion CAC-012 (notification API), which waits for the owner). `CAC-012.tck.mjs` uses the two methods to assert the record `no_asset` of a receiver without an asset.
 
 `lib/scenario.mjs` holds the fixture builders that the sixteen files share. Each builder calls only the operator endpoints of the reference server.
 
@@ -22,6 +22,37 @@ node24 bash -c "cd server && npm ci && cd ../tck && npm ci && TCK_BINDING=in-pro
 ```
 
 The command prints the lines `# fail 0`, `# skipped 0` and `0 packages outside the licence list`.
+
+### The test images and their licences
+
+The local deployment pulls these images at test time, and the repository distributes none of them (decision D82, HashiCorp Vault as a test-only image).
+
+| Image | Use | Licence | Public address |
+|---|---|---|---|
+| `tractusx/edc-controlplane-postgresql-hashicorp-vault:0.13.0`, `tractusx/edc-dataplane-hashicorp-vault:0.13.0` | the control plane and the data plane of each connector | Apache-2.0 | tractusx-edc at the tag `0.13.0`, `LICENSE` |
+| `tractusx/ssi-dim-wallet-stub:0.1.0` | the one wallet stub of the three connectors (decision D80, One wallet stub for the three companies) | Apache-2.0 | ssi-dim-wallet-stub at the tag `0.1.0` (commit `6734a1fe38c78b343799d7407ef318b6cd0c11de`), `LICENSE` lines 1 to 3 ("Apache License, Version 2.0, January 2004") and `README.md` line 142 ("Distributed under the Apache 2.0 License.") |
+| `tractusx/bdrs-server-memory:0.6.0` | the BPN-DID Resolution Service | Apache-2.0 | bpn-did-resolution-service at the tag `0.6.0`, `LICENSE` |
+| `tractusx/sldt-digital-twin-registry:0.13.0` | the Digital Twin Registry of each participant | Apache-2.0 | sldt-digital-twin-registry at the tag `v0.13.0`, `LICENSE` |
+| `hashicorp/vault:1.16.1` | the secret store of each connector | Business Source License 1.1 (BUSL-1.1), not an open source licence; `NOTICE.md` names the image | `hashicorp/vault` at the tag `v1.16.1`, `LICENSE` lines 1 and 2 |
+| `postgres:17`, `postgres:18.0` | the databases of the servers and of the registries, and the databases of the connectors | PostgreSQL licence | section 9.8 of the implementation plan |
+| `node:24` | the reference servers, the seed service and the container of the test kit | MIT for Node.js | section 9.8 of the implementation plan |
+
+### The commands of the connector binding
+
+The connector binding runs on a started deployment and runs no docker command (decision D84, The connector binding on a started deployment). At the repository root, in Git Bash with `MSYS_NO_PATHCONV=1`, for each regime of section 9.2.9 of the implementation plan:
+
+```bash
+set -a; . tck/.env; set +a
+ACCESS_REGIME=after-act PASSPORT_SERVICE_PROVIDER_BPNL= docker compose -f tck/docker-compose.yml --env-file tck/.env up -d --wait
+docker run --rm --network tck_default -v "$(pwd -W):/work" -v bpafl_server_modules:/work/server/node_modules \
+  -v bpafl_tck_modules:/work/tck/node_modules -w /work/tck -e TCK_BINDING=connector -e TCK_OPERATOR_TOKEN_SECRET \
+  -e TCK_EDC_MANAGEMENT_API_KEY -e TCK_DATA_PLANE_KEY_1 -e TCK_DATA_PLANE_KEY_2 -e TCK_DATA_PLANE_KEY_3 \
+  -e TCK_ACCESS_REGIME=after-act -e TCK_PASSPORT_SERVICE_PROVIDER_BPNL= node:24 \
+  node --test --test-reporter=tap <the files of the regime>
+docker compose -f tck/docker-compose.yml --env-file tck/.env down -v
+```
+
+The regime with the passport service provider sets `PASSPORT_SERVICE_PROVIDER_BPNL=BPNL00000000TCK6` and `TCK_PASSPORT_SERVICE_PROVIDER_BPNL=BPNL00000000TCK6` and runs `CAC-009.tck.mjs`; the regime before the act sets `ACCESS_REGIME=before-act` and `TCK_ACCESS_REGIME=before-act` and runs `CAC-011.tck.mjs`. After the default regime, `node --test connectorHeader.test.mjs` in the same container runs the header test.
 
 ## The verification of phase P7
 
@@ -84,6 +115,35 @@ The first run on 2026-11-19 started the deployment of `docker-compose.yml` with 
 3. **The connector discovery of D75 finds no connector.** The DID document of the stub holds the service entries `CredentialService` and `IssuerService` and no entry of the type `DataService`. The connector registers its entry through DIV with `GET /api/v2.0.0/companyIdentities?$filter=issuerDID eq "<did>"`, and the stub answers 404, because the stub has no such endpoint. The discovery request therefore answers 400 `No connector endpoints found for counterPartyId did:web:stub-1%3A8080:BPNL00000000TCK1`, and the resolver of D75 resolves every receiver to `null`.
 
 Decision D76 makes the implementer report the failure to the owner before the contingency applies, so `lib/connectorBinding.mjs` refuses to start, and the sixteen files do not run on the connector binding.
+
+### The second run of phase P7
+
+The second run on 2026-11-19 followed version 13 of the implementation plan: one wallet stub (decision D80), the address list resolver (decision D81) and the connector binding on a started deployment (decision D84). Each of the three regimes ran on a fresh deployment, and `docker compose up -d --wait` exited 0 for each. The run found three results.
+
+1. **The provider data plane answers 500 to a refusal of the server.** Tractus-X EDC 0.13.0 passes an answer 200 of the server through unchanged. The data plane answers every other status of the server with 500 and without the error body of the server: a GET of a receiving endpoint, which the server answers with 405 `ERR-RX-METHOD-NOT-ALLOWED`, gave 500 `{"errors":["Received code transferring HTTP data: 405 - Method Not Allowed."]}`, and an unknown operation, which the server answers with 404 `ERR-RX-OPERATION-UNKNOWN`, gave 500 `{"errors":[]}`. The data plane logged `ERROR [DataPlanePublicApiV2Controller] Failed to read data from source: NOT_FOUND`. The sender therefore records a refused notification as a failed transport and repeats the notification every 60 seconds (decision D49), and the descriptive error body of section 4.3 item 7 of the proposal does not reach the sender.
+2. **One repeated notification fails `settle()` of every file of a run.** The refused BatteryRepaired of `CAC-012.tck.mjs` for the passport `TCK-PASSPORT-UNKNOWN` stayed pending, and `settle()` of every file of the default run then failed with `settle: recycler holds the pending notification <messageId>`, because the files of a run share one deployment and `settle()` polls every sent record of the three servers. The refused BatteryBecameWaste after a PassportEnded of `CAC-009.tck.mjs` failed `settle()` of that run in the same way. The header test `connectorHeader.test.mjs` received 500 in place of 404 for the same reason; the first run had observed the replacement of the header `Edc-Bpn` with an echo backend.
+3. **One assertion needs a fixed clock.** `CAC-009.tck.mjs` asserts that a PassportEnded planned before a BatteryBecameWaste leaves at least 5 seconds after the BatteryBecameWaste. The servers of the deployment run on the real clock, and the second request is planned some milliseconds after the first, so the difference is below 5 seconds.
+
+| Criterion | Pass count in-process | Pass count across connectors |
+|---|---|---|
+| CX-0160-4-CAC-001 (New passport) | 7 of 7 | 4 of 7 |
+| CX-0160-4-CAC-002 (Digital twin) | 5 of 5 | 0 of 1 |
+| CX-0160-4-CAC-003 (Model elements) | 6 of 6 | 6 of 6 |
+| CX-0160-4-CAC-004 (Predecessor links) | 3 of 3 | 3 of 3 |
+| CX-0160-4-CAC-005 (Forward link) | 7 of 7 | 0 of 1 |
+| CX-0160-4-CAC-006 (Status and repair) | 11 of 11 | 5 of 11 |
+| CX-0160-4-CAC-007 (Waste status) | 7 of 7 | 3 of 7 |
+| CX-0160-4-CAC-008 (Donors) | 3 of 3 | 0 of 1 |
+| CX-0160-4-CAC-009 (End of the passport) | 7 of 7 | 4 of 7 |
+| CX-0160-4-CAC-010 (Access) | 7 of 7 | 7 of 7 |
+| CX-0160-4-CAC-011 (Access before the Art. 77(9) act) | 4 of 4 | 4 of 4 |
+| CX-0160-4-CAC-012 (Notification API) | 9 of 9 | 0 of 1 |
+| CX-0160-4-CAC-013 (Data assets) | 5 of 5 | 2 of 5 |
+| CX-0160-4-CAC-014 (Certificates) | 3 of 3 | 0 of 3 |
+| CX-0160-4-CAC-015 (Persistence) | 4 of 4 | 0 of 1 |
+| CX-0160-4-CAC-016 (Access map) | 6 of 6 | 6 of 6 |
+
+A count "0 of 1" names a file whose test failed before its subtests ran. Every failure across connectors of the default run is the failure of `settle()` of result 2. The owner decides results 1 to 3.
 
 ### The recorded answers of phase P7
 

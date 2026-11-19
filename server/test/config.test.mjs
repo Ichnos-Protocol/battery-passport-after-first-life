@@ -41,6 +41,7 @@ const ADDRESS = {
   Street: [{ en: "Example Street 1" }],
   ZipCode: [{ en: "00000" }],
 };
+const ADDRESS_LIST = { BPNL00000000TCK2: { connectorUrl: "http://cp-2:8084/api/v1/dsp/2025-1", did: "did:web:stub%3A8080:BPNL00000000TCK2" } };
 const CONNECTOR_VARIABLES = ["CONNECTOR_DATA_PLANE_PUBLIC_URL", "CONNECTOR_DSP_URL", "EDC_MANAGEMENT_URL", "EDC_MANAGEMENT_API_KEY", "DTR_URL"];
 
 // One complete input of valid values with BINDING=memory.
@@ -57,6 +58,8 @@ function fixtureEnv() {
     PORT: "9090",
     PUBLIC_BASE_URL: "https://provider.example/",
     BINDING: "memory",
+    RECEIVER_RESOLUTION: "address-list",
+    RECEIVER_ADDRESS_LIST: JSON.stringify(ADDRESS_LIST),
     OPERATOR_TOKEN_SECRET: OPERATOR_SECRET,
     DATA_PLANE_KEY,
     DATA_PLANE_KEY_HEADER: "X-DP-Key",
@@ -78,7 +81,7 @@ function fixtureEnv() {
   };
 }
 
-// The property of each of the 29 variables of section 9.6 for the input of fixtureEnv().
+// The property of each of the 31 variables of section 9.6 for the input of fixtureEnv().
 const EXPECTED = {
   OWN_BPNL: ["ownBpnl", "BPNL00000000TCK1"],
   OWN_LEGAL_NAME: ["ownLegalName", "Example Battery Company"],
@@ -91,6 +94,8 @@ const EXPECTED = {
   PORT: ["port", 9090],
   PUBLIC_BASE_URL: ["publicBaseUrl", "https://provider.example"],
   BINDING: ["binding", "memory"],
+  RECEIVER_RESOLUTION: ["receiverResolution", "address-list"],
+  RECEIVER_ADDRESS_LIST: ["receiverAddressList", ADDRESS_LIST],
   OPERATOR_TOKEN_SECRET: ["operatorTokenSecret", OPERATOR_SECRET],
   DATA_PLANE_KEY: ["dataPlaneKey", DATA_PLANE_KEY],
   DATA_PLANE_KEY_HEADER: ["dataPlaneKeyHeader", "x-dp-key"],
@@ -118,6 +123,7 @@ const DEFAULTS = {
   DATABASE_SCHEMA: ["databaseSchema", "public"],
   DATABASE_POOL_SIZE: ["databasePoolSize", 10],
   PORT: ["port", 8080],
+  RECEIVER_RESOLUTION: ["receiverResolution", "discovery"],
   DATA_PLANE_KEY_HEADER: ["dataPlaneKeyHeader", "x-api-key"],
   PARTNER_BPN_HEADER: ["partnerBpnHeader", "edc-bpn"],
   PASSPORT_ENDED_DELAY_SECONDS: ["passportEndedDelaySeconds", 5],
@@ -141,6 +147,10 @@ const KEY_VARIABLES = ["OPERATOR_TOKEN_SECRET", "DATA_PLANE_KEY", "EDC_MANAGEMEN
 
 // The values of section 14.2 that fail the rule of each variable.
 const MALFORMED = [
+  ["RECEIVER_RESOLUTION", "dns"],
+  ["RECEIVER_ADDRESS_LIST", JSON.stringify({ BPNL00000000TCK2: { connectorUrl: "http://connector.example/api/v1/dsp", did: "did:web:connector.example" } })],
+  ["RECEIVER_ADDRESS_LIST", JSON.stringify({ BPNL00000000TCK2: { connectorUrl: "http://cp-2:8084/api/v1/dsp" } })],
+  ["RECEIVER_ADDRESS_LIST", "{}"],
   ["OWN_BPNL", "BPNL0000000TCK1"],
   ["PASSPORT_SERVICE_PROVIDER_BPNL", "BPNL0000000TCK1"],
   ["OWN_LEGAL_NAME", "x".repeat(301)],
@@ -200,9 +210,9 @@ function without(env, ...names) {
   return copy;
 }
 
-test("section 9.6: one accepted value of each of the 29 variables gives its property with its type", async (t) => {
+test("section 9.6: one accepted value of each of the 31 variables gives its property with its type", async (t) => {
   const config = loadConfig(fixtureEnv());
-  assert.equal(Object.keys(EXPECTED).length, 29);
+  assert.equal(Object.keys(EXPECTED).length, 31);
   for (const [variable, [property, value]] of Object.entries(EXPECTED)) {
     await t.test(`${variable} gives ${property}`, () => {
       assert.deepStrictEqual(config[property], value);
@@ -290,7 +300,7 @@ test("section 9.6: every default is applied when its variable is absent and when
   }
 });
 
-test("section 9.2.1: the configuration object is frozen, pure and holds the 29 properties only", async (t) => {
+test("section 9.2.1: the configuration object is frozen, pure and holds the 31 properties only", async (t) => {
   await t.test("the object, ownAddress and notificationAllowedBpnls are frozen, and an assignment throws a TypeError", () => {
     const config = loadConfig(fixtureEnv());
     for (const value of [config, config.ownAddress, config.notificationAllowedBpnls]) assert.equal(Object.isFrozen(value), true);
@@ -320,5 +330,35 @@ test("section 9.2.1: the configuration object is frozen, pure and holds the 29 p
   await t.test("a variable outside the table, UNKNOWN_SETTING, gives no property", () => {
     const config = loadConfig({ ...fixtureEnv(), UNKNOWN_SETTING: "value" });
     assert.deepStrictEqual(Object.keys(config).sort(), Object.values(EXPECTED).map(([property]) => property).sort());
+  });
+});
+
+test("D81 (A fixed address list in the local deployment only): the address list serves only a local test deployment", async (t) => {
+  await t.test("RECEIVER_ADDRESS_LIST absent under RECEIVER_RESOLUTION=address-list is named as missing", () => {
+    const error = configError(without(fixtureEnv(), "RECEIVER_ADDRESS_LIST"));
+    assert.deepStrictEqual(error.variables, ["RECEIVER_ADDRESS_LIST"]);
+    assert.match(error.message, /RECEIVER_ADDRESS_LIST is missing/);
+  });
+  await t.test("RECEIVER_ADDRESS_LIST absent under RECEIVER_RESOLUTION=discovery gives null", () => {
+    const config = loadConfig({ ...without(fixtureEnv(), "RECEIVER_ADDRESS_LIST"), RECEIVER_RESOLUTION: "discovery" });
+    assert.equal(config.receiverAddressList, null);
+  });
+  await t.test("the hosts localhost, 127.0.0.1 and [::1] are admitted, and the list and its entries are frozen", () => {
+    const list = {
+      BPNL00000000TCK1: { connectorUrl: "http://localhost:8084/api/v1/dsp", did: "did:web:one" },
+      BPNL00000000TCK2: { connectorUrl: "https://127.0.0.1:8084/api/v1/dsp", did: "did:web:two" },
+      BPNL00000000TCK3: { connectorUrl: "http://[::1]:8084/api/v1/dsp", did: "did:web:three" },
+    };
+    const config = loadConfig({ ...fixtureEnv(), RECEIVER_ADDRESS_LIST: JSON.stringify(list) });
+    assert.deepStrictEqual(config.receiverAddressList, list);
+    assert.equal(Object.isFrozen(config.receiverAddressList), true);
+    assert.equal(Object.isFrozen(config.receiverAddressList.BPNL00000000TCK1), true);
+  });
+  await t.test("an entry with a third property, a key that is no Business Partner Number and 101 entries are refused", () => {
+    const entry = { connectorUrl: "http://cp-2:8084/api/v1/dsp", did: "did:web:two" };
+    const many = Object.fromEntries(Array.from({ length: 101 }, (_, index) => [`BPNL0000000${String(index).padStart(5, "0")}`, entry]));
+    for (const list of [{ BPNL00000000TCK2: { ...entry, extra: 1 } }, { BPNS00000000TCK1: entry }, many]) {
+      assert.deepStrictEqual(configError({ ...fixtureEnv(), RECEIVER_ADDRESS_LIST: JSON.stringify(list) }).variables, ["RECEIVER_ADDRESS_LIST"]);
+    }
   });
 });

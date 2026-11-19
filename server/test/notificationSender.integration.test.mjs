@@ -184,6 +184,9 @@ test("SwR-CXCLIENT-183 (Sender's record of a receiver without an asset or a cont
   await secondLife.offerStore.withdraw("asset-lifecycle-notification-1.0");
   const [missing] = await repair(SECOND_LIFE);
   await recycler.worker.tick();
+  await secondLife.offerStore.publish({ ...buildNotificationAssetOffer({ allowedBpnls: null }), frameworkAgreement: "OtherAgreement:1.0" });
+  const [refusedContract] = await repair(SECOND_LIFE);
+  await recycler.worker.tick();
   const records = new Map((await sent()).map((record) => [record.id, record]));
   const providerDid = "did:web:bpnl00000000tck1.memory.invalid";
   const secondDid = "did:web:bpnl00000000tck2.memory.invalid";
@@ -202,7 +205,8 @@ test("SwR-CXCLIENT-183 (Sender's record of a receiver without an asset or a cont
     assert.ok(record.cause.includes(UNRESOLVED));
   });
   for (const [label, item, outcome] of [
-    ["contract_refused: the notification asset admits the data provider only", contract, "contract_refused"],
+    ["no_asset (D83): the notification asset admits the data provider only, so the sender sees no asset", contract, "no_asset"],
+    ["contract_refused (D83): the usage policy of the notification asset holds another framework agreement", refusedContract, "contract_refused"],
     ["no_asset: the receiver offers no notification asset", missing, "no_asset"],
   ]) {
     await t.test(`${label}, and the record holds the receiver, the operation, the passport identifier and the date of the attempt`, () => {
