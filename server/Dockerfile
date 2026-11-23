@@ -22,7 +22,7 @@
 # and section 10.7 of docs/architecture/implementation_plan.md). The build context is the repository
 # root. The server reads docs/api/schemas/, docs/api/aspects/ and sources/IDTA/ at run time (finding 7
 # of the verification of phase P7).
-FROM node:24
+FROM node:26
 
 WORKDIR /app
 COPY server/ server/
